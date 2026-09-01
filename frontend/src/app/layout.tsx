@@ -9,8 +9,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://frontend-two-mu-2qajzx2xxc.vercel.app"),
+  metadataBase: new URL("https://ai-clipper-pro.vercel.app"),
   title: "AI Video Clipper Pro — High-Retention Short-Form Discovery",
+
   description: "Autonomous discovery, 12-factor ranking, smart 9:16 vertical reframing, and animated subtitle burn-in for TikTok, Reels, and Shorts.",
   icons: {
     icon: [
