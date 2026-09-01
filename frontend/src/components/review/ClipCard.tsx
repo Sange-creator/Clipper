@@ -52,23 +52,20 @@ export function ClipCard({ clip, rank }: ClipCardProps) {
         {/* Top Badges: Rank & Score */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
           <div className="flex items-center gap-1.5">
-            <span className="rounded-lg bg-black/60 backdrop-blur-md border border-white/10 px-2 py-1 text-[11px] font-bold text-white font-mono">
+            <span className="rounded-md bg-zinc-950/80 backdrop-blur-md border border-white/10 px-2 py-0.5 text-[10px] font-bold text-zinc-300 font-mono">
               #{rank}
             </span>
-            <span className={`rounded-lg px-2 py-1 text-[10px] font-bold backdrop-blur-md border ${
-              clip.mode === "viral_moments"
-                ? "bg-amber-500/80 border-amber-400/50 text-black"
-                : "bg-violet-600/80 border-violet-400/50 text-white"
-            }`}>
-              {clip.mode === "viral_moments" ? "⚡ Viral" : "🎙️ Podcast"}
+            <span className="rounded-md bg-zinc-900/90 backdrop-blur-md border border-white/10 px-2 py-0.5 text-[10px] font-semibold text-zinc-300 uppercase tracking-wider">
+              {clip.mode === "viral_moments" ? "Viral Hook" : "Context Unit"}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 rounded-lg bg-violet-600/80 backdrop-blur-md px-2 py-1 text-[11px] font-bold text-white shadow-md shadow-violet-500/30">
-            <Sparkles className="h-3 w-3" />
+          <div className="flex items-center gap-1 rounded-md bg-violet-600/90 backdrop-blur-md border border-violet-400/30 px-2 py-0.5 text-[11px] font-bold text-white shadow-md">
             <span>{clip.scores.composite_score.toFixed(0)}</span>
+            <span className="text-[9px] text-violet-200 font-mono">PTS</span>
           </div>
         </div>
+
 
         {/* Favorite & Quick Download Buttons */}
         <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5">

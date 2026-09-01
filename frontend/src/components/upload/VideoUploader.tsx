@@ -17,7 +17,11 @@ import {
   Volume2,
   Subtitles,
   Scissors,
+  Smartphone,
+  Maximize2,
+  Monitor,
 } from "lucide-react";
+
 import { api } from "@/lib/api";
 import { formatFileSize } from "@/lib/utils";
 import { VideoInfo } from "@/lib/types";
@@ -294,23 +298,23 @@ export function VideoUploader() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-white/5">
-            {/* Mode 1: 9:16 Smart Crop */}
+            {/* Mode 1: 9:16 Full Vertical */}
             <div
               onClick={() => setFramingMode("crop_9_16")}
               className={`rounded-xl p-3.5 cursor-pointer border transition-all ${
                 framingMode === "crop_9_16"
-                  ? "bg-cyan-500/15 border-cyan-500 text-white shadow-lg shadow-cyan-500/10"
+                  ? "bg-violet-500/15 border-violet-500 text-white shadow-lg shadow-violet-500/10"
                   : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm">📱</span>
+                <Smartphone className="h-4 w-4 text-violet-400" />
                 <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/10 text-zinc-300">
                   Default
                 </span>
               </div>
               <h5 className="text-xs font-semibold text-white">9:16 Full Vertical</h5>
-              <p className="text-[10px] text-cyan-400 font-medium mt-0.5">TikTok • Reels • Shorts</p>
+              <p className="text-[10px] text-violet-400 font-medium mt-0.5">TikTok • Reels • Shorts</p>
               <p className="text-[10px] text-zinc-400 mt-2 leading-relaxed">
                 Fills 1080x1920 vertical canvas. Centers subject and crops widescreen edges.
               </p>
@@ -321,12 +325,12 @@ export function VideoUploader() {
               onClick={() => setFramingMode("blur_fit_9_16")}
               className={`rounded-xl p-3.5 cursor-pointer border transition-all ${
                 framingMode === "blur_fit_9_16"
-                  ? "bg-cyan-500/15 border-cyan-500 text-white shadow-lg shadow-cyan-500/10"
+                  ? "bg-violet-500/15 border-violet-500 text-white shadow-lg shadow-violet-500/10"
                   : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm">🖼️</span>
+                <Maximize2 className="h-4 w-4 text-cyan-400" />
                 <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300">
                   Popular
                 </span>
@@ -343,18 +347,18 @@ export function VideoUploader() {
               onClick={() => setFramingMode("original_16_9")}
               className={`rounded-xl p-3.5 cursor-pointer border transition-all ${
                 framingMode === "original_16_9"
-                  ? "bg-cyan-500/15 border-cyan-500 text-white shadow-lg shadow-cyan-500/10"
+                  ? "bg-violet-500/15 border-violet-500 text-white shadow-lg shadow-violet-500/10"
                   : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm">🖥️</span>
+                <Monitor className="h-4 w-4 text-emerald-400" />
                 <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/10 text-zinc-300">
                   Landscape
                 </span>
               </div>
               <h5 className="text-xs font-semibold text-white">Native 16:9 Landscape</h5>
-              <p className="text-[10px] text-cyan-400 font-medium mt-0.5">YouTube & Twitter</p>
+              <p className="text-[10px] text-emerald-400 font-medium mt-0.5">YouTube & Twitter</p>
               <p className="text-[10px] text-zinc-400 mt-2 leading-relaxed">
                 Preserves original widescreen resolution with zero vertical cropping or transformation.
               </p>

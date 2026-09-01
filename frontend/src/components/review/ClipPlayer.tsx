@@ -14,7 +14,10 @@ import {
   Heart,
   MessageCircle,
   Share2,
+  Search,
+  Music,
 } from "lucide-react";
+
 import { formatTimecode } from "@/lib/utils";
 
 interface ClipPlayerProps {
@@ -104,7 +107,7 @@ export function ClipPlayer({ videoUrl, thumbnailUrl, onTimeUpdate, duration }: C
             <div className="flex justify-between items-center text-[10px] text-white/70 font-semibold px-2">
               <span>LIVE</span>
               <span>Following | <strong className="text-white">For You</strong></span>
-              <span>🔍</span>
+              <Search className="h-3.5 w-3.5 text-white/80" />
             </div>
 
             {/* Right-side action buttons */}
@@ -133,11 +136,15 @@ export function ClipPlayer({ videoUrl, thumbnailUrl, onTimeUpdate, duration }: C
             <div className="space-y-1.5 px-2 pb-2">
               <p className="text-xs font-bold text-white">@creator_channel</p>
               <p className="text-[11px] text-white/90 line-clamp-2">
-                The secret high-retention hook strategy #viral #shorts #mindset
+                The high-retention hook strategy for short-form video discovery
               </p>
-              <p className="text-[10px] text-white/60">♫ Original Sound - Viral Clips</p>
+              <div className="flex items-center gap-1.5 text-[10px] text-white/60">
+                <Music className="h-3 w-3" />
+                <span>Original Audio Track</span>
+              </div>
             </div>
           </div>
+
         )}
 
         {/* Big Center Play Overlay Button */}

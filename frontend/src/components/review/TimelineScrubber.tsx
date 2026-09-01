@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Scissors, RefreshCw, Sparkles, Sliders, Subtitles, Check } from "lucide-react";
+import { Scissors, RefreshCw, Sparkles, Sliders, Subtitles, Check, Smartphone, Maximize2, Monitor } from "lucide-react";
+
 import { formatSeconds } from "@/lib/utils";
 
 interface TimelineScrubberProps {
@@ -270,14 +271,15 @@ export function TimelineScrubber({
             }}
             className={`rounded-xl p-3 text-left border transition-all ${
               framingMode === "crop_9_16"
-                ? "bg-cyan-500/20 border-cyan-400 text-white shadow-sm"
+                ? "bg-violet-500/15 border-violet-400 text-white shadow-sm"
                 : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold">📱 9:16 Full Vertical</span>
+            <div className="flex items-center gap-2 mb-1">
+              <Smartphone className="h-3.5 w-3.5 text-violet-400" />
+              <span className="text-xs font-semibold">9:16 Vertical</span>
             </div>
-            <p className="text-[10px] text-zinc-400">Smart crop & reframe</p>
+            <p className="text-[10px] text-zinc-400">Smart focal tracking</p>
           </button>
 
           <button
@@ -288,14 +290,15 @@ export function TimelineScrubber({
             }}
             className={`rounded-xl p-3 text-left border transition-all ${
               framingMode === "blur_fit_9_16"
-                ? "bg-cyan-500/20 border-cyan-400 text-white shadow-sm"
+                ? "bg-violet-500/15 border-violet-400 text-white shadow-sm"
                 : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold">🖼️ 16:9 Blurred Canvas</span>
+            <div className="flex items-center gap-2 mb-1">
+              <Maximize2 className="h-3.5 w-3.5 text-cyan-400" />
+              <span className="text-xs font-semibold">16:9 Frosted Blur</span>
             </div>
-            <p className="text-[10px] text-zinc-400">Fit 16:9 with frosted blur</p>
+            <p className="text-[10px] text-zinc-400">Fit with canvas blur</p>
           </button>
 
           <button
@@ -306,15 +309,17 @@ export function TimelineScrubber({
             }}
             className={`rounded-xl p-3 text-left border transition-all ${
               framingMode === "original_16_9"
-                ? "bg-cyan-500/20 border-cyan-400 text-white shadow-sm"
+                ? "bg-violet-500/15 border-violet-400 text-white shadow-sm"
                 : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold">🖥️ Native 16:9</span>
+            <div className="flex items-center gap-2 mb-1">
+              <Monitor className="h-3.5 w-3.5 text-emerald-400" />
+              <span className="text-xs font-semibold">16:9 Landscape</span>
             </div>
-            <p className="text-[10px] text-zinc-400">Original landscape</p>
+            <p className="text-[10px] text-zinc-400">Native aspect ratio</p>
           </button>
+
         </div>
 
         {/* If Blurred Canvas is chosen, show Blur Ratio Controls */}

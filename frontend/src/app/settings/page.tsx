@@ -24,7 +24,14 @@ import {
   Subtitles,
   Workflow,
   Check,
+  Smartphone,
+  Maximize2,
+  Monitor,
+  Film,
+  Layers,
+  HardDrive,
 } from "lucide-react";
+
 
 import { api } from "@/lib/api";
 import { SettingsResponse } from "@/lib/types";
@@ -259,49 +266,50 @@ export default function SettingsPage() {
       </div>
 
       {/* Pipeline Architecture & Resiliency Hierarchy */}
-      <div className="rounded-2xl border border-violet-500/20 bg-gradient-to-r from-violet-950/20 via-black/40 to-cyan-950/20 p-5 space-y-3">
-        <div className="flex items-center gap-2 text-xs font-semibold text-violet-300 uppercase tracking-wider">
+      <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-5 space-y-3">
+        <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300 uppercase tracking-wider">
           <Workflow className="h-4 w-4 text-violet-400" />
-          <span>Execution Hierarchy & Intelligent Fallback</span>
+          <span>Execution Hierarchy & Fallback Resilience</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
-          <div className="rounded-xl p-3 bg-black/40 border border-cyan-500/30">
+          <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10">
             <div className="flex items-center justify-between text-cyan-400 font-bold text-[11px] mb-1">
-              <span>1. SPEECH AI</span>
-              <span>🎙️</span>
+              <span>1. SPEECH RECOGNITION</span>
+              <Mic className="h-3.5 w-3.5" />
             </div>
             <p className="font-semibold text-white">Deepgram Nova-3</p>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Word-level timestamps & diarization</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">Word timestamps & diarization</p>
           </div>
 
-          <div className="rounded-xl p-3 bg-black/40 border border-amber-500/30">
+          <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10">
             <div className="flex items-center justify-between text-amber-400 font-bold text-[11px] mb-1">
               <span>2. PRIMARY REASONING</span>
-              <span>⚡</span>
+              <Zap className="h-3.5 w-3.5" />
             </div>
             <p className="font-semibold text-white">Groq Llama 3</p>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Ultra-fast candidate discovery (500ms)</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">Sub-second hook discovery</p>
           </div>
 
-          <div className="rounded-xl p-3 bg-black/40 border border-violet-500/30">
+          <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10">
             <div className="flex items-center justify-between text-violet-400 font-bold text-[11px] mb-1">
-              <span>3. FALLBACK ENGINE</span>
-              <span>✨</span>
+              <span>3. FAILOVER ENGINE</span>
+              <Layers className="h-3.5 w-3.5" />
             </div>
             <p className="font-semibold text-white">Google Gemini 2.0</p>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Auto-fallback on rate limits or errors</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">Automatic failover on rate limit</p>
           </div>
 
-          <div className="rounded-xl p-3 bg-black/40 border border-emerald-500/30">
+          <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10">
             <div className="flex items-center justify-between text-emerald-400 font-bold text-[11px] mb-1">
               <span>4. RENDER ENGINE</span>
-              <span>🎬</span>
+              <Film className="h-3.5 w-3.5" />
             </div>
             <p className="font-semibold text-white">FFmpeg 9.0 Pro</p>
-            <p className="text-[10px] text-zinc-400 mt-0.5">Dynamic framing, blur & animated ASS</p>
+            <p className="text-[10px] text-zinc-400 mt-0.5">Vertical crop & subtitle burn-in</p>
           </div>
         </div>
       </div>
+
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* 1. Global Provider & Model Priority Selectors */}
@@ -325,12 +333,13 @@ export default function SettingsPage() {
                   onClick={() => setAiProvider("groq")}
                   className={`rounded-xl p-3 text-left border transition-all ${
                     aiProvider === "groq"
-                      ? "bg-amber-500/20 border-amber-400 text-white shadow-md ring-1 ring-amber-400"
+                      ? "bg-amber-500/15 border-amber-400 text-white shadow-md ring-1 ring-amber-400"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-amber-300">⚡ Groq LPU</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Zap className="h-3.5 w-3.5 text-amber-400" />
+                    <span className="text-xs font-bold text-amber-300">Groq LPU</span>
                   </div>
                   <p className="text-[10px] text-zinc-400">Fastest (0.5s)</p>
                 </button>
@@ -340,12 +349,13 @@ export default function SettingsPage() {
                   onClick={() => setAiProvider("gemini")}
                   className={`rounded-xl p-3 text-left border transition-all ${
                     aiProvider === "gemini"
-                      ? "bg-violet-600/25 border-violet-400 text-white shadow-md ring-1 ring-violet-400"
+                      ? "bg-violet-600/20 border-violet-400 text-white shadow-md ring-1 ring-violet-400"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-violet-300">✨ Gemini</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Cpu className="h-3.5 w-3.5 text-violet-400" />
+                    <span className="text-xs font-bold text-violet-300">Gemini 2.0</span>
                   </div>
                   <p className="text-[10px] text-zinc-400">Deep Reasoning</p>
                 </button>
@@ -355,14 +365,15 @@ export default function SettingsPage() {
                   onClick={() => setAiProvider("mock")}
                   className={`rounded-xl p-3 text-left border transition-all ${
                     aiProvider === "mock"
-                      ? "bg-emerald-600/20 border-emerald-400 text-white shadow-md ring-1 ring-emerald-400"
+                      ? "bg-emerald-600/15 border-emerald-400 text-white shadow-md ring-1 ring-emerald-400"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-emerald-300">💻 Offline</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <HardDrive className="h-3.5 w-3.5 text-emerald-400" />
+                    <span className="text-xs font-bold text-emerald-300">Offline</span>
                   </div>
-                  <p className="text-[10px] text-zinc-400">No Key Needed</p>
+                  <p className="text-[10px] text-zinc-400">Local Heuristic</p>
                 </button>
               </div>
               <p className="text-[10px] text-zinc-500">
@@ -381,12 +392,13 @@ export default function SettingsPage() {
                   onClick={() => setTranscriberProvider("deepgram")}
                   className={`rounded-xl p-3 text-left border transition-all ${
                     transcriberProvider === "deepgram"
-                      ? "bg-cyan-500/20 border-cyan-400 text-white shadow-md ring-1 ring-cyan-400"
+                      ? "bg-cyan-500/15 border-cyan-400 text-white shadow-md ring-1 ring-cyan-400"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-cyan-300">🎙️ Deepgram</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Mic className="h-3.5 w-3.5 text-cyan-400" />
+                    <span className="text-xs font-bold text-cyan-300">Deepgram</span>
                   </div>
                   <p className="text-[10px] text-zinc-400">Lightning Fast</p>
                 </button>
@@ -396,14 +408,15 @@ export default function SettingsPage() {
                   onClick={() => setTranscriberProvider("auto")}
                   className={`rounded-xl p-3 text-left border transition-all ${
                     transcriberProvider === "auto"
-                      ? "bg-violet-600/25 border-violet-400 text-white shadow-md ring-1 ring-violet-400"
+                      ? "bg-violet-600/20 border-violet-400 text-white shadow-md ring-1 ring-violet-400"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-violet-300">🔄 Auto</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <RefreshCw className="h-3.5 w-3.5 text-violet-400" />
+                    <span className="text-xs font-bold text-violet-300">Auto Hybrid</span>
                   </div>
-                  <p className="text-[10px] text-zinc-400">Smart Fallback</p>
+                  <p className="text-[10px] text-zinc-400">Smart Failover</p>
                 </button>
 
                 <button
@@ -411,16 +424,18 @@ export default function SettingsPage() {
                   onClick={() => setTranscriberProvider("whisper")}
                   className={`rounded-xl p-3 text-left border transition-all ${
                     transcriberProvider === "whisper"
-                      ? "bg-emerald-600/20 border-emerald-400 text-white shadow-md ring-1 ring-emerald-400"
+                      ? "bg-emerald-600/15 border-emerald-400 text-white shadow-md ring-1 ring-emerald-400"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-emerald-300">🖥️ Whisper</span>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Cpu className="h-3.5 w-3.5 text-emerald-400" />
+                    <span className="text-xs font-bold text-emerald-300">Whisper Local</span>
                   </div>
-                  <p className="text-[10px] text-zinc-400">On-Device Local</p>
+                  <p className="text-[10px] text-zinc-400">On-Device</p>
                 </button>
               </div>
+
               <p className="text-[10px] text-zinc-500">
                 Deepgram delivers timestamp accuracy and handles background noise in seconds.
               </p>
@@ -831,16 +846,16 @@ export default function SettingsPage() {
               onClick={() => setDefaultFramingMode("crop_9_16")}
               className={`rounded-xl p-4 cursor-pointer border transition-all ${
                 defaultFramingMode === "crop_9_16"
-                  ? "bg-cyan-500/15 border-cyan-500 text-white shadow-lg shadow-cyan-500/10"
+                  ? "bg-violet-500/15 border-violet-500 text-white shadow-lg shadow-violet-500/10"
                   : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-lg">📱</span>
+                <Smartphone className="h-5 w-5 text-violet-400" />
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-white/10 text-zinc-300">Full 9:16</span>
               </div>
               <h4 className="text-xs font-bold text-white">Vertical Dynamic Crop</h4>
-              <p className="text-[11px] text-cyan-400 font-medium mt-0.5">TikTok & Reels</p>
+              <p className="text-[11px] text-violet-400 font-medium mt-0.5">TikTok & Reels</p>
               <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed">
                 Smart reframing that fills entire 9:16 vertical canvas.
               </p>
@@ -850,16 +865,16 @@ export default function SettingsPage() {
               onClick={() => setDefaultFramingMode("blur_fit_9_16")}
               className={`rounded-xl p-4 cursor-pointer border transition-all ${
                 defaultFramingMode === "blur_fit_9_16"
-                  ? "bg-cyan-500/15 border-cyan-500 text-white shadow-lg shadow-cyan-500/10"
+                  ? "bg-violet-500/15 border-violet-500 text-white shadow-lg shadow-violet-500/10"
                   : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-lg">🖼️</span>
+                <Maximize2 className="h-5 w-5 text-cyan-400" />
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">Best for Podcasts</span>
               </div>
               <h4 className="text-xs font-bold text-white">16:9 in 9:16 (Blurred Canvas)</h4>
-              <p className="text-[11px] text-cyan-400 font-medium mt-0.5">Podcasts & Gameplay</p>
+              <p className="text-[11px] text-cyan-400 font-medium mt-0.5">Podcasts & Interviews</p>
               <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed">
                 Keeps complete 16:9 widescreen video centered with an aesthetic frosted blurred background.
               </p>
@@ -869,20 +884,21 @@ export default function SettingsPage() {
               onClick={() => setDefaultFramingMode("original_16_9")}
               className={`rounded-xl p-4 cursor-pointer border transition-all ${
                 defaultFramingMode === "original_16_9"
-                  ? "bg-cyan-500/15 border-cyan-500 text-white shadow-lg shadow-cyan-500/10"
+                  ? "bg-violet-500/15 border-violet-500 text-white shadow-lg shadow-violet-500/10"
                   : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-lg">🖥️</span>
+                <Monitor className="h-5 w-5 text-emerald-400" />
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-white/10 text-zinc-300">Widescreen</span>
               </div>
               <h4 className="text-xs font-bold text-white">Native 16:9 Landscape</h4>
-              <p className="text-[11px] text-cyan-400 font-medium mt-0.5">YouTube & Twitter</p>
+              <p className="text-[11px] text-emerald-400 font-medium mt-0.5">YouTube & Twitter</p>
               <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed">
                 Preserves native landscape aspect ratio with zero vertical transformation.
               </p>
             </div>
+
           </div>
 
           {/* If Blurred Canvas is chosen, show Blur Ratio Controls */}

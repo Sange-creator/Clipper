@@ -20,7 +20,11 @@ import {
   Scissors,
   Trash2,
   AlertTriangle,
+  Smartphone,
+  Maximize2,
+  Monitor,
 } from "lucide-react";
+
 
 import { api } from "@/lib/api";
 import { ProjectDetailResponse, VideoInfo } from "@/lib/types";
@@ -457,11 +461,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   onClick={() => setFramingMode("crop_9_16")}
                   className={`rounded-xl p-2.5 text-left border transition-all ${
                     framingMode === "crop_9_16"
-                      ? "bg-cyan-500/20 border-cyan-400 text-white"
+                      ? "bg-violet-500/15 border-violet-400 text-white"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <p className="text-xs font-semibold">📱 9:16 Vertical</p>
+                  <div className="flex items-center gap-1.5">
+                    <Smartphone className="h-3.5 w-3.5 text-violet-400" />
+                    <p className="text-xs font-semibold">9:16 Vertical</p>
+                  </div>
                   <p className="text-[10px] text-zinc-400 mt-0.5">Crop & fill canvas</p>
                 </button>
                 <button
@@ -469,26 +476,33 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   onClick={() => setFramingMode("blur_fit_9_16")}
                   className={`rounded-xl p-2.5 text-left border transition-all ${
                     framingMode === "blur_fit_9_16"
-                      ? "bg-cyan-500/20 border-cyan-400 text-white"
+                      ? "bg-violet-500/15 border-violet-400 text-white"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <p className="text-xs font-semibold">🖼️ 16:9 Blurred</p>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">Fit with frosted blur</p>
+                  <div className="flex items-center gap-1.5">
+                    <Maximize2 className="h-3.5 w-3.5 text-cyan-400" />
+                    <p className="text-xs font-semibold">16:9 Frosted Blur</p>
+                  </div>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">Fit with canvas blur</p>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFramingMode("original_16_9")}
                   className={`rounded-xl p-2.5 text-left border transition-all ${
                     framingMode === "original_16_9"
-                      ? "bg-cyan-500/20 border-cyan-400 text-white"
+                      ? "bg-violet-500/15 border-violet-400 text-white"
                       : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <p className="text-xs font-semibold">🖥️ 16:9 Native</p>
+                  <div className="flex items-center gap-1.5">
+                    <Monitor className="h-3.5 w-3.5 text-emerald-400" />
+                    <p className="text-xs font-semibold">16:9 Landscape</p>
+                  </div>
                   <p className="text-[10px] text-zinc-400 mt-0.5">Landscape widescreen</p>
                 </button>
               </div>
+
 
               {framingMode === "blur_fit_9_16" && (
                 <div className="rounded-xl bg-black/40 border border-cyan-500/30 p-3 space-y-2">
