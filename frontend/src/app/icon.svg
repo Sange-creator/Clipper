@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B" />
+      <stop offset="100%" stop-color="#090A0F" />
+    </linearGradient>
+    <linearGradient id="iconPrism" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="50%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="iconSpark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#EF4444" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="18" fill="url(#iconBg)" stroke="#818CF8" stroke-width="1.5" stroke-opacity="0.4" />
+  <path d="M26 15 L50 30 C52 31.5 52 34.5 50 36 L26 51 C24 52.5 21 51 21 48 L21 18 C21 15 24 13.5 26 15 Z" fill="url(#iconPrism)" />
+  <circle cx="49" cy="18" r="3.5" fill="url(#iconSpark)" />
+  <circle cx="49" cy="18" r="1.5" fill="#FFFFFF" />
+</svg>

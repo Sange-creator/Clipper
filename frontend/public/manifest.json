@@ -1,0 +1,22 @@
+{
+  "name": "AI Video Clipper Pro",
+  "short_name": "Clipper Pro",
+  "description": "High-Retention Short-Form Discovery & Reframing Engine",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090e",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand-logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
