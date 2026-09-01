@@ -1,0 +1,33 @@
+[project]
+name = "clipper-backend"
+version = "0.1.0"
+description = "AI Video Clipper Platform Backend"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "sqlalchemy>=2.0.36",
+    "aiosqlite>=0.20.0",
+    "python-multipart>=0.0.19",
+    "httpx>=0.28.0",
+    "google-genai>=0.1.1",
+    "groq>=0.15.0",
+    "opencv-python-headless>=4.10.0.84",
+    "scenedetect>=0.6.4",
+    "numpy>=1.26.0",
+    "greenlet>=3.0.0",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
