@@ -40,20 +40,29 @@ export function StageProgress({ job }: StageProgressProps) {
     <div className="glass-panel rounded-2xl p-6 sm:p-8 space-y-6">
       {/* Header with progress */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-violet-400">
-              Pipeline Stage {currentStage} of 21
-            </span>
-            <span className="text-zinc-500">•</span>
-            <span className="text-xs text-zinc-400 capitalize">
-              {job.status === "processing" ? "Active" : job.status}
-            </span>
+        <div className="flex items-center gap-4">
+          <div className="relative flex-shrink-0">
+            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 opacity-40 blur" />
+            <div className="relative h-12 w-12 rounded-xl bg-[#0f1222] border border-violet-500/30 p-1.5 shadow-lg">
+              <img src="/logo.svg" alt="Clipper Pro" className="w-full h-full" />
+            </div>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            {job.stage_name}
-          </h2>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-violet-400">
+                Pipeline Stage {currentStage} of 21
+              </span>
+              <span className="text-zinc-500">•</span>
+              <span className="text-xs text-zinc-400 capitalize">
+                {job.status === "processing" ? "Active" : job.status}
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              {job.stage_name}
+            </h2>
+          </div>
         </div>
+
 
         <div className="flex items-center gap-4">
           <div className="text-right">

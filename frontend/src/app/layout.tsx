@@ -16,12 +16,16 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/favicon.ico" },
     ],
-    shortcut: "/icon.svg",
-    apple: "/apple-icon.svg",
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/apple-icon.svg" },
+    ],
   },
-
   manifest: "/manifest.json",
   openGraph: {
     type: "website",
@@ -46,9 +50,13 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <head>
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-icon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </head>
       <body className="min-h-screen bg-[#07090E] text-slate-100 antialiased selection:bg-violet-500 selection:text-white">
+
         <div className="relative min-h-screen flex flex-col">
           {/* Ambient Glow Orbs */}
           <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 glow-purple pointer-events-none z-0" />

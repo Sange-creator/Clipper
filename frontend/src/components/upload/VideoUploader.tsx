@@ -193,20 +193,24 @@ export function VideoUploader() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-600/10 border border-violet-500/20 text-violet-400 group-hover:scale-110 group-hover:bg-violet-600/20 transition-all duration-300 shadow-xl">
-              <UploadCloud className="h-8 w-8" />
+          <div className="flex flex-col items-center justify-center space-y-4 text-center py-2">
+            <div className="relative group/emblem">
+              <div className="absolute -inset-2 rounded-3xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 opacity-30 blur-lg group-hover/emblem:opacity-60 transition duration-500" />
+              <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-[#101322] border border-violet-500/30 p-2 shadow-2xl group-hover/emblem:scale-105 transition-transform duration-300">
+                <img src="/logo.svg" alt="Clipper Pro" className="w-full h-full" />
+              </div>
             </div>
             <div>
-              <p className="text-base font-semibold text-white">
-                Drag and drop your long-form video, or <span className="text-violet-400 underline underline-offset-4">browse</span>
+              <p className="text-base font-bold text-white">
+                Drag and drop your long-form video, or <span className="text-violet-400 underline underline-offset-4">browse files</span>
               </p>
-              <p className="text-xs text-zinc-400 mt-1">
-                Supports MP4, MOV, MKV, WebM up to 2GB • Podcasts, interviews, commentaries, documentaries
+              <p className="text-xs text-slate-400 mt-1.5 max-w-md mx-auto">
+                MP4, MOV, MKV, WebM • Automatic hook discovery, 9:16 smart reframing & animated captions
               </p>
             </div>
           </div>
         )}
+
       </div>
 
       {error && (

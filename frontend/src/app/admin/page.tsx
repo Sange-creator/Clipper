@@ -45,20 +45,28 @@ export default function AdminDashboardPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Link
             href="/"
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
+          <div className="relative flex-shrink-0">
+            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 opacity-40 blur" />
+            <div className="relative h-12 w-12 rounded-xl bg-[#0f1222] border border-violet-500/30 p-1.5 shadow-lg">
+              <img src="/logo.svg" alt="Clipper Pro" className="w-full h-full" />
+            </div>
+          </div>
           <div>
             <div className="flex items-center gap-2">
-              <Activity className="h-6 w-6 text-violet-400" />
-              <h1 className="text-2xl font-bold text-white">System Observability & Quality</h1>
+              <h1 className="text-2xl font-bold text-white tracking-tight">System Observability</h1>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Live Telemetry
+              </span>
             </div>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Live processing throughput, AI provider latency, clip acceptance metrics, and storage
+            <p className="text-xs text-slate-400 mt-0.5">
+              Real-time pipeline throughput, system hardware telemetry, AI latencies, and storage metrics
             </p>
           </div>
         </div>

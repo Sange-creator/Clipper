@@ -107,19 +107,23 @@ export function BatchUploader({ projectId, onUploadSuccess }: BatchUploaderProps
         />
 
         <div className="flex flex-col items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/25">
-            <Layers className="h-7 w-7 text-white" />
+          <div className="relative group/emblem">
+            <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 opacity-30 blur group-hover/emblem:opacity-60 transition duration-300" />
+            <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[#101322] border border-violet-500/30 p-2 shadow-xl group-hover/emblem:scale-105 transition-transform duration-300">
+              <img src="/logo.svg" alt="Clipper Pro" className="w-full h-full" />
+            </div>
           </div>
           <div className="space-y-1">
-            <p className="text-base font-semibold text-white">
-              Drop 20–30+ Videos or <span className="text-violet-400">Browse Files</span>
+            <p className="text-base font-bold text-white">
+              Drop 20–30+ Videos or <span className="text-violet-400 underline underline-offset-4">Browse Files</span>
             </p>
-            <p className="text-xs text-zinc-400">
-              Supports MP4, MOV, MKV, WebM up to 2GB per video
+            <p className="text-xs text-slate-400">
+              Supports MP4, MOV, MKV, WebM up to 2GB per video • Global Cross-Video Ranking
             </p>
           </div>
         </div>
       </div>
+
 
       {/* Queued Videos List */}
       {queue.length > 0 && (

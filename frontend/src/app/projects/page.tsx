@@ -112,15 +112,26 @@ export default function ProjectsListPage() {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-        <div>
-          <div className="flex items-center gap-2">
-            <Layers className="h-6 w-6 text-violet-400" />
-            <h1 className="text-2xl font-bold text-white">Project Workspaces</h1>
+        <div className="flex items-center gap-4">
+          <div className="relative flex-shrink-0">
+            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 opacity-40 blur" />
+            <div className="relative h-12 w-12 rounded-xl bg-[#0f1222] border border-violet-500/30 p-1.5 shadow-lg">
+              <img src="/logo.svg" alt="Clipper Pro" className="w-full h-full" />
+            </div>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
-            Batch process 20–30+ long videos with cross-video global candidate discovery
-          </p>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-white tracking-tight">Project Workspaces</h1>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                Batch Mode
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Batch process 20–30+ long videos with cross-video global candidate discovery
+            </p>
+          </div>
         </div>
+
 
         <div className="flex items-center gap-3">
           {projects.length > 0 && (
