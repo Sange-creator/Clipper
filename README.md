@@ -10,11 +10,40 @@ AI Video Clipper Pro is structured as a decoupled full-stack application designe
 
 ### Core Technology Stack
 
-- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, Lucide Icons, HTML5 Media APIs
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Radix UI Primitives, Lucide Icons
 - **Backend**: Python 3.11+, FastAPI, SQLAlchemy Async, SQLite / PostgreSQL, Pydantic V2
 - **Speech Recognition**: Deepgram Nova-3 API (Word-level timestamps, speaker diarization) with local Faster-Whisper fallback
 - **Reasoning Engine**: Groq LPU (Llama 3), Google Gemini 2.0 Flash (Multimodal reasoning), and deterministic heuristic fallback
 - **Media Processing**: FFmpeg 7+ / 9.0 Pro, OpenCV, PySceneDetect
+
+---
+
+## Multi-Device & Canvas Format Support
+
+AI Video Clipper Pro provides native, responsive multi-format rendering across Mobile, Tablet, and Desktop screens.
+
+![AI Video Clipper Pro Multi-Format UI Showcase](docs/assets/multi_format_ui_showcase.jpg)
+
+### Supported Canvas Formats
+
+| Format Mode | Aspect Ratio | Target Resolution | Primary Use Case | Output Characteristics |
+|:---|:---|:---|:---|:---|
+| **Mobile Short-Form** | 9:16 Vertical | 1080 x 1920 | TikTok, Reels, Shorts | Full vertical crop, face/subject focal tracking, animated karaoke captions. |
+| **Tablet / Frosted Blur** | 16:9 in 9:16 | 1080 x 1920 | Podcasts, Interviews | 100% widescreen fit centered over a dynamic Gaussian-blurred video canvas. |
+| **Desktop / Widescreen** | 16:9 Native | 1920 x 1080 | YouTube, Twitter/X | Preserves source resolution without vertical crop or frame distortion. |
+
+#### 1. Mobile (9:16 Full Vertical)
+- **Target Platforms**: TikTok, Instagram Reels, YouTube Shorts
+- **Framing Engine**: Dynamic subject tracking centers speakers and crops horizontal excess.
+- **Safe-Zones**: Subtitles and visual hooks avoid bottom tab bars and right-side interactive engagement buttons (Like, Comment, Share).
+
+#### 2. iPad & Tablet (16:9 in 9:16 Blurred Canvas)
+- **Target Use Cases**: Multi-speaker podcasts, software demonstrations, widescreen interviews.
+- **Frosted Blur Engine**: Renders uncropped 16:9 video centered with a background Gaussian blur layer (customizable from 5px to 60px) and a 35% luminosity dim.
+
+#### 3. Web & Desktop (16:9 Native Landscape)
+- **Target Use Cases**: Standard desktop browsers, YouTube long-form, Twitter/X feeds.
+- **Zero Transformation**: Direct high-bitrate clipping with burned-in subtitles positioned within the lower-third.
 
 ---
 
@@ -86,105 +115,33 @@ To guarantee uninterrupted processing regardless of rate limits or service outag
 
 ---
 
-## Framing and Captioning Capabilities
-
-### Video Reframing Modes
-- **9:16 Smart Center / Face Crop**: Vertical framing focusing on detected subjects.
-- **16:9 in 9:16 Blurred Background**: Preserves original 16:9 landscape aspect ratio centered within a 9:16 canvas, with user-configurable background gaussian blur radius (5px to 60px).
-- **16:9 Landscape Native**: Preserves original source dimensions.
-
-### Subtitle Rendering
-- **Karaoke Word-Level Highlighting**: Word-by-word active syllable emphasis.
-- **Configurable Vertical Placement**: Subtitle vertical position slider (15% to 88% screen height) with one-click presets (Top, Upper-Middle, Center, Lower-Third, Bottom).
-- **Styling Presets**: Bold Yellow, Neon Cyan, Classic White, Minimal Boxed, and Subtitle-Free export.
-
----
-
 ## Project Structure
 
 ```
 Clipper/
 |-- backend/
 |   |-- app/
-|   |   |-- api/
-|   |   |   |-- routes/
-|   |   |   |   |-- admin.py
-|   |   |   |   |-- clips.py
-|   |   |   |   |-- export.py
-|   |   |   |   |-- jobs.py
-|   |   |   |   |-- media.py
-|   |   |   |   |-- projects.py
-|   |   |   |   |-- settings.py
-|   |   |   |   `-- upload.py
-|   |   |   |-- schemas.py
-|   |   |   `-- router.py
-|   |   |-- core/
-|   |   |   |-- database.py
-|   |   |   `-- models.py
+|   |   |-- api/routes/          # REST endpoints (upload, jobs, clips, settings, admin)
+|   |   |-- core/                # Database configuration, SQLite schema, SQLAlchemy models
 |   |   |-- services/
-|   |   |   |-- ai/
-|   |   |   |   |-- base.py
-|   |   |   |   |-- factory.py
-|   |   |   |   |-- gemini.py
-|   |   |   |   |-- groq.py
-|   |   |   |   |-- mock.py
-|   |   |   |   `-- prompt_templates.py
-|   |   |   |-- audio/
-|   |   |   |   |-- audio_service.py
-|   |   |   |   |-- deepgram.py
-|   |   |   |   `-- whisper.py
-|   |   |   |-- media/
-|   |   |   |   |-- captioner.py
-|   |   |   |   |-- ffmpeg_service.py
-|   |   |   |   |-- face_detector.py
-|   |   |   |   |-- scene_detector.py
-|   |   |   |   `-- silence_detector.py
-|   |   |   `-- pipeline/
-|   |   |       |-- candidate_discovery.py
-|   |   |       |-- context_expansion.py
-|   |   |       |-- deduplication.py
-|   |   |       |-- duration_enforcer.py
-|   |   |       |-- global_ranking.py
-|   |   |       |-- pipeline.py
-|   |   |       |-- regenerator.py
-|   |   |       `-- scoring.py
-|   |   |-- utils/
-|   |   |   `-- storage.py
-|   |   |-- config.py
-|   |   `-- main.py
-|   |-- tests/
-|   `-- pyproject.toml
+|   |   |   |-- ai/              # Resilient AI engine (Groq, Gemini, Local Heuristics)
+|   |   |   |-- audio/           # Speech-to-text (Deepgram Nova-3, Faster-Whisper)
+|   |   |   |-- media/           # FFmpeg rendering, scene detection, subtitle burn-in
+|   |   |   `-- pipeline/        # 21-stage deterministic orchestration & candidate scoring
+|   |   `-- main.py              # FastAPI application entrypoint
+|   `-- tests/                   # Pytest test suite
 |-- frontend/
-|   |-- public/
-|   |   |-- icon.svg
-|   |   |-- logo.svg
-|   |   `-- brand-logo.jpg
+|   |-- public/                  # Static assets, brand logos, favicons, web manifest
 |   |-- src/
-|   |   |-- app/
-|   |   |   |-- admin/page.tsx
-|   |   |   |-- clips/[id]/page.tsx
-|   |   |   |-- history/page.tsx
-|   |   |   |-- jobs/[id]/page.tsx
-|   |   |   |-- projects/page.tsx
-|   |   |   |-- projects/[id]/page.tsx
-|   |   |   |-- settings/page.tsx
-|   |   |   |-- globals.css
-|   |   |   |-- layout.tsx
-|   |   |   `-- page.tsx
+|   |   |-- app/                 # Next.js 15 App Router pages & server routes
 |   |   |-- components/
-|   |   |   |-- history/
-|   |   |   |-- layout/
-|   |   |   |-- processing/
-|   |   |   |-- review/
-|   |   |   |-- ui/
-|   |   |   `-- upload/
-|   |   `-- lib/
-|   |       |-- api.ts
-|   |       `-- utils.ts
-|   |-- package.json
-|   |-- next.config.ts
-|   `-- tailwind.config.ts
-`-- README.md
+|   |   |   |-- ui/              # shadcn/ui components (buttons, badges, cards, sliders)
+|   |   |   |-- upload/          # Single and batch video drag-and-drop wizards
+|   |   |   |-- processing/      # 21-stage live progress monitor & log telemetry
+|   |   |   `-- review/          # Clip workstation, timeline scrubber, player safe-zone
+|   |   `-- lib/                 # Type definitions, API client, utility functions
+|   `-- tailwind.config.ts       # shadcn/ui design tokens & zinc dark theme
+`-- docs/assets/                 # Architecture diagrams and UI preview assets
 ```
 
 ---
@@ -243,53 +200,11 @@ The web application is accessible at `http://localhost:3000` (or `http://localho
 
 ---
 
-## API Reference
+## Live Deployments
 
-### Video & Ingestion
-- `POST /api/upload`: Upload video file and extract media metadata.
-- `GET /api/videos`: List all registered source videos.
-- `GET /api/videos/{id}`: Fetch video metadata and associated jobs.
-
-### Jobs & Pipeline Execution
-- `POST /api/jobs`: Dispatch a new asynchronous video clipping job.
-- `GET /api/jobs`: Query active and past pipeline executions.
-- `GET /api/jobs/{id}`: Real-time status, progress percentage, and log history.
-- `GET /api/jobs/{id}/clips`: Retrieve rendered clips for a specific job.
-
-### Clip Workstation & Trimming
-- `GET /api/clips/{id}`: Detailed clip metrics, transcript context, and AI scores.
-- `POST /api/clips/{id}/regenerate`: Fine-tune start and end timestamps and re-render clip.
-- `POST /api/clips/{id}/favorite`: Toggle favorite bookmark state.
-
-### Export & Archiving
-- `GET /api/export/clip/{id}`: Single clip bundle download (.mp4, .srt, .ass, metadata.json).
-- `GET /api/export/clip/{id}/mp4`: Direct MP4 video stream.
-- `GET /api/export/job/{id}/batch`: Batch ZIP archive of all rendered clips in a job.
-- `POST /api/export/clips/batch`: Multi-selection custom ZIP archive download.
-
-### Settings & Admin
-- `GET /api/settings`: Fetch current provider configurations and masked keys.
-- `POST /api/settings`: Update API keys, framing preferences, and default styles.
-- `POST /api/settings/test`: Validate credentials against remote AI APIs.
-- `GET /api/admin/metrics`: Pipeline throughput, error rates, and system telemetry.
-
----
-
-## Testing
-
-Run the backend test suite:
-
-```bash
-cd backend
-pytest
-```
-
-Run frontend linting and type verification:
-
-```bash
-cd frontend
-npm run build
-```
+- **Production Frontend**: [https://ai-clipper-pro.vercel.app](https://ai-clipper-pro.vercel.app)
+- **Secondary Domain**: [https://clipper-ai-pro.vercel.app](https://clipper-ai-pro.vercel.app)
+- **Source Code**: [https://github.com/Sange-creator/Clipper](https://github.com/Sange-creator/Clipper)
 
 ---
 
