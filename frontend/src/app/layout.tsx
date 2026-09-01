@@ -49,6 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
@@ -56,6 +57,7 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
       <body className="min-h-screen bg-[#07090E] text-slate-100 antialiased selection:bg-violet-500 selection:text-white">
+
 
         <div className="relative min-h-screen flex flex-col">
           {/* Ambient Glow Orbs */}
