@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   UploadCloud,
@@ -23,6 +23,8 @@ import {
   Flame,
   Eraser,
   Wand2,
+  CheckCircle2,
+  FolderOpen,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
@@ -32,6 +34,7 @@ import { CaptionStyleType, VideoInfo } from "@/lib/types";
 export function VideoUploader() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropzoneRef = useRef<HTMLDivElement>(null);
 
   // Upload state
   const [file, setFile] = useState<File | null>(null);
@@ -40,6 +43,14 @@ export function VideoUploader() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [uploadedVideo, setUploadedVideo] = useState<VideoInfo | null>(null);
+  const [highlightDropzone, setHighlightDropzone] = useState(false);
+  const [recentVideos, setRecentVideos] = useState<VideoInfo[]>([]);
+
+  useEffect(() => {
+    api.getRecentVideos(15).then((vids) => {
+      if (Array.isArray(vids)) setRecentVideos(vids);
+    }).catch(() => {});
+  }, []);
 
   // V3 Configuration Presets
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
@@ -103,7 +114,14 @@ export function VideoUploader() {
   };
 
   const handleStartProcessing = async () => {
-    if (!uploadedVideo) return;
+    if (!uploadedVideo) {
+      setError("Please select or drop a video file first to discover clips.");
+      setHighlightDropzone(true);
+      setTimeout(() => setHighlightDropzone(false), 3000);
+      dropzoneRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      fileInputRef.current?.click();
+      return;
+    }
     setIsLaunching(true);
     setError(null);
 
@@ -142,12 +160,15 @@ export function VideoUploader() {
     <div className="w-full max-w-4xl mx-auto space-y-8">
       {/* Upload Dropzone */}
       <div
+        ref={dropzoneRef}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => !file && fileInputRef.current?.click()}
         className={`relative group cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed p-8 sm:p-12 transition-all duration-300 ${
-          isDragging
+          highlightDropzone
+            ? "border-amber-400 bg-amber-500/15 ring-4 ring-amber-400/50 scale-[1.02]"
+            : isDragging
             ? "border-violet-500 bg-violet-500/10 scale-[1.01]"
             : file
             ? "border-emerald-500/40 bg-emerald-500/[0.02]"
@@ -225,6 +246,36 @@ export function VideoUploader() {
                 MP4, MOV, MKV, WebM • Automatic hook discovery, 9:16 smart reframing & animated captions
               </p>
             </div>
+
+            {!file && !isUploading && recentVideos.length > 0 && (
+              <div
+                className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="text-[11px] text-zinc-400 font-medium">Or pick existing from library:</span>
+                <select
+                  onChange={(e) => {
+                    const vid = recentVideos.find((v) => v.id === e.target.value);
+                    if (vid) {
+                      setUploadedVideo(vid);
+                      setFile({ name: vid.filename } as any);
+                      setError(null);
+                    }
+                  }}
+                  defaultValue=""
+                  className="rounded-lg bg-zinc-900 border border-white/20 px-3 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-violet-500 max-w-xs truncate cursor-pointer hover:border-white/30 transition-colors"
+                >
+                  <option value="" disabled>
+                    Select from {recentVideos.length} recent library videos...
+                  </option>
+                  {recentVideos.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      {v.filename} ({v.duration_seconds ? v.duration_seconds.toFixed(0) + "s" : "video"})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         )}
 
@@ -237,8 +288,8 @@ export function VideoUploader() {
         </div>
       )}
 
-      {/* Preset & Optimization Options (Enabled once file uploaded) */}
-      <div className={`space-y-6 transition-all duration-300 ${uploadedVideo ? "opacity-100" : "opacity-60 pointer-events-none"}`}>
+      {/* Preset & Optimization Options */}
+      <div className="space-y-6 transition-all duration-300">
         <div className="flex items-center gap-2 text-white font-semibold text-sm">
           <Sliders className="h-4 w-4 text-violet-400" />
           <span>Clipping Mode & AI Settings</span>
@@ -894,25 +945,56 @@ export function VideoUploader() {
           />
         </div>
 
-        {/* Launch Button */}
-        <div className="flex justify-end pt-2">
-          <button
-            onClick={handleStartProcessing}
-            disabled={!uploadedVideo || isLaunching}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-3.5 font-semibold text-white shadow-xl shadow-violet-500/25 hover:from-violet-500 hover:to-indigo-500 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          >
-            {isLaunching ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Launching 21-Stage Pipeline...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" />
-                <span>Discover & Render {mode === "podcast" ? "Podcast" : "Viral"} Clips</span>
-              </>
-            )}
-          </button>
+        {/* Launch Button Area */}
+        <div className="space-y-4 pt-4 border-t border-white/10">
+          {error && (
+            <div className="flex items-center gap-3 rounded-xl bg-rose-500/10 border border-rose-500/30 p-4 text-xs text-rose-300 animate-in fade-in">
+              <AlertCircle className="h-4 w-4 flex-shrink-0 text-rose-400" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs">
+              {uploadedVideo ? (
+                <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                  <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+                  <span>
+                    Ready to clip: <strong className="text-white">{uploadedVideo.filename}</strong> (
+                    {uploadedVideo.duration_seconds ? uploadedVideo.duration_seconds.toFixed(0) + "s" : "ready"})
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-amber-300/90 font-medium">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0 text-amber-400" />
+                  <span>No video selected yet. Click button to choose file or pick from library above.</span>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={handleStartProcessing}
+              disabled={isLaunching}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-3.5 font-semibold text-white shadow-xl shadow-violet-500/25 hover:from-violet-500 hover:to-indigo-500 active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer"
+            >
+              {isLaunching ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Launching 21-Stage Pipeline...</span>
+                </>
+              ) : uploadedVideo ? (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  <span>Discover & Render {mode === "podcast" ? "Podcast" : "Viral"} Clips</span>
+                </>
+              ) : (
+                <>
+                  <UploadCloud className="h-4 w-4" />
+                  <span>Select Video & Discover Clips</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

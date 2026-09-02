@@ -11,6 +11,7 @@ import {
   SettingsResponse,
   SettingsUpdateRequest,
   TestApiKeyResponse,
+  VideoInfo,
   VideoUploadResponse,
 } from "./types";
 
@@ -18,6 +19,16 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
 
 export const api = {
   // Video uploads
+  async getRecentVideos(limit = 10): Promise<VideoInfo[]> {
+    try {
+      const res = await fetch(`${API_BASE}/upload/recent?limit=${limit}`);
+      if (!res.ok) return [];
+      return res.json();
+    } catch {
+      return [];
+    }
+  },
+
   async uploadVideo(file: File): Promise<VideoUploadResponse> {
     const formData = new FormData();
     formData.append("file", file);

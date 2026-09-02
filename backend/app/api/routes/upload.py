@@ -3,6 +3,7 @@
 import logging
 import shutil
 from pathlib import Path
+from typing import List
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,6 +18,34 @@ from app.utils.storage import get_media_url, sanitize_filename
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/upload", tags=["Upload"])
+
+
+@router.get("/recent", response_model=List[VideoInfo])
+async def get_recent_videos(
+    limit: int = 10,
+    db: AsyncSession = Depends(get_db),
+):
+    """Retrieve recently uploaded videos from library."""
+    result = await db.execute(
+        select(Video).order_by(Video.created_at.desc()).limit(limit)
+    )
+    videos = result.scalars().all()
+    return [
+        VideoInfo(
+            id=v.id,
+            filename=v.filename,
+            duration_seconds=v.duration_seconds,
+            width=v.width,
+            height=v.height,
+            fps=v.fps,
+            video_codec=v.video_codec,
+            audio_codec=v.audio_codec,
+            file_size_bytes=v.file_size_bytes,
+            created_at=v.created_at,
+            video_url=get_media_url(v.file_path),
+        )
+        for v in videos
+    ]
 
 
 @router.post("", response_model=VideoUploadResponse)
