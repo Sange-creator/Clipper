@@ -36,7 +36,7 @@ export function ClipCard({ clip, rank }: ClipCardProps) {
       <Link href={`/clips/${clip.id}`} className="block relative aspect-[9/16] bg-black/80 overflow-hidden">
         {clip.thumbnail_url && !imgError ? (
           <img
-            src={clip.thumbnail_url}
+            src={api.getMediaUrl(clip.thumbnail_url)}
             alt={displayTitle}
             onError={() => setImgError(true)}
             className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"

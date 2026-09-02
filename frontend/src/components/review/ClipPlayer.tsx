@@ -18,6 +18,7 @@ import {
   Music,
 } from "lucide-react";
 
+import { api } from "@/lib/api";
 import { formatTimecode } from "@/lib/utils";
 
 interface ClipPlayerProps {
@@ -44,8 +45,21 @@ export function ClipPlayer({ videoUrl, thumbnailUrl, onTimeUpdate, duration }: C
       videoRef.current.pause();
       setIsPlaying(false);
     } else {
-      videoRef.current.play();
-      setIsPlaying(true);
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.warn("Audio autoplay blocked or playback failed, attempting muted:", err);
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              setIsMuted(true);
+              videoRef.current.play().then(() => setIsPlaying(true)).catch((e) => {
+                console.error("Video play failed:", e);
+              });
+            }
+          });
+      }
     }
   };
 
@@ -83,16 +97,21 @@ export function ClipPlayer({ videoUrl, thumbnailUrl, onTimeUpdate, duration }: C
     setPlaybackRate(nextSpeed);
   };
 
+  const resolvedVideoSrc = api.getMediaUrl(videoUrl);
+  const resolvedPoster = api.getMediaUrl(thumbnailUrl) || undefined;
+
   return (
     <div className="flex flex-col items-center space-y-4">
       {/* 9:16 Video Player Frame */}
       <div className="relative group overflow-hidden rounded-3xl border-2 border-white/10 bg-black shadow-2xl video-container-9-16 flex items-center justify-center">
         <video
           ref={videoRef}
-          src={videoUrl}
-          poster={thumbnailUrl || undefined}
+          src={resolvedVideoSrc}
+          poster={resolvedPoster}
           loop={isLooping}
           playsInline
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
           onEnded={() => setIsPlaying(false)}

@@ -9,7 +9,7 @@ from app.config import settings
 router = APIRouter(prefix="/api/media", tags=["Media"])
 
 
-@router.get("/{file_path:path}")
+@router.api_route("/{file_path:path}", methods=["GET", "HEAD"])
 async def stream_media_file(
     file_path: str,
     request: Request,
@@ -17,12 +17,22 @@ async def stream_media_file(
 ):
     """
     Streams media files (MP4, JPG, ASS, SRT) from storage.
-    Supports HTTP 206 Partial Content for instant video player scrubbing.
+    Supports HTTP HEAD requests for browser preflight and HTTP 206 Partial Content for instant video player scrubbing.
     """
-    full_path = (settings.DATA_DIR / file_path).resolve()
+    clean_path = file_path.strip().lstrip("/")
+    full_path = (settings.DATA_DIR / clean_path).resolve()
 
-    # Prevent directory traversal outside data dir
-    if not str(full_path).startswith(str(settings.DATA_DIR.resolve())):
+    # If not found directly, search in specific data subdirectories
+    if not full_path.exists() or not full_path.is_file():
+        filename = Path(clean_path).name
+        for sub in [settings.PROCESSED_DIR, settings.UPLOAD_DIR, settings.THUMBNAIL_DIR, settings.SUBTITLE_DIR]:
+            candidate = (sub / filename).resolve()
+            if candidate.exists() and candidate.is_file():
+                full_path = candidate
+                break
+
+    # Security: Ensure resolved path is within project directory
+    if not str(full_path).startswith(str(settings.BASE_DIR.resolve())):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied.")
 
     if not full_path.exists() or not full_path.is_file():
@@ -43,11 +53,26 @@ async def stream_media_file(
     elif ext == ".ass":
         content_type = "text/plain; charset=utf-8"
 
+    # Handle HEAD request for browser HTML5 video capability probing
+    if request.method == "HEAD":
+        return Response(
+            status_code=status.HTTP_200_OK,
+            headers={
+                "Accept-Ranges": "bytes",
+                "Content-Length": str(file_size),
+                "Content-Type": content_type,
+                "Access-Control-Allow-Origin": "*",
+            },
+        )
+
     if not range:
         return FileResponse(
             str(full_path),
             media_type=content_type,
-            headers={"Accept-Ranges": "bytes"},
+            headers={
+                "Accept-Ranges": "bytes",
+                "Access-Control-Allow-Origin": "*",
+            },
         )
 
     # Parse Range Header (e.g. bytes=0-1048576)

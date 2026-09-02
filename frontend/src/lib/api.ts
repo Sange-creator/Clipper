@@ -286,6 +286,15 @@ export const api = {
     return res.json();
   },
 
+  // Media Streaming & Asset URLs
+  getMediaUrl(url: string | null | undefined): string {
+    if (!url) return "";
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    const cleanUrl = url.startsWith("/") ? url : `/${url}`;
+    const baseOrigin = API_BASE.replace(/\/api\/?$/, "");
+    return `${baseOrigin}${cleanUrl}`;
+  },
+
   // Export URLs
   getDirectMp4Url(clipId: string): string {
     return `${API_BASE}/export/clip/${clipId}/mp4`;
