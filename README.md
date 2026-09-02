@@ -4,22 +4,7 @@ Production-grade AI video clipping and short-form discovery platform that conver
 
 ---
 
-## Real Application Interface
-
-### Desktop Web Workstation
-![AI Video Clipper Pro Desktop Interface](docs/assets/ui-desktop.png)
-
-### Multi-Device Responsive Support (iPad & Mobile)
-
-| iPad / Tablet View (820px) | Mobile View (390px) |
-| :---: | :---: |
-| ![Tablet View](docs/assets/ui-tablet.png) | ![Mobile View](docs/assets/ui-mobile.png) |
-
-### System Settings & Multi-Video Workspaces
-
-| AI Engine & Failover Configuration | Project Workspaces Batch Hub |
-| :---: | :---: |
-| ![Settings Hub](docs/assets/ui-settings.png) | ![Workspaces Hub](docs/assets/ui-workspaces.png) |
+![AI Video Clipper Pro Multi-Device Showcase](docs/assets/clipper_3devices_showcase.jpg)
 
 ---
 
@@ -156,7 +141,7 @@ Clipper/
 |   |   |   `-- review/          # Clip workstation, timeline scrubber, player safe-zone
 |   |   `-- lib/                 # Type definitions, API client, utility functions
 |   `-- tailwind.config.ts       # shadcn/ui design tokens & zinc dark theme
-`-- docs/assets/                 # Real application UI screenshots & architecture assets
+`-- docs/assets/                 # Architecture diagrams and UI preview assets
 ```
 
 ---
