@@ -173,7 +173,7 @@ class ProjectProcessRequest(BaseModel):
     mode: Optional[Literal["podcast", "viral_moments"]] = None
     target_clips_count: int = Field(default=20, ge=1, le=100)
     duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "30-45s"
-    caption_style: Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"] = "bold_yellow"
+    caption_style: str = "bold_yellow"
     burn_captions: bool = True
     remove_dead_air: bool = True
     framing_mode: Literal["crop_9_16", "blur_fit_9_16", "original_16_9"] = "crop_9_16"
@@ -200,7 +200,7 @@ class JobCreateRequest(BaseModel):
     min_duration: Optional[float] = None
     max_duration: Optional[float] = None
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
-    caption_style: Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"] = "bold_yellow"
+    caption_style: str = "bold_yellow"
     burn_captions: bool = True
     remove_dead_air: bool = True
     framing_mode: Literal["crop_9_16", "blur_fit_9_16", "original_16_9"] = "crop_9_16"
@@ -235,7 +235,7 @@ class JobStatusResponse(BaseModel):
 class ClipEditRequest(BaseModel):
     start_time: float
     end_time: float
-    caption_style: Optional[Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"]] = None
+    caption_style: Optional[str] = None
     burn_captions: bool = True
     remove_dead_air: bool = True
     framing_mode: Optional[Literal["crop_9_16", "blur_fit_9_16", "original_16_9"]] = None
@@ -251,7 +251,7 @@ class ClipEditRequest(BaseModel):
 
 class ClipRegenerateRequest(BaseModel):
     intent: Literal["stronger_hook", "shorter_duration", "longer_context", "different_payoff", "style_change"]
-    caption_style: Optional[Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon"]] = None
+    caption_style: Optional[str] = None
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     add_hook_header: Optional[bool] = None
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
@@ -271,7 +271,7 @@ class UserFeedbackCreate(BaseModel):
 class BulkClipActionRequest(BaseModel):
     clip_ids: List[str]
     action: Literal["apply_style", "render", "reject", "favorite", "delete"]
-    caption_style: Optional[Literal["clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon"]] = None
+    caption_style: Optional[str] = None
 
 
 class AdminMetricsResponse(BaseModel):
