@@ -56,6 +56,11 @@ class Settings(BaseSettings):
     DEFAULT_FRAMING_MODE: str = "crop_9_16"  # "crop_9_16", "blur_fit_9_16", "original_16_9"
     DEFAULT_BLUR_RADIUS: int = 30  # 10 (Light), 30 (Medium), 50 (Heavy), 80 (Ultra)
     DEFAULT_SUBTITLE_POSITION: int = 75  # 10% (Top) to 90% (Bottom), default 75% (Lower-Third)
+    DEFAULT_ADD_HOOK_HEADER: bool = False  # Add sticky persistent TikTok hook title throughout video
+    DEFAULT_HOOK_HEADER_POSITION: int = 12  # 8% (Top Banner) to 90% (Bottom), default 12%
+    DEFAULT_REMOVE_WATERMARK: bool = False
+    DEFAULT_WATERMARK_POSITION: str = "top_right"  # "top_right", "bottom_right", "top_left", "bottom_left"
+    DEFAULT_ENHANCE_QUALITY: bool = True
     TARGET_WIDTH: int = 1080
     TARGET_HEIGHT: int = 1920
 

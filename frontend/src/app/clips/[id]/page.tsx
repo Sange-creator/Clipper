@@ -14,6 +14,7 @@ import {
   FileVideo,
   RefreshCw,
   ThumbsDown,
+  Image as ImageIcon,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { RenderedClipResponse } from "@/lib/types";
@@ -28,9 +29,10 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
   const clipId = resolvedParams.id;
 
   const [clip, setClip] = useState<RenderedClipResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isRegenerateOpen, setIsRegenerateOpen] = useState(false);
+  const [isRefreshingThumb, setIsRefreshingThumb] = useState(false);
 
   const fetchClip = async () => {
     try {
@@ -67,7 +69,32 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     }
   };
 
-  const handleRerender = async (startTime: number, endTime: number, framingMode?: string, blurRadius?: number, subtitlePosition?: number) => {
+  const handleRefreshThumbnail = async () => {
+    if (!clip) return;
+    setIsRefreshingThumb(true);
+    try {
+      const updated = await api.refreshThumbnail(clip.id);
+      setClip(updated);
+    } catch (err: any) {
+      alert(err.message || "Failed to refresh thumbnail preview");
+    } finally {
+      setIsRefreshingThumb(false);
+    }
+  };
+
+  const handleRerender = async (
+    startTime: number,
+    endTime: number,
+    framingMode?: string,
+    blurRadius?: number,
+    subtitlePosition?: number,
+    addHookHeader?: boolean,
+    hookHeaderPosition?: number,
+    hookHeaderText?: string,
+    removeWatermark?: boolean,
+    watermarkPosition?: string,
+    enhanceQuality?: boolean
+  ) => {
     if (!clip) return;
     const updated = await api.rerenderClip(clip.id, {
       start_time: startTime,
@@ -75,11 +102,15 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
       framing_mode: framingMode,
       blur_radius: blurRadius,
       subtitle_position: subtitlePosition,
+      add_hook_header: addHookHeader,
+      hook_header_position: hookHeaderPosition,
+      hook_header_text: hookHeaderText,
+      remove_watermark: removeWatermark,
+      watermark_position: watermarkPosition,
+      enhance_quality: enhanceQuality,
     });
     setClip(updated);
   };
-
-
 
   const handleRegenerate = async (intent: string, captionStyle?: string, note?: string) => {
     if (!clip) return;
@@ -87,6 +118,10 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
       intent,
       caption_style: captionStyle,
       custom_note: note,
+      subtitle_position: clip.subtitle_position,
+      add_hook_header: clip.add_hook_header,
+      hook_header_position: clip.hook_header_position,
+      hook_header_text: clip.hook_header_text || undefined,
     });
     setClip(updated);
   };
@@ -127,7 +162,7 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg sm:text-xl font-bold text-white line-clamp-1">
-                {clip.hook_text || clip.metadata.tiktok_title || "Clip Review Workstation"}
+                {clip.hook_header_text || clip.hook_text || clip.metadata.tiktok_title || "Clip Review Workstation"}
               </h1>
               <span className="rounded-md bg-violet-600/20 border border-violet-500/30 px-2 py-0.5 text-xs font-bold text-violet-300">
                 Score {clip.scores.composite_score.toFixed(0)}
@@ -140,6 +175,16 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={handleRefreshThumbnail}
+            disabled={isRefreshingThumb}
+            title="Refresh cover thumbnail from rendered video"
+            className="flex items-center gap-1.5 rounded-xl bg-white/[0.04] border border-white/10 px-3.5 py-2 text-xs font-semibold text-zinc-200 hover:text-white hover:bg-white/10 transition-all disabled:opacity-50"
+          >
+            <ImageIcon className={`h-3.5 w-3.5 text-amber-400 ${isRefreshingThumb ? "animate-spin" : ""}`} />
+            <span>{isRefreshingThumb ? "Refreshing..." : "Refresh Thumbnail"}</span>
+          </button>
+
           <button
             onClick={() => setIsRegenerateOpen(true)}
             className="flex items-center gap-1.5 rounded-xl bg-white/[0.04] border border-white/10 px-4 py-2 text-xs font-semibold text-zinc-200 hover:text-white hover:bg-white/10 transition-all"
@@ -215,6 +260,12 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
             initialFramingMode={clip.framing_mode}
             initialBlurRadius={clip.blur_radius}
             initialSubtitlePosition={clip.subtitle_position}
+            initialAddHookHeader={clip.add_hook_header}
+            initialHookHeaderPosition={clip.hook_header_position}
+            initialHookHeaderText={clip.hook_header_text || clip.hook_text}
+            initialRemoveWatermark={clip.remove_watermark}
+            initialWatermarkPosition={clip.watermark_position as any}
+            initialEnhanceQuality={clip.enhance_quality}
             onRerender={handleRerender}
           />
 

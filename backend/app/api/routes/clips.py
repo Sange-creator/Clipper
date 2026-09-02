@@ -108,6 +108,10 @@ async def list_all_clips(
                 aspect_ratio=clip.aspect_ratio,
                 framing_mode=getattr(clip, "framing_mode", "crop_9_16") or "crop_9_16",
                 blur_radius=getattr(clip, "blur_radius", 30) or 30,
+                subtitle_position=getattr(clip, "subtitle_position", 75) or 75,
+                add_hook_header=getattr(clip, "add_hook_header", False) or False,
+                hook_header_position=getattr(clip, "hook_header_position", 12) or 12,
+                hook_header_text=getattr(clip, "hook_header_text", None),
                 caption_style=clip.caption_style,
                 burn_captions=clip.burn_captions,
                 timeline_edit=timeline_data,
@@ -151,8 +155,8 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         shareability_score=cand.shareability_score if cand else 0.0,
         novelty_score=cand.novelty_score if cand else 0.0,
         quotability_score=cand.quotability_score if cand else 0.0,
-        standalone_score=cand.standalone_score if cand else 0.0,
-        rewatch_score=cand.rewatch_score if cand else 0.0,
+        standalone_score=getattr(cand, "standalone_score", 0.0) if cand else 0.0,
+        rewatch_score=getattr(cand, "rewatch_score", 0.0) if cand else 0.0,
         visual_score=cand.visual_score if cand else 0.0,
         audio_score=cand.audio_score if cand else 0.0,
         platform_score=cand.platform_score if cand else 0.0,
@@ -190,6 +194,12 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         framing_mode=getattr(clip, "framing_mode", "crop_9_16") or "crop_9_16",
         blur_radius=getattr(clip, "blur_radius", 30) or 30,
         subtitle_position=getattr(clip, "subtitle_position", 75) or 75,
+        add_hook_header=getattr(clip, "add_hook_header", False) or False,
+        hook_header_position=getattr(clip, "hook_header_position", 12) or 12,
+        hook_header_text=getattr(clip, "hook_header_text", None),
+        remove_watermark=getattr(clip, "remove_watermark", False) or False,
+        watermark_position=getattr(clip, "watermark_position", "top_right") or "top_right",
+        enhance_quality=getattr(clip, "enhance_quality", True) if getattr(clip, "enhance_quality", True) is not None else True,
         caption_style=clip.caption_style,
         burn_captions=clip.burn_captions,
         timeline_edit=timeline_data,
@@ -211,7 +221,7 @@ async def rerender_clip(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Manually edit boundaries and re-render clip without re-running AI discovery.
+    Manually edit boundaries, hook header, and layout, then re-render clip.
     """
     stmt = (
         select(RenderedClip)
@@ -239,6 +249,14 @@ async def rerender_clip(
     framing = req.framing_mode or getattr(clip, "framing_mode", "crop_9_16") or "crop_9_16"
     blur_r = req.blur_radius if req.blur_radius is not None else getattr(clip, "blur_radius", 30) or 30
     sub_pos = req.subtitle_position if req.subtitle_position is not None else getattr(clip, "subtitle_position", 75) or 75
+    add_hook = req.add_hook_header if req.add_hook_header is not None else getattr(clip, "add_hook_header", False)
+    hook_pos = req.hook_header_position if req.hook_header_position is not None else (getattr(clip, "hook_header_position", None) or 12)
+    hook_txt = req.hook_header_text or getattr(clip, "hook_header_text", None) or (clip.candidate.hook_text if clip.candidate else "") or ""
+    remove_wm = req.remove_watermark if req.remove_watermark is not None else getattr(clip, "remove_watermark", False)
+    wm_pos = req.watermark_position if req.watermark_position is not None else (getattr(clip, "watermark_position", None) or "top_right")
+    enhance = req.enhance_quality if req.enhance_quality is not None else getattr(clip, "enhance_quality", True)
+    if enhance is None:
+        enhance = True
 
     # Calculate dead air timeline cuts
     if req.remove_dead_air:
@@ -261,6 +279,12 @@ async def rerender_clip(
     clip.framing_mode = framing
     clip.blur_radius = blur_r
     clip.subtitle_position = sub_pos
+    clip.add_hook_header = add_hook
+    clip.hook_header_position = hook_pos
+    clip.hook_header_text = hook_txt if add_hook else None
+    clip.remove_watermark = remove_wm
+    clip.watermark_position = wm_pos
+    clip.enhance_quality = enhance
     clip.aspect_ratio = "16:9" if framing == "original_16_9" else "9:16"
     clip.timeline_edit_json = json.dumps(t_edit.model_dump())
 
@@ -272,7 +296,17 @@ async def rerender_clip(
 
     ass_path = settings.SUBTITLE_DIR / f"{clip.id}.ass"
     srt_path = settings.SUBTITLE_DIR / f"{clip.id}.srt"
-    captioner.generate_ass(segments, start_time, end_time, ass_path, style=style, subtitle_position=sub_pos)
+    captioner.generate_ass(
+        segments,
+        start_time,
+        end_time,
+        ass_path,
+        style=style,
+        subtitle_position=sub_pos,
+        add_hook_header=add_hook,
+        hook_header_text=hook_txt,
+        hook_header_position=hook_pos,
+    )
     captioner.generate_srt(segments, start_time, end_time, srt_path)
 
     out_video_path = settings.PROCESSED_DIR / f"{clip.id}.mp4"
@@ -290,10 +324,13 @@ async def rerender_clip(
         keep_intervals=t_edit.keep,
         framing_mode=framing,
         blur_radius=blur_r,
+        remove_watermark=remove_wm,
+        watermark_position=wm_pos,
+        enhance_quality=enhance,
     )
 
     thumb_path = settings.THUMBNAIL_DIR / f"{clip.id}.jpg"
-    await renderer.generate_thumbnail(video_path, start_time + 1.0, thumb_path)
+    await renderer.generate_thumbnail(out_video_path, 1.0, thumb_path)
 
     # Track manual edit feedback
     db.add(UserFeedback(clip_id=clip.id, action="manually_edited"))
@@ -301,6 +338,30 @@ async def rerender_clip(
     await db.commit()
     await db.refresh(clip)
 
+    return await get_clip(id, db)
+
+
+@router.post("/{id}/refresh-thumbnail", response_model=RenderedClipResponse)
+async def refresh_thumbnail(
+    id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """Re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered clip."""
+    stmt = select(RenderedClip).where(RenderedClip.id == id).options(selectinload(RenderedClip.candidate))
+    res = await db.execute(stmt)
+    clip = res.scalar_one_or_none()
+    if not clip:
+        raise HTTPException(status_code=404, detail="Clip not found")
+
+    out_video_path = Path(clip.video_path)
+    if not out_video_path.exists():
+        raise HTTPException(status_code=400, detail="Rendered clip video file does not exist")
+
+    thumb_path = settings.THUMBNAIL_DIR / f"{clip.id}.jpg"
+    await renderer.generate_thumbnail(out_video_path, 1.0, thumb_path)
+    clip.thumbnail_path = str(thumb_path)
+    await db.commit()
+    await db.refresh(clip)
     return await get_clip(id, db)
 
 
@@ -318,6 +379,12 @@ async def regenerate_clip(
         caption_style=req.caption_style,
         custom_note=req.custom_note,
         subtitle_position=req.subtitle_position,
+        add_hook_header=req.add_hook_header,
+        hook_header_position=req.hook_header_position,
+        hook_header_text=req.hook_header_text,
+        remove_watermark=req.remove_watermark,
+        watermark_position=req.watermark_position,
+        enhance_quality=req.enhance_quality,
     )
     # Track feedback
     db.add(UserFeedback(clip_id=id, action="regenerated", feedback_text=req.intent))

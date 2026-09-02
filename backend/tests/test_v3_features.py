@@ -89,3 +89,29 @@ async def test_mock_ai_provider_modes_and_v3_scores():
     assert cand.standalone_score > 0
     assert cand.rewatch_score > 0
     assert "viral_moments" in cand.reason
+
+
+def test_watermark_removal_filter_and_metadata_stripping():
+    """Test delogo coordinates for all corners and comprehensive metadata stripping args."""
+    from app.services.media.renderer import get_delogo_filter, METADATA_STRIP_ARGS
+
+    # Test top_right delogo
+    tr_filter = get_delogo_filter("top_right", 1920, 1080)
+    assert tr_filter.startswith("delogo=x=")
+    assert "show=0" in tr_filter
+
+    # Test other positions
+    br_filter = get_delogo_filter("bottom_right", 1920, 1080)
+    tl_filter = get_delogo_filter("top_left", 1920, 1080)
+    bl_filter = get_delogo_filter("bottom_left", 1920, 1080)
+
+    assert "delogo" in br_filter
+    assert "delogo" in tl_filter
+    assert "delogo" in bl_filter
+
+    # Verify all critical metadata strip flags are present
+    assert "-map_metadata" in METADATA_STRIP_ARGS
+    assert "-map_chapters" in METADATA_STRIP_ARGS
+    assert "+bitexact" in METADATA_STRIP_ARGS
+    assert "-write_id3v2" in METADATA_STRIP_ARGS
+    assert "0" in METADATA_STRIP_ARGS

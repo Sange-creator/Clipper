@@ -30,6 +30,12 @@ class ClipRegeneratorService:
         caption_style: Optional[str] = None,
         custom_note: Optional[str] = None,
         subtitle_position: Optional[int] = None,
+        add_hook_header: Optional[bool] = None,
+        hook_header_position: Optional[int] = None,
+        hook_header_text: Optional[str] = None,
+        remove_watermark: Optional[bool] = None,
+        watermark_position: Optional[str] = None,
+        enhance_quality: Optional[bool] = None,
     ) -> RenderedClip:
         """Apply strategic regeneration adjustments and re-render clip."""
         stmt = (
@@ -58,21 +64,20 @@ class ClipRegeneratorService:
 
         # Apply intent transformations
         if intent == "stronger_hook":
-            # Advance start by 2-3s past any setup or find punchier opening sentence
-            start_time = min(end_time - 10.0, start_time + 3.0)
+            # Trim leading 2-5 seconds or seek next punchy sentence boundary
+            start_time = min(end_time - 10.0, start_time + 3.5)
         elif intent == "shorter_duration":
-            # Trim 25% from setup, preserving conclusion
-            current_dur = end_time - start_time
-            if current_dur > 15.0:
-                start_time += (current_dur * 0.25)
+            # Compress to ~25s target
+            end_time = max(start_time + 15.0, min(end_time, start_time + 28.0))
         elif intent == "longer_context":
-            # Expand backwards by 6-8 seconds
-            start_time = max(0.0, start_time - 7.0)
-        elif intent == "different_payoff":
-            # Extend ending to subsequent segment
+            # Expand context window 5s before and after
+            start_time = max(0.0, start_time - 5.0)
             end_time = min(video_dur, end_time + 6.0)
+        elif intent == "different_payoff":
+            # Seek forward 8 seconds to capture alternative resolution
+            end_time = min(video_dur, end_time + 8.0)
 
-        # Snap to transcript segment boundaries
+        # Snap to nearest natural word boundary in transcript
         for s in segments:
             if abs(s.get("start", 0.0) - start_time) < 3.0:
                 start_time = s.get("start", start_time)
@@ -85,11 +90,27 @@ class ClipRegeneratorService:
         # Re-render assets
         chosen_style = caption_style or clip.caption_style or "bold_yellow"
         chosen_sub_pos = subtitle_position if subtitle_position is not None else getattr(clip, "subtitle_position", 75)
+        chosen_add_hook = add_hook_header if add_hook_header is not None else getattr(clip, "add_hook_header", False)
+        chosen_hook_pos = hook_header_position if hook_header_position is not None else (getattr(clip, "hook_header_position", None) or 12)
+        chosen_hook_text = hook_header_text or getattr(clip, "hook_header_text", None) or (clip.candidate.hook_text if clip.candidate else "") or ""
+
         clip.start_time = round(start_time, 2)
         clip.end_time = round(end_time, 2)
         clip.duration = round(end_time - start_time, 2)
+        chosen_remove_wm = remove_watermark if remove_watermark is not None else getattr(clip, "remove_watermark", False)
+        chosen_wm_pos = watermark_position if watermark_position is not None else (getattr(clip, "watermark_position", None) or "top_right")
+        chosen_enhance = enhance_quality if enhance_quality is not None else getattr(clip, "enhance_quality", True)
+        if chosen_enhance is None:
+            chosen_enhance = True
+
         clip.caption_style = chosen_style
         clip.subtitle_position = chosen_sub_pos
+        clip.add_hook_header = chosen_add_hook
+        clip.hook_header_position = chosen_hook_pos
+        clip.hook_header_text = chosen_hook_text if chosen_add_hook else None
+        clip.remove_watermark = chosen_remove_wm
+        clip.watermark_position = chosen_wm_pos
+        clip.enhance_quality = chosen_enhance
 
         video_path = Path(video.file_path)
         ass_path = settings.SUBTITLE_DIR / f"{clip.id}.ass"
@@ -97,8 +118,18 @@ class ClipRegeneratorService:
         out_video_path = settings.PROCESSED_DIR / f"{clip.id}.mp4"
         thumb_path = settings.THUMBNAIL_DIR / f"{clip.id}.jpg"
 
-        # 1. Captions
-        captioner.generate_ass(segments, clip.start_time, clip.end_time, ass_path, style=chosen_style, subtitle_position=chosen_sub_pos)
+        # 1. Captions with persistent hook header
+        captioner.generate_ass(
+            segments,
+            clip.start_time,
+            clip.end_time,
+            ass_path,
+            style=chosen_style,
+            subtitle_position=chosen_sub_pos,
+            add_hook_header=chosen_add_hook,
+            hook_header_text=chosen_hook_text,
+            hook_header_position=chosen_hook_pos,
+        )
         captioner.generate_srt(segments, clip.start_time, clip.end_time, srt_path)
 
         # 2. Reframing & Render
@@ -113,11 +144,13 @@ class ClipRegeneratorService:
             burn_captions=True,
             framing_mode=getattr(clip, "framing_mode", "crop_9_16"),
             blur_radius=getattr(clip, "blur_radius", 30),
+            remove_watermark=chosen_remove_wm,
+            watermark_position=chosen_wm_pos,
+            enhance_quality=chosen_enhance,
         )
 
-
-        # 3. Thumbnail
-        await renderer.generate_thumbnail(video_path, clip.start_time + 1.0, thumb_path)
+        # 3. Thumbnail from rendered vertical video (guarantees 9:16 layout & non-black frame)
+        await renderer.generate_thumbnail(out_video_path, 1.0, thumb_path)
 
         # 4. Update metadata if custom note
         if custom_note:

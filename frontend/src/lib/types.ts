@@ -122,6 +122,12 @@ export interface RenderedClipResponse {
   framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9" | string;
   blur_radius?: number;
   subtitle_position?: number;
+  add_hook_header?: boolean;
+  hook_header_position?: number;
+  hook_header_text?: string | null;
+  remove_watermark?: boolean;
+  watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
+  enhance_quality?: boolean;
   caption_style: string;
   burn_captions?: boolean;
   timeline_edit?: TimelineEditInfo | null;
@@ -161,17 +167,34 @@ export interface JobStatusResponse {
   logs: LogEntry[];
 }
 
+export type CaptionStyleType =
+  | "tiktok_viral"
+  | "hormozi_bold"
+  | "clean_white"
+  | "bold_yellow"
+  | "podcast_box"
+  | "cinematic"
+  | "meme_impact"
+  | "cyber_neon"
+  | "none";
+
 export interface JobCreatePayload {
   video_id: string;
+  project_id?: string;
   mode?: "podcast" | "viral_moments";
   target_clips_count?: number;
   duration_preset?: "15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom";
-  caption_style?: "clean_white" | "bold_yellow" | "podcast_box" | "cinematic" | "meme_impact" | "cyber_neon" | "none";
+  caption_style?: CaptionStyleType;
   burn_captions?: boolean;
   remove_dead_air?: boolean;
   framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9";
   blur_radius?: number;
   subtitle_position?: number;
+  add_hook_header?: boolean;
+  hook_header_position?: number;
+  remove_watermark?: boolean;
+  watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
+  enhance_quality?: boolean;
   reframing_mode?: "smart_face_track" | "center_crop";
   ai_provider?: "gemini" | "groq" | "mock";
   custom_instructions?: string;
@@ -187,12 +210,17 @@ export interface ProjectProcessPayload {
   mode?: "podcast" | "viral_moments";
   target_clips_count?: number;
   duration_preset?: "15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom";
-  caption_style?: "clean_white" | "bold_yellow" | "podcast_box" | "cinematic" | "meme_impact" | "cyber_neon" | "none";
+  caption_style?: CaptionStyleType;
   burn_captions?: boolean;
   remove_dead_air?: boolean;
   framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9";
   blur_radius?: number;
   subtitle_position?: number;
+  add_hook_header?: boolean;
+  hook_header_position?: number;
+  remove_watermark?: boolean;
+  watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
+  enhance_quality?: boolean;
   reframing_mode?: "smart_face_track" | "center_crop";
   source_diversity_weight?: number;
   ai_provider?: "gemini" | "groq" | "mock";
@@ -233,6 +261,11 @@ export interface SettingsResponse {
   default_framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9" | string;
   default_blur_radius?: number;
   default_subtitle_position?: number;
+  default_add_hook_header?: boolean;
+  default_hook_header_position?: number;
+  default_remove_watermark?: boolean;
+  default_watermark_position?: string;
+  default_enhance_quality?: boolean;
   ffmpeg_available?: boolean;
   ffprobe_available?: boolean;
 }
@@ -251,6 +284,11 @@ export interface SettingsUpdateRequest {
   default_framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9";
   default_blur_radius?: number;
   default_subtitle_position?: number;
+  default_add_hook_header?: boolean;
+  default_hook_header_position?: number;
+  default_remove_watermark?: boolean;
+  default_watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left";
+  default_enhance_quality?: boolean;
 }
 
 export interface TestApiKeyResponse {

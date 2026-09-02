@@ -126,3 +126,30 @@ async def test_single_mp4_and_batch_export_endpoints(tmp_path):
             namelist = zf.namelist()
             assert any(clip_id_1[:6] in name for name in namelist)
             assert any(clip_id_2[:6] in name for name in namelist)
+
+            # Strict two-folder validation: Only "videos" and "titles_and_thumbnails" allowed
+            top_level_folders = {name.split("/")[0] for name in namelist if "/" in name}
+            assert top_level_folders == {"videos", "titles_and_thumbnails"}
+
+            # videos/ contains only .mp4 files
+            videos = [name for name in namelist if name.startswith("videos/")]
+            assert len(videos) == 2
+            assert all(v.endswith(".mp4") for v in videos)
+
+            # titles_and_thumbnails/ contains only thumbnails and title/meta files
+            thumbs_and_titles = [name for name in namelist if name.startswith("titles_and_thumbnails/")]
+            assert all(m.endswith((".jpg", ".txt", ".json")) for m in thumbs_and_titles)
+            assert any(m.endswith("_title.txt") for m in thumbs_and_titles)
+            assert any(m.endswith("_thumbnail.jpg") for m in thumbs_and_titles)
+
+            # Zero root files
+            assert all("/" in name for name in namelist)
+
+        # Test 4: Job-level batch export has identical strict two-folder structure
+        resp_job_batch = await ac.get(f"/api/export/job/{jb.id}/batch")
+        assert resp_job_batch.status_code == 200
+        with zipfile.ZipFile(io.BytesIO(resp_job_batch.content), "r") as zf:
+            namelist = zf.namelist()
+            top_level = {name.split("/")[0] for name in namelist if "/" in name}
+            assert top_level == {"videos", "titles_and_thumbnails"}
+            assert all("/" in name for name in namelist)

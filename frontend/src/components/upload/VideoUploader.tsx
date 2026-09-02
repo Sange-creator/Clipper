@@ -20,11 +20,14 @@ import {
   Smartphone,
   Maximize2,
   Monitor,
+  Flame,
+  Eraser,
+  Wand2,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
 import { formatFileSize } from "@/lib/utils";
-import { VideoInfo } from "@/lib/types";
+import { CaptionStyleType, VideoInfo } from "@/lib/types";
 
 export function VideoUploader() {
   const router = useRouter();
@@ -41,13 +44,18 @@ export function VideoUploader() {
   // V3 Configuration Presets
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
   const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
+  const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
+  const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
+  const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
+  const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">("top_right");
+  const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
   const [blurRadius, setBlurRadius] = useState<number>(30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
   const [targetClipsCount, setTargetClipsCount] = useState<number>(10);
   const [durationPreset, setDurationPreset] = useState<"15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom">("30-45s");
-  const [captionStyle, setCaptionStyle] = useState<"bold_yellow" | "clean_white" | "podcast_box" | "cinematic" | "meme_impact" | "cyber_neon">("bold_yellow");
+  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_viral");
   const [aiProvider, setAiProvider] = useState<"gemini" | "groq" | "mock" | "auto">("auto");
   const [customInstructions, setCustomInstructions] = useState<string>("");
   const [isLaunching, setIsLaunching] = useState(false);
@@ -107,6 +115,11 @@ export function VideoUploader() {
         duration_preset: durationPreset,
         caption_style: burnCaptions ? captionStyle : "none",
         burn_captions: burnCaptions,
+        add_hook_header: addHookHeader,
+        hook_header_position: hookHeaderPosition,
+        remove_watermark: removeWatermark,
+        watermark_position: watermarkPosition,
+        enhance_quality: enhanceQuality,
         remove_dead_air: removeDeadAir,
         framing_mode: framingMode,
         blur_radius: blurRadius,
@@ -427,7 +440,7 @@ export function VideoUploader() {
           )}
         </div>
 
-        {/* 3. Subtitle & Silence Toggles */}
+        {/* 3. Subtitle, Hook Header & Silence Toggles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Subtitle On/Off Toggle */}
@@ -458,8 +471,10 @@ export function VideoUploader() {
             {burnCaptions ? (
               <div className="space-y-2 pt-2 border-t border-white/5">
                 <label className="text-[11px] font-medium text-zinc-400">Select Caption Style:</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {[
+                    { id: "tiktok_viral", name: "TikTok Viral", desc: "Electric yellow pop" },
+                    { id: "hormozi_bold", name: "Hormozi Punch", desc: "Neon green highlight" },
                     { id: "bold_yellow", name: "Bold Yellow", desc: "Active word pop-in" },
                     { id: "clean_white", name: "Clean White", desc: "Crisp & minimalist" },
                     { id: "podcast_box", name: "Podcast Box", desc: "Dark backing banner" },
@@ -559,12 +574,126 @@ export function VideoUploader() {
             )}
           </div>
 
+          {/* Persistent TikTok Hook Header Toggle */}
+          <div className="glass-panel rounded-xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Flame className="h-4 w-4 text-amber-400" />
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-semibold text-white">Sticky TikTok Hook Header</h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">VIRAL CREATOR</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400">Keep catchy hook header with emoji visible throughout clip</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAddHookHeader(!addHookHeader)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  addHookHeader ? "bg-amber-500" : "bg-zinc-800"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    addHookHeader ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+
+            {addHookHeader ? (
+              <div className="space-y-3 pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-semibold text-amber-300 flex items-center gap-1.5">
+                    <span>Hook Screen Position:</span>
+                    <span className="font-mono text-white bg-amber-500/20 px-1.5 py-0.5 rounded text-[10px]">
+                      {hookHeaderPosition}% from Top
+                    </span>
+                  </label>
+                  <span className="text-[10px] text-zinc-400">
+                    {hookHeaderPosition <= 15 ? "Top Banner (Recommended)" : hookHeaderPosition <= 30 ? "Upper-Third" : hookHeaderPosition <= 55 ? "Center Screen" : "Bottom Anchor"}
+                  </span>
+                </div>
+
+                {/* Position Presets */}
+                <div className="grid grid-cols-4 gap-1.5">
+                  {[
+                    { label: "Top Banner", pos: 12 },
+                    { label: "Upper 3rd", pos: 25 },
+                    { label: "Center", pos: 50 },
+                    { label: "Bottom", pos: 85 },
+                  ].map((p) => (
+                    <button
+                      key={p.pos}
+                      type="button"
+                      onClick={() => setHookHeaderPosition(p.pos)}
+                      className={`rounded-lg py-1.5 px-2 text-center text-[10px] font-medium border transition-all ${
+                        hookHeaderPosition === p.pos
+                          ? "bg-amber-500/25 border-amber-400 text-white shadow-sm"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                      }`}
+                    >
+                      {p.label} ({p.pos}%)
+                    </button>
+                  ))}
+                </div>
+
+                {/* Slider with Live Phone Mockup Indicator */}
+                <div className="flex items-center gap-3 pt-1">
+                  <div className="flex-1 space-y-1">
+                    <input
+                      type="range"
+                      min={8}
+                      max={85}
+                      step={1}
+                      value={hookHeaderPosition}
+                      onChange={(e) => setHookHeaderPosition(Number(e.target.value))}
+                      className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[9px] text-zinc-500">
+                      <span>Top (8%)</span>
+                      <span>Upper (25%)</span>
+                      <span>Center (50%)</span>
+                      <span>Bottom (85%)</span>
+                    </div>
+                  </div>
+
+                  {/* Phone Preview indicator */}
+                  <div className="w-10 h-16 rounded-md bg-black/70 border border-amber-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                    <div
+                      className="absolute left-1 right-1 h-1.5 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
+                      style={{ top: `${hookHeaderPosition}%` }}
+                    />
+                    {burnCaptions && (
+                      <div
+                        className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
+                        style={{ top: `${subtitlePosition}%` }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* TikTok style preview badge */}
+                <div className="rounded-lg bg-black/40 border border-amber-500/20 p-2.5 flex items-center justify-between text-xs">
+                  <span className="text-[10px] text-zinc-400">Creator Style Preview:</span>
+                  <span className="font-extrabold text-amber-300 font-mono tracking-wide">
+                    WHY NOBODY TALKS ABOUT THIS 🤫
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-[11px] text-zinc-500 pt-2 border-t border-white/5">
+                No persistent top header overlay. Only spoken karaoke subtitles will be displayed.
+              </p>
+            )}
+          </div>
 
           {/* Dead-Air Removal Toggle */}
           <div className="glass-panel rounded-xl p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Scissors className="h-4 w-4 text-amber-400" />
+                <Scissors className="h-4 w-4 text-emerald-400" />
                 <div>
                   <h4 className="text-xs font-semibold text-white">Cut Silence & Dead Air</h4>
                   <p className="text-[11px] text-zinc-400">Detect silence &gt;1.2s and splice dead air</p>
@@ -574,7 +703,7 @@ export function VideoUploader() {
                 type="button"
                 onClick={() => setRemoveDeadAir(!removeDeadAir)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  removeDeadAir ? "bg-amber-500" : "bg-zinc-800"
+                  removeDeadAir ? "bg-emerald-500" : "bg-zinc-800"
                 }`}
               >
                 <span
@@ -589,6 +718,111 @@ export function VideoUploader() {
               {removeDeadAir
                 ? "Aggressively detects awkward pauses and long silences via audio decibel analysis, creating seamless concatenated timeline cuts while keeping speech cadence natural."
                 : "Keeps continuous video without audio timeline trimming."}
+            </p>
+          </div>
+
+          {/* Watermark / Logo / Trademark Eraser Toggle */}
+          <div className="glass-panel rounded-xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Eraser className="h-4 w-4 text-cyan-400" />
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-semibold text-white">Erase Watermark / Logo</h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">DELOGO</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400">Remove channel logo, watermark, or trademark before clipping</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRemoveWatermark(!removeWatermark)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  removeWatermark ? "bg-cyan-500" : "bg-zinc-800"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    removeWatermark ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+
+            {removeWatermark ? (
+              <div className="space-y-3 pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5">
+                    <span>Logo / Watermark Position:</span>
+                  </label>
+                  <span className="text-[10px] text-zinc-400">FFmpeg Delogo Interpolation</span>
+                </div>
+
+                {/* 4 Corner Presets */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  {[
+                    { label: "Top Right", value: "top_right" },
+                    { label: "Bottom Right", value: "bottom_right" },
+                    { label: "Top Left", value: "top_left" },
+                    { label: "Bottom Left", value: "bottom_left" },
+                  ].map((pos) => (
+                    <button
+                      key={pos.value}
+                      type="button"
+                      onClick={() => setWatermarkPosition(pos.value as any)}
+                      className={`rounded-lg py-1.5 px-2 text-center text-[10px] font-medium border transition-all ${
+                        watermarkPosition === pos.value
+                          ? "bg-cyan-500/25 border-cyan-400 text-white shadow-sm"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                      }`}
+                    >
+                      {pos.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[10px] text-zinc-400">
+                  Smoothly erases corner logos/watermarks before 9:16 vertical crop and caption overlay.
+                </p>
+              </div>
+            ) : (
+              <p className="text-[11px] text-zinc-500 pt-2 border-t border-white/5">
+                Original video frames will be preserved without corner watermark removal.
+              </p>
+            )}
+          </div>
+
+          {/* Studio Video & Audio Quality Enhancement */}
+          <div className="glass-panel rounded-xl p-5 space-y-4 md:col-span-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Wand2 className="h-4 w-4 text-emerald-400" />
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-semibold text-white">Studio Enhancement & Color Boost</h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">AI EDITING</span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400">Lanczos sharpening, vibrant color grading &amp; broadcast loudness normalization</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEnhanceQuality(!enhanceQuality)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  enhanceQuality ? "bg-emerald-500" : "bg-zinc-800"
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    enhanceQuality ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+
+            <p className="text-[11px] text-zinc-400 leading-relaxed pt-2 border-t border-white/5">
+              {enhanceQuality
+                ? "Applies studio-grade contrast & saturation boost, facial unsharp filter for crisp mobile screens, and EBU R128 audio loudness normalization."
+                : "Standard export without additional visual filtering or loudness normalization."}
             </p>
           </div>
         </div>

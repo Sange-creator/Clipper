@@ -389,11 +389,25 @@ class VideoProcessingPipeline:
                     )
                     crop_info = {"mode": "center_crop"}
                     
-                    # Stage 17: Generate captions
+                    # Stage 17: Generate captions & persistent TikTok hook header
                     ass_path = settings.SUBTITLE_DIR / f"{clip_id}.ass"
                     srt_path = settings.SUBTITLE_DIR / f"{clip_id}.srt"
                     job_sub_pos = getattr(job, "subtitle_position", None) or 75
-                    captioner.generate_ass(raw_segments, cand.start, cand.end, ass_path, style=caption_style, subtitle_position=job_sub_pos)
+                    job_add_hook = getattr(job, "add_hook_header", False)
+                    job_hook_pos = getattr(job, "hook_header_position", None) or 12
+                    hook_title_text = cand.hook_summary or cand.reason or ""
+
+                    captioner.generate_ass(
+                        raw_segments,
+                        cand.start,
+                        cand.end,
+                        ass_path,
+                        style=caption_style,
+                        subtitle_position=job_sub_pos,
+                        add_hook_header=job_add_hook,
+                        hook_header_text=hook_title_text,
+                        hook_header_position=job_hook_pos,
+                    )
                     captioner.generate_srt(raw_segments, cand.start, cand.end, srt_path)
 
                     # FFmpeg render
@@ -401,6 +415,11 @@ class VideoProcessingPipeline:
                     should_burn = burn_captions and caption_style != "none"
                     job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
                     job_blur_radius = getattr(job, "blur_radius", None) or 30
+                    job_remove_watermark = getattr(job, "remove_watermark", False) or False
+                    job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
+                    job_enhance_quality = getattr(job, "enhance_quality", True)
+                    if job_enhance_quality is None:
+                        job_enhance_quality = True
 
                     await renderer.render_clip(
                         source_video_path=video_path,
@@ -413,16 +432,18 @@ class VideoProcessingPipeline:
                         keep_intervals=t_edit.keep,
                         framing_mode=job_framing_mode,
                         blur_radius=job_blur_radius,
+                        remove_watermark=job_remove_watermark,
+                        watermark_position=job_watermark_position,
+                        enhance_quality=job_enhance_quality,
                     )
 
-                    # Stage 18: Generate thumbnails
+                    # Stage 18: Generate thumbnails from rendered vertical video (guarantees 9:16 layout & non-black frame)
                     await self.update_job_progress(
                         session, job, 18,
                         f"Generating thumbnail for clip {idx}/{len(ranked_clips)}"
                     )
                     thumb_path = settings.THUMBNAIL_DIR / f"{clip_id}.jpg"
-                    hook_frame_ts = max(0.0, min(max(0.1, video.duration_seconds - 0.2), cand.start + 1.0))
-                    await renderer.generate_thumbnail(video_path, hook_frame_ts, thumb_path)
+                    await renderer.generate_thumbnail(out_video_path, 1.0, thumb_path)
 
                     # Stage 19: Generate platform metadata
                     await self.update_job_progress(
@@ -456,6 +477,12 @@ class VideoProcessingPipeline:
                         framing_mode=job_framing_mode,
                         blur_radius=job_blur_radius,
                         subtitle_position=job_sub_pos,
+                        add_hook_header=job_add_hook,
+                        hook_header_position=job_hook_pos,
+                        hook_header_text=hook_title_text if job_add_hook else None,
+                        remove_watermark=job_remove_watermark,
+                        watermark_position=job_watermark_position,
+                        enhance_quality=job_enhance_quality,
                         caption_style=caption_style if should_burn else "none",
                         burn_captions=should_burn,
                         timeline_edit_json=json.dumps(t_edit.model_dump()),
@@ -656,12 +683,31 @@ class VideoProcessingPipeline:
             segs = json.loads(tr.segments_json) if tr else []
 
             job_sub_pos = getattr(job, "subtitle_position", None) or 75
-            captioner.generate_ass(segs, cand.start, cand.end, ass_path, style=caption_style, subtitle_position=job_sub_pos)
+            job_add_hook = getattr(job, "add_hook_header", False)
+            job_hook_pos = getattr(job, "hook_header_position", None) or 12
+            hook_title_text = cand.hook_summary or cand.reason or ""
+
+            captioner.generate_ass(
+                segs,
+                cand.start,
+                cand.end,
+                ass_path,
+                style=caption_style,
+                subtitle_position=job_sub_pos,
+                add_hook_header=job_add_hook,
+                hook_header_text=hook_title_text,
+                hook_header_position=job_hook_pos,
+            )
             captioner.generate_srt(segs, cand.start, cand.end, srt_path)
 
             should_burn = burn_captions and caption_style != "none"
             job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
             job_blur_radius = getattr(job, "blur_radius", None) or 30
+            job_remove_watermark = getattr(job, "remove_watermark", False) or False
+            job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
+            job_enhance_quality = getattr(job, "enhance_quality", True)
+            if job_enhance_quality is None:
+                job_enhance_quality = True
 
             await renderer.render_clip(
                 source_video_path=v_path,
@@ -674,9 +720,12 @@ class VideoProcessingPipeline:
                 keep_intervals=t_edit.keep,
                 framing_mode=job_framing_mode,
                 blur_radius=job_blur_radius,
+                remove_watermark=job_remove_watermark,
+                watermark_position=job_watermark_position,
+                enhance_quality=job_enhance_quality,
             )
 
-            await renderer.generate_thumbnail(v_path, cand.start + 1.0, thumb)
+            await renderer.generate_thumbnail(out_video, 1.0, thumb)
 
             clip_text = " ".join([s.get("text", "") for s in segs if s.get("end", 0) >= cand.start and s.get("start", 0) <= cand.end])
             meta_res = await ai_provider.generate_metadata(clip_text, {"hook_summary": cand.hook_summary, "payoff_summary": cand.payoff_summary})
@@ -697,6 +746,12 @@ class VideoProcessingPipeline:
                 framing_mode=job_framing_mode,
                 blur_radius=job_blur_radius,
                 subtitle_position=job_sub_pos,
+                add_hook_header=job_add_hook,
+                hook_header_position=job_hook_pos,
+                hook_header_text=hook_title_text if job_add_hook else None,
+                remove_watermark=job_remove_watermark,
+                watermark_position=job_watermark_position,
+                enhance_quality=job_enhance_quality,
                 caption_style=caption_style if should_burn else "none",
                 burn_captions=should_burn,
                 timeline_edit_json=json.dumps(t_edit.model_dump()),

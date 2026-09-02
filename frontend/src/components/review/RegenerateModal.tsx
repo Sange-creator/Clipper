@@ -12,6 +12,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { CaptionPresetPicker } from "./CaptionPresetPicker";
+import { CaptionStyleType } from "@/lib/types";
 
 interface RegenerateModalProps {
   isOpen: boolean;
@@ -65,7 +66,7 @@ export function RegenerateModal({
   currentStyle,
 }: RegenerateModalProps) {
   const [selectedIntent, setSelectedIntent] = useState<string>("stronger_hook");
-  const [captionStyle, setCaptionStyle] = useState<string>(currentStyle || "bold_yellow");
+  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>((currentStyle as any) || "tiktok_viral");
   const [customNote, setCustomNote] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 

@@ -68,6 +68,65 @@ def retime_ass_subtitles(ass_content: str, keep_intervals: List[List[float]]) ->
     return "\n".join(new_lines)
 
 
+METADATA_STRIP_ARGS = [
+    "-map_metadata", "-1",
+    "-map_metadata:s:v", "-1",
+    "-map_metadata:s:a", "-1",
+    "-map_chapters", "-1",
+    "-metadata", "title=",
+    "-metadata", "artist=",
+    "-metadata", "album=",
+    "-metadata", "composer=",
+    "-metadata", "comment=",
+    "-metadata", "description=",
+    "-metadata", "synopsis=",
+    "-metadata", "author=",
+    "-metadata", "date=",
+    "-metadata", "creation_time=",
+    "-metadata", "handler_name=",
+    "-metadata", "encoder=",
+    "-metadata", "copyright=",
+    "-metadata:s:v", "handler_name=",
+    "-metadata:s:v", "title=",
+    "-metadata:s:v", "language=",
+    "-metadata:s:a", "handler_name=",
+    "-metadata:s:a", "title=",
+    "-metadata:s:a", "language=",
+    "-fflags", "+bitexact",
+    "-flags:v", "+bitexact",
+    "-flags:a", "+bitexact",
+    "-write_id3v2", "0",
+    "-write_id3v1", "0",
+]
+
+
+def get_delogo_filter(position: str = "top_right", width: int = 1920, height: int = 1080) -> str:
+    """Generate safe delogo filter coordinates to cleanly remove watermarks/logos without edge artifacts."""
+    pos = (position or "top_right").lower().strip()
+    box_w = max(40, int(width * 0.13))
+    box_h = max(30, int(height * 0.085))
+    margin_x = max(10, int(width * 0.015))
+    margin_y = max(10, int(height * 0.02))
+
+    if pos in ("top_left", "tl"):
+        x = margin_x
+        y = margin_y
+    elif pos in ("bottom_left", "bl"):
+        x = margin_x
+        y = max(1, height - box_h - margin_y)
+    elif pos in ("bottom_right", "br"):
+        x = max(1, width - box_w - margin_x)
+        y = max(1, height - box_h - margin_y)
+    else:  # top_right (default)
+        x = max(1, width - box_w - margin_x)
+        y = margin_y
+
+    # FFmpeg delogo requires x>=1, y>=1, x+w<=width-1, y+h<=height-1
+    x = max(1, min(x, width - box_w - 2))
+    y = max(1, min(y, height - box_h - 2))
+    return f"delogo=x={x}:y={y}:w={box_w}:h={box_h}:show=0"
+
+
 class VideoRenderer:
     """Renders sliced, vertically reframed, and captioned 9:16 video clips with FFmpeg."""
 
@@ -86,17 +145,22 @@ class VideoRenderer:
         keep_intervals: Optional[List[List[float]]] = None,
         framing_mode: str = "crop_9_16",
         blur_radius: int = 30,
+        remove_watermark: bool = False,
+        watermark_position: str = "top_right",
+        enhance_quality: bool = True,
     ) -> Path:
         """
         Renders a short-form video clip from source:
         - Accurately cuts between start_time and end_time (or slices multiple keep_intervals).
+        - Optional logo/watermark removal before reframing.
         - Applies selected framing mode:
             * crop_9_16: Full 9:16 vertical crop (TikTok / Reels / Shorts default)
             * blur_fit_9_16: 16:9 video centered within 9:16 vertical canvas with customized blurred background
             * original_16_9: Native 16:9 landscape widescreen
+        - Optional studio visual enhancement (unsharp edge sharpening, color vibrancy, contrast boost).
         - Burns in styled ASS subtitles if burn_captions is True.
         - Normalizes audio loudness (loudnorm).
-        - Fully sanitizes all original video/container metadata.
+        - Fully sanitizes and wipes all original video/container metadata.
         """
         src = Path(source_video_path).resolve()
         out = Path(output_video_path).resolve()
@@ -114,6 +178,17 @@ class VideoRenderer:
         crop_cfg = reframing_config or {}
         mode = framing_mode or "crop_9_16"
         r = max(5, min(100, blur_radius or 30))
+
+        # Inspect source resolution if watermark removal is active
+        src_w, src_h = 1920, 1080
+        if remove_watermark:
+            try:
+                from app.services.media.inspector import inspector
+                meta = await inspector.inspect(src)
+                if meta.width > 0 and meta.height > 0:
+                    src_w, src_h = meta.width, meta.height
+            except Exception:
+                pass
 
         # Subtitle handling
         final_ass_path: Optional[Path] = None
@@ -136,18 +211,29 @@ class VideoRenderer:
             e_time = valid_intervals[0][1]
             seg_dur = max(0.5, e_time - s_time)
 
+            filter_parts = []
+            if remove_watermark:
+                filter_parts.append(get_delogo_filter(watermark_position, src_w, src_h))
+
             if mode == "blur_fit_9_16":
+                prefix = f"{filter_parts[0]}," if filter_parts else ""
                 v_filter = (
-                    f"split=2[bg_raw][fg_raw];"
+                    f"{prefix}split=2[bg_raw][fg_raw];"
                     f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:5,drawbox=color=black@0.35:replace=1[bg];"
                     f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=lanczos[fg];"
                     f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
                 )
             elif mode == "original_16_9":
-                v_filter = "scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos"
+                filter_parts.append("scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos")
+                v_filter = ",".join(filter_parts)
             else:
                 # Default: crop_9_16
-                v_filter = f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}"
+                filter_parts.append(f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}")
+                v_filter = ",".join(filter_parts)
+
+            # Studio visual quality enhancement (vibrancy + unsharp detail enhancement)
+            if enhance_quality:
+                v_filter += ",eq=contrast=1.04:saturation=1.08:brightness=0.01,unsharp=lx=3:ly=3:la=0.35:cx=3:cy=3:ca=0.15"
 
             if final_ass_path and final_ass_path.exists():
                 escaped_ass = str(final_ass_path).replace("\\", "/").replace(":", "\\:")
@@ -170,13 +256,7 @@ class VideoRenderer:
                 "-c:a", "aac",
                 "-b:a", "256k",
                 "-ar", "48000",
-                "-map_metadata", "-1",
-                "-map_metadata:s:v", "-1",
-                "-map_metadata:s:a", "-1",
-                "-map_chapters", "-1",
-                "-fflags", "+bitexact",
-                "-flags:v", "+bitexact",
-                "-flags:a", "+bitexact",
+                *METADATA_STRIP_ARGS,
                 "-movflags", "+faststart",
                 str(out)
             ]
@@ -204,17 +284,28 @@ class VideoRenderer:
             )
 
             # Reframe & subtitle on spliced video with lanczos scaling
+            v_post_prefix = ""
+            if remove_watermark:
+                v_post_prefix = f"[vcat]{get_delogo_filter(watermark_position, src_w, src_h)}[v_delogo];"
+                v_cat_target = "[v_delogo]"
+            else:
+                v_cat_target = "[vcat]"
+
             if mode == "blur_fit_9_16":
                 v_post = (
-                    f"[vcat]split=2[bg_raw][fg_raw];"
+                    f"{v_post_prefix}"
+                    f"{v_cat_target}split=2[bg_raw][fg_raw];"
                     f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:5,drawbox=color=black@0.35:replace=1[bg];"
                     f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=lanczos[fg];"
                     f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
                 )
             elif mode == "original_16_9":
-                v_post = "[vcat]scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos"
+                v_post = f"{v_post_prefix}{v_cat_target}scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos"
             else:
-                v_post = f"[vcat]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}"
+                v_post = f"{v_post_prefix}{v_cat_target}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}"
+
+            if enhance_quality:
+                v_post += ",eq=contrast=1.04:saturation=1.08:brightness=0.01,unsharp=lx=3:ly=3:la=0.35:cx=3:cy=3:ca=0.15"
 
             if final_ass_path and final_ass_path.exists():
                 escaped_ass = str(final_ass_path).replace("\\", "/").replace(":", "\\:")
@@ -242,13 +333,7 @@ class VideoRenderer:
                 "-c:a", "aac",
                 "-b:a", "256k",
                 "-ar", "48000",
-                "-map_metadata", "-1",
-                "-map_metadata:s:v", "-1",
-                "-map_metadata:s:a", "-1",
-                "-map_chapters", "-1",
-                "-fflags", "+bitexact",
-                "-flags:v", "+bitexact",
-                "-flags:a", "+bitexact",
+                *METADATA_STRIP_ARGS,
                 "-movflags", "+faststart",
                 str(out)
             ]
@@ -282,13 +367,7 @@ class VideoRenderer:
                 "-pix_fmt", "yuv420p",
                 "-c:a", "aac",
                 "-b:a", "256k",
-                "-map_metadata", "-1",
-                "-map_metadata:s:v", "-1",
-                "-map_metadata:s:a", "-1",
-                "-map_chapters", "-1",
-                "-fflags", "+bitexact",
-                "-flags:v", "+bitexact",
-                "-flags:a", "+bitexact",
+                *METADATA_STRIP_ARGS,
                 "-movflags", "+faststart",
                 str(out)
             ]
@@ -306,51 +385,81 @@ class VideoRenderer:
     async def generate_thumbnail(
         self,
         source_video_path: Path | str,
-        timestamp: float,
-        output_thumbnail_path: Path | str,
+        timestamp: float = 1.0,
+        output_thumbnail_path: Path | str = None,
     ) -> Path:
-        """Extract a single high-quality frame at the hook timestamp for thumbnail with all metadata stripped."""
+        """
+        Extract a crisp, high-quality, representative non-black frame for thumbnail preview.
+        - Uses accurate seeking and FFmpeg's smart thumbnail selector.
+        - Evaluates candidate timestamps (e.g. target ts, 1.0s, 1.5s, 0.5s, 2.0s) to prevent black frames or cut artifacts.
+        - Strips all container metadata.
+        """
         src = Path(source_video_path).resolve()
         out = Path(output_thumbnail_path).resolve()
         out.parent.mkdir(parents=True, exist_ok=True)
 
-        cmd = [
-            self.ffmpeg_path,
-            "-y",
-            "-ss", f"{max(0.0, timestamp):.3f}",
-            "-i", str(src),
-            "-vframes", "1",
-            "-q:v", "2",
-            "-map_metadata", "-1",
-            str(out)
+        candidate_timestamps = [
+            max(0.1, timestamp),
+            1.0,
+            1.5,
+            0.5,
+            2.0,
+            3.0,
+            0.1,
         ]
 
+        seen = set()
+        dedup_candidates = []
+        for ts in candidate_timestamps:
+            r_ts = round(ts, 2)
+            if r_ts not in seen:
+                seen.add(r_ts)
+                dedup_candidates.append(r_ts)
 
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-        await proc.communicate()
-        if not out.exists():
-            fallback_cmd = [
+        for ts in dedup_candidates:
+            cmd = [
                 self.ffmpeg_path,
                 "-y",
-                "-ss", "0.0",
+                "-ss", f"{ts:.3f}",
                 "-i", str(src),
+                "-vf", "thumbnail=16",
                 "-vframes", "1",
                 "-q:v", "2",
+                *METADATA_STRIP_ARGS,
                 str(out)
             ]
-            fallback_proc = await asyncio.create_subprocess_exec(
-                *fallback_cmd,
+
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
-            await fallback_proc.communicate()
+            await proc.communicate()
+
+            if out.exists() and out.stat().st_size > 8192:
+                return out
+
+        # Direct 1-frame fallback if smart filter produced no output
+        fallback_cmd = [
+            self.ffmpeg_path,
+            "-y",
+            "-i", str(src),
+            "-ss", f"{max(0.1, timestamp):.3f}",
+            "-vframes", "1",
+            "-q:v", "2",
+            *METADATA_STRIP_ARGS,
+            str(out)
+        ]
+        fallback_proc = await asyncio.create_subprocess_exec(
+            *fallback_cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        await fallback_proc.communicate()
 
         return out
 
 
 renderer = VideoRenderer()
 video_renderer = renderer
+

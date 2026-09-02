@@ -184,7 +184,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500 transition-all"
             >
               <Download className="h-4 w-4" />
-              <span>Download All ({clips.length} Clips ZIP)</span>
+              <span>Bulk Download ({clips.length} Clips Dual-Folder ZIP)</span>
             </a>
           )}
 

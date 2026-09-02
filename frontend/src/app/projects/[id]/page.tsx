@@ -23,43 +23,52 @@ import {
   Smartphone,
   Maximize2,
   Monitor,
+  Flame,
+  Eraser,
+  Wand2,
+  Download,
 } from "lucide-react";
 
 
 import { api } from "@/lib/api";
-import { ProjectDetailResponse, VideoInfo } from "@/lib/types";
+import { CaptionStyleType, ProjectDetailResponse, VideoInfo } from "@/lib/types";
 import { BatchUploader } from "@/components/upload/BatchUploader";
 import { CaptionPresetPicker } from "@/components/review/CaptionPresetPicker";
 import { ClipCard } from "@/components/review/ClipCard";
 import { formatBytes, formatDuration } from "@/lib/utils";
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
-  const projectId = resolvedParams.id;
+  const { id: projectId } = use(params);
   const router = useRouter();
 
   const [project, setProject] = useState<ProjectDetailResponse | null>(null);
-  const [activeTab, setActiveTab] = useState<"sources" | "process" | "clips">("sources");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"sources" | "process" | "clips">("sources");
 
-  // V3 Processing form state
+  // V3 Discovery & Batch Processing Settings
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
   const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
+  const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
+  const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
+  const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
+  const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">("top_right");
+  const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
   const [blurRadius, setBlurRadius] = useState<number>(30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
   const [targetClips, setTargetClips] = useState(20);
   const [durationPreset, setDurationPreset] = useState("30-45s");
-  const [captionStyle, setCaptionStyle] = useState("bold_yellow");
+  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_viral");
   const [diversityWeight, setDiversityWeight] = useState(0.35);
   const [isStartingJob, setIsStartingJob] = useState(false);
 
   // Deletion & Bulk actions state
   const [selectedClips, setSelectedClips] = useState<string[]>([]);
-  const [bulkStyle, setBulkStyle] = useState("bold_yellow");
+  const [bulkStyle, setBulkStyle] = useState<CaptionStyleType>("tiktok_viral");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isExportingBatch, setIsExportingBatch] = useState(false);
   const [isDeletingProject, setIsDeletingProject] = useState(false);
 
   const fetchProject = async () => {
@@ -100,9 +109,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       const res = await api.processProject(projectId, {
         mode: mode,
         target_clips_count: targetClips,
-        duration_preset: durationPreset,
+        duration_preset: durationPreset as any,
         caption_style: burnCaptions ? captionStyle : "none",
         burn_captions: burnCaptions,
+        add_hook_header: addHookHeader,
+        hook_header_position: hookHeaderPosition,
+        remove_watermark: removeWatermark,
+        watermark_position: watermarkPosition,
+        enhance_quality: enhanceQuality,
         remove_dead_air: removeDeadAir,
         framing_mode: framingMode,
         blur_radius: blurRadius,
@@ -115,6 +129,32 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       alert(err.message || "Failed to trigger project processing");
     } finally {
       setIsStartingJob(false);
+    }
+  };
+
+  const handleBatchDownload = async () => {
+    if (selectedClips.length === 0) return;
+    setIsExportingBatch(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/export/clips/batch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clip_ids: selectedClips }),
+      });
+      if (!res.ok) throw new Error("Bulk export download failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `project_${projectId.slice(0, 8)}_selected_clips_batch.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      alert(err.message || "Failed to download batch ZIP");
+    } finally {
+      setIsExportingBatch(false);
     }
   };
 
@@ -614,6 +654,184 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               </div>
             )}
 
+            {/* Persistent Hook Header Toggle & Position */}
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-amber-400" />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold text-white">Sticky TikTok Hook Header</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">VIRAL CREATOR</span>
+                    </div>
+                    <p className="text-[10px] text-zinc-400">Keep catchy hook title with contextual emojis visible throughout entire clip</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAddHookHeader(!addHookHeader)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                    addHookHeader ? "bg-amber-500" : "bg-zinc-800"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      addHookHeader ? "translate-x-4.5" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {addHookHeader && (
+                <div className="space-y-3 pt-2 border-t border-white/5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-zinc-300">Hook Screen Position</span>
+                    <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                      {hookHeaderPosition}% ({hookHeaderPosition <= 15 ? "Top Banner" : hookHeaderPosition <= 30 ? "Upper 3rd" : hookHeaderPosition <= 55 ? "Center" : "Bottom"})
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {[
+                      { label: "Top Banner", pos: 12 },
+                      { label: "Upper 3rd", pos: 25 },
+                      { label: "Center", pos: 50 },
+                      { label: "Bottom", pos: 85 },
+                    ].map((p) => (
+                      <button
+                        key={p.pos}
+                        type="button"
+                        onClick={() => setHookHeaderPosition(p.pos)}
+                        className={`rounded-lg py-1.5 px-2 text-center text-[10px] font-medium border transition-all ${
+                          hookHeaderPosition === p.pos
+                            ? "bg-amber-500/25 border-amber-400 text-white shadow-sm"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        {p.label} ({p.pos}%)
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-1">
+                    <div className="flex-1 space-y-1">
+                      <input
+                        type="range"
+                        min={8}
+                        max={85}
+                        step={1}
+                        value={hookHeaderPosition}
+                        onChange={(e) => setHookHeaderPosition(Number(e.target.value))}
+                        className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                      />
+                      <div className="flex justify-between text-[9px] text-zinc-500">
+                        <span>Top (8%)</span>
+                        <span>Upper (25%)</span>
+                        <span>Center (50%)</span>
+                        <span>Bottom (85%)</span>
+                      </div>
+                    </div>
+
+                    <div className="w-9 h-14 rounded-md bg-black/80 border border-amber-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                      <div
+                        className="absolute left-1 right-1 h-1.5 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
+                        style={{ top: `${hookHeaderPosition}%` }}
+                      />
+                      {burnCaptions && (
+                        <div
+                          className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
+                          style={{ top: `${subtitlePosition}%` }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Watermark / Logo / Trademark Eraser Toggle */}
+            <div className="glass-panel rounded-xl p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Eraser className="h-4 w-4 text-cyan-400" />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-xs font-semibold text-white">Erase Watermark / Logo</h4>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">DELOGO</span>
+                    </div>
+                    <p className="text-[11px] text-zinc-400">Remove channel logo or watermark before clipping</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRemoveWatermark(!removeWatermark)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    removeWatermark ? "bg-cyan-500" : "bg-zinc-800"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      removeWatermark ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {removeWatermark && (
+                <div className="space-y-3 pt-2 border-t border-white/5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                    {[
+                      { label: "Top Right", value: "top_right" },
+                      { label: "Bottom Right", value: "bottom_right" },
+                      { label: "Top Left", value: "top_left" },
+                      { label: "Bottom Left", value: "bottom_left" },
+                    ].map((pos) => (
+                      <button
+                        key={pos.value}
+                        type="button"
+                        onClick={() => setWatermarkPosition(pos.value as any)}
+                        className={`rounded-lg py-1.5 px-2 text-center text-[10px] font-medium border transition-all ${
+                          watermarkPosition === pos.value
+                            ? "bg-cyan-500/25 border-cyan-400 text-white shadow-sm"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        {pos.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Studio Enhancement & Color Boost */}
+            <div className="glass-panel rounded-xl p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Wand2 className="h-4 w-4 text-emerald-400" />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-xs font-semibold text-white">Studio Enhancement &amp; Color Boost</h4>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">AI EDITING</span>
+                    </div>
+                    <p className="text-[11px] text-zinc-400">Vibrant grading, mobile sharpening &amp; loudness normalization</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEnhanceQuality(!enhanceQuality)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    enhanceQuality ? "bg-emerald-500" : "bg-zinc-800"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      enhanceQuality ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
 
             {/* Launch Button */}
             <button
@@ -658,6 +876,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
               {selectedClips.length > 0 && (
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleBatchDownload}
+                    disabled={isExportingBatch}
+                    className="flex items-center gap-1.5 rounded-lg bg-emerald-600/20 border border-emerald-500/30 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-600 hover:text-white transition-all disabled:opacity-50"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    {isExportingBatch ? "Packaging..." : `Bulk Download (${selectedClips.length})`}
+                  </button>
                   <button
                     onClick={() => handleBulkAction("favorite")}
                     className="flex items-center gap-1.5 rounded-lg bg-white/[0.04] border border-white/10 px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:text-white"

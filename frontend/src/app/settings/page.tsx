@@ -30,6 +30,9 @@ import {
   Film,
   Layers,
   HardDrive,
+  Flame,
+  Eraser,
+  Wand2,
 } from "lucide-react";
 
 
@@ -40,8 +43,8 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SettingsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Form states
-  const [aiProvider, setAiProvider] = useState<"groq" | "gemini" | "mock">("groq");
+  // Active AI Provider Mode
+  const [aiProvider, setAiProvider] = useState<"gemini" | "groq" | "mock">("groq");
   const [transcriberProvider, setTranscriberProvider] = useState<"auto" | "deepgram" | "whisper">("auto");
 
   // Deepgram states (First)
@@ -69,6 +72,11 @@ export default function SettingsPage() {
   const [defaultFramingMode, setDefaultFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
   const [defaultBlurRadius, setDefaultBlurRadius] = useState<number>(30);
   const [defaultSubtitlePosition, setDefaultSubtitlePosition] = useState<number>(75);
+  const [defaultAddHookHeader, setDefaultAddHookHeader] = useState<boolean>(true);
+  const [defaultHookHeaderPosition, setDefaultHookHeaderPosition] = useState<number>(12);
+  const [defaultRemoveWatermark, setDefaultRemoveWatermark] = useState<boolean>(false);
+  const [defaultWatermarkPosition, setDefaultWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">("top_right");
+  const [defaultEnhanceQuality, setDefaultEnhanceQuality] = useState<boolean>(true);
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -85,6 +93,11 @@ export default function SettingsPage() {
       if (data.default_framing_mode) setDefaultFramingMode(data.default_framing_mode as any);
       if (data.default_blur_radius) setDefaultBlurRadius(data.default_blur_radius);
       if (data.default_subtitle_position) setDefaultSubtitlePosition(data.default_subtitle_position);
+      if (data.default_add_hook_header !== undefined) setDefaultAddHookHeader(data.default_add_hook_header);
+      if (data.default_hook_header_position) setDefaultHookHeaderPosition(data.default_hook_header_position);
+      if (data.default_remove_watermark !== undefined) setDefaultRemoveWatermark(data.default_remove_watermark);
+      if (data.default_watermark_position) setDefaultWatermarkPosition(data.default_watermark_position as any);
+      if (data.default_enhance_quality !== undefined) setDefaultEnhanceQuality(data.default_enhance_quality);
 
       // Hydrate plain keys from localStorage if available
       if (typeof window !== "undefined") {
@@ -157,6 +170,11 @@ export default function SettingsPage() {
         default_framing_mode: defaultFramingMode,
         default_blur_radius: defaultBlurRadius,
         default_subtitle_position: defaultSubtitlePosition,
+        default_add_hook_header: defaultAddHookHeader,
+        default_hook_header_position: defaultHookHeaderPosition,
+        default_remove_watermark: defaultRemoveWatermark,
+        default_watermark_position: defaultWatermarkPosition,
+        default_enhance_quality: defaultEnhanceQuality,
       });
       setSettings(updated);
       setSaveSuccess(true);
@@ -1030,12 +1048,221 @@ export default function SettingsPage() {
 
             {/* Mini phone screen preview */}
             <div className="w-12 h-20 rounded-xl bg-black/80 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-xl flex items-center justify-center">
+              {defaultAddHookHeader && (
+                <div
+                  className="absolute left-1.5 right-1.5 h-1.5 bg-amber-400 rounded-full shadow-md shadow-amber-400/80 transition-all duration-150"
+                  style={{ top: `${defaultHookHeaderPosition}%` }}
+                />
+              )}
               <div
                 className="absolute left-1.5 right-1.5 h-2 bg-yellow-400 rounded-full shadow-md shadow-yellow-400/60 transition-all duration-150"
                 style={{ top: `${defaultSubtitlePosition}%` }}
               />
             </div>
           </div>
+        </div>
+
+        {/* 7. Default Sticky TikTok Hook Header Defaults */}
+        <div className="glass-panel rounded-2xl p-6 space-y-5 border border-white/[0.08]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Flame className="h-4 w-4 text-amber-400" />
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-300">
+                    Default Sticky TikTok Hook Header
+                  </h3>
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">VIRAL CREATOR</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDefaultAddHookHeader(!defaultAddHookHeader)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                defaultAddHookHeader ? "bg-amber-500" : "bg-zinc-800"
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  defaultAddHookHeader ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
+          <p className="text-xs text-zinc-400">
+            Automatically burn a bold TikTok-style title overlay with contextual emojis throughout the entire video to maximize viewer retention.
+          </p>
+
+          {defaultAddHookHeader && (
+            <div className="space-y-4 pt-2 border-t border-white/5 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-zinc-300">Default Hook Screen Position</span>
+                <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                  {defaultHookHeaderPosition}% from Top ({defaultHookHeaderPosition <= 15 ? "Top Banner (Recommended)" : defaultHookHeaderPosition <= 30 ? "Upper-Third" : defaultHookHeaderPosition <= 55 ? "Center" : "Bottom"})
+                </span>
+              </div>
+
+              {/* Position Presets */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { label: "Top Banner", pos: 12, desc: "Standard TikTok header" },
+                  { label: "Upper 3rd", pos: 25, desc: "Above subject head" },
+                  { label: "Center Screen", pos: 50, desc: "Mid-frame focus" },
+                  { label: "Bottom Anchor", pos: 85, desc: "Lower watermark" },
+                ].map((p) => (
+                  <button
+                    key={p.pos}
+                    type="button"
+                    onClick={() => setDefaultHookHeaderPosition(p.pos)}
+                    className={`rounded-xl p-3 text-left border transition-all ${
+                      defaultHookHeaderPosition === p.pos
+                        ? "bg-amber-500/25 border-amber-400 text-white shadow-md"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold">{p.label}</span>
+                      <span className="text-[10px] font-mono text-amber-400">{p.pos}%</span>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 mt-1">{p.desc}</p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Slider with Mini Interactive Phone Mockup */}
+              <div className="flex items-center gap-4 pt-2">
+                <div className="flex-1 space-y-1.5">
+                  <input
+                    type="range"
+                    min={8}
+                    max={85}
+                    step={1}
+                    value={defaultHookHeaderPosition}
+                    onChange={(e) => setDefaultHookHeaderPosition(Number(e.target.value))}
+                    className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-zinc-500">
+                    <span>Top Banner (8%)</span>
+                    <span>Upper (25%)</span>
+                    <span>Center (50%)</span>
+                    <span>Bottom (85%)</span>
+                  </div>
+                </div>
+
+                {/* Mini phone screen preview */}
+                <div className="w-12 h-20 rounded-xl bg-black/80 border border-amber-500/40 relative overflow-hidden flex-shrink-0 shadow-xl flex items-center justify-center">
+                  <div
+                    className="absolute left-1.5 right-1.5 h-1.5 bg-amber-400 rounded-full shadow-md shadow-amber-400/80 transition-all duration-150"
+                    style={{ top: `${defaultHookHeaderPosition}%` }}
+                  />
+                  <div
+                    className="absolute left-1.5 right-1.5 h-1.5 bg-yellow-300/50 rounded-full transition-all duration-150"
+                    style={{ top: `${defaultSubtitlePosition}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 8. Default Watermark / Logo Eraser */}
+        <div className="glass-panel rounded-2xl p-6 space-y-5 border border-white/[0.08]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Eraser className="h-4 w-4 text-cyan-400" />
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-300">
+                    Default Watermark &amp; Logo Eraser
+                  </h3>
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">DELOGO</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDefaultRemoveWatermark(!defaultRemoveWatermark)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                defaultRemoveWatermark ? "bg-cyan-500" : "bg-zinc-800"
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  defaultRemoveWatermark ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
+          <p className="text-xs text-zinc-400">
+            Automatically detect and interpolate channel logos, broadcast watermarks, or corner trademarks prior to 9:16 vertical re-framing.
+          </p>
+
+          {defaultRemoveWatermark && (
+            <div className="space-y-4 pt-2 border-t border-white/5 animate-in fade-in duration-200">
+              <span className="text-xs font-semibold text-zinc-300">Default Watermark Location</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { label: "Top Right", value: "top_right", desc: "Default TV / YouTube corner" },
+                  { label: "Bottom Right", value: "bottom_right", desc: "Lower watermark placement" },
+                  { label: "Top Left", value: "top_left", desc: "Network bug / station ID" },
+                  { label: "Bottom Left", value: "bottom_left", desc: "Lower corner branding" },
+                ].map((pos) => (
+                  <button
+                    key={pos.value}
+                    type="button"
+                    onClick={() => setDefaultWatermarkPosition(pos.value as any)}
+                    className={`rounded-xl p-3 text-left border transition-all ${
+                      defaultWatermarkPosition === pos.value
+                        ? "bg-cyan-500/25 border-cyan-400 text-white shadow-md"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold">{pos.label}</span>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 mt-1">{pos.desc}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 9. Studio Enhancement & Color Boost */}
+        <div className="glass-panel rounded-2xl p-6 space-y-5 border border-white/[0.08]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Wand2 className="h-4 w-4 text-emerald-400" />
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-300">
+                    Studio Enhancement &amp; Color Boost
+                  </h3>
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">AI EDITING</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setDefaultEnhanceQuality(!defaultEnhanceQuality)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                defaultEnhanceQuality ? "bg-emerald-500" : "bg-zinc-800"
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  defaultEnhanceQuality ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+
+          <p className="text-xs text-zinc-400">
+            Automatically applies high-quality unsharp mask sharpening, contrast/saturation boost, and EBU R128 loudness normalization for crisp mobile screen playback.
+          </p>
         </div>
 
         {/* Save Bar */}

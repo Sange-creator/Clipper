@@ -3,13 +3,25 @@
 import { Check, Sparkles } from "lucide-react";
 
 export interface CaptionPreset {
-  id: "clean_white" | "bold_yellow" | "podcast_box" | "cinematic" | "meme_impact" | "cyber_neon";
+  id: "tiktok_viral" | "hormozi_bold" | "clean_white" | "bold_yellow" | "podcast_box" | "cinematic" | "meme_impact" | "cyber_neon";
   label: string;
   desc: string;
   previewClass: string;
 }
 
 const PRESETS: CaptionPreset[] = [
+  {
+    id: "tiktok_viral",
+    label: "TikTok Viral (Top Pick)",
+    desc: "Active word electric yellow & crisp white pop with bold shadow",
+    previewClass: "font-black text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,1)] uppercase tracking-wider",
+  },
+  {
+    id: "hormozi_bold",
+    label: "Hormozi Punch",
+    desc: "High-retention neon lime green & yellow impact block text",
+    previewClass: "font-black text-lime-400 drop-shadow-[0_2px_5px_rgba(0,0,0,1)] uppercase",
+  },
   {
     id: "bold_yellow",
     label: "Bold Yellow",
@@ -48,9 +60,11 @@ const PRESETS: CaptionPreset[] = [
   },
 ];
 
+import { CaptionStyleType } from "@/lib/types";
+
 interface CaptionPresetPickerProps {
   selected: string;
-  onChange: (id: string) => void;
+  onChange: (id: CaptionStyleType) => void;
 }
 
 export function CaptionPresetPicker({ selected, onChange }: CaptionPresetPickerProps) {

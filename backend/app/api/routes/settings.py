@@ -91,6 +91,19 @@ async def load_persisted_settings(db: AsyncSession) -> None:
                 settings.DEFAULT_SUBTITLE_POSITION = int(rec.value)
             except Exception:
                 pass
+        elif rec.key == "DEFAULT_ADD_HOOK_HEADER" and rec.value:
+            settings.DEFAULT_ADD_HOOK_HEADER = rec.value.lower() in ("true", "1", "yes")
+        elif rec.key == "DEFAULT_HOOK_HEADER_POSITION" and rec.value:
+            try:
+                settings.DEFAULT_HOOK_HEADER_POSITION = int(rec.value)
+            except Exception:
+                pass
+        elif rec.key == "DEFAULT_REMOVE_WATERMARK" and rec.value:
+            settings.DEFAULT_REMOVE_WATERMARK = rec.value.lower() in ("true", "1", "yes")
+        elif rec.key == "DEFAULT_WATERMARK_POSITION" and rec.value:
+            settings.DEFAULT_WATERMARK_POSITION = rec.value
+        elif rec.key == "DEFAULT_ENHANCE_QUALITY" and rec.value:
+            settings.DEFAULT_ENHANCE_QUALITY = rec.value.lower() in ("true", "1", "yes")
 
     sync_to_env_file()
 
@@ -119,6 +132,11 @@ async def get_settings(db: AsyncSession = Depends(get_db)):
         default_framing_mode=settings.DEFAULT_FRAMING_MODE,
         default_blur_radius=settings.DEFAULT_BLUR_RADIUS,
         default_subtitle_position=settings.DEFAULT_SUBTITLE_POSITION,
+        default_add_hook_header=settings.DEFAULT_ADD_HOOK_HEADER,
+        default_hook_header_position=settings.DEFAULT_HOOK_HEADER_POSITION,
+        default_remove_watermark=settings.DEFAULT_REMOVE_WATERMARK,
+        default_watermark_position=settings.DEFAULT_WATERMARK_POSITION,
+        default_enhance_quality=settings.DEFAULT_ENHANCE_QUALITY,
         ffmpeg_available=ffmpeg_available,
         ffprobe_available=ffprobe_available,
     )
@@ -191,9 +209,29 @@ async def update_settings(
         settings.DEFAULT_SUBTITLE_POSITION = req.default_subtitle_position
         await set_or_update("DEFAULT_SUBTITLE_POSITION", str(req.default_subtitle_position))
 
+    if req.default_add_hook_header is not None:
+        settings.DEFAULT_ADD_HOOK_HEADER = req.default_add_hook_header
+        await set_or_update("DEFAULT_ADD_HOOK_HEADER", str(req.default_add_hook_header))
+
+    if req.default_hook_header_position is not None:
+        settings.DEFAULT_HOOK_HEADER_POSITION = req.default_hook_header_position
+        await set_or_update("DEFAULT_HOOK_HEADER_POSITION", str(req.default_hook_header_position))
+
+    if req.default_remove_watermark is not None:
+        settings.DEFAULT_REMOVE_WATERMARK = req.default_remove_watermark
+        await set_or_update("DEFAULT_REMOVE_WATERMARK", str(req.default_remove_watermark))
+
+    if req.default_watermark_position is not None:
+        settings.DEFAULT_WATERMARK_POSITION = req.default_watermark_position
+        await set_or_update("DEFAULT_WATERMARK_POSITION", req.default_watermark_position)
+
+    if req.default_enhance_quality is not None:
+        settings.DEFAULT_ENHANCE_QUALITY = req.default_enhance_quality
+        await set_or_update("DEFAULT_ENHANCE_QUALITY", str(req.default_enhance_quality))
+
     await db.commit()
     sync_to_env_file()
-    logger.info(f"System settings updated: Provider={settings.AI_PROVIDER}, Framing={settings.DEFAULT_FRAMING_MODE}, SubtitlePos={settings.DEFAULT_SUBTITLE_POSITION}%")
+    logger.info(f"System settings updated: Provider={settings.AI_PROVIDER}, Framing={settings.DEFAULT_FRAMING_MODE}, SubtitlePos={settings.DEFAULT_SUBTITLE_POSITION}%, HookHeader={settings.DEFAULT_ADD_HOOK_HEADER}@{settings.DEFAULT_HOOK_HEADER_POSITION}%, Delogo={settings.DEFAULT_REMOVE_WATERMARK}@{settings.DEFAULT_WATERMARK_POSITION}, Enhance={settings.DEFAULT_ENHANCE_QUALITY}")
 
     return await get_settings(db)
 

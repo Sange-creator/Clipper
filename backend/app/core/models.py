@@ -122,6 +122,11 @@ class Job(Base):
     framing_mode: Mapped[str] = mapped_column(String(32), default="crop_9_16")  # "crop_9_16", "blur_fit_9_16", "original_16_9"
     blur_radius: Mapped[int] = mapped_column(Integer, default=30)  # 10..80
     subtitle_position: Mapped[int] = mapped_column(Integer, default=75)  # 10..90 percent from top
+    add_hook_header: Mapped[bool] = mapped_column(Boolean, default=False)  # Sticky TikTok hook header
+    hook_header_position: Mapped[int] = mapped_column(Integer, default=12)  # 8..90 percent from top
+    remove_watermark: Mapped[bool] = mapped_column(Boolean, default=False)  # Delogo / erase watermark
+    watermark_position: Mapped[str] = mapped_column(String(32), default="top_right")  # "top_right", "bottom_right", "top_left", "bottom_left"
+    enhance_quality: Mapped[bool] = mapped_column(Boolean, default=True)  # Studio color & detail boost
     config_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
 
@@ -205,6 +210,12 @@ class RenderedClip(Base):
     framing_mode: Mapped[str] = mapped_column(String(32), default="crop_9_16")  # "crop_9_16", "blur_fit_9_16", "original_16_9"
     blur_radius: Mapped[int] = mapped_column(Integer, default=30)  # 10..80
     subtitle_position: Mapped[int] = mapped_column(Integer, default=75)  # 10..90 percent from top
+    add_hook_header: Mapped[bool] = mapped_column(Boolean, default=False)  # Sticky TikTok hook header
+    hook_header_position: Mapped[int] = mapped_column(Integer, default=12)  # 8..90 percent from top
+    hook_header_text: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    remove_watermark: Mapped[bool] = mapped_column(Boolean, default=False)  # Delogo / erase watermark
+    watermark_position: Mapped[str] = mapped_column(String(32), default="top_right")  # "top_right", "bottom_right", "top_left", "bottom_left"
+    enhance_quality: Mapped[bool] = mapped_column(Boolean, default=True)  # Studio color & detail boost
     caption_style: Mapped[str] = mapped_column(String(32), default="bold_yellow")
 
     burn_captions: Mapped[bool] = mapped_column(Boolean, default=True)

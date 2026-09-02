@@ -2,9 +2,11 @@ import {
   AdminMetricsResponse,
   BatchUploadResponse,
   CandidateDetail,
+  JobCreatePayload,
   JobStatusResponse,
   ProjectDetailResponse,
   ProjectListItem,
+  ProjectProcessPayload,
   RenderedClipResponse,
   SettingsResponse,
   SettingsUpdateRequest,
@@ -33,6 +35,23 @@ export const api = {
     return res.json();
   },
 
+  async batchUploadVideos(projectId: string, files: File[]): Promise<BatchUploadResponse> {
+    const formData = new FormData();
+    files.forEach((f) => formData.append("files", f));
+
+    const res = await fetch(`${API_BASE}/upload/batch?project_id=${projectId}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: "Batch upload failed" }));
+      throw new Error(err.detail || "Batch upload failed");
+    }
+
+    return res.json();
+  },
+
   // Projects API
   async listProjects(): Promise<ProjectListItem[]> {
     const res = await fetch(`${API_BASE}/projects`);
@@ -40,7 +59,7 @@ export const api = {
     return res.json();
   },
 
-  async createProject(name: string, mode: "podcast" | "viral_moments" = "podcast", description?: string): Promise<ProjectListItem> {
+  async createProject(name: string, mode: "podcast" | "viral_moments" = "podcast", description: string = ""): Promise<ProjectListItem> {
     const res = await fetch(`${API_BASE}/projects`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,39 +75,7 @@ export const api = {
     return res.json();
   },
 
-  async batchUploadVideos(projectId: string, files: File[]): Promise<BatchUploadResponse> {
-    const formData = new FormData();
-    for (const file of files) {
-      formData.append("files", file);
-    }
-
-    const res = await fetch(`${API_BASE}/projects/${projectId}/batch-upload`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: "Batch upload failed" }));
-      throw new Error(err.detail || "Batch upload failed");
-    }
-
-    return res.json();
-  },
-
-  async processProject(projectId: string, params: {
-    mode?: "podcast" | "viral_moments";
-    target_clips_count: number;
-    duration_preset: string;
-    caption_style: string;
-    burn_captions?: boolean;
-    remove_dead_air?: boolean;
-    framing_mode?: string;
-    blur_radius?: number;
-    subtitle_position?: number;
-    reframing_mode: string;
-    source_diversity_weight: number;
-    custom_instructions?: string;
-  }): Promise<{ job_id: string; status: string }> {
+  async processProject(projectId: string, params: ProjectProcessPayload): Promise<{ job_id: string; status: string }> {
     const res = await fetch(`${API_BASE}/projects/${projectId}/process`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -135,21 +122,7 @@ export const api = {
     return res.json();
   },
 
-  async createJob(params: {
-    video_id: string;
-    mode?: "podcast" | "viral_moments";
-    target_clips_count: number;
-    duration_preset: string;
-    caption_style: string;
-    burn_captions?: boolean;
-    remove_dead_air?: boolean;
-    framing_mode?: string;
-    blur_radius?: number;
-    subtitle_position?: number;
-    reframing_mode?: string;
-    ai_provider?: string;
-    custom_instructions?: string;
-  }): Promise<JobStatusResponse> {
+  async createJob(params: JobCreatePayload): Promise<JobStatusResponse> {
     const res = await fetch(`${API_BASE}/jobs`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -239,6 +212,12 @@ export const api = {
     framing_mode?: string;
     blur_radius?: number;
     subtitle_position?: number;
+    add_hook_header?: boolean;
+    hook_header_position?: number;
+    hook_header_text?: string;
+    remove_watermark?: boolean;
+    watermark_position?: string;
+    enhance_quality?: boolean;
   }): Promise<RenderedClipResponse> {
     const res = await fetch(`${API_BASE}/clips/${id}/re-render`, {
       method: "POST",
@@ -249,8 +228,26 @@ export const api = {
     return res.json();
   },
 
+  async refreshThumbnail(id: string): Promise<RenderedClipResponse> {
+    const res = await fetch(`${API_BASE}/clips/${id}/refresh-thumbnail`, {
+      method: "POST",
+    });
+    if (!res.ok) throw new Error("Failed to refresh thumbnail");
+    return res.json();
+  },
 
-  async regenerateClip(id: string, params: { intent: string; caption_style?: string; custom_note?: string; subtitle_position?: number }): Promise<RenderedClipResponse> {
+  async regenerateClip(id: string, params: {
+    intent: string;
+    caption_style?: string;
+    custom_note?: string;
+    subtitle_position?: number;
+    add_hook_header?: boolean;
+    hook_header_position?: number;
+    hook_header_text?: string;
+    remove_watermark?: boolean;
+    watermark_position?: string;
+    enhance_quality?: boolean;
+  }): Promise<RenderedClipResponse> {
     const res = await fetch(`${API_BASE}/clips/${id}/regenerate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

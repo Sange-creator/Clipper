@@ -120,6 +120,12 @@ class RenderedClipResponse(BaseModel):
     framing_mode: str = "crop_9_16"
     blur_radius: int = 30
     subtitle_position: int = 75
+    add_hook_header: bool = False
+    hook_header_position: int = 12
+    hook_header_text: Optional[str] = None
+    remove_watermark: bool = False
+    watermark_position: str = "top_right"
+    enhance_quality: bool = True
     caption_style: str = "bold_yellow"
     burn_captions: bool = True
     timeline_edit: Optional[Dict[str, Any]] = None
@@ -167,12 +173,17 @@ class ProjectProcessRequest(BaseModel):
     mode: Optional[Literal["podcast", "viral_moments"]] = None
     target_clips_count: int = Field(default=20, ge=1, le=100)
     duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "30-45s"
-    caption_style: Literal["clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"] = "bold_yellow"
+    caption_style: Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"] = "bold_yellow"
     burn_captions: bool = True
     remove_dead_air: bool = True
     framing_mode: Literal["crop_9_16", "blur_fit_9_16", "original_16_9"] = "crop_9_16"
     blur_radius: int = Field(default=30, ge=5, le=100)
     subtitle_position: int = Field(default=75, ge=10, le=90)
+    add_hook_header: bool = False
+    hook_header_position: int = Field(default=12, ge=8, le=90)
+    remove_watermark: bool = False
+    watermark_position: Literal["top_right", "bottom_right", "top_left", "bottom_left"] = "top_right"
+    enhance_quality: bool = True
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
     source_diversity_weight: float = Field(default=0.35, ge=0.0, le=1.0)
@@ -189,12 +200,17 @@ class JobCreateRequest(BaseModel):
     min_duration: Optional[float] = None
     max_duration: Optional[float] = None
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
-    caption_style: Literal["clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"] = "bold_yellow"
+    caption_style: Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"] = "bold_yellow"
     burn_captions: bool = True
     remove_dead_air: bool = True
     framing_mode: Literal["crop_9_16", "blur_fit_9_16", "original_16_9"] = "crop_9_16"
     blur_radius: int = Field(default=30, ge=5, le=100)
     subtitle_position: int = Field(default=75, ge=10, le=90)
+    add_hook_header: bool = False
+    hook_header_position: int = Field(default=12, ge=8, le=90)
+    remove_watermark: bool = False
+    watermark_position: Literal["top_right", "bottom_right", "top_left", "bottom_left"] = "top_right"
+    enhance_quality: bool = True
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     custom_instructions: Optional[str] = None
 
@@ -219,18 +235,30 @@ class JobStatusResponse(BaseModel):
 class ClipEditRequest(BaseModel):
     start_time: float
     end_time: float
-    caption_style: Optional[Literal["clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"]] = None
+    caption_style: Optional[Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon", "none"]] = None
     burn_captions: bool = True
     remove_dead_air: bool = True
     framing_mode: Optional[Literal["crop_9_16", "blur_fit_9_16", "original_16_9"]] = None
     blur_radius: Optional[int] = Field(default=None, ge=5, le=100)
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
+    add_hook_header: Optional[bool] = None
+    hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
+    hook_header_text: Optional[str] = None
+    remove_watermark: Optional[bool] = None
+    watermark_position: Optional[Literal["top_right", "bottom_right", "top_left", "bottom_left"]] = None
+    enhance_quality: Optional[bool] = None
 
 
 class ClipRegenerateRequest(BaseModel):
     intent: Literal["stronger_hook", "shorter_duration", "longer_context", "different_payoff", "style_change"]
-    caption_style: Optional[Literal["clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon"]] = None
+    caption_style: Optional[Literal["tiktok_viral", "hormozi_bold", "clean_white", "bold_yellow", "podcast_box", "cinematic", "meme_impact", "cyber_neon"]] = None
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
+    add_hook_header: Optional[bool] = None
+    hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
+    hook_header_text: Optional[str] = None
+    remove_watermark: Optional[bool] = None
+    watermark_position: Optional[Literal["top_right", "bottom_right", "top_left", "bottom_left"]] = None
+    enhance_quality: Optional[bool] = None
     custom_note: Optional[str] = None
 
 
@@ -279,6 +307,11 @@ class SettingsResponse(BaseModel):
     default_framing_mode: str = "crop_9_16"
     default_blur_radius: int = 30
     default_subtitle_position: int = 75
+    default_add_hook_header: bool = False
+    default_hook_header_position: int = 12
+    default_remove_watermark: bool = False
+    default_watermark_position: str = "top_right"
+    default_enhance_quality: bool = True
     ffmpeg_available: bool
     ffprobe_available: bool
 
@@ -296,6 +329,11 @@ class SettingsUpdateRequest(BaseModel):
     default_framing_mode: Optional[Literal["crop_9_16", "blur_fit_9_16", "original_16_9"]] = None
     default_blur_radius: Optional[int] = Field(default=None, ge=5, le=100)
     default_subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
+    default_add_hook_header: Optional[bool] = None
+    default_hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
+    default_remove_watermark: Optional[bool] = None
+    default_watermark_position: Optional[Literal["top_right", "bottom_right", "top_left", "bottom_left"]] = None
+    default_enhance_quality: Optional[bool] = None
 
 
 

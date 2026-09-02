@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Play, Heart, Zap, Award, Sparkles, Mic, Subtitles, Scissors, Download } from "lucide-react";
-
-
+import { Play, Heart, Zap, Award, Sparkles, Mic, Subtitles, Scissors, Download, Flame } from "lucide-react";
 
 import { RenderedClipResponse } from "@/lib/types";
 import { api } from "@/lib/api";
@@ -16,6 +14,7 @@ interface ClipCardProps {
 
 export function ClipCard({ clip, rank }: ClipCardProps) {
   const [isFav, setIsFav] = useState(clip.is_favorite);
+  const [imgError, setImgError] = useState(false);
 
   const handleFavoriteToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,20 +28,27 @@ export function ClipCard({ clip, rank }: ClipCardProps) {
   };
 
   const deadAirSec = clip.timeline_edit?.dead_air_removed_seconds || 0;
+  const displayTitle = clip.hook_header_text || clip.hook_text || clip.metadata.tiktok_title || "High-Impact Short Clip";
 
   return (
     <div className="group relative overflow-hidden rounded-2xl glass-panel glass-panel-hover flex flex-col justify-between">
       {/* Thumbnail & Video Preview Area */}
-      <Link href={`/clips/${clip.id}`} className="block relative aspect-[9/16] bg-black/60 overflow-hidden">
-        {clip.thumbnail_url ? (
+      <Link href={`/clips/${clip.id}`} className="block relative aspect-[9/16] bg-black/80 overflow-hidden">
+        {clip.thumbnail_url && !imgError ? (
           <img
             src={clip.thumbnail_url}
-            alt={clip.hook_text || "Clip preview"}
+            alt={displayTitle}
+            onError={() => setImgError(true)}
             className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center text-zinc-600 bg-zinc-900">
-            <Play className="h-10 w-10 opacity-40" />
+          <div className="h-full w-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-b from-zinc-900 via-zinc-950 to-black relative">
+            <div className="h-12 w-12 rounded-2xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mb-2">
+              <Play className="h-6 w-6 text-violet-400 ml-0.5" />
+            </div>
+            <p className="text-xs font-bold text-white line-clamp-3 leading-snug px-1 font-mono">
+              {displayTitle}
+            </p>
           </div>
         )}
 
@@ -55,9 +61,11 @@ export function ClipCard({ clip, rank }: ClipCardProps) {
             <span className="rounded-md bg-zinc-950/80 backdrop-blur-md border border-white/10 px-2 py-0.5 text-[10px] font-bold text-zinc-300 font-mono">
               #{rank}
             </span>
-            <span className="rounded-md bg-zinc-900/90 backdrop-blur-md border border-white/10 px-2 py-0.5 text-[10px] font-semibold text-zinc-300 uppercase tracking-wider">
-              {clip.mode === "viral_moments" ? "Viral Hook" : "Context Unit"}
-            </span>
+            {clip.add_hook_header && (
+              <span className="rounded-md bg-amber-500/20 backdrop-blur-md border border-amber-500/40 px-1.5 py-0.5 text-[9px] font-bold text-amber-300 flex items-center gap-0.5">
+                <Flame className="h-2.5 w-2.5 fill-amber-400" /> HOOK
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-1 rounded-md bg-violet-600/90 backdrop-blur-md border border-violet-400/30 px-2 py-0.5 text-[11px] font-bold text-white shadow-md">

@@ -1,4 +1,4 @@
-"""Config-driven caption generator with 6 presets, animated ASS formatting and keyword emphasis."""
+"""Config-driven caption generator with captivating TikTok creator styling, animated ASS formatting, keyword emphasis, and persistent hook headers."""
 
 import re
 from pathlib import Path
@@ -6,15 +6,104 @@ from typing import Any, Dict, List, Optional
 
 EMPHASIS_PATTERNS = [
     r"^\$?\d+[\d,\.]*[%kKmMbB]?$",  # Numbers, percentages, currency (e.g. $10k, 80%, 100)
-    r"\b(secret|never|always|huge|insane|crazy|truth|mistake|stop|proven|guaranteed|warning)\b",
+    r"\b(secret|never|always|huge|insane|crazy|truth|mistake|stop|proven|guaranteed|warning|shocking|unbelievable|wtf|omg|must|crucial)\b",
 ]
+
+# Contextual Creator Emojis for TikTok / Reels / Shorts
+EMOJI_KEYWORDS = {
+    "shock": ["🤯", "😱", "😳", "👀"],
+    "warning": ["⚠️", "🛑", "❌", "🚨"],
+    "money": ["💰", "💵", "🤑", "📈"],
+    "fire": ["🔥", "⚡️", "💥", "🚀"],
+    "secret": ["🤫", "🔒", "🔑", "👀"],
+    "humor": ["💀", "😂", "🤣", "😭"],
+    "top": ["💯", "👑", "🎯", "✨"],
+}
+
+DEFAULT_VIRAL_EMOJIS = ["🤯", "🔥", "😱", "💀", "🤫", "❌", "💯", "⚠️", "🚀", "👀"]
+
+
+def format_tiktok_hook_header(hook_text: str, custom_text: Optional[str] = None) -> str:
+    """
+    Format text into a high-CTR, punchy TikTok creator hook header:
+    - Uppercase or punchy title phrasing
+    - Auto-wraps onto 2 balanced lines using \\N if long
+    - Ensures a captivating viral emoji is placed at the end
+    """
+    raw = (custom_text or hook_text or "").strip()
+    if not raw:
+        return "WAIT TILL THE END 🤯"
+
+    # Remove outer quotes and redundant punctuation
+    cleaned = re.sub(r"^[\"']|[\"']$", "", raw).strip()
+    cleaned = re.sub(r"\s+", " ", cleaned)
+
+    # Check if text already ends with an emoji
+    has_emoji = bool(re.search(r"[\U00010000-\U0010ffff\u2600-\u27ff]", cleaned))
+
+    # Pick an emoji if not present
+    if not has_emoji:
+        lower = cleaned.lower()
+        chosen_emoji = "🔥"
+        if any(w in lower for w in ["shock", "crazy", "insane", "unbelievable", "mind", "wait"]):
+            chosen_emoji = "🤯"
+        elif any(w in lower for w in ["mistake", "stop", "never", "don't", "dont", "worst", "wrong", "fail"]):
+            chosen_emoji = "❌"
+        elif any(w in lower for w in ["money", "dollar", "rich", "million", "billion", "business", "profit", "crypto"]):
+            chosen_emoji = "💰"
+        elif any(w in lower for w in ["secret", "nobody", "truth", "hidden", "why", "curious", "listen"]):
+            chosen_emoji = "🤫"
+        elif any(w in lower for w in ["funny", "hilarious", "laugh", "joke", "dead", "died"]):
+            chosen_emoji = "💀"
+        elif any(w in lower for w in ["warning", "alert", "danger", "careful", "problem"]):
+            chosen_emoji = "⚠️"
+        else:
+            chosen_emoji = DEFAULT_VIRAL_EMOJIS[hash(cleaned) % len(DEFAULT_VIRAL_EMOJIS)]
+
+        cleaned = f"{cleaned} {chosen_emoji}"
+
+    # Auto-wrap cleanly onto 2 lines with \N if long (> 28 chars)
+    if len(cleaned) > 28 and " " in cleaned:
+        words = cleaned.split(" ")
+        mid = len(words) // 2
+        line1 = " ".join(words[:mid])
+        line2 = " ".join(words[mid:])
+        return f"{line1.upper()}\\N{line2.upper()}"
+
+    return cleaned.upper()
 
 
 class CaptionGenerator:
-    """Generates styled animated ASS and standard SRT subtitle files with keyword emphasis."""
+    """Generates styled animated ASS and standard SRT subtitle files with keyword emphasis and persistent hook titles."""
 
-    # 6 Config-Driven Caption Presets
+    # 8 Config-Driven Caption Presets
     PRESET_CONFIGS = {
+        "tiktok_viral": {
+            "font_name": "Arial Black",
+            "font_size": 48,
+            "primary_color": "&H00FFFFFF&",    # Crisp White
+            "secondary_color": "&H0000FFFF&",  # Electric Neon Yellow highlight
+            "outline_color": "&H00000000&",    # Solid Black
+            "back_color": "&H90000000&",
+            "border_style": 1,
+            "outline": 6,
+            "shadow": 3,
+            "margin_v": 280,
+            "uppercase": True,
+        },
+        "hormozi_bold": {
+            "font_name": "Impact",
+            "font_size": 52,
+            "primary_color": "&H00FFFFFF&",    # White
+            "secondary_color": "&H0000FF00&",  # High-impact Neon Lime Green
+            "outline_color": "&H00000000&",
+            "back_color": "&HA0000000&",
+            "border_style": 1,
+            "outline": 7,
+            "shadow": 4,
+            "margin_v": 300,
+            "uppercase": True,
+        },
         "bold_yellow": {
             "font_name": "Arial Black",
             "font_size": 48,
@@ -131,11 +220,16 @@ class CaptionGenerator:
         output_path: Path | str,
         style: str = "bold_yellow",
         subtitle_position: Optional[int] = 75,
+        add_hook_header: bool = False,
+        hook_header_text: Optional[str] = None,
+        hook_header_position: Optional[int] = 12,
     ) -> Path:
         """
         Generate an Advanced SubStation Alpha (.ass) subtitle file.
         All timestamps are relative to the sliced clip start (0.0s).
         subtitle_position: percentage height from top of screen (10% to 90%, default 75%).
+        add_hook_header: if True, creates a persistent, high-impact TikTok hook header across the entire video.
+        hook_header_position: percentage height from top of screen (10% to 90%, default 12% Top Banner).
         """
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -154,15 +248,19 @@ class CaptionGenerator:
         uppercase = cfg["uppercase"]
 
         # Calculate MarginV based on screen percentage (10% = Top, 50% = Center, 75% = Lower-Third, 90% = Bottom)
+        # PlayResY is 1920. Alignment 2 measures from the bottom edge.
         if subtitle_position is not None:
-            # PlayResY is 1920. Alignment 2 measures from the bottom edge.
-            pos_pct = max(10, min(90, subtitle_position))
-            margin_v = max(60, min(1750, int(1920 * (1.0 - (pos_pct / 100.0)))))
+            sub_pos_pct = max(10, min(90, subtitle_position))
+            margin_v = max(60, min(1750, int(1920 * (1.0 - (sub_pos_pct / 100.0)))))
         else:
             margin_v = cfg.get("margin_v", 320)
 
+        # Calculate Hook Header MarginV (default 12% from top -> margin_v ~ 1689 from bottom)
+        hook_pos_pct = max(8, min(90, hook_header_position if hook_header_position is not None else 12))
+        hook_margin_v = max(60, min(1780, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))
+
         ass_header = f"""[Script Info]
-Title: AI Clipper Animated Captions
+Title: AI Clipper Animated Captions & TikTok Hook
 ScriptType: v4.00+
 WrapStyle: 0
 ScaledBorderAndShadow: yes
@@ -174,14 +272,25 @@ PlayResY: 1920
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Default,{font_name},{font_size},{primary_color},{secondary_color},{outline_color},{back_color},-1,0,0,0,100,100,1,0,{border_style},{outline},{shadow},2,60,60,{margin_v},1
 Style: Emphasis,{font_name},{int(font_size * 1.1)},{secondary_color},{primary_color},{outline_color},{back_color},-1,0,0,0,110,110,1,0,{border_style},{outline + 1},{shadow + 1},2,60,60,{margin_v},1
-
+Style: HookHeader,Arial Black,46,&H0000FFFF,&H00FFFFFF,&H00000000,&HA0000000,-1,0,0,0,100,100,1,0,1,6,3,2,50,50,{hook_margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
         dialogue_lines: List[str] = []
+        clip_duration = max(0.5, clip_end - clip_start)
 
+        # 1. Add persistent TikTok Hook Header on Layer 1 throughout entire video
+        if add_hook_header and hook_header_text:
+            formatted_hook = format_tiktok_hook_header(hook_header_text)
+            start_str = self.format_timestamp_ass(0.0)
+            end_str = self.format_timestamp_ass(clip_duration)
+            dialogue_lines.append(
+                f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
+            )
+
+        # 2. Add animated spoken karaoke subtitles on Layer 0
         for seg in segments:
             seg_start = seg.get("start", 0.0)
             seg_end = seg.get("end", 0.0)
