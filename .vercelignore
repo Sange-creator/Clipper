@@ -1,0 +1,9 @@
+backend
+data
+docs
+*.py
+*.mp4
+*.mkv
+*.mov
+*.sqlite
+*.db
