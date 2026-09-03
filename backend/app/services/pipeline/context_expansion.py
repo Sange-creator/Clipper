@@ -1,6 +1,7 @@
 """Context expansion and natural boundary adjustment engine."""
 
 import logging
+import re
 from typing import Any, Dict, List
 from app.services.ai.base import RawCandidateMoment
 
@@ -8,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 FILLER_STARTS = [
     "so", "um", "uh", "like", "you know", "hello", "hi guys", "welcome back",
-    "today we are going to", "in this video", "hey everyone", "basically"
+    "today we are going to", "in this video", "hey everyone", "basically", "well"
 ]
 
 
@@ -40,26 +41,34 @@ class ContextExpansionService:
         if not overlapping_segs:
             return candidate
 
-        # Refine start boundary
+        # Refine start boundary (Snap precisely to the hook word without dragging backwards into preamble)
         best_start = start
         for s in overlapping_segs:
             s_start = s.get("start", 0.0)
             s_end = s.get("end", 0.0)
-            s_text = s.get("text", "").strip().lower()
+            words = s.get("words", [])
 
-            # If segment is near candidate start
-            if abs(s_start - start) < 3.0:
-                # Check if starts with filler
+            # Check word-level timestamps first for millisecond-exact hook alignment
+            if words:
+                w_idx = 0
+                while w_idx < len(words):
+                    w = words[w_idx]
+                    w_clean = re.sub(r"[^\w]", "", w.get("word", "").lower())
+                    if w_clean in FILLER_STARTS and w_idx + 1 < len(words):
+                        w_idx += 1
+                        continue
+                    best_start = max(0.0, w.get("start", s_start))
+                    break
+                if best_start != start:
+                    break
+
+            # Fallback if no word timestamps: only snap to s_start if it is very close (< 0.6s)
+            # Never rewind 2-3s backwards into pre-hook pleasantries
+            if abs(s_start - start) < 0.6:
+                s_text = s.get("text", "").strip().lower()
                 has_filler = any(s_text.startswith(f) for f in FILLER_STARTS)
-                if has_filler and s.get("words"):
-                    # Advance to first non-filler word
-                    words = s["words"]
-                    if len(words) > 2:
-                        best_start = words[1].get("start", s_start)
-                    else:
-                        best_start = s_end
-                else:
-                    best_start = s_start
+                if not has_filler:
+                    best_start = max(0.0, s_start)
                 break
 
         # Refine end boundary (ensure thought/sentence completion)

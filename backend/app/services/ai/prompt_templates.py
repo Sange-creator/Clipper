@@ -21,6 +21,11 @@ STRICTLY AVOID:
 - Repetitive filler and dead air
 - Abrupt mid-sentence cutoffs without resolution
 
+MANDATORY CHAOTIC / INSANE HOOK RULE:
+- The opening 3 seconds MUST be the most chaotic, shocking, insane, intense, or pattern-interrupting sentence in the clip.
+- Set 'start' to the EXACT moment this high-impact sentence begins. NEVER start on background build-up or polite conversational setup.
+- Prioritize moments where the speaker says something unbelievable, reveals an outrageous confession, screams or laughs chaotically, or drops a bomb of an opinion.
+
 CONSTRAINTS:
 - Target duration range: {duration_target}
 - Generate an exhaustive pool of at least {pool_size} candidate moments.
@@ -49,9 +54,10 @@ VIRAL_MOMENTS_DISCOVERY_SYSTEM_PROMPT = """You are an elite long-video viral mom
 Analyze this timestamped transcript from a long-form video (documentary, commentary, livestream, tutorial, speech, reaction, or storytelling) and discover high-potential standalone viral moments.
 
 VIRAL MOMENTS FOCUS (Mode: Long Video Viral Moment Clipper):
+- Insane and chaotic occurrences, reactions, and explosive statements
 - Surprising events, discoveries, and shocking information
 - High-curiosity hooks that make skipping impossible
-- Emotional peaks, drama, conflict, and tension
+- Emotional peaks, drama, conflict, yelling, banter, and tension
 - Dramatic transformations and impressive demonstrations
 - Unbelievable facts and mind-bending revelations
 - Funny incidents, failed attempts, and unexpected plot twists
@@ -63,6 +69,11 @@ STRICTLY AVOID:
 - Slow, repetitive narration and dead air
 - Filler transitions and channel intros/outros
 - Misleading out-of-context quotes
+
+MANDATORY CHAOTIC / INSANE HOOK RULE:
+- Drop the viewer directly into the chaos: the first 2-3 seconds MUST be a massive pattern-interrupt.
+- Set 'start' precisely at the chaotic event, shocking confession, or unexpected climax.
+- Zero throat clearing or slow warmup allowed before the hook.
 
 CONSTRAINTS:
 - Target duration range: {duration_target}

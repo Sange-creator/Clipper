@@ -287,7 +287,7 @@ export interface SettingsUpdateRequest {
   default_add_hook_header?: boolean;
   default_hook_header_position?: number;
   default_remove_watermark?: boolean;
-  default_watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left";
+  default_watermark_position?: string;
   default_enhance_quality?: boolean;
 }
 

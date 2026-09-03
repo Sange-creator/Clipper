@@ -10,9 +10,24 @@ from app.services.ai.base import (
 )
 
 HOOK_KEYWORDS = [
-    "secret", "never", "always", "crazy", "truth", "insane", "mistake",
-    "why", "how", "what if", "stop", "unbelievable", "huge", "shocking",
-    "the reason", "don't", "nobody tells you", "actually", "listen", "look"
+    "insane", "crazy", "chaotic", "unbelievable", "wtf", "screaming", "fight",
+    "shut up", "lie", "ruined", "disaster", "warning", "never do this", "banned",
+    "illegal", "expose", "secret", "worst mistake", "scam", "crying", "shocking",
+    "panic", "plot twist", "caught", "destroyed", "stop", "never", "why", "how",
+    "what if", "nobody tells you", "actually", "listen", "look"
+]
+
+CHAOTIC_HOOKS = [
+    "Wait until you see how this ends...",
+    "This is the most insane thing I've ever heard 😳",
+    "Nobody knows this secret, but it changes everything",
+    "Stop doing this immediately or you will lose everything 🚨",
+    "I was not expecting this to happen at all...",
+    "This completely exposed the whole truth 🤯",
+    "The biggest mistake everyone is making right now",
+    "Watch what happens when he realized the truth...",
+    "This is pure chaos and nobody is talking about it",
+    "I still can't believe they actually said this on camera",
 ]
 
 PAYOFF_KEYWORDS = [
@@ -170,26 +185,27 @@ class MockAIProvider(AIProvider):
             while t + 10.0 <= total_dur and len(candidates) < needed_pool:
                 cand_end = min(t + seg_len, total_dur)
                 if cand_end > t + 5.0:
+                    chosen_hook = CHAOTIC_HOOKS[(idx - 1) % len(CHAOTIC_HOOKS)]
                     candidates.append(
                         RawCandidateMoment(
                             start=round(t, 2),
                             end=round(cand_end, 2),
-                            hook_score=min(96.0, 80.0 + (idx * 3 % 15)),
-                            retention_score=min(94.0, 82.0 + (idx * 2 % 12)),
-                            curiosity_score=min(95.0, 81.0 + (idx * 4 % 14)),
-                            emotion_score=min(92.0, 78.0 + (idx * 3 % 14)),
+                            hook_score=min(98.0, 88.0 + (idx * 3 % 11)),
+                            retention_score=min(96.0, 84.0 + (idx * 2 % 12)),
+                            curiosity_score=min(98.0, 86.0 + (idx * 4 % 12)),
+                            emotion_score=min(95.0, 80.0 + (idx * 3 % 15)),
                             story_score=min(95.0, 84.0 + (idx * 2 % 10)),
-                            payoff_score=min(96.0, 83.0 + (idx * 3 % 13)),
-                            shareability_score=82.0,
-                            novelty_score=78.0,
-                            quotability_score=80.0,
-                            standalone_score=85.0,
-                            rewatch_score=80.0,
-                            visual_score=82.0,
-                            audio_score=85.0,
-                            platform_score=86.0,
-                            reason=f"Cohesive {mode} thematic moment #{idx} with strong narrative progression.",
-                            hook_summary=f"Key highlight starting at {int(t)}s",
+                            payoff_score=min(96.0, 85.0 + (idx * 3 % 11)),
+                            shareability_score=88.0,
+                            novelty_score=84.0,
+                            quotability_score=86.0,
+                            standalone_score=88.0,
+                            rewatch_score=85.0,
+                            visual_score=84.0,
+                            audio_score=86.0,
+                            platform_score=90.0,
+                            reason=f"High-intensity {mode} viral hook '{chosen_hook[:30]}...' with strong audience retention.",
+                            hook_summary=chosen_hook,
                             payoff_summary=f"Climax payoff ending at {int(cand_end)}s",
                         )
                     )
@@ -204,9 +220,10 @@ class MockAIProvider(AIProvider):
         candidates: List[RawCandidateMoment],
         transcript_context: str,
     ) -> List[RawCandidateMoment]:
+        # Prioritize the most chaotic, intense opening hooks
         return sorted(
             candidates,
-            key=lambda c: (c.hook_score * 0.3 + c.retention_score * 0.3 + c.payoff_score * 0.4),
+            key=lambda c: (c.hook_score * 0.45 + c.retention_score * 0.35 + c.payoff_score * 0.20),
             reverse=True,
         )
 
@@ -215,9 +232,11 @@ class MockAIProvider(AIProvider):
         clip_transcript: str,
         clip_context: Dict[str, Any],
     ) -> PlatformClipMetadata:
-        hook = clip_context.get("hook_summary", "Unbelievable Insight")
+        hook = clip_context.get("hook_summary", "")
+        if not hook or len(hook) < 8 or hook.lower().startswith("key highlight"):
+            hook = CHAOTIC_HOOKS[0]
         first_words = " ".join(clip_transcript.split()[:8])
-        clean_title = (hook if len(hook) > 10 else first_words) or "Must-Watch Short"
+        clean_title = hook if len(hook) > 10 else (first_words or "Insane Viral Moment")
 
         return PlatformClipMetadata(
             tiktok_title=clean_title[:80],

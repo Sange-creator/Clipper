@@ -182,6 +182,45 @@ class CaptionGenerator:
             "margin_v": 280,
             "uppercase": True,
         },
+        "capcut_black_box": {
+            "font_name": "Arial Black",
+            "font_size": 48,
+            "primary_color": "&H00FFFFFF&",    # Crisp White
+            "secondary_color": "&H0000FFFF&",  # Electric Neon Yellow highlight
+            "outline_color": "&H00000000&",
+            "back_color": "&HE6000000&",       # Opaque CapCut Black Box
+            "border_style": 3,                 # Solid background bounding box
+            "outline": 9,                      # Box padding
+            "shadow": 0,
+            "margin_v": 280,
+            "uppercase": True,
+        },
+        "capcut_yellow_box": {
+            "font_name": "Impact",
+            "font_size": 48,
+            "primary_color": "&H00000000&",    # Deep Black
+            "secondary_color": "&H00FFFFFF&",  # White Accent
+            "outline_color": "&H00000000&",
+            "back_color": "&H0000E5FF&",       # CapCut Vibrant Yellow Box
+            "border_style": 3,                 # Solid background bounding box
+            "outline": 9,
+            "shadow": 0,
+            "margin_v": 280,
+            "uppercase": True,
+        },
+        "tiktok_boxed": {
+            "font_name": "Arial Black",
+            "font_size": 50,
+            "primary_color": "&H00FFFFFF&",    # Pure White
+            "secondary_color": "&H0000FF00&",  # Neon Lime Green
+            "outline_color": "&H00000000&",
+            "back_color": "&HD9141414&",       # Opaque Dark Charcoal Box
+            "border_style": 3,
+            "outline": 10,
+            "shadow": 0,
+            "margin_v": 280,
+            "uppercase": True,
+        },
     }
 
     def format_timestamp_ass(self, seconds: float) -> str:

@@ -524,6 +524,9 @@ export function VideoUploader() {
                 <label className="text-[11px] font-medium text-zinc-400">Select Caption Style:</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {[
+                    { id: "capcut_black_box", name: "CapCut Black Box", desc: "Creator dark box" },
+                    { id: "capcut_yellow_box", name: "CapCut Yellow Box", desc: "Bold on neon yellow" },
+                    { id: "tiktok_boxed", name: "TikTok Boxed", desc: "Opaque charcoal box" },
                     { id: "tiktok_viral", name: "TikTok Viral", desc: "Electric yellow pop" },
                     { id: "hormozi_bold", name: "Hormozi Punch", desc: "Neon green highlight" },
                     { id: "bold_yellow", name: "Bold Yellow", desc: "Active word pop-in" },
@@ -809,13 +812,15 @@ export function VideoUploader() {
                   <span className="text-[10px] text-zinc-400">FFmpeg Delogo Interpolation</span>
                 </div>
 
-                {/* 4 Corner Presets */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                {/* Watermark Presets */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                   {[
                     { label: "Top Right", value: "top_right" },
                     { label: "Bottom Right", value: "bottom_right" },
                     { label: "Top Left", value: "top_left" },
                     { label: "Bottom Left", value: "bottom_left" },
+                    { label: "TikTok Bounce (TL+BR)", value: "tiktok_bounce" },
+                    { label: "All 4 Corners", value: "all_corners" },
                   ].map((pos) => (
                     <button
                       key={pos.value}

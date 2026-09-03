@@ -182,7 +182,7 @@ class ProjectProcessRequest(BaseModel):
     add_hook_header: bool = False
     hook_header_position: int = Field(default=12, ge=8, le=90)
     remove_watermark: bool = False
-    watermark_position: Literal["top_right", "bottom_right", "top_left", "bottom_left"] = "top_right"
+    watermark_position: str = "top_right"
     enhance_quality: bool = True
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
@@ -209,7 +209,7 @@ class JobCreateRequest(BaseModel):
     add_hook_header: bool = False
     hook_header_position: int = Field(default=12, ge=8, le=90)
     remove_watermark: bool = False
-    watermark_position: Literal["top_right", "bottom_right", "top_left", "bottom_left"] = "top_right"
+    watermark_position: str = "top_right"
     enhance_quality: bool = True
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     custom_instructions: Optional[str] = None
@@ -245,7 +245,7 @@ class ClipEditRequest(BaseModel):
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     hook_header_text: Optional[str] = None
     remove_watermark: Optional[bool] = None
-    watermark_position: Optional[Literal["top_right", "bottom_right", "top_left", "bottom_left"]] = None
+    watermark_position: Optional[str] = None
     enhance_quality: Optional[bool] = None
 
 
@@ -257,7 +257,7 @@ class ClipRegenerateRequest(BaseModel):
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     hook_header_text: Optional[str] = None
     remove_watermark: Optional[bool] = None
-    watermark_position: Optional[Literal["top_right", "bottom_right", "top_left", "bottom_left"]] = None
+    watermark_position: Optional[str] = None
     enhance_quality: Optional[bool] = None
     custom_note: Optional[str] = None
 
@@ -332,7 +332,7 @@ class SettingsUpdateRequest(BaseModel):
     default_add_hook_header: Optional[bool] = None
     default_hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     default_remove_watermark: Optional[bool] = None
-    default_watermark_position: Optional[Literal["top_right", "bottom_right", "top_left", "bottom_left"]] = None
+    default_watermark_position: Optional[str] = None
     default_enhance_quality: Optional[bool] = None
 
 

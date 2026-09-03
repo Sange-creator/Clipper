@@ -90,8 +90,18 @@ METADATA_STRIP_ARGS = [
     "-metadata:s:v", "title=",
     "-metadata:s:v", "language=",
     "-metadata:s:a", "handler_name=",
+    "-metadata", "vendor_id=",
+    "-metadata", "compatible_brands=",
+    "-metadata", "minor_version=",
+    "-metadata", "major_brand=",
+    "-metadata:s:v", "handler_name=",
+    "-metadata:s:v", "title=",
+    "-metadata:s:v", "language=",
+    "-metadata:s:v", "encoder=",
+    "-metadata:s:a", "handler_name=",
     "-metadata:s:a", "title=",
     "-metadata:s:a", "language=",
+    "-metadata:s:a", "encoder=",
     "-fflags", "+bitexact",
     "-flags:v", "+bitexact",
     "-flags:a", "+bitexact",
@@ -101,30 +111,40 @@ METADATA_STRIP_ARGS = [
 
 
 def get_delogo_filter(position: str = "top_right", width: int = 1920, height: int = 1080) -> str:
-    """Generate safe delogo filter coordinates to cleanly remove watermarks/logos without edge artifacts."""
+    """
+    Generate safe delogo filter coordinates to cleanly remove watermarks/logos without edge artifacts.
+    Supports individual corners, TikTok bouncing watermarks (top-left & bottom-right), and all corners.
+    """
     pos = (position or "top_right").lower().strip()
     box_w = max(40, int(width * 0.13))
     box_h = max(30, int(height * 0.085))
     margin_x = max(10, int(width * 0.015))
     margin_y = max(10, int(height * 0.02))
 
-    if pos in ("top_left", "tl"):
-        x = margin_x
-        y = margin_y
-    elif pos in ("bottom_left", "bl"):
-        x = margin_x
-        y = max(1, height - box_h - margin_y)
-    elif pos in ("bottom_right", "br"):
-        x = max(1, width - box_w - margin_x)
-        y = max(1, height - box_h - margin_y)
-    else:  # top_right (default)
-        x = max(1, width - box_w - margin_x)
-        y = margin_y
+    def _calc_delogo(corner: str) -> str:
+        if corner in ("top_left", "tl"):
+            x = margin_x
+            y = margin_y
+        elif corner in ("bottom_left", "bl"):
+            x = margin_x
+            y = max(1, height - box_h - margin_y)
+        elif corner in ("bottom_right", "br"):
+            x = max(1, width - box_w - margin_x)
+            y = max(1, height - box_h - margin_y)
+        else:  # top_right (default)
+            x = max(1, width - box_w - margin_x)
+            y = margin_y
+        # FFmpeg delogo requires x>=1, y>=1, x+w<=width-1, y+h<=height-1
+        safe_x = max(1, min(x, width - box_w - 2))
+        safe_y = max(1, min(y, height - box_h - 2))
+        return f"delogo=x={safe_x}:y={safe_y}:w={box_w}:h={box_h}:show=0"
 
-    # FFmpeg delogo requires x>=1, y>=1, x+w<=width-1, y+h<=height-1
-    x = max(1, min(x, width - box_w - 2))
-    y = max(1, min(y, height - box_h - 2))
-    return f"delogo=x={x}:y={y}:w={box_w}:h={box_h}:show=0"
+    if pos in ("tiktok_bounce", "both_corners", "tiktok"):
+        return f"{_calc_delogo('top_left')},{_calc_delogo('bottom_right')}"
+    elif pos in ("all_corners", "all"):
+        return f"{_calc_delogo('top_left')},{_calc_delogo('top_right')},{_calc_delogo('bottom_left')},{_calc_delogo('bottom_right')}"
+    else:
+        return _calc_delogo(pos)
 
 
 class VideoRenderer:
