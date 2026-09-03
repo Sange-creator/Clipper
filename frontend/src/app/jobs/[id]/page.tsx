@@ -60,59 +60,70 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     // Initial fetch
     fetchJobData();
 
-    // Connect SSE Stream for real-time live events
-    const eventSource = new EventSource(`http://127.0.0.1:8000/api/jobs/${jobId}/events`);
+    // Connect SSE Stream for real-time live events with safe error handling
+    let eventSource: EventSource | null = null;
+    try {
+      const sseUrl = `${api.getBaseUrl()}/jobs/${jobId}/events`;
+      eventSource = new EventSource(sseUrl);
 
-    eventSource.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        if (data.job_id === jobId) {
-          setJob((prev) => {
-            if (!prev) return prev;
-            return {
-              ...prev,
-              current_stage: data.current_stage || prev.current_stage,
-              stage_name: data.stage_name || prev.stage_name,
-              progress: data.progress !== undefined ? data.progress : prev.progress,
-              status: data.status || prev.status,
-              logs: [
-                ...prev.logs,
-                {
-                  stage: data.current_stage || 1,
-                  stage_name: data.stage_name || "",
-                  message: data.message || "",
-                  timestamp: data.timestamp || new Date().toISOString(),
-                },
-              ],
-            };
-          });
+      eventSource.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data.job_id === jobId) {
+            setJob((prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                current_stage: data.current_stage || prev.current_stage,
+                stage_name: data.stage_name || prev.stage_name,
+                progress: data.progress !== undefined ? data.progress : prev.progress,
+                status: data.status || prev.status,
+                logs: [
+                  ...prev.logs,
+                  {
+                    stage: data.current_stage || 1,
+                    stage_name: data.stage_name || "",
+                    message: data.message || "",
+                    timestamp: data.timestamp || new Date().toISOString(),
+                  },
+                ],
+              };
+            });
 
-          // If stage 8+ reached, fetch candidates
-          if (data.current_stage >= 8) {
-            api.getJobCandidates(jobId).then((cands) => {
-              if (cands.length > 0) setCandidates(cands);
-            }).catch(() => {});
+            // If stage 8+ reached, fetch candidates
+            if (data.current_stage >= 8) {
+              api.getJobCandidates(jobId).then((cands) => {
+                if (cands.length > 0) setCandidates(cands);
+              }).catch(() => {});
+            }
+
+            // If completed or rendered clips are ready
+            if (data.status === "completed" || data.current_stage >= 16) {
+              api.getJobClips(jobId).then((loadedClips) => {
+                if (loadedClips.length > 0) setClips(loadedClips);
+              }).catch(() => {});
+            }
           }
-
-          // If completed or rendered clips are ready
-          if (data.status === "completed" || data.current_stage >= 16) {
-            api.getJobClips(jobId).then((loadedClips) => {
-              if (loadedClips.length > 0) setClips(loadedClips);
-            }).catch(() => {});
-          }
+        } catch {
+          // ignore parse error
         }
-      } catch {
-        // ignore parse error
-      }
-    };
+      };
 
-    // Polling fallback every 3s
+      eventSource.onerror = () => {
+        // Gracefully close on Mixed Content / loopback restriction and rely on active polling below
+        eventSource?.close();
+      };
+    } catch {
+      // EventSource not available
+    }
+
+    // Active polling fallback every 2s ensures smooth progress even if SSE is restricted
     const interval = setInterval(() => {
       fetchJobData();
-    }, 3000);
+    }, 2000);
 
     return () => {
-      eventSource.close();
+      if (eventSource) eventSource.close();
       clearInterval(interval);
     };
   }, [jobId]);

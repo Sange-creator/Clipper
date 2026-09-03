@@ -245,7 +245,8 @@ class VideoProcessingPipeline:
                 silence_intervals = []
                 if remove_dead_air:
                     await self.update_job_progress(session, job, 6, "Analyzing dead-air intervals and audio silence thresholds")
-                    silence_intervals = await silence_detector.detect_silence(video_path)
+                    audio_target = audio_wav_path if audio_wav_path.exists() else video_path
+                    silence_intervals = await silence_detector.detect_silence(audio_target)
 
                 sc_stmt = select(Scene).where(Scene.video_id == video.id)
                 sc_res = await session.execute(sc_stmt)

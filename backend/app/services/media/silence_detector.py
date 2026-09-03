@@ -43,19 +43,24 @@ class SilenceDetector:
             "ffmpeg",
             "-hide_banner",
             "-nostats",
+            "-vn",  # Do not decode video! Audio only for 300x speed
             "-i", str(media_path),
             "-af", f"silencedetect=noise={noise_db}dB:d={min_silence_sec}",
             "-f", "null",
             "-",
         ]
 
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        _, stderr = await proc.communicate()
-        output = stderr.decode("utf-8", errors="replace")
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            _, stderr = await asyncio.wait_for(proc.communicate(), timeout=20.0)
+            output = stderr.decode("utf-8", errors="replace")
+        except Exception as e:
+            logger.warning(f"Silence detection timed out or failed: {e}. Proceeding without silence excision.")
+            return []
 
         silence_intervals: List[SilenceInterval] = []
         current_start: float | None = None

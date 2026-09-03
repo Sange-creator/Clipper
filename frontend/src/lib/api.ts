@@ -18,6 +18,10 @@ import {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
 
 export const api = {
+  getBaseUrl(): string {
+    return API_BASE;
+  },
+
   // Video uploads
   async getRecentVideos(limit = 10): Promise<VideoInfo[]> {
     try {
