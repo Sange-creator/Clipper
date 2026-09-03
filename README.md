@@ -201,10 +201,9 @@ The web application is accessible at `http://localhost:3000`.
 
 ---
 
-## Live Deployments
+## Live Deployment
 
-- **Production Frontend**: [https://ai-clipper-pro.vercel.app](https://ai-clipper-pro.vercel.app)
-- **Secondary / Legacy Domain**: [https://clipper-ai-pro.vercel.app](https://clipper-ai-pro.vercel.app)
+- **Main Vercel Platform**: [https://ai-clipper-pro.vercel.app](https://ai-clipper-pro.vercel.app)
 - **Source Code**: [https://github.com/Sange-creator/Clipper](https://github.com/Sange-creator/Clipper)
 
 ---
