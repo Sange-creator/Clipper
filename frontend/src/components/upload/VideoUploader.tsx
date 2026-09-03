@@ -26,6 +26,7 @@ import {
   CheckCircle2,
   FolderOpen,
   Play,
+  Check,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
@@ -380,104 +381,161 @@ export function VideoUploader() {
         </div>
 
         {/* 2. Dual Pre-Clipping Hook & Story Structure Selector */}
-        <div className="glass-panel rounded-2xl p-5 space-y-4 border border-violet-500/20 bg-gradient-to-b from-violet-950/25 via-zinc-950/40 to-transparent">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-sm">
-                ⚡
+        <div className="glass-panel rounded-2xl p-5 sm:p-6 space-y-4 border border-white/10 bg-zinc-950/50 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+          <div className="absolute -top-24 -right-24 w-60 h-60 bg-gradient-to-br from-violet-600/10 to-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-violet-500/20 to-fuchsia-500/20 text-amber-300 border border-amber-500/30 shadow-inner">
+                <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-semibold text-white flex items-center gap-2">
-                  Hook & Story Structure
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
-                    Dual Option
+                <div className="flex items-center gap-2">
+                  <h4 className="text-sm font-semibold text-white tracking-tight">Hook & Story Structure</h4>
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-gradient-to-r from-violet-500/20 to-amber-500/20 text-violet-300 border border-violet-500/30">
+                    Dual Splicing Option
                   </span>
-                </h4>
-                <p className="text-[11px] text-zinc-400">Choose how the start of each extracted clip hooks and grips viewers</p>
+                </div>
+                <p className="text-xs text-zinc-400 mt-0.5">Choose how the start of each extracted clip hooks and grips short-form viewers</p>
               </div>
             </div>
-            <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-zinc-900 border border-white/10 text-zinc-300 self-start sm:self-auto">
-              {hookStrategy === "teaser_climax_hook" ? "⚡ 5s Climax Teaser First" : "▶ Direct Chronological Cut"}
-            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          {/* Two Interactive Selection Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1 relative z-10">
             {/* Option 1: 5s Climax Teaser Hook */}
             <div
               onClick={() => setHookStrategy("teaser_climax_hook")}
-              className={`cursor-pointer rounded-xl p-4.5 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
+              className={`cursor-pointer rounded-xl p-5 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden group ${
                 hookStrategy === "teaser_climax_hook"
-                  ? "bg-gradient-to-br from-red-500/15 via-violet-600/15 to-zinc-900/60 border-red-500/60 shadow-xl shadow-red-500/10 ring-1 ring-red-500/40"
+                  ? "bg-gradient-to-br from-amber-500/15 via-violet-950/30 to-zinc-900/90 border-amber-500/60 shadow-xl shadow-amber-500/10 ring-1 ring-amber-500/30"
                   : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]"
               }`}
             >
-              <div className="flex items-start justify-between gap-3 mb-2.5">
-                <div className="flex items-center gap-2.5">
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    hookStrategy === "teaser_climax_hook" ? "bg-red-500 text-white shadow-md shadow-red-500/30" : "bg-white/10 text-zinc-400"
-                  }`}>
-                    <Zap className="h-4 w-4" />
+              <div>
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
+                      hookStrategy === "teaser_climax_hook"
+                        ? "bg-gradient-to-br from-amber-500 to-red-500 text-white shadow-lg shadow-amber-500/30"
+                        : "bg-white/10 text-zinc-400 group-hover:text-white"
+                    }`}>
+                      <Zap className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h5 className="font-semibold text-white text-sm">5s Climax Teaser Hook</h5>
+                        <span className="text-[9px] font-bold tracking-wide uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                          Viral Meta
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-amber-400/90 font-medium">In Medias Res Cold-Open</span>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="font-semibold text-white text-xs sm:text-sm flex items-center gap-1.5">
-                      5s Climax Teaser Hook
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        Viral Meta
-                      </span>
-                    </h5>
-                    <span className="text-[11px] text-red-400 font-medium">In Medias Res Cold-Open</span>
+
+                  {/* Radio Indicator */}
+                  <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all shrink-0 mt-1 ${
+                    hookStrategy === "teaser_climax_hook"
+                      ? "border-amber-400 bg-amber-500 text-black shadow-sm shadow-amber-500/40"
+                      : "border-zinc-700 bg-zinc-900/80"
+                  }`}>
+                    {hookStrategy === "teaser_climax_hook" && <Check className="h-3 w-3 stroke-[3]" />}
                   </div>
                 </div>
-                {hookStrategy === "teaser_climax_hook" && (
-                  <CheckCircle2 className="h-5 w-5 text-red-400 shrink-0" />
-                )}
+
+                <p className="text-xs text-zinc-300 leading-relaxed mb-4">
+                  Cuts the most intense <strong className="text-white font-medium">4–5s fight, clash, scream, or shocking revelation</strong> from the middle/peak, plays it first to catch viewers off-guard, then rewinds to naturally build up the story.
+                </p>
               </div>
-              <p className="text-xs text-zinc-300 leading-relaxed mb-3">
-                Cuts the most intense <strong className="text-white">4–5 second fight, clash, scream, or shocking revelation</strong> from the middle/peak, plays it first to catch viewers off-guard, then rewinds to naturally build up the story to that moment.
-              </p>
-              <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 bg-black/40 rounded-lg p-2 border border-white/5 font-mono">
-                <span className="text-red-400 font-bold">[0-5s: PEAK CLASH]</span>
-                <span>➔</span>
-                <span className="text-zinc-300">[5s+: Story Build-up & Payoff]</span>
+
+              {/* Visual Flow Timeline */}
+              <div className="pt-3 border-t border-white/5">
+                <div className="flex items-center justify-between text-[10px] mb-2">
+                  <span className="text-amber-400 font-semibold flex items-center gap-1">
+                    <Zap className="h-3 w-3 fill-amber-400/30" /> 0–5s Climax Teaser
+                  </span>
+                  <span className="text-zinc-500">➔</span>
+                  <span className="text-violet-300 font-semibold">Story Context & Payoff</span>
+                </div>
+                <div className="grid grid-cols-4 gap-1.5 h-2 rounded-full overflow-hidden bg-black/40 p-0.5 border border-white/5">
+                  <div className="bg-gradient-to-r from-amber-500 to-red-500 rounded-full h-full shadow-sm" />
+                  <div className="bg-gradient-to-r from-violet-600 to-indigo-500 rounded-full h-full col-span-3" />
+                </div>
+                <div className="flex items-center justify-between text-[9px] text-zinc-500 mt-1 font-mono">
+                  <span>Peak Hook</span>
+                  <span>Rewind to Start</span>
+                  <span>Full Story Arc</span>
+                </div>
               </div>
             </div>
 
             {/* Option 2: Direct Chronological Cut */}
             <div
               onClick={() => setHookStrategy("direct_chronological")}
-              className={`cursor-pointer rounded-xl p-4.5 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
+              className={`cursor-pointer rounded-xl p-5 border transition-all duration-300 flex flex-col justify-between relative overflow-hidden group ${
                 hookStrategy === "direct_chronological"
-                  ? "bg-gradient-to-br from-violet-500/15 to-zinc-900/60 border-violet-500/60 shadow-xl shadow-violet-500/10 ring-1 ring-violet-500/40"
+                  ? "bg-gradient-to-br from-cyan-500/15 via-indigo-950/30 to-zinc-900/90 border-cyan-500/60 shadow-xl shadow-cyan-500/10 ring-1 ring-cyan-500/30"
                   : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]"
               }`}
             >
-              <div className="flex items-start justify-between gap-3 mb-2.5">
-                <div className="flex items-center gap-2.5">
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    hookStrategy === "direct_chronological" ? "bg-violet-500 text-white shadow-md shadow-violet-500/30" : "bg-white/10 text-zinc-400"
-                  }`}>
-                    <Play className="h-4 w-4" />
+              <div>
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition-all ${
+                      hookStrategy === "direct_chronological"
+                        ? "bg-gradient-to-br from-cyan-500 to-indigo-600 text-white shadow-lg shadow-cyan-500/30"
+                        : "bg-white/10 text-zinc-400 group-hover:text-white"
+                    }`}>
+                      <Play className="h-5 w-5 fill-current" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h5 className="font-semibold text-white text-sm">Direct Chronological Cut</h5>
+                        <span className="text-[9px] font-bold tracking-wide uppercase px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                          Classic Flow
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-cyan-400/90 font-medium">Traditional Linear Narrative</span>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="font-semibold text-white text-xs sm:text-sm flex items-center gap-1.5">
-                      Direct Chronological Cut
-                    </h5>
-                    <span className="text-[11px] text-violet-400 font-medium">Traditional Linear Cut</span>
+
+                  {/* Radio Indicator */}
+                  <div className={`h-5 w-5 rounded-full border flex items-center justify-center transition-all shrink-0 mt-1 ${
+                    hookStrategy === "direct_chronological"
+                      ? "border-cyan-400 bg-cyan-500 text-black shadow-sm shadow-cyan-500/40"
+                      : "border-zinc-700 bg-zinc-900/80"
+                  }`}>
+                    {hookStrategy === "direct_chronological" && <Check className="h-3 w-3 stroke-[3]" />}
                   </div>
                 </div>
-                {hookStrategy === "direct_chronological" && (
-                  <CheckCircle2 className="h-5 w-5 text-violet-400 shrink-0" />
-                )}
+
+                <p className="text-xs text-zinc-300 leading-relaxed mb-4">
+                  Extracts clips <strong className="text-white font-medium">directly from start to finish</strong> in uninterrupted sequential order without splicing scenes. Ideal for clean stories, tutorials, and monologues.
+                </p>
               </div>
-              <p className="text-xs text-zinc-300 leading-relaxed mb-3">
-                Cuts the video <strong className="text-white">directly from start to finish</strong> in normal chronological sequence without moving or splicing scenes. Best for clean sequential stories, tutorials, or continuous monologues.
-              </p>
-              <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 bg-black/40 rounded-lg p-2 border border-white/5 font-mono">
-                <span className="text-violet-400 font-bold">[0s: Natural Opening]</span>
-                <span>➔</span>
-                <span className="text-zinc-300">[Progression]</span>
-                <span>➔</span>
-                <span className="text-emerald-400">[Payoff]</span>
+
+              {/* Visual Flow Timeline */}
+              <div className="pt-3 border-t border-white/5">
+                <div className="flex items-center justify-between text-[10px] mb-2">
+                  <span className="text-cyan-400 font-semibold flex items-center gap-1">
+                    <Play className="h-3 w-3 fill-cyan-400/30" /> Natural Opening
+                  </span>
+                  <span className="text-zinc-500">➔</span>
+                  <span className="text-zinc-300 font-semibold">Progression</span>
+                  <span className="text-zinc-500">➔</span>
+                  <span className="text-emerald-400 font-semibold">Payoff</span>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5 h-2 rounded-full overflow-hidden bg-black/40 p-0.5 border border-white/5">
+                  <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full h-full" />
+                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full h-full" />
+                  <div className="bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full h-full" />
+                </div>
+                <div className="flex items-center justify-between text-[9px] text-zinc-500 mt-1 font-mono">
+                  <span>0s Start</span>
+                  <span>Escalation</span>
+                  <span>Resolution</span>
+                </div>
               </div>
             </div>
           </div>
