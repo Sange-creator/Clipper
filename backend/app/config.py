@@ -49,8 +49,8 @@ class Settings(BaseSettings):
     WHISPER_MODEL_SIZE: str = "base"  # "tiny", "base", "small", "medium", "large-v3"
     WHISPER_DEVICE: str = "cpu"  # "cpu", "cuda", "mps"
 
-    # Media Limits & Processing
-    MAX_UPLOAD_SIZE_MB: int = 2000
+    # Media Limits & Processing (0 = Unlimited file size, supports any video size)
+    MAX_UPLOAD_SIZE_MB: int = 0
     ALLOWED_VIDEO_EXTENSIONS: list[str] = [".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"]
     DEFAULT_OUTPUT_ASPECT_RATIO: str = "9:16"
     DEFAULT_FRAMING_MODE: str = "crop_9_16"  # "crop_9_16", "blur_fit_9_16", "original_16_9"

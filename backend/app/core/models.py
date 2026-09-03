@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import uuid
 from typing import List, Optional
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     Column,
     DateTime,
@@ -63,8 +64,8 @@ class Video(Base):
     fps: Mapped[float] = mapped_column(Float, default=0.0)
     video_codec: Mapped[str] = mapped_column(String(64), default="")
     audio_codec: Mapped[str] = mapped_column(String(64), default="")
-    bitrate: Mapped[int] = mapped_column(Integer, default=0)
-    file_size_bytes: Mapped[int] = mapped_column(Integer, default=0)
+    bitrate: Mapped[int] = mapped_column(BigInteger, default=0)
+    file_size_bytes: Mapped[int] = mapped_column(BigInteger, default=0)
     metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now)
 

@@ -118,7 +118,7 @@ export function BatchUploader({ projectId, onUploadSuccess }: BatchUploaderProps
               Drop 20–30+ Videos or <span className="text-violet-400 underline underline-offset-4">Browse Files</span>
             </p>
             <p className="text-xs text-slate-400">
-              Supports MP4, MOV, MKV, WebM up to 2GB per video • Global Cross-Video Ranking
+              Supports MP4, MOV, MKV, WebM of any file size • 4K/1080p Long-form • Global Cross-Video Ranking
             </p>
           </div>
         </div>

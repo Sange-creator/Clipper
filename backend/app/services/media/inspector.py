@@ -50,8 +50,10 @@ class MediaInspector:
         file_size = path.stat().st_size
         if file_size == 0:
             raise MediaValidationError("File is empty (0 bytes).")
-        if file_size > settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024:
-            raise MediaValidationError(f"File size exceeds maximum limit of {settings.MAX_UPLOAD_SIZE_MB}MB.")
+        # Video size can be any (no arbitrary limit). Only enforce if MAX_UPLOAD_SIZE_MB is explicitly configured > 0.
+        if getattr(settings, "MAX_UPLOAD_SIZE_MB", 0) > 0:
+            if file_size > settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024:
+                raise MediaValidationError(f"File size exceeds maximum limit of {settings.MAX_UPLOAD_SIZE_MB}MB.")
 
         cmd = [
             self.ffprobe_path,
