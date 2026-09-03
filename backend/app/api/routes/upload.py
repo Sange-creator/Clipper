@@ -161,3 +161,32 @@ async def upload_video(
         is_duplicate=False,
         message="Video uploaded and technical metadata inspected successfully."
     )
+
+
+@router.post("/{video_id}/detect-watermark")
+async def detect_video_watermark(
+    video_id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Run computer vision analysis to automatically detect if and where
+    a watermark or logo exists on the uploaded video.
+    """
+    video = await db.get(Video, video_id)
+    if not video:
+        raise HTTPException(status_code=404, detail="Video not found")
+
+    file_path = Path(video.file_path)
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Video file on disk not found")
+
+    from app.services.media.watermark_detector import watermark_detector
+    result = await watermark_detector.detect_watermark(
+        file_path,
+        start_time=0.0,
+        end_time=min(video.duration_seconds or 60.0, 60.0),
+        width=video.width or 1920,
+        height=video.height or 1080,
+    )
+    return result.to_dict()
+

@@ -58,7 +58,15 @@ export function VideoUploader() {
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
   const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
-  const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">("top_right");
+  const [watermarkPosition, setWatermarkPosition] = useState<string>("auto");
+  const [isScanningWatermark, setIsScanningWatermark] = useState<boolean>(false);
+  const [watermarkScanResult, setWatermarkScanResult] = useState<{
+    detected: boolean;
+    position: string;
+    confidence: number;
+    delogo_filter: string;
+    corner_scores: Record<string, number>;
+  } | null>(null);
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
@@ -110,6 +118,28 @@ export function VideoUploader() {
       setFile(null);
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleScanWatermark = async () => {
+    if (!uploadedVideo) {
+      setError("Please select or upload a video first to run automatic watermark detection.");
+      return;
+    }
+    setIsScanningWatermark(true);
+    setError(null);
+    try {
+      const res = await api.detectWatermark(uploadedVideo.id);
+      setWatermarkScanResult(res);
+      if (res.detected) {
+        setRemoveWatermark(true);
+        setWatermarkPosition(res.position);
+      }
+    } catch (err: any) {
+      console.error("Watermark scan error:", err);
+      setError("Failed to run automatic watermark detection: " + (err.message || ""));
+    } finally {
+      setIsScanningWatermark(false);
     }
   };
 
@@ -809,26 +839,65 @@ export function VideoUploader() {
                   <label className="text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5">
                     <span>Logo / Watermark Position:</span>
                   </label>
-                  <span className="text-[10px] text-zinc-400">FFmpeg Delogo Interpolation</span>
+                  {uploadedVideo && (
+                    <button
+                      type="button"
+                      onClick={handleScanWatermark}
+                      disabled={isScanningWatermark}
+                      className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-400 hover:text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-2 py-0.5 rounded-md transition-all disabled:opacity-50"
+                    >
+                      {isScanningWatermark ? (
+                        <>
+                          <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                          <span>Scanning with AI...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-2.5 w-2.5" />
+                          <span>Auto-Scan Video</span>
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
 
+                {watermarkScanResult && (
+                  <div className={`p-2 rounded-lg text-[10px] border ${
+                    watermarkScanResult.detected
+                      ? "bg-cyan-950/40 border-cyan-500/40 text-cyan-200"
+                      : "bg-zinc-900/60 border-zinc-700/40 text-zinc-300"
+                  }`}>
+                    {watermarkScanResult.detected ? (
+                      <p>
+                        <strong className="font-semibold text-cyan-300">✓ Detected Logo:</strong>{" "}
+                        {watermarkScanResult.position.replace("_", " ").toUpperCase()} ({Math.round(watermarkScanResult.confidence * 100)}% confidence). Filter auto-configured!
+                      </p>
+                    ) : (
+                      <p>
+                        <strong className="font-semibold text-zinc-400">ℹ Clean Video:</strong> No persistent static logo detected across sampled frames.
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Watermark Presets */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                   {[
+                    { label: "✨ Auto Detect (AI)", value: "auto" },
+                    { label: "TikTok Bounce", value: "tiktok_bounce" },
                     { label: "Top Right", value: "top_right" },
                     { label: "Bottom Right", value: "bottom_right" },
                     { label: "Top Left", value: "top_left" },
                     { label: "Bottom Left", value: "bottom_left" },
-                    { label: "TikTok Bounce (TL+BR)", value: "tiktok_bounce" },
                     { label: "All 4 Corners", value: "all_corners" },
                   ].map((pos) => (
                     <button
                       key={pos.value}
                       type="button"
-                      onClick={() => setWatermarkPosition(pos.value as any)}
+                      onClick={() => setWatermarkPosition(pos.value)}
                       className={`rounded-lg py-1.5 px-2 text-center text-[10px] font-medium border transition-all ${
                         watermarkPosition === pos.value
-                          ? "bg-cyan-500/25 border-cyan-400 text-white shadow-sm"
+                          ? "bg-cyan-500/25 border-cyan-400 text-white shadow-sm font-semibold"
                           : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
                       }`}
                     >
@@ -837,7 +906,9 @@ export function VideoUploader() {
                   ))}
                 </div>
                 <p className="text-[10px] text-zinc-400">
-                  Smoothly erases corner logos/watermarks before 9:16 vertical crop and caption overlay.
+                  {watermarkPosition === "auto"
+                    ? "AI vision scans video frames, detects static logos or bouncing TikTok tags, and removes them seamlessly."
+                    : "Smoothly erases corner logos/watermarks before 9:16 vertical crop and caption overlay."}
                 </p>
               </div>
             ) : (

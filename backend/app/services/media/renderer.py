@@ -224,6 +224,33 @@ class VideoRenderer:
                 else:
                     final_ass_path = p
 
+        # Resolve delogo filter if watermark removal is requested
+        delogo_cmd = ""
+        if remove_watermark:
+            raw_pos = (watermark_position or "auto").lower().strip()
+            if raw_pos in ("auto", "automatic", "detect", "auto_detect"):
+                try:
+                    from app.services.media.watermark_detector import watermark_detector
+                    detect_s = valid_intervals[0][0] if valid_intervals else 0.0
+                    detect_e = valid_intervals[-1][1] if valid_intervals else 30.0
+                    detect_res = await watermark_detector.detect_watermark(
+                        src,
+                        start_time=detect_s,
+                        end_time=detect_e,
+                        width=src_w,
+                        height=src_h,
+                    )
+                    if detect_res.detected and detect_res.delogo_filter:
+                        delogo_cmd = detect_res.delogo_filter
+                        logger.info(f"Auto-watermark detected '{detect_res.position}' (confidence={detect_res.confidence:.2f})")
+                    else:
+                        logger.info("Auto-watermark detection: No persistent watermark detected on video.")
+                except Exception as e:
+                    logger.warning(f"Watermark auto-detection encountered error, defaulting to top_right: {e}")
+                    delogo_cmd = get_delogo_filter("top_right", src_w, src_h)
+            else:
+                delogo_cmd = get_delogo_filter(raw_pos, src_w, src_h)
+
         # Check if single slice or multi-interval concat
         if len(valid_intervals) == 1:
             # Single slice: Fast seek with Lanczos sharp scaling
@@ -232,8 +259,8 @@ class VideoRenderer:
             seg_dur = max(0.5, e_time - s_time)
 
             filter_parts = []
-            if remove_watermark:
-                filter_parts.append(get_delogo_filter(watermark_position, src_w, src_h))
+            if delogo_cmd:
+                filter_parts.append(delogo_cmd)
 
             if mode == "blur_fit_9_16":
                 prefix = f"{filter_parts[0]}," if filter_parts else ""
@@ -305,8 +332,8 @@ class VideoRenderer:
 
             # Reframe & subtitle on spliced video with lanczos scaling
             v_post_prefix = ""
-            if remove_watermark:
-                v_post_prefix = f"[vcat]{get_delogo_filter(watermark_position, src_w, src_h)}[v_delogo];"
+            if delogo_cmd:
+                v_post_prefix = f"[vcat]{delogo_cmd}[v_delogo];"
                 v_cat_target = "[v_delogo]"
             else:
                 v_cat_target = "[vcat]"

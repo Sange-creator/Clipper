@@ -286,6 +286,20 @@ export const api = {
     return res.json();
   },
 
+  async detectWatermark(videoId: string): Promise<{
+    detected: boolean;
+    position: string;
+    confidence: number;
+    delogo_filter: string;
+    corner_scores: Record<string, number>;
+  }> {
+    const res = await fetch(`${API_BASE}/upload/${videoId}/detect-watermark`, {
+      method: "POST",
+    });
+    if (!res.ok) throw new Error("Failed to run watermark detection");
+    return res.json();
+  },
+
   // Media Streaming & Asset URLs
   getMediaUrl(url: string | null | undefined): string {
     if (!url) return "";

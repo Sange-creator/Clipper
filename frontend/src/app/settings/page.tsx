@@ -1203,13 +1203,14 @@ export default function SettingsPage() {
           {defaultRemoveWatermark && (
             <div className="space-y-4 pt-2 border-t border-white/5 animate-in fade-in duration-200">
               <span className="text-xs font-semibold text-zinc-300">Default Watermark Location</span>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
+                  { label: "✨ Auto Detect (AI)", value: "auto", desc: "Computer vision scan & remove" },
+                  { label: "TikTok Bounce", value: "tiktok_bounce", desc: "Top-Left & Bottom-Right" },
                   { label: "Top Right", value: "top_right", desc: "Default TV / YouTube corner" },
                   { label: "Bottom Right", value: "bottom_right", desc: "Lower watermark placement" },
                   { label: "Top Left", value: "top_left", desc: "Network bug / station ID" },
                   { label: "Bottom Left", value: "bottom_left", desc: "Lower corner branding" },
-                  { label: "TikTok Bounce", value: "tiktok_bounce", desc: "Top-Left & Bottom-Right" },
                   { label: "All 4 Corners", value: "all_corners", desc: "Full 4-corner wipe" },
                 ].map((pos) => (
                   <button
