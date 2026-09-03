@@ -147,10 +147,17 @@ class MockAIProvider(AIProvider):
                     first_sentence = (start_seg.get("text", "").strip() or "Compelling opening hook")
                     last_sentence = (seg.get("text", "").strip() or "Climactic ending insight")
 
+                    dur = end_time - start_time
+                    c_s = round(start_time + dur * 0.55, 2)
+                    c_e = round(min(end_time, c_s + 4.5), 2)
+
                     candidates.append(
                         RawCandidateMoment(
                             start=round(start_time, 2),
                             end=round(end_time, 2),
+                            climax_start=c_s,
+                            climax_end=c_e,
+                            climax_summary=f"Insane peak clash: {last_sentence[:40]}",
                             hook_score=round(hook_score, 1),
                             retention_score=round(retention_score, 1),
                             curiosity_score=round(curiosity_score, 1),
@@ -186,10 +193,16 @@ class MockAIProvider(AIProvider):
                 cand_end = min(t + seg_len, total_dur)
                 if cand_end > t + 5.0:
                     chosen_hook = CHAOTIC_HOOKS[(idx - 1) % len(CHAOTIC_HOOKS)]
+                    dur = cand_end - t
+                    c_s = round(t + dur * 0.50, 2)
+                    c_e = round(min(cand_end, c_s + 4.5), 2)
                     candidates.append(
                         RawCandidateMoment(
                             start=round(t, 2),
                             end=round(cand_end, 2),
+                            climax_start=c_s,
+                            climax_end=c_e,
+                            climax_summary=f"Insane climax clash: {chosen_hook[:30]}",
                             hook_score=min(98.0, 88.0 + (idx * 3 % 11)),
                             retention_score=min(96.0, 84.0 + (idx * 2 % 12)),
                             curiosity_score=min(98.0, 86.0 + (idx * 4 % 12)),

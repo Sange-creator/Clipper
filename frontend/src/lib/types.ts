@@ -128,6 +128,7 @@ export interface RenderedClipResponse {
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;
+  hook_strategy?: "teaser_climax_hook" | "direct_chronological";
   caption_style: string;
   burn_captions?: boolean;
   timeline_edit?: TimelineEditInfo | null;
@@ -195,6 +196,7 @@ export interface JobCreatePayload {
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;
+  hook_strategy?: "teaser_climax_hook" | "direct_chronological";
   reframing_mode?: "smart_face_track" | "center_crop";
   ai_provider?: "gemini" | "groq" | "mock";
   custom_instructions?: string;
@@ -221,6 +223,7 @@ export interface ProjectProcessPayload {
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;
+  hook_strategy?: "teaser_climax_hook" | "direct_chronological";
   reframing_mode?: "smart_face_track" | "center_crop";
   source_diversity_weight?: number;
   ai_provider?: "gemini" | "groq" | "mock";
@@ -266,6 +269,7 @@ export interface SettingsResponse {
   default_remove_watermark?: boolean;
   default_watermark_position?: string;
   default_enhance_quality?: boolean;
+  default_hook_strategy?: "teaser_climax_hook" | "direct_chronological";
   ffmpeg_available?: boolean;
   ffprobe_available?: boolean;
 }
@@ -289,6 +293,7 @@ export interface SettingsUpdateRequest {
   default_remove_watermark?: boolean;
   default_watermark_position?: string;
   default_enhance_quality?: boolean;
+  default_hook_strategy?: "teaser_climax_hook" | "direct_chronological";
 }
 
 export interface TestApiKeyResponse {

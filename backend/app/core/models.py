@@ -125,8 +125,9 @@ class Job(Base):
     add_hook_header: Mapped[bool] = mapped_column(Boolean, default=False)  # Sticky TikTok hook header
     hook_header_position: Mapped[int] = mapped_column(Integer, default=12)  # 8..90 percent from top
     remove_watermark: Mapped[bool] = mapped_column(Boolean, default=False)  # Delogo / erase watermark
-    watermark_position: Mapped[str] = mapped_column(String(32), default="top_right")  # "top_right", "bottom_right", "top_left", "bottom_left"
+    watermark_position: Mapped[str] = mapped_column(String(32), default="top_right")  # "top_right", "bottom_right", "top_left", "bottom_left", "tiktok_bounce", "all_corners", "auto"
     enhance_quality: Mapped[bool] = mapped_column(Boolean, default=True)  # Studio color & detail boost
+    hook_strategy: Mapped[str] = mapped_column(String(32), default="teaser_climax_hook")  # "teaser_climax_hook" | "direct_chronological"
     config_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
 
@@ -216,6 +217,7 @@ class RenderedClip(Base):
     remove_watermark: Mapped[bool] = mapped_column(Boolean, default=False)  # Delogo / erase watermark
     watermark_position: Mapped[str] = mapped_column(String(32), default="top_right")  # "top_right", "bottom_right", "top_left", "bottom_left"
     enhance_quality: Mapped[bool] = mapped_column(Boolean, default=True)  # Studio color & detail boost
+    hook_strategy: Mapped[str] = mapped_column(String(32), default="teaser_climax_hook")  # "teaser_climax_hook" | "direct_chronological"
     caption_style: Mapped[str] = mapped_column(String(32), default="bold_yellow")
 
     burn_captions: Mapped[bool] = mapped_column(Boolean, default=True)

@@ -26,6 +26,9 @@ class RawCandidateMoment(BaseModel):
     reason: str = ""
     hook_summary: str = ""
     payoff_summary: str = ""
+    climax_start: Optional[float] = None  # Start timestamp of 4-5s peak clash/fight/shock
+    climax_end: Optional[float] = None    # End timestamp of 4-5s peak clash/fight/shock
+    climax_summary: Optional[str] = None  # Brief summary of peak shock moment
 
 
 class ContentAnalysisResult(BaseModel):

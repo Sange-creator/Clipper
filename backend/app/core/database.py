@@ -49,6 +49,7 @@ async def init_db() -> None:
             ("jobs", "remove_watermark", "BOOLEAN DEFAULT 0"),
             ("jobs", "watermark_position", "VARCHAR(32) DEFAULT 'top_right'"),
             ("jobs", "enhance_quality", "BOOLEAN DEFAULT 1"),
+            ("jobs", "hook_strategy", "VARCHAR(32) DEFAULT 'teaser_climax_hook'"),
             ("clip_candidates", "standalone_score", "FLOAT DEFAULT 0.0"),
             ("clip_candidates", "rewatch_score", "FLOAT DEFAULT 0.0"),
             ("clip_candidates", "timeline_edit_json", "TEXT"),
@@ -63,6 +64,7 @@ async def init_db() -> None:
             ("rendered_clips", "remove_watermark", "BOOLEAN DEFAULT 0"),
             ("rendered_clips", "watermark_position", "VARCHAR(32) DEFAULT 'top_right'"),
             ("rendered_clips", "enhance_quality", "BOOLEAN DEFAULT 1"),
+            ("rendered_clips", "hook_strategy", "VARCHAR(32) DEFAULT 'teaser_climax_hook'"),
             ("rendered_clips", "timeline_edit_json", "TEXT"),
 
 

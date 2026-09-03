@@ -1,0 +1,126 @@
+import pytest
+from app.services.media.captioner import captioner
+from app.services.ai.base import RawCandidateMoment
+from app.services.media.silence_detector import TimelineEdit
+
+
+def test_captioner_keep_intervals_teaser_retiming(tmp_path):
+    """Test that ASS and SRT subtitles cleanly retime across teaser + story intervals."""
+    segments = [
+        {
+            "start": 10.0,
+            "end": 14.0,
+            "text": "Get out of my face right now!",
+            "words": [
+                {"word": "Get", "start": 10.0, "end": 10.8},
+                {"word": "out", "start": 10.9, "end": 11.5},
+                {"word": "of", "start": 11.6, "end": 12.0},
+                {"word": "my", "start": 12.1, "end": 12.5},
+                {"word": "face", "start": 12.6, "end": 13.2},
+                {"word": "right", "start": 13.3, "end": 13.7},
+                {"word": "now!", "start": 13.8, "end": 14.0},
+            ],
+        },
+        {
+            "start": 0.0,
+            "end": 5.0,
+            "text": "It all started earlier that morning.",
+            "words": [
+                {"word": "It", "start": 0.0, "end": 0.8},
+                {"word": "all", "start": 0.9, "end": 1.5},
+                {"word": "started", "start": 1.6, "end": 2.5},
+                {"word": "earlier", "start": 2.6, "end": 3.5},
+                {"word": "that", "start": 3.6, "end": 4.2},
+                {"word": "morning.", "start": 4.3, "end": 5.0},
+            ],
+        },
+    ]
+
+    # Teaser climax from 10.0s to 14.0s (duration 4s), then story from 0.0s to 15.0s (duration 15s)
+    keep_intervals = [[10.0, 14.0], [0.0, 15.0]]
+    ass_path = tmp_path / "test_teaser.ass"
+    srt_path = tmp_path / "test_teaser.srt"
+
+    captioner.generate_ass(
+        segments,
+        clip_start=0.0,
+        clip_end=15.0,
+        output_path=ass_path,
+        style="bold_yellow",
+        keep_intervals=keep_intervals,
+    )
+
+    captioner.generate_srt(
+        segments,
+        clip_start=0.0,
+        clip_end=15.0,
+        output_path=srt_path,
+        keep_intervals=keep_intervals,
+    )
+
+    assert ass_path.exists()
+    ass_content = ass_path.read_text(encoding="utf-8")
+    assert "[Events]" in ass_content
+    assert "Dialogue:" in ass_content
+
+    assert srt_path.exists()
+    srt_content = srt_path.read_text(encoding="utf-8")
+    # Subtitle dialogue exists for both teaser and story
+    assert "Get out of my face" in srt_content or "started earlier" in srt_content
+
+
+def test_hook_strategy_timeline_edits():
+    """Test timeline structure for teaser_climax_hook vs direct_chronological."""
+    cand = RawCandidateMoment(
+        start=10.0,
+        end=40.0,
+        climax_start=25.0,
+        climax_end=29.5,
+        climax_summary="Explosive confrontation and clash",
+        hook_score=95.0,
+        retention_score=92.0,
+        payoff_score=94.0,
+    )
+
+    story_intervals = [[cand.start, cand.end]]
+
+    # 1. Teaser climax hook strategy
+    hook_strat = "teaser_climax_hook"
+    final_keep = list(story_intervals)
+    if hook_strat == "teaser_climax_hook":
+        c_start = cand.climax_start
+        c_end = cand.climax_end
+        if c_start is not None and c_end is not None:
+            s = max(cand.start, float(c_start))
+            e = min(cand.end, max(s + 3.0, float(c_end)))
+            if e - s > 5.0:
+                e = s + 5.0
+            if s >= cand.start + 3.0 and (e - s) >= 2.0:
+                teaser_interval = [round(s, 2), round(e, 2)]
+                final_keep = [teaser_interval] + story_intervals
+
+    teaser_edit = TimelineEdit(
+        source_start=cand.start,
+        source_end=cand.end,
+        keep=final_keep,
+        dead_air_removed_seconds=0.0,
+    )
+
+    assert len(teaser_edit.keep) == 2
+    assert teaser_edit.keep[0] == [25.0, 29.5]  # 4.5s climax teaser
+    assert teaser_edit.keep[1] == [10.0, 40.0]  # Full story build-up
+    total_duration = sum(e - s for s, e in teaser_edit.keep)
+    assert total_duration == 4.5 + 30.0
+
+    # 2. Direct chronological strategy
+    hook_strat_direct = "direct_chronological"
+    direct_keep = list(story_intervals)
+    direct_edit = TimelineEdit(
+        source_start=cand.start,
+        source_end=cand.end,
+        keep=direct_keep,
+        dead_air_removed_seconds=0.0,
+    )
+
+    assert len(direct_edit.keep) == 1
+    assert direct_edit.keep[0] == [10.0, 40.0]

@@ -262,13 +262,12 @@ class CaptionGenerator:
         add_hook_header: bool = False,
         hook_header_text: Optional[str] = None,
         hook_header_position: Optional[int] = 12,
+        keep_intervals: Optional[List[List[float]]] = None,
     ) -> Path:
         """
         Generate an Advanced SubStation Alpha (.ass) subtitle file.
         All timestamps are relative to the sliced clip start (0.0s).
-        subtitle_position: percentage height from top of screen (10% to 90%, default 75%).
-        add_hook_header: if True, creates a persistent, high-impact TikTok hook header across the entire video.
-        hook_header_position: percentage height from top of screen (10% to 90%, default 12% Top Banner).
+        Supports multi-interval splicing (e.g. 5s climax teaser followed by narrative build-up).
         """
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -287,7 +286,6 @@ class CaptionGenerator:
         uppercase = cfg["uppercase"]
 
         # Calculate MarginV based on screen percentage (10% = Top, 50% = Center, 75% = Lower-Third, 90% = Bottom)
-        # PlayResY is 1920. Alignment 2 measures from the bottom edge.
         if subtitle_position is not None:
             sub_pos_pct = max(10, min(90, subtitle_position))
             margin_v = max(60, min(1750, int(1920 * (1.0 - (sub_pos_pct / 100.0)))))
@@ -317,67 +315,77 @@ Style: HookHeader,Arial Black,46,&H0000FFFF,&H00FFFFFF,&H00000000,&HA0000000,-1,
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
+        intervals = keep_intervals or [[clip_start, clip_end]]
+        total_duration = sum(max(0.0, e - s) for s, e in intervals)
         dialogue_lines: List[str] = []
-        clip_duration = max(0.5, clip_end - clip_start)
 
         # 1. Add persistent TikTok Hook Header on Layer 1 throughout entire video
         if add_hook_header and hook_header_text:
             formatted_hook = format_tiktok_hook_header(hook_header_text)
             start_str = self.format_timestamp_ass(0.0)
-            end_str = self.format_timestamp_ass(clip_duration)
+            end_str = self.format_timestamp_ass(max(0.5, total_duration))
             dialogue_lines.append(
                 f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
             )
 
-        # 2. Add animated spoken karaoke subtitles on Layer 0
-        for seg in segments:
-            seg_start = seg.get("start", 0.0)
-            seg_end = seg.get("end", 0.0)
-            words = seg.get("words", [])
+        # 2. Add animated spoken karaoke subtitles on Layer 0 across all intervals
+        cumulative_time = 0.0
+        for iv_start, iv_end in intervals:
+            iv_dur = max(0.0, iv_end - iv_start)
+            for seg in segments:
+                seg_start = seg.get("start", 0.0)
+                seg_end = seg.get("end", 0.0)
+                words = seg.get("words", [])
 
-            if seg_end <= clip_start or seg_start >= clip_end:
-                continue
+                if seg_end <= iv_start or seg_start >= iv_end:
+                    continue
 
-            rel_start = max(0.0, seg_start - clip_start)
-            rel_end = max(0.1, min(clip_end - clip_start, seg_end - clip_start))
+                rel_start = cumulative_time + max(0.0, seg_start - iv_start)
+                rel_end = cumulative_time + max(0.1, min(iv_dur, seg_end - iv_start))
 
-            if words and len(words) > 0:
-                # 3-5 word chunks for short-form retention
-                chunk_size = 4
-                for c in range(0, len(words), chunk_size):
-                    chunk = words[c : c + chunk_size]
-                    c_start = max(0.0, chunk[0].get("start", seg_start) - clip_start)
-                    c_end = max(0.1, min(clip_end - clip_start, chunk[-1].get("end", seg_end) - clip_start))
-                    if c_start >= clip_end - clip_start or c_end <= 0:
-                        continue
+                if words and len(words) > 0:
+                    chunk_size = 4
+                    for c in range(0, len(words), chunk_size):
+                        chunk = words[c : c + chunk_size]
+                        first_w_start = chunk[0].get("start", seg_start)
+                        last_w_end = chunk[-1].get("end", seg_end)
+                        if last_w_end <= iv_start or first_w_start >= iv_end:
+                            continue
 
-                    karaoke_parts = []
-                    for w in chunk:
-                        w_start = w.get("start", seg_start) - clip_start
-                        w_end = w.get("end", seg_end) - clip_start
-                        duration_cs = max(10, int((w_end - w_start) * 100))
-                        word_str = w.get("word", "").strip()
-                        if uppercase:
-                            word_str = word_str.upper()
+                        c_start = cumulative_time + max(0.0, first_w_start - iv_start)
+                        c_end = cumulative_time + max(0.1, min(iv_dur, last_w_end - iv_start))
 
-                        # Check keyword emphasis
-                        if self.is_keyword_emphasis(word_str):
-                            karaoke_parts.append(f"{{\\c{secondary_color}\\fscx110\\fscy110}}{{\\k{duration_cs}}}{word_str}{{\\r}}")
-                        else:
-                            karaoke_parts.append(f"{{\\k{duration_cs}}}{word_str}")
+                        karaoke_parts = []
+                        for w in chunk:
+                            w_raw_start = w.get("start", seg_start)
+                            w_raw_end = w.get("end", seg_end)
+                            w_start = cumulative_time + max(0.0, w_raw_start - iv_start)
+                            w_end = cumulative_time + max(0.05, min(iv_dur, w_raw_end - iv_start))
+                            duration_cs = max(10, int((w_end - w_start) * 100))
+                            word_str = w.get("word", "").strip()
+                            if uppercase:
+                                word_str = word_str.upper()
 
-                    text_content = " ".join(karaoke_parts)
-                    start_str = self.format_timestamp_ass(c_start)
-                    end_str = self.format_timestamp_ass(c_end)
-                    dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text_content}")
-            else:
-                text = seg.get("text", "").strip()
-                if uppercase:
-                    text = text.upper()
-                if text:
-                    start_str = self.format_timestamp_ass(rel_start)
-                    end_str = self.format_timestamp_ass(rel_end)
-                    dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text}")
+                            # Check keyword emphasis
+                            if self.is_keyword_emphasis(word_str):
+                                karaoke_parts.append(f"{{\\c{secondary_color}\\fscx110\\fscy110}}{{\\k{duration_cs}}}{word_str}{{\\r}}")
+                            else:
+                                karaoke_parts.append(f"{{\\k{duration_cs}}}{word_str}")
+
+                        text_content = " ".join(karaoke_parts)
+                        start_str = self.format_timestamp_ass(c_start)
+                        end_str = self.format_timestamp_ass(c_end)
+                        dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text_content}")
+                else:
+                    text = seg.get("text", "").strip()
+                    if uppercase:
+                        text = text.upper()
+                    if text:
+                        start_str = self.format_timestamp_ass(rel_start)
+                        end_str = self.format_timestamp_ass(rel_end)
+                        dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text}")
+
+            cumulative_time += iv_dur
 
         with open(out_file, "w", encoding="utf-8") as f:
             f.write(ass_header + "\n".join(dialogue_lines) + "\n")
@@ -390,28 +398,34 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         clip_start: float,
         clip_end: float,
         output_path: Path | str,
+        keep_intervals: Optional[List[List[float]]] = None,
     ) -> Path:
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
 
+        intervals = keep_intervals or [[clip_start, clip_end]]
+        cumulative_time = 0.0
         srt_entries: List[str] = []
         counter = 1
 
-        for seg in segments:
-            seg_start = seg.get("start", 0.0)
-            seg_end = seg.get("end", 0.0)
-            if seg_end <= clip_start or seg_start >= clip_end:
-                continue
+        for iv_start, iv_end in intervals:
+            iv_dur = max(0.0, iv_end - iv_start)
+            for seg in segments:
+                seg_start = seg.get("start", 0.0)
+                seg_end = seg.get("end", 0.0)
+                if seg_end <= iv_start or seg_start >= iv_end:
+                    continue
 
-            rel_start = max(0.0, seg_start - clip_start)
-            rel_end = max(0.1, min(clip_end - clip_start, seg_end - clip_start))
-            text = seg.get("text", "").strip()
+                rel_start = cumulative_time + max(0.0, seg_start - iv_start)
+                rel_end = cumulative_time + max(0.1, min(iv_dur, seg_end - iv_start))
+                text = seg.get("text", "").strip()
 
-            if text:
-                srt_entries.append(
-                    f"{counter}\n{self.format_timestamp_srt(rel_start)} --> {self.format_timestamp_srt(rel_end)}\n{text}\n"
-                )
-                counter += 1
+                if text:
+                    srt_entries.append(
+                        f"{counter}\n{self.format_timestamp_srt(rel_start)} --> {self.format_timestamp_srt(rel_end)}\n{text}\n"
+                    )
+                    counter += 1
+            cumulative_time += iv_dur
 
         with open(out_file, "w", encoding="utf-8") as f:
             f.write("\n".join(srt_entries))

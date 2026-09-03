@@ -168,6 +168,7 @@ class VideoRenderer:
         remove_watermark: bool = False,
         watermark_position: str = "top_right",
         enhance_quality: bool = True,
+        retime_subtitles: bool = False,
     ) -> Path:
         """
         Renders a short-form video clip from source:
@@ -215,7 +216,7 @@ class VideoRenderer:
         if burn_captions and ass_subtitle_path:
             p = Path(ass_subtitle_path).resolve()
             if p.exists():
-                if len(valid_intervals) > 1:
+                if len(valid_intervals) > 1 and retime_subtitles:
                     # Retime subtitles to match spliced timeline
                     retimed_content = retime_ass_subtitles(p.read_text(encoding="utf-8"), valid_intervals)
                     retimed_path = p.with_name(f"{p.stem}_retimed.ass")

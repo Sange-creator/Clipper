@@ -59,8 +59,9 @@ class Settings(BaseSettings):
     DEFAULT_ADD_HOOK_HEADER: bool = False  # Add sticky persistent TikTok hook title throughout video
     DEFAULT_HOOK_HEADER_POSITION: int = 12  # 8% (Top Banner) to 90% (Bottom), default 12%
     DEFAULT_REMOVE_WATERMARK: bool = False
-    DEFAULT_WATERMARK_POSITION: str = "top_right"  # "top_right", "bottom_right", "top_left", "bottom_left"
+    DEFAULT_WATERMARK_POSITION: str = "top_right"  # "top_right", "bottom_right", "top_left", "bottom_left", "auto"
     DEFAULT_ENHANCE_QUALITY: bool = True
+    DEFAULT_HOOK_STRATEGY: str = "teaser_climax_hook"  # "teaser_climax_hook", "direct_chronological"
     TARGET_WIDTH: int = 1080
     TARGET_HEIGHT: int = 1920
 

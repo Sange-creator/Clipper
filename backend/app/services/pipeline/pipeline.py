@@ -328,17 +328,43 @@ class VideoProcessingPipeline:
                 await self.update_job_progress(session, job, 15, f"Finalizing clip boundaries for top {len(ranked_clips)} clips")
                 candidate_records: List[ClipCandidate] = []
                 timeline_edits: List[TimelineEdit] = []
+                job_hook_strat = getattr(job, "hook_strategy", None) or "teaser_climax_hook"
 
                 for cand, comp_score, penalty, rank in ranked_clips:
                     if remove_dead_air:
-                        t_edit = silence_detector.build_edited_timeline(cand.start, cand.end, silence_intervals)
+                        base_edit = silence_detector.build_edited_timeline(cand.start, cand.end, silence_intervals)
+                        story_intervals = list(base_edit.keep)
+                        dead_air_sec = base_edit.dead_air_removed_seconds
                     else:
-                        t_edit = TimelineEdit(
-                            source_start=cand.start,
-                            source_end=cand.end,
-                            keep=[[cand.start, cand.end]],
-                            dead_air_removed_seconds=0.0,
-                        )
+                        story_intervals = [[cand.start, cand.end]]
+                        dead_air_sec = 0.0
+
+                    final_keep = list(story_intervals)
+                    if job_hook_strat == "teaser_climax_hook":
+                        dur = cand.end - cand.start
+                        c_start = getattr(cand, "climax_start", None)
+                        c_end = getattr(cand, "climax_end", None)
+
+                        if c_start is not None and c_end is not None and float(c_end) > float(c_start) + 1.0:
+                            s = max(cand.start, float(c_start))
+                            e = min(cand.end, max(s + 3.0, float(c_end)))
+                            if e - s > 5.0:
+                                e = s + 5.0
+                        else:
+                            mid = cand.start + dur * 0.50
+                            s = round(mid, 2)
+                            e = round(min(cand.end, s + 4.5), 2)
+
+                        if s >= cand.start + 3.0 and (e - s) >= 2.0:
+                            teaser_interval = [round(s, 2), round(e, 2)]
+                            final_keep = [teaser_interval] + story_intervals
+
+                    t_edit = TimelineEdit(
+                        source_start=cand.start,
+                        source_end=cand.end,
+                        keep=final_keep,
+                        dead_air_removed_seconds=dead_air_sec,
+                    )
                     timeline_edits.append(t_edit)
 
                     cand_rec = ClipCandidate(
@@ -407,8 +433,15 @@ class VideoProcessingPipeline:
                         add_hook_header=job_add_hook,
                         hook_header_text=hook_title_text,
                         hook_header_position=job_hook_pos,
+                        keep_intervals=t_edit.keep,
                     )
-                    captioner.generate_srt(raw_segments, cand.start, cand.end, srt_path)
+                    captioner.generate_srt(
+                        raw_segments,
+                        cand.start,
+                        cand.end,
+                        srt_path,
+                        keep_intervals=t_edit.keep,
+                    )
 
                     # FFmpeg render
                     out_video_path = settings.PROCESSED_DIR / f"{clip_id}.mp4"
@@ -483,6 +516,7 @@ class VideoProcessingPipeline:
                         remove_watermark=job_remove_watermark,
                         watermark_position=job_watermark_position,
                         enhance_quality=job_enhance_quality,
+                        hook_strategy=job_hook_strat,
                         caption_style=caption_style if should_burn else "none",
                         burn_captions=should_burn,
                         timeline_edit_json=json.dumps(t_edit.model_dump()),
@@ -697,8 +731,15 @@ class VideoProcessingPipeline:
                 add_hook_header=job_add_hook,
                 hook_header_text=hook_title_text,
                 hook_header_position=job_hook_pos,
+                keep_intervals=t_edit.keep,
             )
-            captioner.generate_srt(segs, cand.start, cand.end, srt_path)
+            captioner.generate_srt(
+                segs,
+                cand.start,
+                cand.end,
+                srt_path,
+                keep_intervals=t_edit.keep,
+            )
 
             should_burn = burn_captions and caption_style != "none"
             job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
@@ -752,6 +793,7 @@ class VideoProcessingPipeline:
                 remove_watermark=job_remove_watermark,
                 watermark_position=job_watermark_position,
                 enhance_quality=job_enhance_quality,
+                hook_strategy=getattr(job, "hook_strategy", None) or "teaser_climax_hook",
                 caption_style=caption_style if should_burn else "none",
                 burn_captions=should_burn,
                 timeline_edit_json=json.dumps(t_edit.model_dump()),

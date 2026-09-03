@@ -53,6 +53,7 @@ async def create_clipping_job(
         remove_watermark=req.remove_watermark,
         watermark_position=req.watermark_position or "top_right",
         enhance_quality=req.enhance_quality if req.enhance_quality is not None else True,
+        hook_strategy=req.hook_strategy or "teaser_climax_hook",
         status="queued",
         current_stage=1,
         stage_name="Validate file",

@@ -33,6 +33,7 @@ import {
   Flame,
   Eraser,
   Wand2,
+  Play,
 } from "lucide-react";
 
 
@@ -77,6 +78,7 @@ export default function SettingsPage() {
   const [defaultRemoveWatermark, setDefaultRemoveWatermark] = useState<boolean>(false);
   const [defaultWatermarkPosition, setDefaultWatermarkPosition] = useState<string>("top_right");
   const [defaultEnhanceQuality, setDefaultEnhanceQuality] = useState<boolean>(true);
+  const [defaultHookStrategy, setDefaultHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -98,6 +100,7 @@ export default function SettingsPage() {
       if (data.default_remove_watermark !== undefined) setDefaultRemoveWatermark(data.default_remove_watermark);
       if (data.default_watermark_position) setDefaultWatermarkPosition(data.default_watermark_position as any);
       if (data.default_enhance_quality !== undefined) setDefaultEnhanceQuality(data.default_enhance_quality);
+      if (data.default_hook_strategy) setDefaultHookStrategy(data.default_hook_strategy as any);
 
       // Hydrate plain keys from localStorage if available
       if (typeof window !== "undefined") {
@@ -175,6 +178,7 @@ export default function SettingsPage() {
         default_remove_watermark: defaultRemoveWatermark,
         default_watermark_position: defaultWatermarkPosition,
         default_enhance_quality: defaultEnhanceQuality,
+        default_hook_strategy: defaultHookStrategy,
       });
       setSettings(updated);
       setSaveSuccess(true);
@@ -842,6 +846,108 @@ export default function SettingsPage() {
               <RefreshCw className={`h-3 w-3 ${testingGemini ? "animate-spin" : ""}`} />
               <span>{testingGemini ? "Testing Connection..." : "Test Gemini Connection"}</span>
             </button>
+          </div>
+        </div>
+
+        {/* 4.5 Hook Strategy Default */}
+        <div className="glass-panel rounded-2xl p-6 space-y-4 border border-violet-500/20 bg-gradient-to-b from-violet-950/20 to-transparent">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-sm">
+                ⚡
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-200 flex items-center gap-2">
+                  Default Hook & Story Structure
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">
+                    Dual Option
+                  </span>
+                </h3>
+                <p className="text-xs text-zinc-400">Choose default editing structure applied when auto-generating clips</p>
+              </div>
+            </div>
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-zinc-900 border border-white/10 text-zinc-300">
+              {defaultHookStrategy === "teaser_climax_hook" ? "⚡ 5s Climax Teaser First" : "▶ Direct Chronological Cut"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            <div
+              onClick={() => setDefaultHookStrategy("teaser_climax_hook")}
+              className={`cursor-pointer rounded-xl p-4.5 border transition-all duration-300 flex flex-col justify-between ${
+                defaultHookStrategy === "teaser_climax_hook"
+                  ? "bg-gradient-to-br from-red-500/15 via-violet-600/15 to-zinc-900/60 border-red-500/60 shadow-xl shadow-red-500/10 ring-1 ring-red-500/40"
+                  : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3 mb-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                    defaultHookStrategy === "teaser_climax_hook" ? "bg-red-500 text-white" : "bg-white/10 text-zinc-400"
+                  }`}>
+                    <Zap className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h5 className="font-semibold text-white text-xs sm:text-sm flex items-center gap-1.5">
+                      5s Climax Teaser Hook
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                        Viral Meta
+                      </span>
+                    </h5>
+                    <span className="text-[11px] text-red-400 font-medium">In Medias Res Cold-Open</span>
+                  </div>
+                </div>
+                {defaultHookStrategy === "teaser_climax_hook" && (
+                  <CheckCircle2 className="h-5 w-5 text-red-400 shrink-0" />
+                )}
+              </div>
+              <p className="text-xs text-zinc-300 leading-relaxed mb-3">
+                Slices the most intense 4–5s fight, clash, scream, or shocking revelation from the middle, plays it first to catch viewers off-guard, then rewinds to build up the full story.
+              </p>
+              <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 bg-black/40 rounded-lg p-2 border border-white/5 font-mono">
+                <span className="text-red-400 font-bold">[0-5s: PEAK CLASH]</span>
+                <span>➔</span>
+                <span className="text-zinc-300">[Story Build-up & Payoff]</span>
+              </div>
+            </div>
+
+            <div
+              onClick={() => setDefaultHookStrategy("direct_chronological")}
+              className={`cursor-pointer rounded-xl p-4.5 border transition-all duration-300 flex flex-col justify-between ${
+                defaultHookStrategy === "direct_chronological"
+                  ? "bg-gradient-to-br from-violet-500/15 to-zinc-900/60 border-violet-500/60 shadow-xl shadow-violet-500/10 ring-1 ring-violet-500/40"
+                  : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3 mb-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                    defaultHookStrategy === "direct_chronological" ? "bg-violet-500 text-white" : "bg-white/10 text-zinc-400"
+                  }`}>
+                    <Play className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h5 className="font-semibold text-white text-xs sm:text-sm flex items-center gap-1.5">
+                      Direct Chronological Cut
+                    </h5>
+                    <span className="text-[11px] text-violet-400 font-medium">Traditional Linear Narrative</span>
+                  </div>
+                </div>
+                {defaultHookStrategy === "direct_chronological" && (
+                  <CheckCircle2 className="h-5 w-5 text-violet-400 shrink-0" />
+                )}
+              </div>
+              <p className="text-xs text-zinc-300 leading-relaxed mb-3">
+                Cuts the video directly from start to finish in normal order without moving or splicing scenes. Best for clean stories, tutorials, and monologues.
+              </p>
+              <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 bg-black/40 rounded-lg p-2 border border-white/5 font-mono">
+                <span className="text-violet-400 font-bold">[0s: Start]</span>
+                <span>➔</span>
+                <span className="text-zinc-300">[Progression]</span>
+                <span>➔</span>
+                <span className="text-emerald-400">[Payoff]</span>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -118,6 +118,15 @@ class ClipRegeneratorService:
         out_video_path = settings.PROCESSED_DIR / f"{clip.id}.mp4"
         thumb_path = settings.THUMBNAIL_DIR / f"{clip.id}.jpg"
 
+        # Load existing keep_intervals if present
+        keep_intervals = None
+        if clip.timeline_edit_json:
+            try:
+                t_data = json.loads(clip.timeline_edit_json)
+                keep_intervals = t_data.get("keep")
+            except Exception:
+                pass
+
         # 1. Captions with persistent hook header
         captioner.generate_ass(
             segments,
@@ -129,8 +138,9 @@ class ClipRegeneratorService:
             add_hook_header=chosen_add_hook,
             hook_header_text=chosen_hook_text,
             hook_header_position=chosen_hook_pos,
+            keep_intervals=keep_intervals,
         )
-        captioner.generate_srt(segments, clip.start_time, clip.end_time, srt_path)
+        captioner.generate_srt(segments, clip.start_time, clip.end_time, srt_path, keep_intervals=keep_intervals)
 
         # 2. Reframing & Render
         crop_info = await reframer.calculate_crop_trajectory(video_path, clip.start_time, clip.end_time)
@@ -142,6 +152,7 @@ class ClipRegeneratorService:
             reframing_config=crop_info,
             ass_subtitle_path=ass_path,
             burn_captions=True,
+            keep_intervals=keep_intervals,
             framing_mode=getattr(clip, "framing_mode", "crop_9_16"),
             blur_radius=getattr(clip, "blur_radius", 30),
             remove_watermark=chosen_remove_wm,

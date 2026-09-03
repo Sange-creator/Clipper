@@ -139,6 +139,9 @@ Return a JSON array of candidates:
     "visual_score": 80,
     "audio_score": 85,
     "platform_score": 90,
+    "climax_start": 28.5,
+    "climax_end": 33.2,
+    "climax_summary": "Intense peak clash: explosive revelation",
     "reason": "Strong curiosity hook followed by concrete advice.",
     "hook_summary": "Unexpected revelation at the start",
     "payoff_summary": "Clear conclusion and takeaway"

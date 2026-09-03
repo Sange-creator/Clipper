@@ -126,6 +126,7 @@ class RenderedClipResponse(BaseModel):
     remove_watermark: bool = False
     watermark_position: str = "top_right"
     enhance_quality: bool = True
+    hook_strategy: str = "teaser_climax_hook"
     caption_style: str = "bold_yellow"
     burn_captions: bool = True
     timeline_edit: Optional[Dict[str, Any]] = None
@@ -184,6 +185,7 @@ class ProjectProcessRequest(BaseModel):
     remove_watermark: bool = False
     watermark_position: str = "top_right"
     enhance_quality: bool = True
+    hook_strategy: Literal["teaser_climax_hook", "direct_chronological"] = "teaser_climax_hook"
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
     source_diversity_weight: float = Field(default=0.35, ge=0.0, le=1.0)
@@ -211,6 +213,7 @@ class JobCreateRequest(BaseModel):
     remove_watermark: bool = False
     watermark_position: str = "top_right"
     enhance_quality: bool = True
+    hook_strategy: Literal["teaser_climax_hook", "direct_chronological"] = "teaser_climax_hook"
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     custom_instructions: Optional[str] = None
 
@@ -312,6 +315,7 @@ class SettingsResponse(BaseModel):
     default_remove_watermark: bool = False
     default_watermark_position: str = "top_right"
     default_enhance_quality: bool = True
+    default_hook_strategy: str = "teaser_climax_hook"
     ffmpeg_available: bool
     ffprobe_available: bool
 
@@ -334,6 +338,7 @@ class SettingsUpdateRequest(BaseModel):
     default_remove_watermark: Optional[bool] = None
     default_watermark_position: Optional[str] = None
     default_enhance_quality: Optional[bool] = None
+    default_hook_strategy: Optional[Literal["teaser_climax_hook", "direct_chronological"]] = None
 
 
 

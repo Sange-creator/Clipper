@@ -112,6 +112,10 @@ async def list_all_clips(
                 add_hook_header=getattr(clip, "add_hook_header", False) or False,
                 hook_header_position=getattr(clip, "hook_header_position", 12) or 12,
                 hook_header_text=getattr(clip, "hook_header_text", None),
+                remove_watermark=getattr(clip, "remove_watermark", False) or False,
+                watermark_position=getattr(clip, "watermark_position", "top_right") or "top_right",
+                enhance_quality=getattr(clip, "enhance_quality", True) if getattr(clip, "enhance_quality", True) is not None else True,
+                hook_strategy=getattr(clip, "hook_strategy", "teaser_climax_hook") or "teaser_climax_hook",
                 caption_style=clip.caption_style,
                 burn_captions=clip.burn_captions,
                 timeline_edit=timeline_data,
@@ -200,6 +204,7 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         remove_watermark=getattr(clip, "remove_watermark", False) or False,
         watermark_position=getattr(clip, "watermark_position", "top_right") or "top_right",
         enhance_quality=getattr(clip, "enhance_quality", True) if getattr(clip, "enhance_quality", True) is not None else True,
+        hook_strategy=getattr(clip, "hook_strategy", "teaser_climax_hook") or "teaser_climax_hook",
         caption_style=clip.caption_style,
         burn_captions=clip.burn_captions,
         timeline_edit=timeline_data,
@@ -306,8 +311,9 @@ async def rerender_clip(
         add_hook_header=add_hook,
         hook_header_text=hook_txt,
         hook_header_position=hook_pos,
+        keep_intervals=t_edit.keep,
     )
-    captioner.generate_srt(segments, start_time, end_time, srt_path)
+    captioner.generate_srt(segments, start_time, end_time, srt_path, keep_intervals=t_edit.keep)
 
     out_video_path = settings.PROCESSED_DIR / f"{clip.id}.mp4"
     crop_info = {"mode": "center_crop"}
