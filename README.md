@@ -1,6 +1,6 @@
 # AI Video Clipper Pro
 
-Production-grade AI video clipping and short-form discovery platform that converts long-form videos into high-retention 9:16 vertical clips optimized for TikTok, Instagram Reels, and YouTube Shorts.
+Production-grade AI video clipping and short-form discovery platform that automatically discovers, ranks, slices, and renders high-potential short-form clips for TikTok, Instagram Reels, and YouTube Shorts.
 
 ---
 
@@ -8,17 +8,56 @@ Production-grade AI video clipping and short-form discovery platform that conver
 
 ---
 
-## Architectural Overview
+## Key Capabilities & Features
 
-AI Video Clipper Pro is structured as a decoupled full-stack application designed for deterministic media processing, resilient AI reasoning, and high-performance video rendering.
+### 1. Dual Pre-Clipping Hook Strategies (User Choice)
+Before launching a clipping job, creators can choose how every extracted clip hooks the audience:
+- **⚡ 5s Climax Teaser Hook (In Medias Res / Viral Meta)**:
+  - Intelligently locates the most explosive **4–5 second fight, clash, scream, or shocking revelation** inside the moment.
+  - Slices and plays this intense climax first (`0.0s – 5.0s`) to catch viewers off-guard and maximize retention.
+  - Rewinds to the natural beginning to build up the full story context until resolving the climax and punchline.
+  - Subtitles are automatically retimed across both intervals without drift.
+- **▶ Direct Chronological Cut**:
+  - Slices the video directly from start to finish in normal chronological sequence without moving or splicing scenes.
+  - Ideal for clean sequential storytelling, monologues, and tutorials.
 
-### Core Technology Stack
+### 2. Intense Clash, Fight & Conflict Discovery
+- Overhauled reasoning prompts for **Regular Podcast Clipper** and **Long Video Viral Moments**.
+- Prioritizes heated arguments, verbal/physical clashes, explosive confrontations, loud reactions, and shocking confessions.
+- Heavily penalizes childish, mundane, or boring conversational filler.
+- Structured JSON output identifies `climax_start`, `climax_end`, and `climax_summary` timestamps.
 
-- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Radix UI Primitives, Lucide Icons
-- **Backend**: Python 3.11+, FastAPI, SQLAlchemy Async, SQLite / PostgreSQL, Pydantic V2
-- **Speech Recognition**: Deepgram Nova-3 API (Word-level timestamps, speaker diarization) with local Faster-Whisper fallback
-- **Reasoning Engine**: Groq LPU (Llama 3), Google Gemini 2.0 Flash (Multimodal reasoning), and deterministic heuristic fallback
-- **Media Processing**: FFmpeg 7+ / 9.0 Pro, OpenCV, PySceneDetect
+### 3. Automated OpenCV Computer Vision Watermark Detection & Eraser
+- **Temporal Persistence Analysis**: Samples frames across the video and computes standard deviation variance across pixel regions.
+- **Canny Edge Density Scoring**: Distinguishes static logos and channel bugs from natural scene motion.
+- **Autonomous Resolution**: Resolves corner locations (`top_right`, `bottom_right`, `top_left`, `bottom_left`, `tiktok_bounce`, `all_corners`).
+- **FFmpeg Delogo Filter**: Seamlessly erases watermarks with boundary-clamped coordinates before vertical reframing.
+
+### 4. Complete Metadata Stripping & Anti-Duplicate Architecture
+- **Exhaustive Tag Wiping**: Strips QuickTime atoms, camera hardware serials, vendor IDs, GPS coordinates, chapter markers, and creation timestamps (`-map_metadata -1`, `-flags +bitexact`).
+- **Anti-Duplicate Perceptual Transform**: Applies subtle micro-adjustments to color vibrance, edge sharpness, and EBU R128 audio loudness normalization to generate fresh perceptual content hashes.
+
+### 5. CapCut & TikTok Boxed Caption Styles
+- Word-level animated karaoke captions with colored background bounding boxes using ASS `BorderStyle: 3`.
+- Presets: `capcut_black_box`, `capcut_yellow_box`, `tiktok_boxed`, `tiktok_viral`, `hormozi_bold`, `clean_white`, `bold_yellow`, `podcast_box`, `cinematic`, `meme_impact`, and `cyber_neon`.
+- Customizable vertical positioning (10% Top to 90% Bottom) with optional persistent TikTok hook headers.
+
+### 6. Strict Dual-Folder Bulk Download ZIP Architecture
+Batch downloads from jobs or project workstations output ZIP archives formatted with **strictly two root folders**:
+```
+zip_root/
+├── videos/
+│   ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS.mp4
+│   ├── clip_02_d4e5f6_THE_GREATEST_MISTAKE_IN_HISTORY.mp4
+│   └── ...
+└── titles_and_thumbnails/
+    ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS_thumbnail.jpg
+    ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS_title.txt
+    ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS_metadata.json
+    ├── clip_02_d4e5f6_THE_GREATEST_MISTAKE_IN_HISTORY_thumbnail.jpg
+    ├── clip_02_d4e5f6_THE_GREATEST_MISTAKE_IN_HISTORY_title.txt
+    └── clip_02_d4e5f6_THE_GREATEST_MISTAKE_IN_HISTORY_metadata.json
+```
 
 ---
 
@@ -31,19 +70,6 @@ AI Video Clipper Pro provides native, responsive multi-format rendering across M
 | **Mobile Short-Form** | 9:16 Vertical | 1080 x 1920 | TikTok, Reels, Shorts | Full vertical crop, face/subject focal tracking, animated karaoke captions. |
 | **Tablet / Frosted Blur** | 16:9 in 9:16 | 1080 x 1920 | Podcasts, Interviews | 100% widescreen fit centered over a dynamic Gaussian-blurred video canvas. |
 | **Desktop / Widescreen** | 16:9 Native | 1920 x 1080 | YouTube, Twitter/X | Preserves source resolution without vertical crop or frame distortion. |
-
-#### 1. Mobile (9:16 Full Vertical)
-- **Target Platforms**: TikTok, Instagram Reels, YouTube Shorts
-- **Framing Engine**: Dynamic subject tracking centers speakers and crops horizontal excess.
-- **Safe-Zones**: Subtitles and visual hooks avoid bottom tab bars and right-side interactive engagement buttons (Like, Comment, Share).
-
-#### 2. iPad & Tablet (16:9 in 9:16 Blurred Canvas)
-- **Target Use Cases**: Multi-speaker podcasts, software demonstrations, widescreen interviews.
-- **Frosted Blur Engine**: Renders uncropped 16:9 video centered with a background Gaussian blur layer (customizable from 5px to 60px) and a 35% luminosity dim.
-
-#### 3. Web & Desktop (16:9 Native Landscape)
-- **Target Use Cases**: Standard desktop browsers, YouTube long-form, Twitter/X feeds.
-- **Zero Transformation**: Direct high-bitrate clipping with burned-in subtitles positioned within the lower-third.
 
 ---
 
@@ -65,10 +91,10 @@ Every uploaded video is processed through a sequential, state-tracked pipeline w
 12. **Remove Duplicates / Overlaps**: Temporal Intersection-over-Union (IoU) Non-Maximum Suppression (NMS).
 13. **Rank Globally**: Normalization and global priority sorting across candidate pools.
 14. **Apply User Duration Constraints**: Preservation of narrative arcs within target durations (15-30s, 30-45s, 45-60s, 60-90s).
-15. **Generate Final Clip Boundaries**: Generation of exact trimming intervals with dead-air excision.
+15. **Generate Final Clip Boundaries**: Construction of editing timeline (applying 5s climax teaser or direct cut).
 16. **Render Clips Using FFmpeg**: 9:16 vertical crop, 16:9 blurred background synthesis, or native 16:9 export.
-17. **Generate Captions**: Generation of timed Advanced SubStation Alpha (.ass) and SubRip (.srt) subtitle tracks.
-18. **Generate Thumbnails**: Extraction of high-engagement hook keyframes.
+17. **Generate Captions**: Multi-interval subtitle retiming and ASS/SRT generation.
+18. **Generate Thumbnails**: Extraction of high-engagement 9:16 hook keyframes.
 19. **Generate Clip Metadata**: Production of viral titles, captions, and platform hashtags.
 20. **Store Results**: Persistence of clip assets, video streams, and scoring metrics to local database.
 21. **Mark Job Complete**: Finalization of job state and emission of completion signals.
@@ -76,8 +102,6 @@ Every uploaded video is processed through a sequential, state-tracked pipeline w
 ---
 
 ## AI Provider Resilience and Fallback Matrix
-
-To guarantee uninterrupted processing regardless of rate limits or service outages, the system utilizes a chained multi-provider architecture:
 
 ```
 +-------------------------------------------------------------------+
@@ -108,11 +132,6 @@ To guarantee uninterrupted processing regardless of rate limits or service outag
 +-------------------------------------------------------------------+
 ```
 
-- **Deepgram Nova-3**: Cloud speech recognition supporting word timestamps and speaker identification.
-- **Groq LPU**: Sub-second candidate extraction running Llama 3 models.
-- **Google Gemini 2.0 Flash**: Multi-modal fallback capable of contextual reasoning and visual validation.
-- **Heuristic Engine**: Deterministic fallback guaranteeing pipeline completion under total network isolation.
-
 ---
 
 ## Project Structure
@@ -121,22 +140,22 @@ To guarantee uninterrupted processing regardless of rate limits or service outag
 Clipper/
 |-- backend/
 |   |-- app/
-|   |   |-- api/routes/          # REST endpoints (upload, jobs, clips, settings, admin)
-|   |   |-- core/                # Database configuration, SQLite schema, SQLAlchemy models
+|   |   |-- api/routes/          # REST endpoints (upload, jobs, clips, settings, export, admin)
+|   |   |-- core/                # Database configuration, SQLite schema, SQLAlchemy models, Pydantic schemas
 |   |   |-- services/
-|   |   |   |-- ai/              # Resilient AI engine (Groq, Gemini, Local Heuristics)
+|   |   |   |-- ai/              # Resilient AI engine (Groq, Gemini, Local Heuristics, Prompts)
 |   |   |   |-- audio/           # Speech-to-text (Deepgram Nova-3, Faster-Whisper)
-|   |   |   |-- media/           # FFmpeg rendering, scene detection, subtitle burn-in
+|   |   |   |-- media/           # FFmpeg rendering, watermark detector, captioner, silence detector
 |   |   |   `-- pipeline/        # 21-stage deterministic orchestration & candidate scoring
 |   |   `-- main.py              # FastAPI application entrypoint
-|   `-- tests/                   # Pytest test suite
+|   `-- tests/                   # Comprehensive 35+ Pytest test suite
 |-- frontend/
 |   |-- public/                  # Static assets, brand logos, favicons, web manifest
 |   |-- src/
-|   |   |-- app/                 # Next.js 15 App Router pages & server routes
+|   |   |-- app/                 # Next.js 15 App Router pages (upload, jobs, clips, projects, settings, admin)
 |   |   |-- components/
 |   |   |   |-- ui/              # shadcn/ui components (buttons, badges, cards, sliders)
-|   |   |   |-- upload/          # Single and batch video drag-and-drop wizards
+|   |   |   |-- upload/          # Single and batch video drag-and-drop wizards with hook strategy selector
 |   |   |   |-- processing/      # 21-stage live progress monitor & log telemetry
 |   |   |   `-- review/          # Clip workstation, timeline scrubber, player safe-zone
 |   |   `-- lib/                 # Type definitions, API client, utility functions
@@ -178,32 +197,14 @@ npm install
 npm run dev
 ```
 
-The web application is accessible at `http://localhost:3000` (or `http://localhost:3001`).
-
----
-
-## Environment Variables
-
-| Variable | Type | Description | Default |
-|:---|:---|:---|:---|
-| `AI_PROVIDER` | string | Primary reasoning engine (`groq`, `gemini`, `mock`) | `groq` |
-| `GROQ_API_KEY` | string | Groq Cloud API authentication key | Optional |
-| `GROQ_MODEL` | string | Groq model identifier | `llama-3.3-70b-versatile` |
-| `GEMINI_API_KEY` | string | Google Gemini AI authentication key | Optional |
-| `GEMINI_MODEL` | string | Gemini model identifier | `gemini-2.0-flash` |
-| `DEEPGRAM_API_KEY` | string | Deepgram Cloud STT API key | Optional |
-| `DEEPGRAM_MODEL` | string | Deepgram acoustic model | `nova-3` |
-| `TRANSCRIBER_PROVIDER` | string | Speech recognition backend (`auto`, `deepgram`, `whisper`) | `auto` |
-| `WHISPER_MODEL_SIZE` | string | Local Faster-Whisper model size | `base` |
-| `DATABASE_URL` | string | Database connection string | `sqlite+aiosqlite:///./data/clipper.db` |
-| `DATA_DIR` | string | Storage directory for video artifacts | `./data` |
+The web application is accessible at `http://localhost:3000`.
 
 ---
 
 ## Live Deployments
 
 - **Production Frontend**: [https://ai-clipper-pro.vercel.app](https://ai-clipper-pro.vercel.app)
-- **Secondary Domain**: [https://clipper-ai-pro.vercel.app](https://clipper-ai-pro.vercel.app)
+- **Secondary / Legacy Domain**: [https://clipper-ai-pro.vercel.app](https://clipper-ai-pro.vercel.app)
 - **Source Code**: [https://github.com/Sange-creator/Clipper](https://github.com/Sange-creator/Clipper)
 
 ---
