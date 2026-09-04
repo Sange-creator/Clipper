@@ -27,6 +27,13 @@ import {
   FolderOpen,
   Play,
   Check,
+  FileText,
+  MessageSquare,
+  BookOpen,
+  Film,
+  Smile,
+  Feather,
+  Square,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
@@ -719,7 +726,7 @@ export function VideoUploader() {
             {burnCaptions ? (
               <div className="space-y-2 pt-2 border-t border-white/5">
                 <label className="text-[11px] font-medium text-zinc-400">Select Caption Style & Font:</label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {[
                     { id: "tiktok_viral", name: "TikTok Viral", desc: "Electric yellow pop", font: "Arial Black" },
                     { id: "meme", name: "Meme Classic", desc: "Heavy Impact white all-caps", font: "Impact" },
@@ -744,17 +751,17 @@ export function VideoUploader() {
                       onClick={() => setCaptionStyle(style.id as any)}
                       className={`rounded-lg p-2.5 text-left border transition-all ${
                         captionStyle === style.id
-                          ? "bg-violet-600/20 border-violet-500 text-white shadow-md ring-1 ring-violet-500"
+                          ? "bg-violet-600/15 border-violet-500 text-white shadow-sm ring-1 ring-violet-500/60"
                           : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.04]"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold">{style.name}</p>
-                        <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-white/5 text-zinc-400 border border-white/10">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-medium text-white truncate">{style.name}</p>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/10 shrink-0">
                           {style.font}
                         </span>
                       </div>
-                      <p className="text-[9px] text-zinc-500 mt-1 line-clamp-1">{style.desc}</p>
+                      <p className="text-[10px] text-zinc-400 mt-1 truncate">{style.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -843,9 +850,9 @@ export function VideoUploader() {
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h4 className="text-xs font-semibold text-white">Sticky TikTok Hook Header</h4>
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">VIRAL CREATOR</span>
+                    <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">Creator Header</span>
                   </div>
-                  <p className="text-[11px] text-zinc-400">Keep catchy hook header with emoji visible throughout clip</p>
+                  <p className="text-[11px] text-zinc-400">Keep catchy hook headline pinned across the clip</p>
                 </div>
               </div>
               <button
@@ -953,61 +960,67 @@ export function VideoUploader() {
                         : "Viral Creator Yellow"}
                     </span>
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
-                      { id: "viral_creator", label: "⚡️ Viral Creator", font: "Arial Black", desc: "Electric Yellow" },
-                      { id: "white_box", label: "📄 White Card Box", font: "Arial Black", desc: "Black on White" },
-                      { id: "meme", label: "🗿 Classic Meme", font: "Impact", desc: "Bold Impact Stroke" },
-                      { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier New", desc: "Amber Typewriter" },
-                      { id: "old_history", label: "🏛️ Old History", font: "Georgia", desc: "Parchment Serif" },
-                      { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Arial Black", desc: "Cyan & Magenta" },
-                    ].map((hs) => (
-                      <button
-                        key={hs.id}
-                        type="button"
-                        onClick={() => setHookHeaderStyle(hs.id)}
-                        className={`py-1.5 px-2.5 rounded-lg border text-left transition-all ${
-                          hookHeaderStyle === hs.id
-                            ? "bg-amber-500/25 border-amber-400 ring-1 ring-amber-400 text-white shadow-sm"
-                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-semibold">{hs.label}</span>
-                          <span className="text-[8px] font-mono text-zinc-500">{hs.font}</span>
-                        </div>
-                        <span className="text-[9px] text-zinc-400 block mt-0.5">{hs.desc}</span>
-                      </button>
-                    ))}
+                      { id: "viral_creator", label: "Viral Creator", icon: Zap, font: "Arial Black", desc: "Electric Yellow" },
+                      { id: "white_box", label: "White Card Box", icon: FileText, font: "Arial Black", desc: "Black on White" },
+                      { id: "meme", label: "Classic Meme", icon: MessageSquare, font: "Impact", desc: "Bold Impact Stroke" },
+                      { id: "nostalgic", label: "Nostalgic Vintage", icon: Clock, font: "Courier New", desc: "Amber Typewriter" },
+                      { id: "old_history", label: "Old History", icon: BookOpen, font: "Georgia", desc: "Parchment Serif" },
+                      { id: "neon_cyber", label: "Cyber Neon", icon: Sparkles, font: "Arial Black", desc: "Cyan & Magenta" },
+                    ].map((hs) => {
+                      const IconComponent = hs.icon;
+                      return (
+                        <button
+                          key={hs.id}
+                          type="button"
+                          onClick={() => setHookHeaderStyle(hs.id)}
+                          className={`p-2 rounded-lg border text-left transition-all ${
+                            hookHeaderStyle === hs.id
+                              ? "bg-amber-500/15 border-amber-400 ring-1 ring-amber-400/50 text-white shadow-sm"
+                              : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-1.5">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <IconComponent className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                              <span className="text-[11px] font-medium text-white truncate">{hs.label}</span>
+                            </div>
+                            <span className="text-[8px] font-mono text-zinc-400 bg-zinc-900 px-1 py-0.5 rounded border border-white/5 shrink-0">{hs.font}</span>
+                          </div>
+                          <span className="text-[9px] text-zinc-400 block mt-1 truncate">{hs.desc}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* TikTok style preview badge */}
+                {/* Live Header Style Preview */}
                 <div className="rounded-lg bg-black/40 border border-amber-500/20 p-2.5 flex items-center justify-between text-xs">
-                  <span className="text-[10px] text-zinc-400">Creator Style Preview:</span>
+                  <span className="text-[10px] text-zinc-400">Header Style Preview:</span>
                   {hookHeaderStyle === "white_box" ? (
                     <span className="font-black text-black bg-white px-2.5 py-0.5 rounded uppercase tracking-tight text-[11px] shadow-sm">
-                      WHY NOBODY TALKS ABOUT THIS 🤫
+                      WHY NOBODY TALKS ABOUT THIS
                     </span>
                   ) : hookHeaderStyle === "meme" ? (
                     <span className="font-black text-white uppercase tracking-wider drop-shadow-[0_2px_6px_rgba(0,0,0,1)] text-[11px]">
-                      WHY NOBODY TALKS ABOUT THIS 🤫
+                      WHY NOBODY TALKS ABOUT THIS
                     </span>
                   ) : hookHeaderStyle === "nostalgic" ? (
                     <span className="font-mono font-bold text-amber-200 drop-shadow-[0_2px_4px_rgba(30,20,10,0.9)] tracking-widest text-[11px] uppercase">
-                      WHY NOBODY TALKS ABOUT THIS 🤫
+                      WHY NOBODY TALKS ABOUT THIS
                     </span>
                   ) : hookHeaderStyle === "old_history" ? (
                     <span className="font-serif italic font-semibold text-amber-100/95 drop-shadow-[0_2px_4px_rgba(15,20,30,0.9)] tracking-wide text-[11px]">
-                      WHY NOBODY TALKS ABOUT THIS 🤫
+                      WHY NOBODY TALKS ABOUT THIS
                     </span>
                   ) : hookHeaderStyle === "neon_cyber" ? (
                     <span className="font-black text-cyan-300 drop-shadow-[0_0_8px_rgba(255,0,255,0.8)] uppercase text-[11px]">
-                      WHY NOBODY TALKS ABOUT THIS 🤫
+                      WHY NOBODY TALKS ABOUT THIS
                     </span>
                   ) : (
                     <span className="font-extrabold text-amber-300 font-mono tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,1)] text-[11px]">
-                      WHY NOBODY TALKS ABOUT THIS 🤫
+                      WHY NOBODY TALKS ABOUT THIS
                     </span>
                   )}
                 </div>
@@ -1115,12 +1128,12 @@ export function VideoUploader() {
                   }`}>
                     {watermarkScanResult.detected ? (
                       <p>
-                        <strong className="font-semibold text-cyan-300">✓ Detected Logo:</strong>{" "}
+                        <strong className="font-semibold text-cyan-300">Detected Logo:</strong>{" "}
                         {watermarkScanResult.position.replace("_", " ").toUpperCase()} ({Math.round(watermarkScanResult.confidence * 100)}% confidence). Filter auto-configured!
                       </p>
                     ) : (
                       <p>
-                        <strong className="font-semibold text-zinc-400">ℹ Clean Video:</strong> No persistent static logo detected across sampled frames.
+                        <strong className="font-semibold text-zinc-400">Clean Video:</strong> No persistent static logo detected across sampled frames.
                       </p>
                     )}
                   </div>
@@ -1129,7 +1142,7 @@ export function VideoUploader() {
                 {/* Watermark Presets */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                   {[
-                    { label: "✨ Auto Detect (AI)", value: "auto" },
+                    { label: "Auto Detect (AI)", value: "auto" },
                     { label: "TikTok Bounce", value: "tiktok_bounce" },
                     { label: "Top Right", value: "top_right" },
                     { label: "Bottom Right", value: "bottom_right" },

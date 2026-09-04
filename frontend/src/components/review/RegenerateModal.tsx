@@ -10,6 +10,8 @@ import {
   Palette,
   X,
   RefreshCw,
+  FileText,
+  MessageSquare,
 } from "lucide-react";
 import { CaptionPresetPicker } from "./CaptionPresetPicker";
 import { CaptionStyleType } from "@/lib/types";
@@ -167,29 +169,35 @@ export function RegenerateModal({
               </span>
             </div>
 
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
               {[
-                { id: "viral_creator", label: "⚡️ Viral Creator", font: "Sans Bold" },
-                { id: "white_box", label: "📄 White Card", font: "Arial Black" },
-                { id: "meme", label: "🗿 Classic Meme", font: "Impact" },
-                { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier Type" },
-                { id: "old_history", label: "🏛️ Old History", font: "Georgia Serif" },
-                { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Cyan Glow" },
-              ].map((styleOpt) => (
-                <button
-                  key={styleOpt.id}
-                  type="button"
-                  onClick={() => setHookHeaderStyle(styleOpt.id)}
-                  className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
-                    hookHeaderStyle === styleOpt.id
-                      ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
-                      : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <span className="text-xs font-bold leading-tight">{styleOpt.label}</span>
-                  <span className="text-[9px] text-zinc-500">{styleOpt.font}</span>
-                </button>
-              ))}
+                { id: "viral_creator", label: "Viral Creator", icon: Zap, font: "Sans Bold" },
+                { id: "white_box", label: "White Card", icon: FileText, font: "Arial Black" },
+                { id: "meme", label: "Classic Meme", icon: MessageSquare, font: "Impact" },
+                { id: "nostalgic", label: "Nostalgic", icon: Clock, font: "Courier Type" },
+                { id: "old_history", label: "Old History", icon: BookOpen, font: "Georgia Serif" },
+                { id: "neon_cyber", label: "Cyber Neon", icon: Sparkles, font: "Cyan Glow" },
+              ].map((styleOpt) => {
+                const IconComponent = styleOpt.icon;
+                return (
+                  <button
+                    key={styleOpt.id}
+                    type="button"
+                    onClick={() => setHookHeaderStyle(styleOpt.id)}
+                    className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 ${
+                      hookHeaderStyle === styleOpt.id
+                        ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <IconComponent className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                      <span className="text-xs font-semibold leading-tight">{styleOpt.label}</span>
+                    </div>
+                    <span className="text-[9px] font-mono text-zinc-500">{styleOpt.font}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

@@ -599,6 +599,16 @@ Avoid vague loading indicators for long operations.
 
 ---
 
+# UI Guidelines & Design System
+
+Always adhere strictly to `UI_GUIDELINES.md`:
+* Use shadcn/ui primitives and clean dark-mode obsidian styling (`bg-[#07090E]`, `border-white/10`).
+* Zero-Emoji Policy in UI: Never use emojis in UI controls, buttons, tabs, preset cards, or badges. Use Lucide-react SVG icons instead.
+* Responsive layouts: Never cram 4 columns into half-width containers. Rich cards with titles and font badges must use 2 columns max (`grid-cols-1 sm:grid-cols-2`) so badges and text never overlap or collide.
+* Component integrity: Ensure all typography badges, titles, and descriptions maintain adequate spacing and breathing room.
+
+---
+
 # Clip Review Interface
 
 Users should be able to:

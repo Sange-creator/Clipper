@@ -34,6 +34,10 @@ import {
   Eraser,
   Wand2,
   Play,
+  FileText,
+  MessageSquare,
+  Clock,
+  BookOpen,
 } from "lucide-react";
 
 
@@ -1272,29 +1276,35 @@ export default function SettingsPage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                   {[
-                    { id: "viral_creator", label: "⚡️ Viral Creator", font: "Sans Bold" },
-                    { id: "white_box", label: "📄 White Card", font: "Arial Black" },
-                    { id: "meme", label: "🗿 Classic Meme", font: "Impact" },
-                    { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier Type" },
-                    { id: "old_history", label: "🏛️ Old History", font: "Georgia Serif" },
-                    { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Cyan Glow" },
-                  ].map((styleOpt) => (
-                    <button
-                      key={styleOpt.id}
-                      type="button"
-                      onClick={() => setDefaultHookHeaderStyle(styleOpt.id)}
-                      className={`p-2.5 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
-                        defaultHookHeaderStyle === styleOpt.id
-                          ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
-                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      <span className="text-xs font-bold leading-tight">{styleOpt.label}</span>
-                      <span className="text-[9px] text-zinc-500">{styleOpt.font}</span>
-                    </button>
-                  ))}
+                    { id: "viral_creator", label: "Viral Creator", icon: Zap, font: "Sans Bold" },
+                    { id: "white_box", label: "White Card", icon: FileText, font: "Arial Black" },
+                    { id: "meme", label: "Classic Meme", icon: MessageSquare, font: "Impact" },
+                    { id: "nostalgic", label: "Nostalgic", icon: Clock, font: "Courier Type" },
+                    { id: "old_history", label: "Old History", icon: BookOpen, font: "Georgia Serif" },
+                    { id: "neon_cyber", label: "Cyber Neon", icon: Sparkles, font: "Cyan Glow" },
+                  ].map((styleOpt) => {
+                    const IconComponent = styleOpt.icon;
+                    return (
+                      <button
+                        key={styleOpt.id}
+                        type="button"
+                        onClick={() => setDefaultHookHeaderStyle(styleOpt.id)}
+                        className={`p-2.5 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 ${
+                          defaultHookHeaderStyle === styleOpt.id
+                            ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <IconComponent className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                          <span className="text-xs font-semibold leading-tight">{styleOpt.label}</span>
+                        </div>
+                        <span className="text-[9px] font-mono text-zinc-500">{styleOpt.font}</span>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Live Creator Style Preview */}
@@ -1315,16 +1325,16 @@ export default function SettingsPage() {
                     }`}
                   >
                     {defaultHookHeaderStyle === "white_box"
-                      ? "WAIT TILL THE END 🤯"
+                      ? "WAIT TILL THE END"
                       : defaultHookHeaderStyle === "meme"
-                      ? "NOBODY EXPECTED THIS 💀"
+                      ? "NOBODY EXPECTED THIS"
                       : defaultHookHeaderStyle === "nostalgic"
-                      ? "CHAPTER I: THE BEGINNING 📜"
+                      ? "CHAPTER I: THE BEGINNING"
                       : defaultHookHeaderStyle === "old_history"
-                      ? "HISTORICAL CHRONICLES 🏛️"
+                      ? "HISTORICAL CHRONICLES"
                       : defaultHookHeaderStyle === "neon_cyber"
-                      ? "FUTURE TECH REVEALED ⚡️"
-                      : "WHY NOBODY TALKS ABOUT THIS 🤫"}
+                      ? "FUTURE TECH REVEALED"
+                      : "WHY NOBODY TALKS ABOUT THIS"}
                   </div>
                 </div>
               </div>
@@ -1370,7 +1380,7 @@ export default function SettingsPage() {
               <span className="text-xs font-semibold text-zinc-300">Default Watermark Location</span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
-                  { label: "✨ Auto Detect (AI)", value: "auto", desc: "Computer vision scan & remove" },
+                  { label: "Auto Detect (AI)", value: "auto", desc: "Computer vision scan & remove" },
                   { label: "TikTok Bounce", value: "tiktok_bounce", desc: "Top-Left & Bottom-Right" },
                   { label: "Top Right", value: "top_right", desc: "Default TV / YouTube corner" },
                   { label: "Bottom Right", value: "bottom_right", desc: "Lower watermark placement" },
