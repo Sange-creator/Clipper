@@ -45,9 +45,10 @@ class WatermarkDetector:
     where static watermarks, station bugs, or bouncing TikTok logos are positioned.
     """
 
-    def __init__(self, sample_frames_count: int = 16, edge_threshold: float = 0.18):
+    def __init__(self, sample_frames_count: int = 8, edge_threshold: float = 0.18):
         self.sample_frames_count = sample_frames_count
         self.edge_threshold = edge_threshold
+        self._cache: Dict[str, WatermarkDetectionResult] = {}
 
     async def detect_watermark(
         self,
@@ -58,16 +59,23 @@ class WatermarkDetector:
         height: int = 1080,
     ) -> WatermarkDetectionResult:
         """Asynchronously run watermark detection in an executor thread to keep event loop free."""
+        v_str = str(video_path)
+        if v_str in self._cache:
+            logger.info(f"WatermarkDetector: Returning cached detection result for {Path(v_str).name}")
+            return self._cache[v_str]
+
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(
+        res = await loop.run_in_executor(
             None,
             self._detect_sync,
-            str(video_path),
+            v_str,
             start_time,
             end_time,
             width,
             height,
         )
+        self._cache[v_str] = res
+        return res
 
     def _detect_sync(
         self,

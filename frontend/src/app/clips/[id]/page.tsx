@@ -93,7 +93,8 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     hookHeaderText?: string,
     removeWatermark?: boolean,
     watermarkPosition?: string,
-    enhanceQuality?: boolean
+    enhanceQuality?: boolean,
+    hookHeaderStyle?: string
   ) => {
     if (!clip) return;
     const updated = await api.rerenderClip(clip.id, {
@@ -104,6 +105,7 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
       subtitle_position: subtitlePosition,
       add_hook_header: addHookHeader,
       hook_header_position: hookHeaderPosition,
+      hook_header_style: hookHeaderStyle,
       hook_header_text: hookHeaderText,
       remove_watermark: removeWatermark,
       watermark_position: watermarkPosition,
@@ -121,6 +123,7 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
       subtitle_position: clip.subtitle_position,
       add_hook_header: clip.add_hook_header,
       hook_header_position: clip.hook_header_position,
+      hook_header_style: clip.hook_header_style,
       hook_header_text: clip.hook_header_text || undefined,
     });
     setClip(updated);
@@ -262,6 +265,7 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
             initialSubtitlePosition={clip.subtitle_position}
             initialAddHookHeader={clip.add_hook_header}
             initialHookHeaderPosition={clip.hook_header_position}
+            initialHookHeaderStyle={clip.hook_header_style}
             initialHookHeaderText={clip.hook_header_text || clip.hook_text}
             initialRemoveWatermark={clip.remove_watermark}
             initialWatermarkPosition={clip.watermark_position as any}
@@ -290,6 +294,7 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
         onClose={() => setIsRegenerateOpen(false)}
         onRegenerate={handleRegenerate}
         currentStyle={clip.caption_style}
+        currentHookHeaderStyle={clip.hook_header_style}
       />
     </div>
   );

@@ -32,6 +32,7 @@ class ClipRegeneratorService:
         subtitle_position: Optional[int] = None,
         add_hook_header: Optional[bool] = None,
         hook_header_position: Optional[int] = None,
+        hook_header_style: Optional[str] = None,
         hook_header_text: Optional[str] = None,
         remove_watermark: Optional[bool] = None,
         watermark_position: Optional[str] = None,
@@ -68,14 +69,16 @@ class ClipRegeneratorService:
             start_time = min(end_time - 10.0, start_time + 3.5)
         elif intent == "shorter_duration":
             # Compress to ~25s target
-            end_time = max(start_time + 15.0, min(end_time, start_time + 28.0))
+            mid = (start_time + end_time) / 2
+            start_time = max(0.0, mid - 12.0)
+            end_time = min(video_dur, start_time + 25.0)
         elif intent == "longer_context":
-            # Expand context window 5s before and after
+            # Expand context
             start_time = max(0.0, start_time - 5.0)
-            end_time = min(video_dur, end_time + 6.0)
-        elif intent == "different_payoff":
-            # Seek forward 8 seconds to capture alternative resolution
             end_time = min(video_dur, end_time + 8.0)
+        elif intent == "different_payoff":
+            # Extend payoff
+            end_time = min(video_dur, end_time + 6.0)
 
         # Snap to nearest natural word boundary in transcript
         for s in segments:
@@ -88,15 +91,16 @@ class ClipRegeneratorService:
                 break
 
         # Re-render assets
-        chosen_style = caption_style or clip.caption_style or "bold_yellow"
-        chosen_sub_pos = subtitle_position if subtitle_position is not None else getattr(clip, "subtitle_position", 75)
-        chosen_add_hook = add_hook_header if add_hook_header is not None else getattr(clip, "add_hook_header", False)
-        chosen_hook_pos = hook_header_position if hook_header_position is not None else (getattr(clip, "hook_header_position", None) or 12)
-        chosen_hook_text = hook_header_text or getattr(clip, "hook_header_text", None) or (clip.candidate.hook_text if clip.candidate else "") or ""
-
         clip.start_time = round(start_time, 2)
         clip.end_time = round(end_time, 2)
         clip.duration = round(end_time - start_time, 2)
+
+        chosen_style = caption_style or clip.caption_style or "bold_yellow"
+        chosen_sub_pos = subtitle_position if subtitle_position is not None else getattr(clip, "subtitle_position", 75)
+        chosen_add_hook = add_hook_header if add_hook_header is not None else getattr(clip, "add_hook_header", False)
+        chosen_hook_pos = hook_header_position if hook_header_position is not None else getattr(clip, "hook_header_position", 12)
+        chosen_hook_style = hook_header_style if hook_header_style is not None else getattr(clip, "hook_header_style", "viral_creator")
+        chosen_hook_text = hook_header_text if hook_header_text is not None else getattr(clip, "hook_header_text", None)
         chosen_remove_wm = remove_watermark if remove_watermark is not None else getattr(clip, "remove_watermark", False)
         chosen_wm_pos = watermark_position if watermark_position is not None else (getattr(clip, "watermark_position", None) or "top_right")
         chosen_enhance = enhance_quality if enhance_quality is not None else getattr(clip, "enhance_quality", True)
@@ -107,6 +111,7 @@ class ClipRegeneratorService:
         clip.subtitle_position = chosen_sub_pos
         clip.add_hook_header = chosen_add_hook
         clip.hook_header_position = chosen_hook_pos
+        clip.hook_header_style = chosen_hook_style
         clip.hook_header_text = chosen_hook_text if chosen_add_hook else None
         clip.remove_watermark = chosen_remove_wm
         clip.watermark_position = chosen_wm_pos
@@ -138,6 +143,7 @@ class ClipRegeneratorService:
             add_hook_header=chosen_add_hook,
             hook_header_text=chosen_hook_text,
             hook_header_position=chosen_hook_pos,
+            hook_header_style=chosen_hook_style,
             keep_intervals=keep_intervals,
         )
         captioner.generate_srt(segments, clip.start_time, clip.end_time, srt_path, keep_intervals=keep_intervals)

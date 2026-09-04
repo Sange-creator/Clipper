@@ -57,12 +57,15 @@ data/subtitles/*
 !data/subtitles/.gitkeep
 data/thumbnails/*
 !data/thumbnails/.gitkeep
+data/titles_and_thumbnails/*
+!data/titles_and_thumbnails/.gitkeep
 data/audio/*
 !data/audio/.gitkeep
 backend/data/
 data/*.db
 data/*.db-journal
 data/*.sqlite
+*.tsbuildinfo
 *.mp4
 *.mkv
 *.mov

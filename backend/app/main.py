@@ -99,6 +99,7 @@ async def health_check():
         "status": "healthy",
         "app_name": settings.APP_NAME,
         "environment": settings.APP_ENV,
+        "ai_provider": settings.AI_PROVIDER,
         "ai_provider_configured": settings.AI_PROVIDER,
         "has_gemini_key": bool(settings.GEMINI_API_KEY),
         "has_groq_key": bool(settings.GROQ_API_KEY),

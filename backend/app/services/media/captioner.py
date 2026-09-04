@@ -104,6 +104,71 @@ class CaptionGenerator:
             "margin_v": 300,
             "uppercase": True,
         },
+        "meme": {
+            "font_name": "Impact",
+            "font_size": 54,
+            "primary_color": "&H00FFFFFF&",    # Solid Crisp White
+            "secondary_color": "&H0000FFFF&",  # Meme Yellow Punch
+            "outline_color": "&H00000000&",    # Extra Heavy Black Stroke
+            "back_color": "&HA0000000&",
+            "border_style": 1,
+            "outline": 8,
+            "shadow": 4,
+            "margin_v": 320,
+            "uppercase": True,
+        },
+        "meme_impact": {
+            "font_name": "Impact",
+            "font_size": 52,
+            "primary_color": "&H00FFFFFF&",
+            "secondary_color": "&H0000FF00&",  # Lime green highlight
+            "outline_color": "&H00000000&",
+            "back_color": "&H80000000&",
+            "border_style": 1,
+            "outline": 6,
+            "shadow": 4,
+            "margin_v": 320,
+            "uppercase": True,
+        },
+        "nostalgic": {
+            "font_name": "Courier New",
+            "font_size": 44,
+            "primary_color": "&H00C8ECF8&",    # Warm Vintage Cream / Amber
+            "secondary_color": "&H0020C0FF&",  # Warm Sunset Amber Gold highlight
+            "outline_color": "&H00142030&",    # Burnt Sepia / Espresso outline
+            "back_color": "&H80001020&",
+            "border_style": 1,
+            "outline": 5,
+            "shadow": 3,
+            "margin_v": 280,
+            "uppercase": False,
+        },
+        "old_history": {
+            "font_name": "Georgia",
+            "font_size": 42,
+            "primary_color": "&H00D8F0F8&",    # Parchment Ivory
+            "secondary_color": "&H0048B8D8&",  # Antique Gold / Historical Bronze
+            "outline_color": "&H00101824&",    # Deep Sepia Slate
+            "back_color": "&H90101824&",
+            "border_style": 1,
+            "outline": 4,
+            "shadow": 3,
+            "margin_v": 260,
+            "uppercase": False,
+        },
+        "white_background": {
+            "font_name": "Arial Black",
+            "font_size": 44,
+            "primary_color": "&H00000000&",    # Deep Pitch Black Text
+            "secondary_color": "&H000020D8&",  # Crimson Red Accent
+            "outline_color": "&H00FFFFFF&",    # Matching White Border
+            "back_color": "&H00FFFFFF&",       # Pure Solid White Box
+            "border_style": 3,                 # Solid Bounding Box
+            "outline": 10,
+            "shadow": 0,
+            "margin_v": 280,
+            "uppercase": True,
+        },
         "bold_yellow": {
             "font_name": "Arial Black",
             "font_size": 48,
@@ -145,7 +210,7 @@ class CaptionGenerator:
         },
         "cinematic": {
             "font_name": "Georgia",
-            "font_size": 36,
+            "font_size": 38,
             "primary_color": "&H00F0F0F0&",
             "secondary_color": "&H00D0D0D0&",
             "outline_color": "&H00000000&",
@@ -155,19 +220,6 @@ class CaptionGenerator:
             "shadow": 2,
             "margin_v": 240,
             "uppercase": False,
-        },
-        "meme_impact": {
-            "font_name": "Impact",
-            "font_size": 52,
-            "primary_color": "&H00FFFFFF&",
-            "secondary_color": "&H0000FF00&",  # Lime green highlight
-            "outline_color": "&H00000000&",
-            "back_color": "&H80000000&",
-            "border_style": 1,
-            "outline": 6,
-            "shadow": 4,
-            "margin_v": 320,
-            "uppercase": True,
         },
         "cyber_neon": {
             "font_name": "Arial Black",
@@ -181,6 +233,32 @@ class CaptionGenerator:
             "shadow": 4,
             "margin_v": 280,
             "uppercase": True,
+        },
+        "playful_comic": {
+            "font_name": "Comic Sans MS",
+            "font_size": 44,
+            "primary_color": "&H00FFFFFF&",
+            "secondary_color": "&H00FF20A0&",  # Bubblegum Pink
+            "outline_color": "&H00000000&",
+            "back_color": "&H80000000&",
+            "border_style": 1,
+            "outline": 5,
+            "shadow": 3,
+            "margin_v": 280,
+            "uppercase": False,
+        },
+        "editorial_serif": {
+            "font_name": "Times New Roman",
+            "font_size": 42,
+            "primary_color": "&H00F5F5F5&",
+            "secondary_color": "&H0000D4FF&",  # Luxury Gold
+            "outline_color": "&H00000000&",
+            "back_color": "&H60000000&",
+            "border_style": 1,
+            "outline": 3,
+            "shadow": 2,
+            "margin_v": 260,
+            "uppercase": False,
         },
         "capcut_black_box": {
             "font_name": "Arial Black",
@@ -223,6 +301,106 @@ class CaptionGenerator:
         },
     }
 
+    # Hook Header Visual Styles
+    HOOK_HEADER_STYLES = {
+        "viral_creator": {
+            "font_name": "Arial Black",
+            "font_size": 46,
+            "primary_color": "&H0000FFFF&",    # Electric Neon Yellow
+            "secondary_color": "&H00FFFFFF&",  # White
+            "outline_color": "&H00000000&",    # Black
+            "back_color": "&HA0000000&",
+            "border_style": 1,
+            "outline": 6,
+            "shadow": 3,
+        },
+        "white_box": {
+            "font_name": "Arial Black",
+            "font_size": 42,
+            "primary_color": "&H00000000&",    # Deep Black
+            "secondary_color": "&H000000E0&",  # Crimson Accent
+            "outline_color": "&H00FFFFFF&",    # White
+            "back_color": "&H00FFFFFF&",       # Solid Pure White Box
+            "border_style": 3,
+            "outline": 9,
+            "shadow": 0,
+        },
+        "white_background": {
+            "font_name": "Arial Black",
+            "font_size": 42,
+            "primary_color": "&H00000000&",
+            "secondary_color": "&H000000E0&",
+            "outline_color": "&H00FFFFFF&",
+            "back_color": "&H00FFFFFF&",
+            "border_style": 3,
+            "outline": 9,
+            "shadow": 0,
+        },
+        "meme": {
+            "font_name": "Impact",
+            "font_size": 50,
+            "primary_color": "&H00FFFFFF&",    # Crisp White
+            "secondary_color": "&H0000FFFF&",  # Yellow
+            "outline_color": "&H00000000&",    # Heavy Black
+            "back_color": "&HB0000000&",
+            "border_style": 1,
+            "outline": 8,
+            "shadow": 4,
+        },
+        "nostalgic": {
+            "font_name": "Courier New",
+            "font_size": 42,
+            "primary_color": "&H0020D0FF&",    # Warm Vintage Amber
+            "secondary_color": "&H00FFFFFF&",  # White
+            "outline_color": "&H00102030&",    # Warm Sepia
+            "back_color": "&H90001020&",
+            "border_style": 1,
+            "outline": 4,
+            "shadow": 3,
+        },
+        "old_history": {
+            "font_name": "Georgia",
+            "font_size": 42,
+            "primary_color": "&H00E0F0FA&",    # Parchment Ivory
+            "secondary_color": "&H0050B0D8&",  # Antique Gold
+            "outline_color": "&H00141C28&",    # Dark Slate
+            "back_color": "&H90101824&",
+            "border_style": 1,
+            "outline": 3,
+            "shadow": 3,
+        },
+        "neon_cyber": {
+            "font_name": "Arial Black",
+            "font_size": 44,
+            "primary_color": "&H00FFFF00&",    # Electric Cyan
+            "secondary_color": "&H00FF00FF&",  # Magenta
+            "outline_color": "&H00000000&",
+            "back_color": "&H80000000&",
+            "border_style": 1,
+            "outline": 6,
+            "shadow": 4,
+        },
+    }
+
+    def get_preset_config(self, style: str) -> Dict[str, Any]:
+        """Resolve caption preset configuration with normalized alias matching."""
+        raw = (style or "").lower().strip()
+        alias_map = {
+            "meme_classic": "meme",
+            "meme_bold": "meme",
+            "white_box": "white_background",
+            "white_card": "white_background",
+            "vintage": "nostalgic",
+            "nostalgic_vintage": "nostalgic",
+            "history": "old_history",
+            "history_documentary": "old_history",
+            "comic": "playful_comic",
+            "editorial": "editorial_serif",
+            "luxury": "editorial_serif",
+        }
+        key = alias_map.get(raw, raw)
+        return self.PRESET_CONFIGS.get(key, self.PRESET_CONFIGS["bold_yellow"])
+
     def format_timestamp_ass(self, seconds: float) -> str:
         hours = int(seconds // 3600)
         minutes = int((seconds % 3600) // 60)
@@ -262,6 +440,7 @@ class CaptionGenerator:
         add_hook_header: bool = False,
         hook_header_text: Optional[str] = None,
         hook_header_position: Optional[int] = 12,
+        hook_header_style: Optional[str] = None,
         keep_intervals: Optional[List[List[float]]] = None,
     ) -> Path:
         """
@@ -272,7 +451,7 @@ class CaptionGenerator:
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
 
-        cfg = self.PRESET_CONFIGS.get(style, self.PRESET_CONFIGS["bold_yellow"])
+        cfg = self.get_preset_config(style)
 
         font_name = cfg["font_name"]
         font_size = cfg["font_size"]
@@ -296,6 +475,19 @@ class CaptionGenerator:
         hook_pos_pct = max(8, min(90, hook_header_position if hook_header_position is not None else 12))
         hook_margin_v = max(60, min(1780, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))
 
+        # Resolve Hook Header style (explicit or inherit from matching caption style if available)
+        resolved_hook_key = hook_header_style or (style if style in self.HOOK_HEADER_STYLES else "viral_creator")
+        hook_cfg = self.HOOK_HEADER_STYLES.get(resolved_hook_key, self.HOOK_HEADER_STYLES["viral_creator"])
+        hook_font = hook_cfg["font_name"]
+        hook_size = hook_cfg["font_size"]
+        hook_primary = hook_cfg["primary_color"]
+        hook_secondary = hook_cfg["secondary_color"]
+        hook_outline = hook_cfg["outline_color"]
+        hook_back = hook_cfg["back_color"]
+        hook_border = hook_cfg.get("border_style", 1)
+        hook_out_px = hook_cfg.get("outline", 6)
+        hook_shadow_px = hook_cfg.get("shadow", 3)
+
         ass_header = f"""[Script Info]
 Title: AI Clipper Animated Captions & TikTok Hook
 ScriptType: v4.00+
@@ -309,7 +501,7 @@ PlayResY: 1920
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Default,{font_name},{font_size},{primary_color},{secondary_color},{outline_color},{back_color},-1,0,0,0,100,100,1,0,{border_style},{outline},{shadow},2,60,60,{margin_v},1
 Style: Emphasis,{font_name},{int(font_size * 1.1)},{secondary_color},{primary_color},{outline_color},{back_color},-1,0,0,0,110,110,1,0,{border_style},{outline + 1},{shadow + 1},2,60,60,{margin_v},1
-Style: HookHeader,Arial Black,46,&H0000FFFF,&H00FFFFFF,&H00000000,&HA0000000,-1,0,0,0,100,100,1,0,1,6,3,2,50,50,{hook_margin_v},1
+Style: HookHeader,{hook_font},{hook_size},{hook_primary},{hook_secondary},{hook_outline},{hook_back},-1,0,0,0,100,100,1,0,{hook_border},{hook_out_px},{hook_shadow_px},2,50,50,{hook_margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

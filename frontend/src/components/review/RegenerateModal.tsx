@@ -17,8 +17,9 @@ import { CaptionStyleType } from "@/lib/types";
 interface RegenerateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegenerate: (intent: string, captionStyle?: string, note?: string) => Promise<void>;
+  onRegenerate: (intent: string, captionStyle?: string, note?: string, hookHeaderStyle?: string) => Promise<void>;
   currentStyle: string;
+  currentHookHeaderStyle?: string;
 }
 
 const INTENTS = [
@@ -64,9 +65,11 @@ export function RegenerateModal({
   onClose,
   onRegenerate,
   currentStyle,
+  currentHookHeaderStyle,
 }: RegenerateModalProps) {
   const [selectedIntent, setSelectedIntent] = useState<string>("stronger_hook");
   const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>((currentStyle as any) || "tiktok_viral");
+  const [hookHeaderStyle, setHookHeaderStyle] = useState<string>(currentHookHeaderStyle || "viral_creator");
   const [customNote, setCustomNote] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -76,7 +79,7 @@ export function RegenerateModal({
     e.preventDefault();
     setIsLoading(true);
     try {
-      await onRegenerate(selectedIntent, captionStyle, customNote);
+      await onRegenerate(selectedIntent, captionStyle, customNote, hookHeaderStyle);
       onClose();
     } finally {
       setIsLoading(false);
@@ -142,6 +145,53 @@ export function RegenerateModal({
             selected={captionStyle}
             onChange={setCaptionStyle}
           />
+
+          {/* Hook Header Visual Style */}
+          <div className="space-y-2 pt-1 border-t border-white/5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+                Hook Header Visual Style
+              </label>
+              <span className="text-[10px] text-amber-400 font-mono">
+                {hookHeaderStyle === "white_box"
+                  ? "White Card Box"
+                  : hookHeaderStyle === "meme"
+                  ? "Classic Meme"
+                  : hookHeaderStyle === "nostalgic"
+                  ? "Vintage Typewriter"
+                  : hookHeaderStyle === "old_history"
+                  ? "History Serif"
+                  : hookHeaderStyle === "neon_cyber"
+                  ? "Neon Glow"
+                  : "Viral Creator"}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              {[
+                { id: "viral_creator", label: "⚡️ Viral Creator", font: "Sans Bold" },
+                { id: "white_box", label: "📄 White Card", font: "Arial Black" },
+                { id: "meme", label: "🗿 Classic Meme", font: "Impact" },
+                { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier Type" },
+                { id: "old_history", label: "🏛️ Old History", font: "Georgia Serif" },
+                { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Cyan Glow" },
+              ].map((styleOpt) => (
+                <button
+                  key={styleOpt.id}
+                  type="button"
+                  onClick={() => setHookHeaderStyle(styleOpt.id)}
+                  className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
+                    hookHeaderStyle === styleOpt.id
+                      ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
+                      : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <span className="text-xs font-bold leading-tight">{styleOpt.label}</span>
+                  <span className="text-[9px] text-zinc-500">{styleOpt.font}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Custom Note */}
           <div className="space-y-2">

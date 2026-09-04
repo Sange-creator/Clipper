@@ -111,6 +111,7 @@ async def list_all_clips(
                 subtitle_position=getattr(clip, "subtitle_position", 75) or 75,
                 add_hook_header=getattr(clip, "add_hook_header", False) or False,
                 hook_header_position=getattr(clip, "hook_header_position", 12) or 12,
+                hook_header_style=getattr(clip, "hook_header_style", "viral_creator") or "viral_creator",
                 hook_header_text=getattr(clip, "hook_header_text", None),
                 remove_watermark=getattr(clip, "remove_watermark", False) or False,
                 watermark_position=getattr(clip, "watermark_position", "top_right") or "top_right",
@@ -200,6 +201,7 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         subtitle_position=getattr(clip, "subtitle_position", 75) or 75,
         add_hook_header=getattr(clip, "add_hook_header", False) or False,
         hook_header_position=getattr(clip, "hook_header_position", 12) or 12,
+        hook_header_style=getattr(clip, "hook_header_style", "viral_creator") or "viral_creator",
         hook_header_text=getattr(clip, "hook_header_text", None),
         remove_watermark=getattr(clip, "remove_watermark", False) or False,
         watermark_position=getattr(clip, "watermark_position", "top_right") or "top_right",
@@ -280,12 +282,14 @@ async def rerender_clip(
     clip.end_time = end_time
     clip.duration = final_dur
     clip.caption_style = style
+    hook_style = req.hook_header_style if req.hook_header_style is not None else (getattr(clip, "hook_header_style", "viral_creator") or "viral_creator")
     clip.burn_captions = req.burn_captions
     clip.framing_mode = framing
     clip.blur_radius = blur_r
     clip.subtitle_position = sub_pos
     clip.add_hook_header = add_hook
     clip.hook_header_position = hook_pos
+    clip.hook_header_style = hook_style
     clip.hook_header_text = hook_txt if add_hook else None
     clip.remove_watermark = remove_wm
     clip.watermark_position = wm_pos
@@ -311,6 +315,7 @@ async def rerender_clip(
         add_hook_header=add_hook,
         hook_header_text=hook_txt,
         hook_header_position=hook_pos,
+        hook_header_style=hook_style,
         keep_intervals=t_edit.keep,
     )
     captioner.generate_srt(segments, start_time, end_time, srt_path, keep_intervals=t_edit.keep)
@@ -387,6 +392,7 @@ async def regenerate_clip(
         subtitle_position=req.subtitle_position,
         add_hook_header=req.add_hook_header,
         hook_header_position=req.hook_header_position,
+        hook_header_style=req.hook_header_style,
         hook_header_text=req.hook_header_text,
         remove_watermark=req.remove_watermark,
         watermark_position=req.watermark_position,

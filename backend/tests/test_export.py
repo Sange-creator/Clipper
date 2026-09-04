@@ -8,12 +8,13 @@ import pytest
 
 from httpx import ASGITransport, AsyncClient
 from app.main import app
-from app.core.database import AsyncSessionLocal
+from app.core.database import AsyncSessionLocal, init_db
 from app.core.models import Project, Video, Job, ClipCandidate, RenderedClip
 
 
 @pytest.mark.asyncio
 async def test_single_mp4_and_batch_export_endpoints(tmp_path):
+    await init_db()
     # Setup dummy video file
     dummy_video = tmp_path / "test_clip.mp4"
     dummy_video.write_bytes(b"\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00isommp42")
@@ -136,20 +137,37 @@ async def test_single_mp4_and_batch_export_endpoints(tmp_path):
             assert len(videos) == 2
             assert all(v.endswith(".mp4") for v in videos)
 
-            # titles_and_thumbnails/ contains only thumbnails and title/meta files
+            # titles_and_thumbnails/ contains thumbnails, individual title/meta files, and all_titles_and_hashtags.txt
             thumbs_and_titles = [name for name in namelist if name.startswith("titles_and_thumbnails/")]
             assert all(m.endswith((".jpg", ".txt", ".json")) for m in thumbs_and_titles)
             assert any(m.endswith("_title.txt") for m in thumbs_and_titles)
             assert any(m.endswith("_thumbnail.jpg") for m in thumbs_and_titles)
+            assert "titles_and_thumbnails/all_titles_and_hashtags.txt" in namelist
+            assert "titles_and_thumbnails/titles_and_hashtags.txt" in namelist
+
+            # Validate content of all_titles_and_hashtags.txt
+            all_txt = zf.read("titles_and_thumbnails/all_titles_and_hashtags.txt").decode("utf-8")
+            assert "ALL TITLES & 5 HASHTAGS" in all_txt
+            assert "VIDEO 01" in all_txt
+            assert "VIDEO 02" in all_txt
+            assert "HASHTAGS (5):" in all_txt
 
             # Zero root files
             assert all("/" in name for name in namelist)
 
-        # Test 4: Job-level batch export has identical strict two-folder structure
+        # Test 4: Job-level batch export has identical strict two-folder structure & single text file
         resp_job_batch = await ac.get(f"/api/export/job/{jb.id}/batch")
         assert resp_job_batch.status_code == 200
         with zipfile.ZipFile(io.BytesIO(resp_job_batch.content), "r") as zf:
             namelist = zf.namelist()
             top_level = {name.split("/")[0] for name in namelist if "/" in name}
             assert top_level == {"videos", "titles_and_thumbnails"}
+            assert "titles_and_thumbnails/all_titles_and_hashtags.txt" in namelist
             assert all("/" in name for name in namelist)
+
+        # Test 5: Direct titles-and-hashtags text endpoint
+        resp_txt = await ac.get(f"/api/export/job/{jb.id}/titles-and-hashtags")
+        assert resp_txt.status_code == 200
+        assert "ALL TITLES & 5 HASHTAGS" in resp_txt.text
+        assert "VIDEO 01" in resp_txt.text
+

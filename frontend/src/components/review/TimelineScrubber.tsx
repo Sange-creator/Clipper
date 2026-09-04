@@ -14,6 +14,7 @@ interface TimelineScrubberProps {
   initialSubtitlePosition?: number;
   initialAddHookHeader?: boolean;
   initialHookHeaderPosition?: number;
+  initialHookHeaderStyle?: string;
   initialHookHeaderText?: string | null;
   initialRemoveWatermark?: boolean;
   initialWatermarkPosition?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
@@ -29,7 +30,8 @@ interface TimelineScrubberProps {
     hookHeaderText?: string,
     removeWatermark?: boolean,
     watermarkPosition?: string,
-    enhanceQuality?: boolean
+    enhanceQuality?: boolean,
+    hookHeaderStyle?: string
   ) => Promise<void>;
 }
 
@@ -42,6 +44,7 @@ export function TimelineScrubber({
   initialSubtitlePosition = 75,
   initialAddHookHeader = false,
   initialHookHeaderPosition = 12,
+  initialHookHeaderStyle = "viral_creator",
   initialHookHeaderText = "",
   initialRemoveWatermark = false,
   initialWatermarkPosition = "top_right",
@@ -57,6 +60,7 @@ export function TimelineScrubber({
   const [subtitlePosition, setSubtitlePosition] = useState<number>(initialSubtitlePosition || 75);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(initialAddHookHeader || false);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(initialHookHeaderPosition || 12);
+  const [hookHeaderStyle, setHookHeaderStyle] = useState<string>(initialHookHeaderStyle || "viral_creator");
   const [hookHeaderText, setHookHeaderText] = useState<string>(initialHookHeaderText || "");
   const [removeWatermark, setRemoveWatermark] = useState<boolean>(initialRemoveWatermark || false);
   const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">(
@@ -65,6 +69,9 @@ export function TimelineScrubber({
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(initialEnhanceQuality !== false);
   const [isRendering, setIsRendering] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+
+  // Playhead preview time
+  const [previewTime, setPreviewTime] = useState<number | null>(null);
 
   const duration = Math.max(0, endTime - startTime);
 
@@ -98,7 +105,8 @@ export function TimelineScrubber({
         hookHeaderText.trim() || undefined,
         removeWatermark,
         watermarkPosition,
-        enhanceQuality
+        enhanceQuality,
+        hookHeaderStyle
       );
       setJustSaved(true);
     } finally {
@@ -435,6 +443,75 @@ export function TimelineScrubber({
                     className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
                     style={{ top: `${subtitlePosition}%` }}
                   />
+                </div>
+              </div>
+
+              {/* Hook Header Visual Style Selection */}
+              <div className="space-y-2 pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-zinc-300">Hook Visual Style & Typography</span>
+                  <span className="text-[10px] text-amber-400/90 font-mono">
+                    {hookHeaderStyle === "white_box"
+                      ? "White Card Box"
+                      : hookHeaderStyle === "meme"
+                      ? "Classic Meme"
+                      : hookHeaderStyle === "nostalgic"
+                      ? "Vintage Typewriter"
+                      : hookHeaderStyle === "old_history"
+                      ? "History Serif"
+                      : hookHeaderStyle === "neon_cyber"
+                      ? "Neon Glow"
+                      : "Viral Creator"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  {[
+                    { id: "viral_creator", label: "⚡️ Viral Creator", font: "Sans Bold" },
+                    { id: "white_box", label: "📄 White Card", font: "Arial Black" },
+                    { id: "meme", label: "🗿 Classic Meme", font: "Impact" },
+                    { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier Type" },
+                    { id: "old_history", label: "🏛️ Old History", font: "Georgia Serif" },
+                    { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Cyan Glow" },
+                  ].map((styleOpt) => (
+                    <button
+                      key={styleOpt.id}
+                      type="button"
+                      onClick={() => {
+                        setHookHeaderStyle(styleOpt.id);
+                        setJustSaved(false);
+                      }}
+                      className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
+                        hookHeaderStyle === styleOpt.id
+                          ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <span className="text-xs font-bold leading-tight">{styleOpt.label}</span>
+                      <span className="text-[9px] text-zinc-500">{styleOpt.font}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Dynamic Creator Style Preview */}
+                <div className="rounded-xl bg-black/60 border border-white/10 p-3 flex items-center justify-center min-h-[50px]">
+                  <div
+                    className={`px-4 py-1.5 text-center text-xs transition-all ${
+                      hookHeaderStyle === "white_box"
+                        ? "bg-white text-black font-black uppercase tracking-tight shadow-lg rounded-sm"
+                        : hookHeaderStyle === "meme"
+                        ? "text-white font-black uppercase tracking-wider text-sm [text-shadow:_2px_2px_0_rgb(0_0_0),_-2px_2px_0_rgb(0_0_0),_2px_-2px_0_rgb(0_0_0),_-2px_-2px_0_rgb(0_0_0)] font-sans"
+                        : hookHeaderStyle === "nostalgic"
+                        ? "bg-amber-950/80 text-amber-200 border border-amber-600/40 font-mono tracking-widest uppercase rounded shadow-inner text-xs"
+                        : hookHeaderStyle === "old_history"
+                        ? "bg-stone-900/90 text-amber-100 border-t border-b border-amber-500/50 font-serif italic tracking-wide text-xs px-5 shadow-lg"
+                        : hookHeaderStyle === "neon_cyber"
+                        ? "text-cyan-300 font-black uppercase tracking-widest [text-shadow:_0_0_8px_#06b6d4,_0_0_20px_#ec4899] font-mono text-xs"
+                        : "text-yellow-400 font-extrabold uppercase tracking-wide [text-shadow:_1px_1px_0_#000,_-1px_-1px_0_#000] font-sans"
+                    }`}
+                  >
+                    {hookHeaderText.trim() ? hookHeaderText : "WHY NOBODY TALKS ABOUT THIS 🤫"}
+                  </div>
                 </div>
               </div>
             </div>

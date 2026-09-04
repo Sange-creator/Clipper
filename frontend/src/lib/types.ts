@@ -124,6 +124,7 @@ export interface RenderedClipResponse {
   subtitle_position?: number;
   add_hook_header?: boolean;
   hook_header_position?: number;
+  hook_header_style?: string;
   hook_header_text?: string | null;
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
@@ -171,13 +172,23 @@ export interface JobStatusResponse {
 export type CaptionStyleType =
   | "tiktok_viral"
   | "hormozi_bold"
-  | "clean_white"
   | "bold_yellow"
+  | "clean_white"
   | "podcast_box"
   | "cinematic"
+  | "meme"
   | "meme_impact"
+  | "nostalgic"
+  | "old_history"
+  | "white_background"
+  | "playful_comic"
+  | "editorial_serif"
   | "cyber_neon"
-  | "none";
+  | "capcut_black_box"
+  | "capcut_yellow_box"
+  | "tiktok_boxed"
+  | "none"
+  | string;
 
 export interface JobCreatePayload {
   video_id: string;
@@ -193,6 +204,7 @@ export interface JobCreatePayload {
   subtitle_position?: number;
   add_hook_header?: boolean;
   hook_header_position?: number;
+  hook_header_style?: string;
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;
@@ -220,6 +232,7 @@ export interface ProjectProcessPayload {
   subtitle_position?: number;
   add_hook_header?: boolean;
   hook_header_position?: number;
+  hook_header_style?: string;
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;
@@ -266,6 +279,7 @@ export interface SettingsResponse {
   default_subtitle_position?: number;
   default_add_hook_header?: boolean;
   default_hook_header_position?: number;
+  default_hook_header_style?: string;
   default_remove_watermark?: boolean;
   default_watermark_position?: string;
   default_enhance_quality?: boolean;
@@ -290,6 +304,7 @@ export interface SettingsUpdateRequest {
   default_subtitle_position?: number;
   default_add_hook_header?: boolean;
   default_hook_header_position?: number;
+  default_hook_header_style?: string;
   default_remove_watermark?: boolean;
   default_watermark_position?: string;
   default_enhance_quality?: boolean;

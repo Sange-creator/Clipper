@@ -51,6 +51,7 @@ zip_root/
 │   ├── clip_02_d4e5f6_THE_GREATEST_MISTAKE_IN_HISTORY.mp4
 │   └── ...
 └── titles_and_thumbnails/
+    ├── all_titles_and_hashtags.txt                   <-- Single file with titles & 5 hashtags for all videos (1-click copy)
     ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS_thumbnail.jpg
     ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS_title.txt
     ├── clip_01_a1b2c3_WHY_NOBODY_TALKS_ABOUT_THIS_metadata.json
@@ -172,7 +173,19 @@ Clipper/
 - Node.js 18 or newer
 - FFmpeg 6.0+ (compiled with `libass` for subtitle burn-in)
 
-### 1. Backend Setup
+### Quickstart (Single Command)
+
+Run both the FastAPI backend and Next.js frontend concurrently:
+
+```bash
+./dev.sh
+```
+
+---
+
+### Manual Setup & Running Separately
+
+#### 1. Backend Setup
 
 ```bash
 cd backend
@@ -189,7 +202,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 The API documentation is available at `http://localhost:8000/docs`.
 
-### 2. Frontend Setup
+#### 2. Frontend Setup
 
 ```bash
 cd frontend

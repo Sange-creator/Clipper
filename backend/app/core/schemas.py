@@ -122,6 +122,7 @@ class RenderedClipResponse(BaseModel):
     subtitle_position: int = 75
     add_hook_header: bool = False
     hook_header_position: int = 12
+    hook_header_style: str = "viral_creator"
     hook_header_text: Optional[str] = None
     remove_watermark: bool = False
     watermark_position: str = "top_right"
@@ -182,6 +183,7 @@ class ProjectProcessRequest(BaseModel):
     subtitle_position: int = Field(default=75, ge=10, le=90)
     add_hook_header: bool = False
     hook_header_position: int = Field(default=12, ge=8, le=90)
+    hook_header_style: Optional[str] = "viral_creator"
     remove_watermark: bool = False
     watermark_position: str = "top_right"
     enhance_quality: bool = True
@@ -210,6 +212,7 @@ class JobCreateRequest(BaseModel):
     subtitle_position: int = Field(default=75, ge=10, le=90)
     add_hook_header: bool = False
     hook_header_position: int = Field(default=12, ge=8, le=90)
+    hook_header_style: Optional[str] = "viral_creator"
     remove_watermark: bool = False
     watermark_position: str = "top_right"
     enhance_quality: bool = True
@@ -246,6 +249,7 @@ class ClipEditRequest(BaseModel):
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     add_hook_header: Optional[bool] = None
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
+    hook_header_style: Optional[str] = None
     hook_header_text: Optional[str] = None
     remove_watermark: Optional[bool] = None
     watermark_position: Optional[str] = None
@@ -258,6 +262,7 @@ class ClipRegenerateRequest(BaseModel):
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     add_hook_header: Optional[bool] = None
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
+    hook_header_style: Optional[str] = None
     hook_header_text: Optional[str] = None
     remove_watermark: Optional[bool] = None
     watermark_position: Optional[str] = None
@@ -312,6 +317,7 @@ class SettingsResponse(BaseModel):
     default_subtitle_position: int = 75
     default_add_hook_header: bool = False
     default_hook_header_position: int = 12
+    default_hook_header_style: str = "viral_creator"
     default_remove_watermark: bool = False
     default_watermark_position: str = "top_right"
     default_enhance_quality: bool = True
@@ -335,6 +341,7 @@ class SettingsUpdateRequest(BaseModel):
     default_subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     default_add_hook_header: Optional[bool] = None
     default_hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
+    default_hook_header_style: Optional[str] = None
     default_remove_watermark: Optional[bool] = None
     default_watermark_position: Optional[str] = None
     default_enhance_quality: Optional[bool] = None

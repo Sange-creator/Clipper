@@ -98,6 +98,10 @@ class MockAIProvider(AIProvider):
         elif "60-90" in duration_target:
             target_min, target_max = 58.0, 95.0
 
+        total_dur = float(media_info.get("duration_seconds") or 60.0)
+        target_min = min(target_min, max(1.0, total_dur * 0.5))
+        target_max = min(target_max, total_dur)
+
         candidates: List[RawCandidateMoment] = []
         num_segments = len(transcript_segments)
 
@@ -105,6 +109,8 @@ class MockAIProvider(AIProvider):
         for i in range(num_segments):
             start_seg = transcript_segments[i]
             start_time = start_seg.get("start", 0.0)
+            if start_time >= total_dur:
+                continue
             start_text = start_seg.get("text", "").lower()
 
             # Hook score calculation
@@ -119,12 +125,12 @@ class MockAIProvider(AIProvider):
             accumulated_text = []
             for j in range(i, num_segments):
                 seg = transcript_segments[j]
-                end_time = seg.get("end", start_time + 30.0)
+                end_time = min(total_dur, seg.get("end", start_time + 30.0))
                 seg_text = seg.get("text", "")
                 accumulated_text.append(seg_text)
                 cur_duration = end_time - start_time
 
-                if cur_duration >= target_min:
+                if cur_duration >= target_min and end_time <= total_dur:
                     combined_text = " ".join(accumulated_text).lower()
                     
                     # Payoff score
@@ -184,14 +190,14 @@ class MockAIProvider(AIProvider):
         # If candidates are too few, create default segments across video timeline
         needed_pool = max(requested_count * 3, 15)
         if len(candidates) < needed_pool:
-            total_dur = media_info.get("duration_seconds", 60.0)
             seg_len = min(target_max, max(target_min, total_dur / max(1, requested_count)))
-            step = max(5.0, (total_dur - seg_len) / max(1, needed_pool))
+            step = max(2.0, (total_dur - seg_len) / max(1, needed_pool))
             t = 0.0
             idx = 1
-            while t + 10.0 <= total_dur and len(candidates) < needed_pool:
+            min_chunk = min(5.0, total_dur * 0.5)
+            while t + min_chunk <= total_dur and len(candidates) < needed_pool:
                 cand_end = min(t + seg_len, total_dur)
-                if cand_end > t + 5.0:
+                if cand_end > t + 1.0:
                     chosen_hook = CHAOTIC_HOOKS[(idx - 1) % len(CHAOTIC_HOOKS)]
                     dur = cand_end - t
                     c_s = round(t + dur * 0.50, 2)
@@ -218,12 +224,37 @@ class MockAIProvider(AIProvider):
                             audio_score=86.0,
                             platform_score=90.0,
                             reason=f"High-intensity {mode} viral hook '{chosen_hook[:30]}...' with strong audience retention.",
-                            hook_summary=chosen_hook,
-                            payoff_summary=f"Climax payoff ending at {int(cand_end)}s",
+                            hook_summary=chosen_hook[:80],
+                            payoff_summary="High-energy conclusion",
                         )
                     )
-                    idx += 1
                 t += step
+                idx += 1
+
+        if not candidates:
+            candidates.append(
+                RawCandidateMoment(
+                    start=0.0,
+                    end=round(total_dur, 2),
+                    hook_score=92.0,
+                    retention_score=90.0,
+                    curiosity_score=94.0,
+                    emotion_score=88.0,
+                    story_score=90.0,
+                    payoff_score=92.0,
+                    shareability_score=88.0,
+                    novelty_score=85.0,
+                    quotability_score=87.0,
+                    standalone_score=90.0,
+                    rewatch_score=85.0,
+                    visual_score=84.0,
+                    audio_score=86.0,
+                    platform_score=89.0,
+                    reason=f"Optimal narrative arc from source media.",
+                    hook_summary="Opening hook",
+                    payoff_summary="Core resolution",
+                )
+            )
 
         return candidates
 

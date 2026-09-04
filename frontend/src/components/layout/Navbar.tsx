@@ -1,12 +1,31 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Film, Sparkles, Layers, Activity, Upload, Key } from "lucide-react";
+import { Film, Sparkles, Layers, Activity, Upload, Key, AlertTriangle } from "lucide-react";
 import { BrandLogo } from "@/components/ui/BrandLogo";
+import { api } from "@/lib/api";
 
 export function Navbar() {
   const pathname = usePathname();
+  const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline">("checking");
+
+  useEffect(() => {
+    let isMounted = true;
+    const check = async () => {
+      const res = await api.checkHealth();
+      if (isMounted) {
+        setBackendStatus(res ? "online" : "offline");
+      }
+    };
+    check();
+    const interval = setInterval(check, 8000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const links = [
     { href: "/", label: "Single Video", icon: Upload },
@@ -48,13 +67,37 @@ export function Navbar() {
 
         {/* Status Indicator */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 shadow-sm shadow-emerald-500/10">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="tracking-tight">Engine Ready</span>
-          </div>
+          {backendStatus === "online" && (
+            <div className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 shadow-sm shadow-emerald-500/10">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="tracking-tight">Engine Ready</span>
+            </div>
+          )}
+
+          {backendStatus === "offline" && (
+            <div
+              title="FastAPI backend is offline (127.0.0.1:8000). Start with: ./dev.sh"
+              className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/30 shadow-sm shadow-rose-500/10"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+              </span>
+              <span className="tracking-tight">Backend Offline (Port 8000)</span>
+            </div>
+          )}
+
+          {backendStatus === "checking" && (
+            <div className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-zinc-800 text-zinc-400 border border-zinc-700">
+              <span className="relative flex h-2 w-2">
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-400"></span>
+              </span>
+              <span className="tracking-tight">Connecting...</span>
+            </div>
+          )}
         </div>
       </div>
     </header>

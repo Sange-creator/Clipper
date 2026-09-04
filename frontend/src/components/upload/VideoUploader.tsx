@@ -59,6 +59,7 @@ export function VideoUploader() {
   const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
+  const [hookHeaderStyle, setHookHeaderStyle] = useState<string>("viral_creator");
   const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
   const [watermarkPosition, setWatermarkPosition] = useState<string>("auto");
   const [isScanningWatermark, setIsScanningWatermark] = useState<boolean>(false);
@@ -168,6 +169,7 @@ export function VideoUploader() {
         burn_captions: burnCaptions,
         add_hook_header: addHookHeader,
         hook_header_position: hookHeaderPosition,
+        hook_header_style: hookHeaderStyle,
         remove_watermark: removeWatermark,
         watermark_position: watermarkPosition,
         enhance_quality: enhanceQuality,
@@ -716,33 +718,43 @@ export function VideoUploader() {
 
             {burnCaptions ? (
               <div className="space-y-2 pt-2 border-t border-white/5">
-                <label className="text-[11px] font-medium text-zinc-400">Select Caption Style:</label>
+                <label className="text-[11px] font-medium text-zinc-400">Select Caption Style & Font:</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {[
-                    { id: "capcut_black_box", name: "CapCut Black Box", desc: "Creator dark box" },
-                    { id: "capcut_yellow_box", name: "CapCut Yellow Box", desc: "Bold on neon yellow" },
-                    { id: "tiktok_boxed", name: "TikTok Boxed", desc: "Opaque charcoal box" },
-                    { id: "tiktok_viral", name: "TikTok Viral", desc: "Electric yellow pop" },
-                    { id: "hormozi_bold", name: "Hormozi Punch", desc: "Neon green highlight" },
-                    { id: "bold_yellow", name: "Bold Yellow", desc: "Active word pop-in" },
-                    { id: "clean_white", name: "Clean White", desc: "Crisp & minimalist" },
-                    { id: "podcast_box", name: "Podcast Box", desc: "Dark backing banner" },
-                    { id: "cinematic", name: "Cinematic", desc: "Italic letterbox serif" },
-                    { id: "meme_impact", name: "Meme Impact", desc: "Heavy outline punch" },
-                    { id: "cyber_neon", name: "Cyber Neon", desc: "Cyan & Magenta glow" },
+                    { id: "tiktok_viral", name: "TikTok Viral", desc: "Electric yellow pop", font: "Arial Black" },
+                    { id: "meme", name: "Meme Classic", desc: "Heavy Impact white all-caps", font: "Impact" },
+                    { id: "white_background", name: "White Background Box", desc: "High-contrast black on white card", font: "Arial Black" },
+                    { id: "nostalgic", name: "Nostalgic Vintage", desc: "Warm amber typewriter aesthetic", font: "Courier New" },
+                    { id: "old_history", name: "Old History", desc: "Parchment Georgia serif chronicle", font: "Georgia Serif" },
+                    { id: "hormozi_bold", name: "Hormozi Punch", desc: "Neon lime green highlight", font: "Impact" },
+                    { id: "bold_yellow", name: "Bold Yellow", desc: "Active word pop-in", font: "Arial Black" },
+                    { id: "clean_white", name: "Clean White", desc: "Crisp & minimalist", font: "Arial" },
+                    { id: "podcast_box", name: "Podcast Box", desc: "Dark backing banner", font: "Trebuchet MS" },
+                    { id: "cinematic", name: "Cinematic", desc: "Italic letterbox serif", font: "Georgia" },
+                    { id: "playful_comic", name: "Comic Playful", desc: "Fun cartoon typography", font: "Comic Sans" },
+                    { id: "editorial_serif", name: "Editorial Luxury", desc: "Times Roman luxury serif", font: "Times Serif" },
+                    { id: "cyber_neon", name: "Cyber Neon", desc: "Cyan & Magenta glow", font: "Arial Black" },
+                    { id: "capcut_black_box", name: "CapCut Black Box", desc: "Creator dark box", font: "Arial Black" },
+                    { id: "capcut_yellow_box", name: "CapCut Yellow Box", desc: "Bold on neon yellow", font: "Impact" },
+                    { id: "tiktok_boxed", name: "TikTok Boxed", desc: "Opaque charcoal box", font: "Arial Black" },
                   ].map((style) => (
                     <button
                       key={style.id}
                       type="button"
                       onClick={() => setCaptionStyle(style.id as any)}
-                      className={`rounded-lg p-2 text-left border transition-all ${
+                      className={`rounded-lg p-2.5 text-left border transition-all ${
                         captionStyle === style.id
-                          ? "bg-violet-600/20 border-violet-500 text-white shadow-md"
-                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                          ? "bg-violet-600/20 border-violet-500 text-white shadow-md ring-1 ring-violet-500"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20 hover:bg-white/[0.04]"
                       }`}
                     >
-                      <p className="text-xs font-medium">{style.name}</p>
-                      <p className="text-[9px] text-zinc-500 mt-0.5">{style.desc}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-semibold">{style.name}</p>
+                        <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-white/5 text-zinc-400 border border-white/10">
+                          {style.font}
+                        </span>
+                      </div>
+                      <p className="text-[9px] text-zinc-500 mt-1 line-clamp-1">{style.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -923,12 +935,81 @@ export function VideoUploader() {
                   </div>
                 </div>
 
+                {/* Hook Header Visual Style Presets */}
+                <div className="space-y-1.5 pt-2 border-t border-white/5">
+                  <label className="text-[11px] font-medium text-zinc-300 flex items-center justify-between">
+                    <span>Hook Header Visual Style:</span>
+                    <span className="text-[10px] text-zinc-400 font-mono">
+                      {hookHeaderStyle === "white_box"
+                        ? "Pure White Card Box"
+                        : hookHeaderStyle === "meme"
+                        ? "Impact Meme All-Caps"
+                        : hookHeaderStyle === "nostalgic"
+                        ? "Vintage Amber Typewriter"
+                        : hookHeaderStyle === "old_history"
+                        ? "Antique Parchment Serif"
+                        : hookHeaderStyle === "neon_cyber"
+                        ? "Cyber Neon Glow"
+                        : "Viral Creator Yellow"}
+                    </span>
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                    {[
+                      { id: "viral_creator", label: "⚡️ Viral Creator", font: "Arial Black", desc: "Electric Yellow" },
+                      { id: "white_box", label: "📄 White Card Box", font: "Arial Black", desc: "Black on White" },
+                      { id: "meme", label: "🗿 Classic Meme", font: "Impact", desc: "Bold Impact Stroke" },
+                      { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier New", desc: "Amber Typewriter" },
+                      { id: "old_history", label: "🏛️ Old History", font: "Georgia", desc: "Parchment Serif" },
+                      { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Arial Black", desc: "Cyan & Magenta" },
+                    ].map((hs) => (
+                      <button
+                        key={hs.id}
+                        type="button"
+                        onClick={() => setHookHeaderStyle(hs.id)}
+                        className={`py-1.5 px-2.5 rounded-lg border text-left transition-all ${
+                          hookHeaderStyle === hs.id
+                            ? "bg-amber-500/25 border-amber-400 ring-1 ring-amber-400 text-white shadow-sm"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-semibold">{hs.label}</span>
+                          <span className="text-[8px] font-mono text-zinc-500">{hs.font}</span>
+                        </div>
+                        <span className="text-[9px] text-zinc-400 block mt-0.5">{hs.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* TikTok style preview badge */}
                 <div className="rounded-lg bg-black/40 border border-amber-500/20 p-2.5 flex items-center justify-between text-xs">
                   <span className="text-[10px] text-zinc-400">Creator Style Preview:</span>
-                  <span className="font-extrabold text-amber-300 font-mono tracking-wide">
-                    WHY NOBODY TALKS ABOUT THIS 🤫
-                  </span>
+                  {hookHeaderStyle === "white_box" ? (
+                    <span className="font-black text-black bg-white px-2.5 py-0.5 rounded uppercase tracking-tight text-[11px] shadow-sm">
+                      WHY NOBODY TALKS ABOUT THIS 🤫
+                    </span>
+                  ) : hookHeaderStyle === "meme" ? (
+                    <span className="font-black text-white uppercase tracking-wider drop-shadow-[0_2px_6px_rgba(0,0,0,1)] text-[11px]">
+                      WHY NOBODY TALKS ABOUT THIS 🤫
+                    </span>
+                  ) : hookHeaderStyle === "nostalgic" ? (
+                    <span className="font-mono font-bold text-amber-200 drop-shadow-[0_2px_4px_rgba(30,20,10,0.9)] tracking-widest text-[11px] uppercase">
+                      WHY NOBODY TALKS ABOUT THIS 🤫
+                    </span>
+                  ) : hookHeaderStyle === "old_history" ? (
+                    <span className="font-serif italic font-semibold text-amber-100/95 drop-shadow-[0_2px_4px_rgba(15,20,30,0.9)] tracking-wide text-[11px]">
+                      WHY NOBODY TALKS ABOUT THIS 🤫
+                    </span>
+                  ) : hookHeaderStyle === "neon_cyber" ? (
+                    <span className="font-black text-cyan-300 drop-shadow-[0_0_8px_rgba(255,0,255,0.8)] uppercase text-[11px]">
+                      WHY NOBODY TALKS ABOUT THIS 🤫
+                    </span>
+                  ) : (
+                    <span className="font-extrabold text-amber-300 font-mono tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,1)] text-[11px]">
+                      WHY NOBODY TALKS ABOUT THIS 🤫
+                    </span>
+                  )}
                 </div>
               </div>
             ) : (

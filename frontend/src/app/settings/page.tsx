@@ -75,6 +75,7 @@ export default function SettingsPage() {
   const [defaultSubtitlePosition, setDefaultSubtitlePosition] = useState<number>(75);
   const [defaultAddHookHeader, setDefaultAddHookHeader] = useState<boolean>(true);
   const [defaultHookHeaderPosition, setDefaultHookHeaderPosition] = useState<number>(12);
+  const [defaultHookHeaderStyle, setDefaultHookHeaderStyle] = useState<string>("viral_creator");
   const [defaultRemoveWatermark, setDefaultRemoveWatermark] = useState<boolean>(false);
   const [defaultWatermarkPosition, setDefaultWatermarkPosition] = useState<string>("top_right");
   const [defaultEnhanceQuality, setDefaultEnhanceQuality] = useState<boolean>(true);
@@ -97,6 +98,7 @@ export default function SettingsPage() {
       if (data.default_subtitle_position) setDefaultSubtitlePosition(data.default_subtitle_position);
       if (data.default_add_hook_header !== undefined) setDefaultAddHookHeader(data.default_add_hook_header);
       if (data.default_hook_header_position) setDefaultHookHeaderPosition(data.default_hook_header_position);
+      if (data.default_hook_header_style) setDefaultHookHeaderStyle(data.default_hook_header_style);
       if (data.default_remove_watermark !== undefined) setDefaultRemoveWatermark(data.default_remove_watermark);
       if (data.default_watermark_position) setDefaultWatermarkPosition(data.default_watermark_position as any);
       if (data.default_enhance_quality !== undefined) setDefaultEnhanceQuality(data.default_enhance_quality);
@@ -128,45 +130,25 @@ export default function SettingsPage() {
     try {
       const text = await navigator.clipboard.readText();
       if (text && text.trim()) {
-        const cleaned = text.trim();
-        if (type === "deepgram") {
-          setDeepgramKey(cleaned);
-          setDeepgramTestResult(null);
-          if (typeof window !== "undefined") localStorage.setItem("clipper_deepgram_key", cleaned);
-        } else if (type === "groq") {
-          setGroqKey(cleaned);
-          setGroqTestResult(null);
-          if (typeof window !== "undefined") localStorage.setItem("clipper_groq_key", cleaned);
-        } else if (type === "gemini") {
-          setGeminiKey(cleaned);
-          setGeminiTestResult(null);
-          if (typeof window !== "undefined") localStorage.setItem("clipper_gemini_key", cleaned);
-        }
+        if (type === "deepgram") setDeepgramKey(text.trim());
+        if (type === "groq") setGroqKey(text.trim());
+        if (type === "gemini") setGeminiKey(text.trim());
       }
     } catch {
-      // Clipboard fallback
+      alert("Clipboard access failed. Please paste manually into the input.");
     }
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async () => {
     setIsSaving(true);
     setSaveSuccess(false);
-
-    // Save to localStorage
-    if (typeof window !== "undefined") {
-      if (deepgramKey.trim()) localStorage.setItem("clipper_deepgram_key", deepgramKey.trim());
-      if (groqKey.trim()) localStorage.setItem("clipper_groq_key", groqKey.trim());
-      if (geminiKey.trim()) localStorage.setItem("clipper_gemini_key", geminiKey.trim());
-    }
-
     try {
       const updated = await api.updateSettings({
         ai_provider: aiProvider,
-        deepgram_api_key: deepgramKey.trim() || undefined,
-        deepgram_model: deepgramModel,
         groq_api_key: groqKey.trim() || undefined,
         groq_model: groqModel,
+        deepgram_api_key: deepgramKey.trim() || undefined,
+        deepgram_model: deepgramModel,
         gemini_api_key: geminiKey.trim() || undefined,
         gemini_model: geminiModel,
         transcriber_provider: transcriberProvider,
@@ -175,6 +157,7 @@ export default function SettingsPage() {
         default_subtitle_position: defaultSubtitlePosition,
         default_add_hook_header: defaultAddHookHeader,
         default_hook_header_position: defaultHookHeaderPosition,
+        default_hook_header_style: defaultHookHeaderStyle,
         default_remove_watermark: defaultRemoveWatermark,
         default_watermark_position: defaultWatermarkPosition,
         default_enhance_quality: defaultEnhanceQuality,
@@ -1267,6 +1250,82 @@ export default function SettingsPage() {
                     className="absolute left-1.5 right-1.5 h-1.5 bg-yellow-300/50 rounded-full transition-all duration-150"
                     style={{ top: `${defaultSubtitlePosition}%` }}
                   />
+                </div>
+              </div>
+
+              {/* Hook Header Visual Style Selection */}
+              <div className="space-y-2.5 pt-3 border-t border-white/5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-zinc-300">Hook Visual Style & Typography Preset</span>
+                  <span className="text-[10px] text-amber-400 font-mono">
+                    {defaultHookHeaderStyle === "white_box"
+                      ? "White Card Box"
+                      : defaultHookHeaderStyle === "meme"
+                      ? "Classic Meme"
+                      : defaultHookHeaderStyle === "nostalgic"
+                      ? "Vintage Typewriter"
+                      : defaultHookHeaderStyle === "old_history"
+                      ? "History Serif"
+                      : defaultHookHeaderStyle === "neon_cyber"
+                      ? "Neon Glow"
+                      : "Viral Creator"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+                  {[
+                    { id: "viral_creator", label: "⚡️ Viral Creator", font: "Sans Bold" },
+                    { id: "white_box", label: "📄 White Card", font: "Arial Black" },
+                    { id: "meme", label: "🗿 Classic Meme", font: "Impact" },
+                    { id: "nostalgic", label: "🎞️ Nostalgic", font: "Courier Type" },
+                    { id: "old_history", label: "🏛️ Old History", font: "Georgia Serif" },
+                    { id: "neon_cyber", label: "🔮 Cyber Neon", font: "Cyan Glow" },
+                  ].map((styleOpt) => (
+                    <button
+                      key={styleOpt.id}
+                      type="button"
+                      onClick={() => setDefaultHookHeaderStyle(styleOpt.id)}
+                      className={`p-2.5 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
+                        defaultHookHeaderStyle === styleOpt.id
+                          ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <span className="text-xs font-bold leading-tight">{styleOpt.label}</span>
+                      <span className="text-[9px] text-zinc-500">{styleOpt.font}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Live Creator Style Preview */}
+                <div className="rounded-xl bg-black/60 border border-white/10 p-3.5 flex items-center justify-center min-h-[55px]">
+                  <div
+                    className={`px-4 py-1.5 text-center text-xs transition-all ${
+                      defaultHookHeaderStyle === "white_box"
+                        ? "bg-white text-black font-black uppercase tracking-tight shadow-lg rounded-sm"
+                        : defaultHookHeaderStyle === "meme"
+                        ? "text-white font-black uppercase tracking-wider text-sm [text-shadow:_2px_2px_0_rgb(0_0_0),_-2px_2px_0_rgb(0_0_0),_2px_-2px_0_rgb(0_0_0),_-2px_-2px_0_rgb(0_0_0)] font-sans"
+                        : defaultHookHeaderStyle === "nostalgic"
+                        ? "bg-amber-950/80 text-amber-200 border border-amber-600/40 font-mono tracking-widest uppercase rounded shadow-inner text-xs"
+                        : defaultHookHeaderStyle === "old_history"
+                        ? "bg-stone-900/90 text-amber-100 border-t border-b border-amber-500/50 font-serif italic tracking-wide text-xs px-5 shadow-lg"
+                        : defaultHookHeaderStyle === "neon_cyber"
+                        ? "text-cyan-300 font-black uppercase tracking-widest [text-shadow:_0_0_8px_#06b6d4,_0_0_20px_#ec4899] font-mono text-xs"
+                        : "text-yellow-400 font-extrabold uppercase tracking-wide [text-shadow:_1px_1px_0_#000,_-1px_-1px_0_#000] font-sans"
+                    }`}
+                  >
+                    {defaultHookHeaderStyle === "white_box"
+                      ? "WAIT TILL THE END 🤯"
+                      : defaultHookHeaderStyle === "meme"
+                      ? "NOBODY EXPECTED THIS 💀"
+                      : defaultHookHeaderStyle === "nostalgic"
+                      ? "CHAPTER I: THE BEGINNING 📜"
+                      : defaultHookHeaderStyle === "old_history"
+                      ? "HISTORICAL CHRONICLES 🏛️"
+                      : defaultHookHeaderStyle === "neon_cyber"
+                      ? "FUTURE TECH REVEALED ⚡️"
+                      : "WHY NOBODY TALKS ABOUT THIS 🤫"}
+                  </div>
                 </div>
               </div>
             </div>

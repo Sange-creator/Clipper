@@ -267,16 +267,16 @@ class VideoRenderer:
                 prefix = f"{filter_parts[0]}," if filter_parts else ""
                 v_filter = (
                     f"{prefix}split=2[bg_raw][fg_raw];"
-                    f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:5,drawbox=color=black@0.35:replace=1[bg];"
-                    f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=lanczos[fg];"
+                    f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg];"
+                    f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
                     f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
                 )
             elif mode == "original_16_9":
-                filter_parts.append("scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos")
+                filter_parts.append("scale=1920:1080:force_original_aspect_ratio=decrease:flags=bilinear")
                 v_filter = ",".join(filter_parts)
             else:
                 # Default: crop_9_16
-                filter_parts.append(f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}")
+                filter_parts.append(f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}")
                 v_filter = ",".join(filter_parts)
 
             # Studio visual quality enhancement (vibrancy + unsharp detail enhancement)
@@ -298,7 +298,7 @@ class VideoRenderer:
                 "-c:v", "libx264",
                 "-profile:v", "high",
                 "-level:v", "4.2",
-                "-preset", "medium",
+                "-preset", "veryfast",
                 "-crf", "18",
                 "-pix_fmt", "yuv420p",
                 "-c:a", "aac",
@@ -309,73 +309,72 @@ class VideoRenderer:
                 str(out)
             ]
         else:
-            # Multi-segment splicing: Complex filtergraph with lanczos scaling
+            # Multi-segment splicing: Fast seek multi-input with synchronized concat
+            input_args = []
             filter_chunks = []
-            concat_v_in = ""
-            concat_a_in = ""
+            concat_streams = ""
+
             for idx, (s, e) in enumerate(valid_intervals):
-                filter_chunks.append(
-                    f"[0:v]trim=start={s:.3f}:end={e:.3f},setpts=PTS-STARTPTS[v{idx}]"
-                )
-                filter_chunks.append(
-                    f"[0:a]atrim=start={s:.3f}:end={e:.3f},asetpts=PTS-STARTPTS[a{idx}]"
-                )
-                concat_v_in += f"[v{idx}]"
-                concat_a_in += f"[a{idx}]"
+                dur = max(0.2, e - s)
+                input_args.extend(["-ss", f"{s:.3f}", "-t", f"{dur:.3f}", "-i", str(src)])
+
+                # Reframe each input video stream to standard canvas (apply delogo to raw stream if present)
+                in_v = f"[{idx}:v]{delogo_cmd}," if delogo_cmd else f"[{idx}:v]"
+                if mode == "blur_fit_9_16":
+                    filter_chunks.append(
+                        f"{in_v}split=2[bg_raw_{idx}][fg_raw_{idx}];"
+                        f"[bg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg_{idx}];"
+                        f"[fg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg_{idx}];"
+                        f"[bg_{idx}][fg_{idx}]overlay=(W-w)/2:(H-h)/2,setsar=1[v{idx}]"
+                    )
+                elif mode == "original_16_9":
+                    filter_chunks.append(
+                        f"{in_v}scale=1920:1080:force_original_aspect_ratio=decrease:flags=bilinear,setsar=1[v{idx}]"
+                    )
+                else:
+                    # Default: crop_9_16
+                    filter_chunks.append(
+                        f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},setsar=1[v{idx}]"
+                    )
+
+                concat_streams += f"[v{idx}][{idx}:a]"
 
             num_segs = len(valid_intervals)
             filter_chunks.append(
-                f"{concat_v_in}concat=n={num_segs}:v=1:a=0[vcat]"
+                f"{concat_streams}concat=n={num_segs}:v=1:a=1[vcat][acat]"
             )
-            filter_chunks.append(
-                f"{concat_a_in}concat=n={num_segs}:v=0:a=1[acat]"
-            )
+            v_cat_target = "[vcat]"
 
-            # Reframe & subtitle on spliced video with lanczos scaling
-            v_post_prefix = ""
-            if delogo_cmd:
-                v_post_prefix = f"[vcat]{delogo_cmd}[v_delogo];"
-                v_cat_target = "[v_delogo]"
-            else:
-                v_cat_target = "[vcat]"
-
-            if mode == "blur_fit_9_16":
-                v_post = (
-                    f"{v_post_prefix}"
-                    f"{v_cat_target}split=2[bg_raw][fg_raw];"
-                    f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:5,drawbox=color=black@0.35:replace=1[bg];"
-                    f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=lanczos[fg];"
-                    f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
-                )
-            elif mode == "original_16_9":
-                v_post = f"{v_post_prefix}{v_cat_target}scale=1920:1080:force_original_aspect_ratio=decrease:flags=lanczos"
-            else:
-                v_post = f"{v_post_prefix}{v_cat_target}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}"
-
+            # Quality enhancement & subtitles
+            post_filters = []
             if enhance_quality:
-                v_post += ",eq=contrast=1.04:saturation=1.08:brightness=0.01,unsharp=lx=3:ly=3:la=0.35:cx=3:cy=3:ca=0.15"
+                post_filters.append("eq=contrast=1.04:saturation=1.08:brightness=0.01")
+                post_filters.append("unsharp=lx=3:ly=3:la=0.35:cx=3:cy=3:ca=0.15")
 
             if final_ass_path and final_ass_path.exists():
                 escaped_ass = str(final_ass_path).replace("\\", "/").replace(":", "\\:")
-                v_post += f",subtitles='{escaped_ass}'"
-            v_post += "[vout]"
-            filter_chunks.append(v_post)
+                post_filters.append(f"subtitles='{escaped_ass}'")
 
-            # Audio loudnorm on spliced audio
+            if post_filters:
+                filter_chunks.append(f"{v_cat_target}{','.join(post_filters)}[vout]")
+            else:
+                filter_chunks.append(f"{v_cat_target}null[vout]")
+
+            # Audio loudness normalization
             filter_chunks.append("[acat]loudnorm=I=-14:TP=-1.0:LRA=11[aout]")
 
             full_filter = ";".join(filter_chunks)
             cmd = [
                 self.ffmpeg_path,
                 "-y",
-                "-i", str(src),
+                *input_args,
                 "-filter_complex", full_filter,
                 "-map", "[vout]",
                 "-map", "[aout]",
                 "-c:v", "libx264",
                 "-profile:v", "high",
                 "-level:v", "4.2",
-                "-preset", "medium",
+                "-preset", "veryfast",
                 "-crf", "18",
                 "-pix_fmt", "yuv420p",
                 "-c:a", "aac",
@@ -392,15 +391,23 @@ class VideoRenderer:
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
-        _, stderr = await proc.communicate()
-
+        try:
+            _, stderr = await asyncio.wait_for(proc.communicate(), timeout=300.0)
+        except (asyncio.CancelledError, asyncio.TimeoutError) as err:
+            try:
+                proc.kill()
+                await proc.wait()
+            except Exception:
+                pass
+            logger.error(f"FFmpeg render cancelled or timed out (duration: {duration:.1f}s): {err}")
+            raise
 
         if proc.returncode != 0:
             err_msg = stderr.decode("utf-8", errors="ignore")
-            logger.warning(f"FFmpeg render error: {err_msg[:250]}. Retrying fallback...")
+            logger.warning(f"FFmpeg render error: {err_msg[-500:]}. Retrying fallback...")
             # Fallback simple crop render
-            fallback_s = valid_intervals[0][0]
-            fallback_e = valid_intervals[-1][1]
+            fallback_s = min(s for s, e in valid_intervals)
+            fallback_e = max(e for s, e in valid_intervals)
             fallback_dur = max(1.0, fallback_e - fallback_s)
             fallback_cmd = [
                 self.ffmpeg_path,
@@ -408,9 +415,9 @@ class VideoRenderer:
                 "-ss", f"{fallback_s:.3f}",
                 "-i", str(src),
                 "-t", f"{fallback_dur:.3f}",
-                "-vf", f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=lanczos,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}",
+                "-vf", f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}",
                 "-c:v", "libx264",
-                "-preset", "medium",
+                "-preset", "veryfast",
                 "-crf", "18",
                 "-pix_fmt", "yuv420p",
                 "-c:a", "aac",
@@ -424,7 +431,15 @@ class VideoRenderer:
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
-            _, fallback_err = await fallback_proc.communicate()
+            try:
+                _, fallback_err = await asyncio.wait_for(fallback_proc.communicate(), timeout=300.0)
+            except (asyncio.CancelledError, asyncio.TimeoutError) as fb_err:
+                try:
+                    fallback_proc.kill()
+                    await fallback_proc.wait()
+                except Exception:
+                    pass
+                raise
             if fallback_proc.returncode != 0:
                 raise MediaProcessingError(f"Video rendering failed: {fallback_err.decode('utf-8', errors='ignore')}")
 
@@ -446,14 +461,28 @@ class VideoRenderer:
         out = Path(output_thumbnail_path).resolve()
         out.parent.mkdir(parents=True, exist_ok=True)
 
+        vid_dur = 5.0
+        try:
+            probe_proc = await asyncio.create_subprocess_exec(
+                "ffprobe", "-v", "error", "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1", str(src),
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            p_out, _ = await probe_proc.communicate()
+            if probe_proc.returncode == 0 and p_out.decode().strip():
+                d = float(p_out.decode().strip())
+                if d > 0.1:
+                    vid_dur = d
+        except Exception:
+            pass
+
+        safe_ts = max(0.05, min(timestamp, max(0.05, vid_dur - 0.2)))
         candidate_timestamps = [
-            max(0.1, timestamp),
-            1.0,
-            1.5,
-            0.5,
-            2.0,
-            3.0,
-            0.1,
+            safe_ts,
+            max(0.05, min(1.0, vid_dur * 0.5)),
+            max(0.05, min(0.5, vid_dur * 0.25)),
+            0.05,
         ]
 
         seen = set()
@@ -464,16 +493,22 @@ class VideoRenderer:
                 seen.add(r_ts)
                 dedup_candidates.append(r_ts)
 
+        image_strip_args = [
+            "-map_metadata", "-1",
+            "-map_chapters", "-1",
+        ]
+
         for ts in dedup_candidates:
             cmd = [
                 self.ffmpeg_path,
                 "-y",
                 "-ss", f"{ts:.3f}",
                 "-i", str(src),
-                "-vf", "thumbnail=16",
+                "-vf", "thumbnail=8",
                 "-vframes", "1",
+                "-update", "1",
                 "-q:v", "2",
-                *METADATA_STRIP_ARGS,
+                *image_strip_args,
                 str(out)
             ]
 
@@ -484,18 +519,19 @@ class VideoRenderer:
             )
             await proc.communicate()
 
-            if out.exists() and out.stat().st_size > 8192:
+            if out.exists() and out.stat().st_size > 1000:
                 return out
 
         # Direct 1-frame fallback if smart filter produced no output
         fallback_cmd = [
             self.ffmpeg_path,
             "-y",
+            "-ss", f"{safe_ts:.3f}",
             "-i", str(src),
-            "-ss", f"{max(0.1, timestamp):.3f}",
             "-vframes", "1",
+            "-update", "1",
             "-q:v", "2",
-            *METADATA_STRIP_ARGS,
+            *image_strip_args,
             str(out)
         ]
         fallback_proc = await asyncio.create_subprocess_exec(
@@ -503,7 +539,15 @@ class VideoRenderer:
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
-        await fallback_proc.communicate()
+        try:
+            await asyncio.wait_for(fallback_proc.communicate(), timeout=30.0)
+        except (asyncio.CancelledError, asyncio.TimeoutError):
+            try:
+                fallback_proc.kill()
+                await fallback_proc.wait()
+            except Exception:
+                pass
+            raise
 
         return out
 

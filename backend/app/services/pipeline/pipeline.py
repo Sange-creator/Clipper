@@ -332,6 +332,11 @@ class VideoProcessingPipeline:
                 job_hook_strat = getattr(job, "hook_strategy", None) or "teaser_climax_hook"
 
                 for cand, comp_score, penalty, rank in ranked_clips:
+                    # Clamp candidate boundaries to actual video duration
+                    if video.duration_seconds and video.duration_seconds > 0:
+                        cand.start = round(max(0.0, min(cand.start, max(0.0, video.duration_seconds - 0.5))), 2)
+                        cand.end = round(min(video.duration_seconds, max(cand.start + 0.5, cand.end)), 2)
+
                     if remove_dead_air:
                         base_edit = silence_detector.build_edited_timeline(cand.start, cand.end, silence_intervals)
                         story_intervals = list(base_edit.keep)
@@ -422,6 +427,7 @@ class VideoProcessingPipeline:
                     job_sub_pos = getattr(job, "subtitle_position", None) or 75
                     job_add_hook = getattr(job, "add_hook_header", False)
                     job_hook_pos = getattr(job, "hook_header_position", None) or 12
+                    job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
                     hook_title_text = cand.hook_summary or cand.reason or ""
 
                     captioner.generate_ass(
@@ -434,6 +440,7 @@ class VideoProcessingPipeline:
                         add_hook_header=job_add_hook,
                         hook_header_text=hook_title_text,
                         hook_header_position=job_hook_pos,
+                        hook_header_style=job_hook_style,
                         keep_intervals=t_edit.keep,
                     )
                     captioner.generate_srt(
@@ -455,21 +462,24 @@ class VideoProcessingPipeline:
                     if job_enhance_quality is None:
                         job_enhance_quality = True
 
-                    await renderer.render_clip(
-                        source_video_path=video_path,
-                        start_time=cand.start,
-                        end_time=cand.end,
-                        output_video_path=out_video_path,
-                        reframing_config=crop_info,
-                        ass_subtitle_path=ass_path if should_burn else None,
-                        burn_captions=should_burn,
-                        keep_intervals=t_edit.keep,
-                        framing_mode=job_framing_mode,
-                        blur_radius=job_blur_radius,
-                        remove_watermark=job_remove_watermark,
-                        watermark_position=job_watermark_position,
-                        enhance_quality=job_enhance_quality,
-                    )
+                    if out_video_path.exists() and out_video_path.stat().st_size > 50000:
+                        logger.info(f"Clip {clip_id} already rendered ({out_video_path.stat().st_size} bytes), skipping render.")
+                    else:
+                        await renderer.render_clip(
+                            source_video_path=video_path,
+                            start_time=cand.start,
+                            end_time=cand.end,
+                            output_video_path=out_video_path,
+                            reframing_config=crop_info,
+                            ass_subtitle_path=ass_path if should_burn else None,
+                            burn_captions=should_burn,
+                            keep_intervals=t_edit.keep,
+                            framing_mode=job_framing_mode,
+                            blur_radius=job_blur_radius,
+                            remove_watermark=job_remove_watermark,
+                            watermark_position=job_watermark_position,
+                            enhance_quality=job_enhance_quality,
+                        )
 
                     # Stage 18: Generate thumbnails from rendered vertical video (guarantees 9:16 layout & non-black frame)
                     await self.update_job_progress(
@@ -477,7 +487,8 @@ class VideoProcessingPipeline:
                         f"Generating thumbnail for clip {idx}/{len(ranked_clips)}"
                     )
                     thumb_path = settings.THUMBNAIL_DIR / f"{clip_id}.jpg"
-                    await renderer.generate_thumbnail(out_video_path, 1.0, thumb_path)
+                    if not (thumb_path.exists() and thumb_path.stat().st_size > 5000):
+                        await renderer.generate_thumbnail(out_video_path, 1.0, thumb_path)
 
                     # Stage 19: Generate platform metadata
                     await self.update_job_progress(
@@ -513,6 +524,7 @@ class VideoProcessingPipeline:
                         subtitle_position=job_sub_pos,
                         add_hook_header=job_add_hook,
                         hook_header_position=job_hook_pos,
+                        hook_header_style=job_hook_style,
                         hook_header_text=hook_title_text if job_add_hook else None,
                         remove_watermark=job_remove_watermark,
                         watermark_position=job_watermark_position,
@@ -535,6 +547,51 @@ class VideoProcessingPipeline:
                     session.add(rendered_rec)
                     await session.commit()
                     rendered_count += 1
+
+                # Generate consolidated titles & 5 hashtags single text file for easy copy-pasting
+                try:
+                    from app.api.routes.export import build_batch_titles_and_hashtags_text, extract_5_hashtags, slugify_title
+                    stmt_clips = select(RenderedClip).where(RenderedClip.job_id == job.id).order_by(RenderedClip.created_at)
+                    res_clips = await session.execute(stmt_clips)
+                    all_job_clips = res_clips.scalars().all()
+                    if all_job_clips:
+                        clips_summary = []
+                        for c_idx, c_cl in enumerate(all_job_clips, start=1):
+                            t_hint = c_cl.hook_header_text or c_cl.tiktok_title or c_cl.shorts_title or f"clip_{c_idx:02d}"
+                            s_slug = slugify_title(t_hint)
+                            b_name = f"clip_{c_idx:02d}_{c_cl.id[:6]}_{s_slug}"
+                            f_tags = extract_5_hashtags(c_cl)
+                            clips_summary.append({
+                                "idx": c_idx,
+                                "clip": c_cl,
+                                "title": t_hint,
+                                "hashtags": f_tags,
+                                "filename": f"{b_name}.mp4",
+                                "duration": c_cl.duration,
+                            })
+                        combined_text = build_batch_titles_and_hashtags_text(clips_summary)
+
+                        # 1. Save in thumbnails directory
+                        thumb_dir = settings.DATA_DIR / "thumbnails"
+                        thumb_dir.mkdir(parents=True, exist_ok=True)
+                        (thumb_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        (thumb_dir / "titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        (thumb_dir / f"job_{job.id[:8]}_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+
+                        # 2. Save in specific video thumbnail directory if exists
+                        v_thumb_dir = thumb_dir / video.id
+                        if v_thumb_dir.exists():
+                            (v_thumb_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+
+                        # 3. Save in titles_and_thumbnails directory
+                        tt_dir = settings.DATA_DIR / "titles_and_thumbnails"
+                        tt_dir.mkdir(parents=True, exist_ok=True)
+                        (tt_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        (tt_dir / "titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        (tt_dir / f"job_{job.id[:8]}_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        logger.info(f"Generated single all_titles_and_hashtags.txt on disk for job {job.id}")
+                except Exception as ex:
+                    logger.warning(f"Could not generate titles_and_hashtags file on disk: {ex}")
 
                 # Stage 21: Mark job complete
                 await self.update_job_progress(
@@ -720,6 +777,7 @@ class VideoProcessingPipeline:
             job_sub_pos = getattr(job, "subtitle_position", None) or 75
             job_add_hook = getattr(job, "add_hook_header", False)
             job_hook_pos = getattr(job, "hook_header_position", None) or 12
+            job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
             hook_title_text = cand.hook_summary or cand.reason or ""
 
             captioner.generate_ass(
@@ -732,6 +790,7 @@ class VideoProcessingPipeline:
                 add_hook_header=job_add_hook,
                 hook_header_text=hook_title_text,
                 hook_header_position=job_hook_pos,
+                hook_header_style=job_hook_style,
                 keep_intervals=t_edit.keep,
             )
             captioner.generate_srt(
@@ -790,6 +849,7 @@ class VideoProcessingPipeline:
                 subtitle_position=job_sub_pos,
                 add_hook_header=job_add_hook,
                 hook_header_position=job_hook_pos,
+                hook_header_style=job_hook_style,
                 hook_header_text=hook_title_text if job_add_hook else None,
                 remove_watermark=job_remove_watermark,
                 watermark_position=job_watermark_position,

@@ -50,6 +50,7 @@ async def create_clipping_job(
         subtitle_position=req.subtitle_position or 75,
         add_hook_header=req.add_hook_header,
         hook_header_position=req.hook_header_position or 12,
+        hook_header_style=getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
         remove_watermark=req.remove_watermark,
         watermark_position=req.watermark_position or "top_right",
         enhance_quality=req.enhance_quality if req.enhance_quality is not None else True,
@@ -315,6 +316,7 @@ async def get_job_clips(
                 subtitle_position=getattr(cl, "subtitle_position", 75) or 75,
                 add_hook_header=getattr(cl, "add_hook_header", False) or False,
                 hook_header_position=getattr(cl, "hook_header_position", 12) or 12,
+                hook_header_style=getattr(cl, "hook_header_style", "viral_creator") or "viral_creator",
                 hook_header_text=getattr(cl, "hook_header_text", None),
                 remove_watermark=getattr(cl, "remove_watermark", False) or False,
                 watermark_position=getattr(cl, "watermark_position", "top_right") or "top_right",
@@ -347,6 +349,38 @@ async def cancel_job(job_id: str, db: AsyncSession = Depends(get_db)):
     job.status = "cancelled"
     await db.commit()
     return {"message": "Job cancelled.", "cancelled": cancelled}
+
+
+@router.post("/{job_id}/retry", response_model=JobStatusResponse)
+async def retry_job(job_id: str, db: AsyncSession = Depends(get_db)):
+    """Restart or resume a stuck, cancelled, or failed processing job."""
+    job = await db.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found.")
+
+    job_manager.cancel_job(job_id)
+    job.status = "queued"
+    job.error_message = None
+    await db.commit()
+    await db.refresh(job)
+
+    job_manager.start_job(job.id)
+    logs = json.loads(job.log_history or "[]")
+    return JobStatusResponse(
+        id=job.id,
+        video_id=job.video_id,
+        mode=job.mode or "podcast",
+        status=job.status,
+        current_stage=job.current_stage,
+        stage_name=job.stage_name,
+        progress=job.progress,
+        total_candidates_found=0,
+        total_clips_rendered=0,
+        error_message=None,
+        created_at=job.created_at,
+        updated_at=job.updated_at,
+        logs=logs,
+    )
 
 
 @router.delete("/{job_id}")

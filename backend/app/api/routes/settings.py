@@ -98,6 +98,8 @@ async def load_persisted_settings(db: AsyncSession) -> None:
                 settings.DEFAULT_HOOK_HEADER_POSITION = int(rec.value)
             except Exception:
                 pass
+        elif rec.key == "DEFAULT_HOOK_HEADER_STYLE" and rec.value:
+            settings.DEFAULT_HOOK_HEADER_STYLE = rec.value
         elif rec.key == "DEFAULT_REMOVE_WATERMARK" and rec.value:
             settings.DEFAULT_REMOVE_WATERMARK = rec.value.lower() in ("true", "1", "yes")
         elif rec.key == "DEFAULT_WATERMARK_POSITION" and rec.value:
@@ -136,6 +138,7 @@ async def get_settings(db: AsyncSession = Depends(get_db)):
         default_subtitle_position=settings.DEFAULT_SUBTITLE_POSITION,
         default_add_hook_header=settings.DEFAULT_ADD_HOOK_HEADER,
         default_hook_header_position=settings.DEFAULT_HOOK_HEADER_POSITION,
+        default_hook_header_style=settings.DEFAULT_HOOK_HEADER_STYLE,
         default_remove_watermark=settings.DEFAULT_REMOVE_WATERMARK,
         default_watermark_position=settings.DEFAULT_WATERMARK_POSITION,
         default_enhance_quality=settings.DEFAULT_ENHANCE_QUALITY,
@@ -219,6 +222,10 @@ async def update_settings(
     if req.default_hook_header_position is not None:
         settings.DEFAULT_HOOK_HEADER_POSITION = req.default_hook_header_position
         await set_or_update("DEFAULT_HOOK_HEADER_POSITION", str(req.default_hook_header_position))
+
+    if req.default_hook_header_style is not None:
+        settings.DEFAULT_HOOK_HEADER_STYLE = req.default_hook_header_style
+        await set_or_update("DEFAULT_HOOK_HEADER_STYLE", req.default_hook_header_style)
 
     if req.default_remove_watermark is not None:
         settings.DEFAULT_REMOVE_WATERMARK = req.default_remove_watermark

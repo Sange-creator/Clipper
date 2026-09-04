@@ -22,6 +22,17 @@ export const api = {
     return API_BASE;
   },
 
+  // System Health Check
+  async checkHealth(): Promise<{ status: string; app_name?: string; ai_provider?: string } | null> {
+    try {
+      const res = await fetch(`${API_BASE}/health`, { cache: "no-store" });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  },
+
   // Video uploads
   async getRecentVideos(limit = 10): Promise<VideoInfo[]> {
     try {
@@ -37,10 +48,17 @@ export const api = {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch(`${API_BASE}/upload`, {
-      method: "POST",
-      body: formData,
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE}/upload`, {
+        method: "POST",
+        body: formData,
+      });
+    } catch {
+      throw new Error(
+        `Cannot connect to Clipper backend at ${API_BASE}. Please ensure the FastAPI backend is running on port 8000 (uvicorn app.main:app --port 8000).`
+      );
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: "Upload failed" }));
@@ -54,10 +72,17 @@ export const api = {
     const formData = new FormData();
     files.forEach((f) => formData.append("files", f));
 
-    const res = await fetch(`${API_BASE}/upload/batch?project_id=${projectId}`, {
-      method: "POST",
-      body: formData,
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE}/upload/batch?project_id=${projectId}`, {
+        method: "POST",
+        body: formData,
+      });
+    } catch {
+      throw new Error(
+        `Cannot connect to Clipper backend at ${API_BASE}. Please ensure the FastAPI backend is running on port 8000 (uvicorn app.main:app --port 8000).`
+      );
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({ detail: "Batch upload failed" }));
@@ -229,6 +254,7 @@ export const api = {
     subtitle_position?: number;
     add_hook_header?: boolean;
     hook_header_position?: number;
+    hook_header_style?: string;
     hook_header_text?: string;
     remove_watermark?: boolean;
     watermark_position?: string;
@@ -258,6 +284,7 @@ export const api = {
     subtitle_position?: number;
     add_hook_header?: boolean;
     hook_header_position?: number;
+    hook_header_style?: string;
     hook_header_text?: string;
     remove_watermark?: boolean;
     watermark_position?: string;
@@ -324,6 +351,10 @@ export const api = {
 
   getBatchExportUrl(jobId: string): string {
     return `${API_BASE}/export/job/${jobId}/batch`;
+  },
+
+  getTitlesAndHashtagsUrl(jobId: string, download: boolean = false): string {
+    return `${API_BASE}/export/job/${jobId}/titles-and-hashtags${download ? "?download=true" : ""}`;
   },
 
   async downloadSelectedClipsZip(clipIds: string[]): Promise<Blob> {

@@ -136,29 +136,54 @@ class WhisperTranscriptionService:
 
     def _generate_fallback_transcript(self, audio_path: Path) -> TranscriptionResult:
         """Generates realistic structured sample transcript for demonstration or when whisper binary is omitted."""
+        dur = 55.0
+        try:
+            import subprocess
+            res = subprocess.run(
+                [
+                    "ffprobe", "-v", "error", "-show_entries",
+                    "format=duration", "-of", "default=noprint_wrappers=1:nokey=1",
+                    str(audio_path)
+                ],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=5.0
+            )
+            if res.returncode == 0 and res.stdout.strip():
+                val = float(res.stdout.strip())
+                if val > 0.5:
+                    dur = val
+        except Exception:
+            pass
+
+        scale = max(0.05, (dur * 0.95) / 52.5) if dur < 52.5 else 1.0
+
         sample_sentences = [
-            ("The single biggest mistake creators make with short form content", 0.0, 4.2),
-            ("is spending twenty seconds introducing themselves before saying anything useful.", 4.3, 8.8),
-            ("When a viewer swipes onto your video, you have exactly three seconds to hook their curiosity.", 8.9, 14.5),
-            ("If you don't give them a reason to stay, they are already on the next video.", 14.6, 19.2),
-            ("Here is the exact 3-step framework you should follow instead.", 19.3, 24.1),
-            ("First, start with a controversial statement or an unanswered question.", 24.2, 29.5),
-            ("Second, provide immediate context and build narrative escalation.", 29.6, 35.8),
-            ("Third, deliver a punchy payoff with high emotional or intellectual value.", 35.9, 41.2),
-            ("And that is how you consistently retain over 80 percent of your audience.", 41.3, 47.0),
-            ("Try this on your next video and watch your retention skyrocket.", 47.1, 52.5),
+            ("The single biggest mistake creators make with short form content", round(0.0 * scale, 2), round(4.2 * scale, 2)),
+            ("is spending twenty seconds introducing themselves before saying anything useful.", round(4.3 * scale, 2), round(8.8 * scale, 2)),
+            ("When a viewer swipes onto your video, you have exactly three seconds to hook their curiosity.", round(8.9 * scale, 2), round(14.5 * scale, 2)),
+            ("If you don't give them a reason to stay, they are already on the next video.", round(14.6 * scale, 2), round(19.2 * scale, 2)),
+            ("Here is the exact 3-step framework you should follow instead.", round(19.3 * scale, 2), round(24.1 * scale, 2)),
+            ("First, start with a controversial statement or an unanswered question.", round(24.2 * scale, 2), round(29.5 * scale, 2)),
+            ("Second, provide immediate context and build narrative escalation.", round(29.6 * scale, 2), round(35.8 * scale, 2)),
+            ("Third, deliver a punchy payoff with high emotional or intellectual value.", round(35.9 * scale, 2), round(41.2 * scale, 2)),
+            ("And that is how you consistently retain over 80 percent of your audience.", round(41.3 * scale, 2), round(47.0 * scale, 2)),
+            ("Try this on your next video and watch your retention skyrocket.", round(47.1 * scale, 2), round(min(dur, 52.5 * scale), 2)),
         ]
 
         segments: List[TranscriptSegment] = []
         full_text_parts: List[str] = []
 
         for idx, (sentence, start, end) in enumerate(sample_sentences):
+            if end <= start:
+                end = min(dur, round(start + 0.5, 2))
             words: List[WordTimestamp] = []
             word_list = sentence.split()
-            word_dur = (end - start) / max(len(word_list), 1)
+            word_dur = max(0.01, (end - start) / max(len(word_list), 1))
             for w_idx, w in enumerate(word_list):
                 w_start = round(start + (w_idx * word_dur), 2)
-                w_end = round(w_start + word_dur, 2)
+                w_end = round(min(end, w_start + word_dur), 2)
                 words.append(WordTimestamp(word=w, start=w_start, end=w_end, probability=0.98))
 
             full_text_parts.append(sentence)

@@ -14,6 +14,9 @@ import {
   Film,
   Trash2,
   AlertTriangle,
+  Copy,
+  Check,
+  FileText,
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { CandidateDetail, JobStatusResponse, RenderedClipResponse } from "@/lib/types";
@@ -33,6 +36,21 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [error, setError] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [copiedTitles, setCopiedTitles] = useState(false);
+
+  const handleCopyTitles = async () => {
+    try {
+      const res = await fetch(api.getTitlesAndHashtagsUrl(jobId));
+      if (!res.ok) throw new Error("Failed to fetch titles and hashtags");
+      const text = await res.text();
+      await navigator.clipboard.writeText(text);
+      setCopiedTitles(true);
+      setTimeout(() => setCopiedTitles(false), 2500);
+    } catch (err: any) {
+      console.error(err);
+      alert("Could not copy titles & hashtags to clipboard");
+    }
+  };
 
   const fetchJobData = async () => {
     try {
@@ -187,16 +205,37 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {isCompleted && clips.length > 0 && (
-            <a
-              href={api.getBatchExportUrl(jobId)}
-              download
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500 transition-all"
-            >
-              <Download className="h-4 w-4" />
-              <span>Bulk Download ({clips.length} Clips Dual-Folder ZIP)</span>
-            </a>
+            <>
+              <button
+                onClick={handleCopyTitles}
+                className="flex items-center gap-2 rounded-xl bg-violet-600/20 border border-violet-500/30 px-4 py-2.5 text-xs font-semibold text-violet-300 hover:bg-violet-600 hover:text-white transition-all shadow-lg"
+                title="Copy all titles & 5 hashtags to clipboard for easy copy-paste"
+              >
+                {copiedTitles ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                <span>{copiedTitles ? "Copied All Titles & 5 Hashtags!" : "Copy Titles & 5 Hashtags"}</span>
+              </button>
+
+              <a
+                href={api.getTitlesAndHashtagsUrl(jobId, true)}
+                download
+                className="flex items-center gap-2 rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-xs font-semibold text-zinc-200 hover:bg-zinc-700 transition-all"
+                title="Download single text file with all titles & 5 hashtags"
+              >
+                <FileText className="h-4 w-4 text-amber-400" />
+                <span>Titles & Hashtags (.txt)</span>
+              </a>
+
+              <a
+                href={api.getBatchExportUrl(jobId)}
+                download
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-500 hover:to-teal-500 transition-all"
+              >
+                <Download className="h-4 w-4" />
+                <span>Bulk Download ({clips.length} Clips Dual-Folder ZIP)</span>
+              </a>
+            </>
           )}
 
           <button
