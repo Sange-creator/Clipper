@@ -766,6 +766,75 @@ export function VideoUploader() {
                   ))}
                 </div>
 
+                {/* Live Subtitle Appearance Preview */}
+                <div className="rounded-xl border border-violet-500/30 bg-black/60 p-3.5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-zinc-300 flex items-center gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+                      <span>Live Subtitle Appearance Preview</span>
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 capitalize">
+                      {captionStyle.replace(/_/g, " ")}
+                    </span>
+                  </div>
+
+                  <div className="relative rounded-lg bg-zinc-950 border border-white/5 h-20 flex items-center justify-center overflow-hidden px-4">
+                    {captionStyle === "white_background" ? (
+                      <span className="inline-block bg-white text-black font-black px-3.5 py-1 rounded uppercase tracking-wider text-xs shadow-xl font-sans">
+                        THIS IS THE <span className="text-red-600">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "capcut_black_box" ? (
+                      <span className="inline-block bg-black text-white font-black px-3.5 py-1 rounded uppercase tracking-wider text-xs shadow-xl border border-white/20 font-sans">
+                        THIS IS THE <span className="text-yellow-300">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "capcut_yellow_box" ? (
+                      <span className="inline-block bg-yellow-400 text-black font-black px-3.5 py-1 rounded uppercase tracking-wider text-xs shadow-xl font-sans">
+                        THIS IS THE <span className="text-white">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "tiktok_boxed" ? (
+                      <span className="inline-block bg-[#141414] text-white font-black px-3.5 py-1 rounded uppercase tracking-wider text-xs shadow-xl border border-white/10 font-sans">
+                        THIS IS THE <span className="text-emerald-400">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "meme" ? (
+                      <span className="text-white font-black uppercase text-sm tracking-widest drop-shadow-[0_4px_8px_rgba(0,0,0,1)] font-sans">
+                        THIS IS THE <span className="text-yellow-300">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "hormozi_bold" ? (
+                      <span className="text-white font-black uppercase text-sm tracking-wide drop-shadow-[0_3px_6px_rgba(0,0,0,1)] font-sans">
+                        THIS IS THE <span className="text-lime-400">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "nostalgic" ? (
+                      <span className="text-amber-200 font-mono font-bold text-xs tracking-widest drop-shadow-[0_2px_4px_rgba(20,10,5,0.9)]">
+                        THIS IS THE <span className="text-amber-400">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "old_history" ? (
+                      <span className="text-amber-100 font-serif italic text-xs tracking-wide drop-shadow-[0_2px_4px_rgba(10,15,25,0.9)]">
+                        THIS IS THE <span className="text-amber-300">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "cyber_neon" ? (
+                      <span className="text-cyan-300 font-black uppercase text-xs tracking-wider drop-shadow-[0_0_8px_rgba(236,72,153,0.9)] font-sans">
+                        THIS IS THE <span className="text-pink-400">SECRET</span> FORMULA
+                      </span>
+                    ) : captionStyle === "cinematic" ? (
+                      <span className="text-zinc-200 font-serif italic text-xs tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                        This is the secret formula
+                      </span>
+                    ) : captionStyle === "podcast_box" ? (
+                      <span className="inline-block bg-black/80 text-white font-semibold px-2.5 py-0.5 rounded text-xs font-sans">
+                        This is the <span className="text-amber-300">secret</span> formula
+                      </span>
+                    ) : captionStyle === "clean_white" ? (
+                      <span className="text-white font-medium text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-sans">
+                        This is the secret formula
+                      </span>
+                    ) : (
+                      <span className="text-white font-black uppercase text-xs tracking-wide drop-shadow-[0_2px_5px_rgba(0,0,0,1)] font-sans">
+                        THIS IS THE <span className="text-yellow-300">SECRET</span> FORMULA
+                      </span>
+                    )}
+                  </div>
+                </div>
+
                 {/* Subtitle Vertical Position Slider & Phone Preview */}
                 <div className="pt-3 border-t border-white/5 space-y-3">
                   <div className="flex items-center justify-between">

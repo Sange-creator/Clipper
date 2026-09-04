@@ -258,7 +258,9 @@ async def rerender_clip(
     sub_pos = req.subtitle_position if req.subtitle_position is not None else getattr(clip, "subtitle_position", 75) or 75
     add_hook = req.add_hook_header if req.add_hook_header is not None else getattr(clip, "add_hook_header", False)
     hook_pos = req.hook_header_position if req.hook_header_position is not None else (getattr(clip, "hook_header_position", None) or 12)
-    hook_txt = req.hook_header_text or getattr(clip, "hook_header_text", None) or (clip.candidate.hook_text if clip.candidate else "") or ""
+    from app.services.media.audio_analyzer import strip_emojis
+    raw_hook_txt = req.hook_header_text or getattr(clip, "hook_header_text", None) or (clip.candidate.hook_text if clip.candidate else "") or ""
+    hook_txt = strip_emojis(raw_hook_txt)
     remove_wm = req.remove_watermark if req.remove_watermark is not None else getattr(clip, "remove_watermark", False)
     wm_pos = req.watermark_position if req.watermark_position is not None else (getattr(clip, "watermark_position", None) or "top_right")
     enhance = req.enhance_quality if req.enhance_quality is not None else getattr(clip, "enhance_quality", True)

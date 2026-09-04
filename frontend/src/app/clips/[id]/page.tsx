@@ -94,12 +94,16 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     removeWatermark?: boolean,
     watermarkPosition?: string,
     enhanceQuality?: boolean,
-    hookHeaderStyle?: string
+    hookHeaderStyle?: string,
+    captionStyle?: string,
+    burnCaptions?: boolean
   ) => {
     if (!clip) return;
     const updated = await api.rerenderClip(clip.id, {
       start_time: startTime,
       end_time: endTime,
+      caption_style: captionStyle || clip.caption_style,
+      burn_captions: burnCaptions !== undefined ? burnCaptions : clip.burn_captions,
       framing_mode: framingMode,
       blur_radius: blurRadius,
       subtitle_position: subtitlePosition,
@@ -114,16 +118,16 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     setClip(updated);
   };
 
-  const handleRegenerate = async (intent: string, captionStyle?: string, note?: string) => {
+  const handleRegenerate = async (intent: string, captionStyle?: string, note?: string, hookHeaderStyle?: string) => {
     if (!clip) return;
     const updated = await api.regenerateClip(clip.id, {
       intent,
-      caption_style: captionStyle,
+      caption_style: captionStyle || clip.caption_style,
       custom_note: note,
       subtitle_position: clip.subtitle_position,
       add_hook_header: clip.add_hook_header,
       hook_header_position: clip.hook_header_position,
-      hook_header_style: clip.hook_header_style,
+      hook_header_style: hookHeaderStyle || clip.hook_header_style,
       hook_header_text: clip.hook_header_text || undefined,
     });
     setClip(updated);
@@ -263,6 +267,8 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
             initialFramingMode={clip.framing_mode}
             initialBlurRadius={clip.blur_radius}
             initialSubtitlePosition={clip.subtitle_position}
+            initialCaptionStyle={clip.caption_style}
+            initialBurnCaptions={clip.burn_captions}
             initialAddHookHeader={clip.add_hook_header}
             initialHookHeaderPosition={clip.hook_header_position}
             initialHookHeaderStyle={clip.hook_header_style}

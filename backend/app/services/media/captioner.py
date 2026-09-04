@@ -23,44 +23,27 @@ EMOJI_KEYWORDS = {
 DEFAULT_VIRAL_EMOJIS = ["🤯", "🔥", "😱", "💀", "🤫", "❌", "💯", "⚠️", "🚀", "👀"]
 
 
+from app.services.media.audio_analyzer import strip_emojis
+
+
 def format_tiktok_hook_header(hook_text: str, custom_text: Optional[str] = None) -> str:
     """
     Format text into a high-CTR, punchy TikTok creator hook header:
-    - Uppercase or punchy title phrasing
-    - Auto-wraps onto 2 balanced lines using \\N if long
-    - Ensures a captivating viral emoji is placed at the end
+    - Clean uppercase phrasing
+    - Auto-wraps onto 2 balanced lines using \\N if long (> 28 chars)
+    - Strips all Unicode emojis to guarantee no missing character tofu boxes (□) in FFmpeg libass
     """
     raw = (custom_text or hook_text or "").strip()
     if not raw:
-        return "WAIT TILL THE END 🤯"
+        return "WAIT TILL THE END"
 
+    # Strip emojis to avoid font tofu boxes (□)
+    cleaned = strip_emojis(raw).strip()
     # Remove outer quotes and redundant punctuation
-    cleaned = re.sub(r"^[\"']|[\"']$", "", raw).strip()
+    cleaned = re.sub(r"^[\"']|[\"']$", "", cleaned).strip()
     cleaned = re.sub(r"\s+", " ", cleaned)
-
-    # Check if text already ends with an emoji
-    has_emoji = bool(re.search(r"[\U00010000-\U0010ffff\u2600-\u27ff]", cleaned))
-
-    # Pick an emoji if not present
-    if not has_emoji:
-        lower = cleaned.lower()
-        chosen_emoji = "🔥"
-        if any(w in lower for w in ["shock", "crazy", "insane", "unbelievable", "mind", "wait"]):
-            chosen_emoji = "🤯"
-        elif any(w in lower for w in ["mistake", "stop", "never", "don't", "dont", "worst", "wrong", "fail"]):
-            chosen_emoji = "❌"
-        elif any(w in lower for w in ["money", "dollar", "rich", "million", "billion", "business", "profit", "crypto"]):
-            chosen_emoji = "💰"
-        elif any(w in lower for w in ["secret", "nobody", "truth", "hidden", "why", "curious", "listen"]):
-            chosen_emoji = "🤫"
-        elif any(w in lower for w in ["funny", "hilarious", "laugh", "joke", "dead", "died"]):
-            chosen_emoji = "💀"
-        elif any(w in lower for w in ["warning", "alert", "danger", "careful", "problem"]):
-            chosen_emoji = "⚠️"
-        else:
-            chosen_emoji = DEFAULT_VIRAL_EMOJIS[hash(cleaned) % len(DEFAULT_VIRAL_EMOJIS)]
-
-        cleaned = f"{cleaned} {chosen_emoji}"
+    if not cleaned:
+        cleaned = "MUST WATCH"
 
     # Auto-wrap cleanly onto 2 lines with \N if long (> 28 chars)
     if len(cleaned) > 28 and " " in cleaned:
@@ -554,9 +537,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             w_start = cumulative_time + max(0.0, w_raw_start - iv_start)
                             w_end = cumulative_time + max(0.05, min(iv_dur, w_raw_end - iv_start))
                             duration_cs = max(10, int((w_end - w_start) * 100))
-                            word_str = w.get("word", "").strip()
+                            word_str = strip_emojis(w.get("word", "")).strip()
                             if uppercase:
                                 word_str = word_str.upper()
+                            if not word_str:
+                                continue
 
                             # Check keyword emphasis
                             if self.is_keyword_emphasis(word_str):
@@ -569,7 +554,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         end_str = self.format_timestamp_ass(c_end)
                         dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text_content}")
                 else:
-                    text = seg.get("text", "").strip()
+                    text = strip_emojis(seg.get("text", "")).strip()
                     if uppercase:
                         text = text.upper()
                     if text:
@@ -610,7 +595,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                 rel_start = cumulative_time + max(0.0, seg_start - iv_start)
                 rel_end = cumulative_time + max(0.1, min(iv_dur, seg_end - iv_start))
-                text = seg.get("text", "").strip()
+                text = strip_emojis(seg.get("text", "")).strip()
 
                 if text:
                     srt_entries.append(

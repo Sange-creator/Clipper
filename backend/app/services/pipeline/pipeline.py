@@ -223,6 +223,13 @@ class VideoProcessingPipeline:
                 t_res = await session.execute(t_stmt)
                 db_transcript = t_res.scalar_one_or_none()
 
+                # Invalidate placeholder dummy transcripts so real audio is always transcribed
+                if db_transcript and ("The single biggest mistake creators make with short form content" in (db_transcript.full_text or "") or not db_transcript.full_text.strip()):
+                    logger.warning(f"Detected placeholder dummy transcript for video {video.id}. Purging to re-transcribe with real audio.")
+                    await session.delete(db_transcript)
+                    await session.commit()
+                    db_transcript = None
+
                 if not db_transcript:
                     await self.update_job_progress(session, job, 5, "Transcribing spoken dialogue with word-level timestamps")
                     transcript_res = await whisper_service.transcribe(audio_wav_path)
@@ -329,7 +336,8 @@ class VideoProcessingPipeline:
                 await self.update_job_progress(session, job, 15, f"Finalizing clip boundaries for top {len(ranked_clips)} clips")
                 candidate_records: List[ClipCandidate] = []
                 timeline_edits: List[TimelineEdit] = []
-                job_hook_strat = getattr(job, "hook_strategy", None) or "teaser_climax_hook"
+                # Default to direct_hook so the clip opens cleanly on the detected hook sentence
+                job_hook_strat = getattr(job, "hook_strategy", None) or "direct_hook"
 
                 for cand, comp_score, penalty, rank in ranked_clips:
                     # Clamp candidate boundaries to actual video duration
@@ -346,24 +354,20 @@ class VideoProcessingPipeline:
                         dead_air_sec = 0.0
 
                     final_keep = list(story_intervals)
+                    # Only apply teaser climax when explicitly requested AND with a verified climax timestamp
                     if job_hook_strat == "teaser_climax_hook":
                         dur = cand.end - cand.start
                         c_start = getattr(cand, "climax_start", None)
                         c_end = getattr(cand, "climax_end", None)
 
-                        if c_start is not None and c_end is not None and float(c_end) > float(c_start) + 1.0:
+                        if c_start is not None and c_end is not None and float(c_end) > float(c_start) + 1.5:
                             s = max(cand.start, float(c_start))
                             e = min(cand.end, max(s + 3.0, float(c_end)))
-                            if e - s > 5.0:
-                                e = s + 5.0
-                        else:
-                            mid = cand.start + dur * 0.50
-                            s = round(mid, 2)
-                            e = round(min(cand.end, s + 4.5), 2)
-
-                        if s >= cand.start + 3.0 and (e - s) >= 2.0:
-                            teaser_interval = [round(s, 2), round(e, 2)]
-                            final_keep = [teaser_interval] + story_intervals
+                            if e - s > 4.5:
+                                e = s + 4.5
+                            if s >= cand.start + 3.0 and (e - s) >= 2.0:
+                                teaser_interval = [round(s, 2), round(e, 2)]
+                                final_keep = [teaser_interval] + story_intervals
 
                     t_edit = TimelineEdit(
                         source_start=cand.start,
@@ -428,7 +432,9 @@ class VideoProcessingPipeline:
                     job_add_hook = getattr(job, "add_hook_header", False)
                     job_hook_pos = getattr(job, "hook_header_position", None) or 12
                     job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
-                    hook_title_text = cand.hook_summary or cand.reason or ""
+                    raw_hook = cand.hook_summary or cand.reason or ""
+                    from app.services.media.audio_analyzer import strip_emojis
+                    hook_title_text = strip_emojis(raw_hook)
 
                     captioner.generate_ass(
                         raw_segments,

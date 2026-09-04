@@ -19,6 +19,8 @@ interface TimelineScrubberProps {
   initialRemoveWatermark?: boolean;
   initialWatermarkPosition?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   initialEnhanceQuality?: boolean;
+  initialCaptionStyle?: string;
+  initialBurnCaptions?: boolean;
   onRerender: (
     start: number,
     end: number,
@@ -31,7 +33,9 @@ interface TimelineScrubberProps {
     removeWatermark?: boolean,
     watermarkPosition?: string,
     enhanceQuality?: boolean,
-    hookHeaderStyle?: string
+    hookHeaderStyle?: string,
+    captionStyle?: string,
+    burnCaptions?: boolean
   ) => Promise<void>;
 }
 
@@ -49,6 +53,8 @@ export function TimelineScrubber({
   initialRemoveWatermark = false,
   initialWatermarkPosition = "top_right",
   initialEnhanceQuality = true,
+  initialCaptionStyle = "tiktok_viral",
+  initialBurnCaptions = true,
   onRerender,
 }: TimelineScrubberProps) {
   const [startTime, setStartTime] = useState(initialStart);
@@ -58,6 +64,8 @@ export function TimelineScrubber({
   );
   const [blurRadius, setBlurRadius] = useState<number>(initialBlurRadius || 30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(initialSubtitlePosition || 75);
+  const [captionStyle, setCaptionStyle] = useState<string>(initialCaptionStyle || "tiktok_viral");
+  const [burnCaptions, setBurnCaptions] = useState<boolean>(initialBurnCaptions !== false);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(initialAddHookHeader || false);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(initialHookHeaderPosition || 12);
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>(initialHookHeaderStyle || "viral_creator");
@@ -106,7 +114,9 @@ export function TimelineScrubber({
         removeWatermark,
         watermarkPosition,
         enhanceQuality,
-        hookHeaderStyle
+        hookHeaderStyle,
+        captionStyle,
+        burnCaptions
       );
       setJustSaved(true);
     } finally {
@@ -230,82 +240,225 @@ export function TimelineScrubber({
         </div>
       </div>
 
-      {/* Subtitle Screen Position Slider */}
-      <div className="pt-4 border-t border-white/5 space-y-3.5">
+      {/* Subtitles & Typography Styling Workstation */}
+      <div className="pt-4 border-t border-white/5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Subtitles className="h-4 w-4 text-violet-400" />
-            <span className="text-xs font-semibold text-zinc-300">Subtitle Screen Position</span>
-          </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">
-            {subtitlePosition}% from Top ({subtitlePosition <= 25 ? "Top" : subtitlePosition <= 45 ? "Upper-Mid" : subtitlePosition <= 60 ? "Center" : subtitlePosition <= 80 ? "Lower-Third" : "Bottom"})
-          </span>
-        </div>
-
-        {/* Position Presets */}
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-          {[
-            { label: "Top", pos: 20 },
-            { label: "Upper-Mid", pos: 35 },
-            { label: "Center", pos: 50 },
-            { label: "Lower-3rd", pos: 75 },
-            { label: "Bottom", pos: 88 },
-          ].map((p) => (
-            <button
-              key={p.pos}
-              type="button"
-              onClick={() => {
-                setSubtitlePosition(p.pos);
-                setJustSaved(false);
-              }}
-              className={`rounded-lg py-1.5 px-2 text-center text-xs font-medium border transition-all ${
-                subtitlePosition === p.pos
-                  ? "bg-violet-600/30 border-violet-400 text-white shadow-sm"
-                  : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
-              }`}
-            >
-              {p.label} ({p.pos}%)
-            </button>
-          ))}
-        </div>
-
-        {/* Slider & Phone Preview */}
-        <div className="flex items-center gap-4 pt-1">
-          <div className="flex-1 space-y-1">
-            <input
-              type="range"
-              min={15}
-              max={88}
-              step={1}
-              value={subtitlePosition}
-              onChange={(e) => {
-                setSubtitlePosition(Number(e.target.value));
-                setJustSaved(false);
-              }}
-              className="w-full accent-violet-500 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
-            />
-            <div className="flex justify-between text-[9px] text-zinc-500">
-              <span>Top Banner (15%)</span>
-              <span>Center (50%)</span>
-              <span>Lower-Third (75%)</span>
-              <span>Bottom (88%)</span>
+            <div>
+              <span className="text-xs font-semibold text-zinc-300">Burn Animated Subtitles</span>
+              <p className="text-[11px] text-zinc-400">Burn high-retention synchronized karaoke subtitles into video</p>
             </div>
           </div>
-
-          {/* Mini phone screen preview */}
-          <div className="w-10 h-16 rounded-lg bg-black/70 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
-            {addHookHeader && (
-              <div
-                className="absolute left-1 right-1 h-1 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
-                style={{ top: `${hookHeaderPosition}%` }}
-              />
-            )}
-            <div
-              className="absolute left-1 right-1 h-1.5 bg-yellow-400 rounded-full shadow-sm shadow-yellow-400/50 transition-all duration-150"
-              style={{ top: `${subtitlePosition}%` }}
+          <button
+            type="button"
+            onClick={() => {
+              setBurnCaptions(!burnCaptions);
+              setJustSaved(false);
+            }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              burnCaptions ? "bg-violet-600" : "bg-zinc-800"
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                burnCaptions ? "translate-x-6" : "translate-x-1"
+              }`}
             />
-          </div>
+          </button>
         </div>
+
+        {burnCaptions && (
+          <div className="space-y-4 pl-0 sm:pl-6 border-l-0 sm:border-l-2 border-violet-500/20 animate-in fade-in duration-200">
+            {/* Subtitle Presets Grid */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-zinc-300">Subtitle Style Preset</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 capitalize">
+                  {captionStyle.replace(/_/g, " ")}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                {[
+                  { id: "tiktok_viral", name: "TikTok Viral", font: "Arial Black" },
+                  { id: "meme", name: "Meme Classic", font: "Impact" },
+                  { id: "white_background", name: "White Card Box", font: "Arial Black" },
+                  { id: "nostalgic", name: "Nostalgic", font: "Courier" },
+                  { id: "old_history", name: "Old History", font: "Georgia" },
+                  { id: "hormozi_bold", name: "Hormozi Punch", font: "Impact" },
+                  { id: "bold_yellow", name: "Bold Yellow", font: "Arial Black" },
+                  { id: "clean_white", name: "Clean White", font: "Arial" },
+                  { id: "capcut_black_box", name: "CapCut Black", font: "Arial Black" },
+                  { id: "capcut_yellow_box", name: "CapCut Yellow", font: "Impact" },
+                  { id: "tiktok_boxed", name: "TikTok Boxed", font: "Arial Black" },
+                  { id: "cyber_neon", name: "Cyber Neon", font: "Arial Black" },
+                  { id: "cinematic", name: "Cinematic", font: "Georgia" },
+                  { id: "podcast_box", name: "Podcast Box", font: "Trebuchet" },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => {
+                      setCaptionStyle(s.id);
+                      setJustSaved(false);
+                    }}
+                    className={`p-2 rounded-xl border text-left transition-all ${
+                      captionStyle === s.id
+                        ? "bg-violet-600/20 border-violet-500 text-white shadow-sm ring-1 ring-violet-500/50"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1 mb-0.5">
+                      <span className="text-xs font-semibold truncate text-white">{s.name}</span>
+                      <span className="text-[9px] font-mono text-zinc-500 shrink-0">{s.font}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Live Subtitle Style Preview Box */}
+            <div className="rounded-xl bg-black/70 border border-violet-500/30 p-3.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-zinc-400 flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+                  <span>Subtitle Appearance Preview</span>
+                </span>
+                <span className="text-[10px] text-zinc-500">Zero emoji tofu boxes</span>
+              </div>
+              <div className="relative rounded-lg bg-zinc-950 border border-white/5 h-20 flex items-center justify-center overflow-hidden px-4">
+                {captionStyle === "white_background" ? (
+                  <span className="inline-block bg-white text-black font-black px-3.5 py-1 rounded uppercase tracking-wider text-xs shadow-xl font-sans">
+                    THIS IS THE <span className="text-red-600">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "capcut_black_box" ? (
+                  <span className="inline-block bg-black text-white font-black px-3 py-1 rounded uppercase tracking-wider text-xs shadow-xl border border-white/20 font-sans">
+                    THIS IS THE <span className="text-yellow-300">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "capcut_yellow_box" ? (
+                  <span className="inline-block bg-yellow-400 text-black font-black px-3 py-1 rounded uppercase tracking-wider text-xs shadow-xl font-sans">
+                    THIS IS THE <span className="text-white">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "tiktok_boxed" ? (
+                  <span className="inline-block bg-[#141414] text-white font-black px-3 py-1 rounded uppercase tracking-wider text-xs shadow-xl border border-white/10 font-sans">
+                    THIS IS THE <span className="text-emerald-400">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "meme" ? (
+                  <span className="text-white font-black uppercase text-sm tracking-widest drop-shadow-[0_4px_8px_rgba(0,0,0,1)] font-sans">
+                    THIS IS THE <span className="text-yellow-300">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "hormozi_bold" ? (
+                  <span className="text-white font-black uppercase text-sm tracking-wide drop-shadow-[0_3px_6px_rgba(0,0,0,1)] font-sans">
+                    THIS IS THE <span className="text-lime-400">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "nostalgic" ? (
+                  <span className="text-amber-200 font-mono font-bold text-xs tracking-widest drop-shadow-[0_2px_4px_rgba(20,10,5,0.9)]">
+                    THIS IS THE <span className="text-amber-400">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "old_history" ? (
+                  <span className="text-amber-100 font-serif italic text-xs tracking-wide drop-shadow-[0_2px_4px_rgba(10,15,25,0.9)]">
+                    THIS IS THE <span className="text-amber-300">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "cyber_neon" ? (
+                  <span className="text-cyan-300 font-black uppercase text-xs tracking-wider drop-shadow-[0_0_8px_rgba(236,72,153,0.9)] font-sans">
+                    THIS IS THE <span className="text-pink-400">SECRET</span> FORMULA
+                  </span>
+                ) : captionStyle === "cinematic" ? (
+                  <span className="text-zinc-200 font-serif italic text-xs tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                    This is the secret formula
+                  </span>
+                ) : captionStyle === "podcast_box" ? (
+                  <span className="inline-block bg-black/80 text-white font-semibold px-2.5 py-0.5 rounded text-xs font-sans">
+                    This is the <span className="text-amber-300">secret</span> formula
+                  </span>
+                ) : captionStyle === "clean_white" ? (
+                  <span className="text-white font-medium text-xs drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-sans">
+                    This is the secret formula
+                  </span>
+                ) : (
+                  <span className="text-white font-black uppercase text-xs tracking-wide drop-shadow-[0_2px_5px_rgba(0,0,0,1)] font-sans">
+                    THIS IS THE <span className="text-yellow-300">SECRET</span> FORMULA
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Position Controls */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-zinc-300">Screen Position</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                  {subtitlePosition}% from Top ({subtitlePosition <= 25 ? "Top" : subtitlePosition <= 45 ? "Upper-Mid" : subtitlePosition <= 60 ? "Center" : subtitlePosition <= 80 ? "Lower-Third" : "Bottom"})
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                {[
+                  { label: "Top", pos: 20 },
+                  { label: "Upper-Mid", pos: 35 },
+                  { label: "Center", pos: 50 },
+                  { label: "Lower-3rd", pos: 75 },
+                  { label: "Bottom", pos: 88 },
+                ].map((p) => (
+                  <button
+                    key={p.pos}
+                    type="button"
+                    onClick={() => {
+                      setSubtitlePosition(p.pos);
+                      setJustSaved(false);
+                    }}
+                    className={`rounded-lg py-1.5 px-2 text-center text-xs font-medium border transition-all ${
+                      subtitlePosition === p.pos
+                        ? "bg-violet-600/30 border-violet-400 text-white shadow-sm"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    {p.label} ({p.pos}%)
+                  </button>
+                ))}
+              </div>
+
+              {/* Slider & Phone Preview */}
+              <div className="flex items-center gap-4 pt-1">
+                <div className="flex-1 space-y-1">
+                  <input
+                    type="range"
+                    min={15}
+                    max={88}
+                    step={1}
+                    value={subtitlePosition}
+                    onChange={(e) => {
+                      setSubtitlePosition(Number(e.target.value));
+                      setJustSaved(false);
+                    }}
+                    className="w-full accent-violet-500 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[9px] text-zinc-500">
+                    <span>Top (15%)</span>
+                    <span>Center (50%)</span>
+                    <span>Lower-Third (75%)</span>
+                    <span>Bottom (88%)</span>
+                  </div>
+                </div>
+
+                {/* Mini phone screen preview */}
+                <div className="w-10 h-16 rounded-lg bg-black/70 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                  {addHookHeader && (
+                    <div
+                      className="absolute left-1 right-1 h-1 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
+                      style={{ top: `${hookHeaderPosition}%` }}
+                    />
+                  )}
+                  <div
+                    className="absolute left-1 right-1 h-1.5 bg-yellow-400 rounded-full shadow-sm shadow-yellow-400/50 transition-all duration-150"
+                    style={{ top: `${subtitlePosition}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Sticky TikTok Hook Header Controls */}
