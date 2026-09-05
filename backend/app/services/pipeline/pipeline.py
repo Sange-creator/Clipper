@@ -231,8 +231,12 @@ class VideoProcessingPipeline:
             mode = config.get("mode", getattr(job, "mode", "podcast"))
             duration_preset = config.get("duration_preset", "30-45s")
             ai_provider_name = config.get("ai_provider")
-            caption_style = config.get("caption_style", "bold_yellow")
+            caption_style = config.get("caption_style", "tiktok_viral")
             burn_captions = config.get("burn_captions", getattr(job, "burn_captions", True))
+            if caption_style and caption_style != "none":
+                burn_captions = True
+            elif burn_captions and (not caption_style or caption_style == "none"):
+                caption_style = "tiktok_viral"
             remove_dead_air = config.get("remove_dead_air", getattr(job, "remove_dead_air", True))
             reframing_mode = config.get("reframing_mode", "center_crop")
             custom_instructions = config.get("custom_instructions")
@@ -710,8 +714,12 @@ class VideoProcessingPipeline:
         requested_clips = config.get("target_clips_count", 20)
         mode = config.get("mode", getattr(job, "mode", "podcast"))
         duration_preset = config.get("duration_preset", "30-45s")
-        caption_style = config.get("caption_style", "bold_yellow")
+        caption_style = config.get("caption_style", "tiktok_viral")
         burn_captions = config.get("burn_captions", getattr(job, "burn_captions", True))
+        if caption_style and caption_style != "none":
+            burn_captions = True
+        elif burn_captions and (not caption_style or caption_style == "none"):
+            caption_style = "tiktok_viral"
         remove_dead_air = config.get("remove_dead_air", getattr(job, "remove_dead_air", True))
         source_diversity_weight = config.get("source_diversity_weight", 0.35)
         ai_provider = get_ai_provider(config.get("ai_provider"))

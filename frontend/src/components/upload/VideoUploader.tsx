@@ -167,13 +167,16 @@ export function VideoUploader() {
     setError(null);
 
     try {
+      const willBurn = burnCaptions && captionStyle !== "none";
+      const resolvedCaptionStyle = willBurn ? (captionStyle || "tiktok_viral") : "none";
+
       const job = await api.createJob({
         video_id: uploadedVideo.id,
         mode: mode,
         target_clips_count: targetClipsCount,
         duration_preset: durationPreset,
-        caption_style: burnCaptions ? captionStyle : "none",
-        burn_captions: burnCaptions,
+        caption_style: resolvedCaptionStyle,
+        burn_captions: willBurn,
         add_hook_header: addHookHeader,
         hook_header_position: hookHeaderPosition,
         hook_header_style: hookHeaderStyle,
@@ -708,19 +711,29 @@ export function VideoUploader() {
                   <p className="text-[11px] text-zinc-400">Burn readable karaoke captions into video</p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setBurnCaptions(!burnCaptions)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  burnCaptions ? "bg-violet-600" : "bg-zinc-800"
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    burnCaptions ? "translate-x-6" : "translate-x-1"
+              <div className="flex items-center gap-2">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                  burnCaptions
+                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                    : "bg-zinc-800 text-zinc-400 border border-zinc-700"
+                }`}>
+                  {burnCaptions ? "Enabled" : "Off"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setBurnCaptions(!burnCaptions)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+                    burnCaptions ? "bg-violet-600" : "bg-zinc-800"
                   }`}
-                />
-              </button>
+                  aria-label="Toggle animated subtitles"
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      burnCaptions ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
 
             {burnCaptions ? (
@@ -748,7 +761,10 @@ export function VideoUploader() {
                     <button
                       key={style.id}
                       type="button"
-                      onClick={() => setCaptionStyle(style.id as any)}
+                      onClick={() => {
+                        setCaptionStyle(style.id as any);
+                        setBurnCaptions(true);
+                      }}
                       className={`rounded-lg p-2.5 text-left border transition-all ${
                         captionStyle === style.id
                           ? "bg-violet-600/15 border-violet-500 text-white shadow-sm ring-1 ring-violet-500/60"

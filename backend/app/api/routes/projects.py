@@ -373,6 +373,11 @@ async def process_project(
     v_res = await db.execute(v_stmt)
     videos = v_res.scalars().all()
 
+    if req.caption_style and req.caption_style != "none":
+        req.burn_captions = True
+    elif req.burn_captions and (not req.caption_style or req.caption_style == "none"):
+        req.caption_style = "tiktok_viral"
+
     mode = req.mode or proj.mode or "podcast"
     job = Job(
         project_id=id,

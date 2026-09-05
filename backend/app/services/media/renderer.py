@@ -422,13 +422,18 @@ class VideoRenderer:
             fallback_s = min(s for s, e in valid_intervals)
             fallback_e = max(e for s, e in valid_intervals)
             fallback_dur = max(1.0, fallback_e - fallback_s)
+            fallback_vf = f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}"
+            if final_ass_path and final_ass_path.exists():
+                escaped_ass = str(final_ass_path).replace("\\", "/").replace(":", "\\:")
+                fallback_vf += f",subtitles='{escaped_ass}'"
+
             fallback_cmd = [
                 self.ffmpeg_path,
                 "-y",
                 "-ss", f"{fallback_s:.3f}",
                 "-i", str(src),
                 "-t", f"{fallback_dur:.3f}",
-                "-vf", f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}",
+                "-vf", fallback_vf,
                 "-c:v", "libx264",
                 "-preset", "veryfast",
                 "-crf", "18",

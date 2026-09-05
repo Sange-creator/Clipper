@@ -38,6 +38,11 @@ async def create_clipping_job(
     if not video:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found.")
 
+    if req.caption_style and req.caption_style != "none":
+        req.burn_captions = True
+    elif req.burn_captions and (not req.caption_style or req.caption_style == "none"):
+        req.caption_style = "tiktok_viral"
+
     config_dict = req.model_dump()
     db_job = Job(
         video_id=req.video_id,

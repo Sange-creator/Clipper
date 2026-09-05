@@ -289,3 +289,37 @@
   - `README.md`
   - `SESSION_TRACKER.md`
 
+### Session 9: Subtitle Burn-In Fix & Single Vercel Production Cleanup
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"What the heck, man, I have chosen the subtitle; however, the subtitle is not being shown to the clipped video, or I think there is a problem. And also, please, if there are multiple Vercel deployments, delete all of them and keep only one primary Vercel."*
+  > *"kee this https://ai-clipper-pro.vercel.app/ only primary frontend deployment"*
+
+- **Root Cause Analysis**:
+  1. **Frontend Toggle Desynchronization**: In `VideoUploader.tsx`, the toggle button had no clear visual state label. Clicking the toggle flipped `burnCaptions` to `false`. Furthermore, clicking any of the 16 subtitle style cards failed to set `burnCaptions = true`. When submitting the job, `VideoUploader` evaluated `caption_style: burnCaptions ? captionStyle : "none"`, sending `"none"` and `burn_captions: false` to the backend.
+  2. **Pipeline Fallback Omission**: In `renderer.py`, the fallback simple-crop render branch omitted the `subtitles='...'` filter if the primary multi-filter hit any seeking issues.
+  3. **Vercel Deployments Sprawl**: Multiple stale/failed deployments from earlier sessions and test runs accumulated on Vercel.
+
+- **Changes & Deliverables**:
+  1. **Subtitle Burning Guarantee (Frontend & Backend)**:
+     - In `VideoUploader.tsx`, added a clear status badge (`Enabled` / `Off`) to the subtitle card.
+     - Ensured clicking ANY caption style card automatically turns on `setBurnCaptions(true)`.
+     - Added fallback safety in `handleStartProcessing`: if a valid caption style is chosen, `burn_captions` is enforced as `true` and `caption_style` is preserved.
+     - Updated `pipeline.py`, `jobs.py`, and `projects.py` to ensure that whenever `caption_style != "none"`, `burn_captions` is unconditionally enforced as `True`.
+     - Added `subtitles='{escaped_ass}'` to the fallback crop render in `renderer.py` so subtitles can never be dropped under any circumstance.
+     - Re-rendered the existing clips with burned-in animated subtitles.
+  2. **Vercel Deployments Cleanup**:
+     - Purged all 30+ obsolete and errored Vercel deployments.
+     - Built and deployed the updated frontend as the single, active production deployment.
+     - Pointed the primary domain `https://ai-clipper-pro.vercel.app/` directly to this single deployment. Verified HTTP 200 response.
+  3. **Verification**:
+     - Ran the full test suite (`pytest -v`), all 41 unit & integration tests passed.
+
+- **Files Modified**:
+  - `frontend/src/components/upload/VideoUploader.tsx`
+  - `frontend/src/app/projects/[id]/page.tsx`
+  - `backend/app/api/routes/jobs.py`
+  - `backend/app/api/routes/projects.py`
+  - `backend/app/services/pipeline/pipeline.py`
+  - `backend/app/services/media/renderer.py`
+  - `SESSION_TRACKER.md`
