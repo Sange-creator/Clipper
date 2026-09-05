@@ -98,10 +98,14 @@ Return JSON with:
             raise AIProviderError("Gemini API key is not configured.")
 
         pool_size = max(requested_count * 5, 50)
+        v_title = media_info.get("video_title") or media_info.get("filename") or "Video Highlights"
+        v_genre = media_info.get("genre") or mode or "viral_moments"
         system_instruction = get_discovery_prompt(
             mode=mode,
             duration_target=duration_target,
             pool_size=pool_size,
+            video_title=v_title,
+            genre=v_genre,
         )
 
         formatted_transcript = []
@@ -196,11 +200,17 @@ Return a JSON array of candidates:
         if not self.client:
             raise AIProviderError("Gemini API key is not configured.")
 
+        part_idx = clip_context.get("part_index")
+        total_p = clip_context.get("total_parts")
+        series_line = f"\nSeries Info: Part {part_idx} of {total_p}" if part_idx and total_p else ""
+        source_title = clip_context.get("video_title", "")
+        title_line = f"\nSource Video Title: {source_title}" if source_title else ""
+
         prompt = f"""Generate platform metadata for this clip transcript:
 \"\"\"{clip_transcript}\"\"\"
 
 Hook Summary: {clip_context.get('hook_summary', '')}
-Payoff Summary: {clip_context.get('payoff_summary', '')}
+Payoff Summary: {clip_context.get('payoff_summary', '')}{title_line}{series_line}
 """
         try:
             response = await self.client.aio.models.generate_content(
@@ -214,21 +224,41 @@ Payoff Summary: {clip_context.get('payoff_summary', '')}
             )
             raw = clean_json_text(response.text or "{}")
             data = json.loads(raw)
+
+            # Ensure single_para_copy exists
+            if not data.get("single_para_copy"):
+                tt_t = data.get("tiktok_title", "Viral Clip")
+                tt_c = data.get("tiktok_caption", "")
+                tags_str = " ".join(data.get("tiktok_hashtags", ["#fyp", "#viral", "#shorts"]))
+                data["single_para_copy"] = f"{tt_t} — {tt_c} {tags_str}".strip()
+
+            data["part_index"] = part_idx
+            data["total_parts"] = total_p
             return PlatformClipMetadata(**data)
         except Exception as e:
             logger.error(f"Gemini metadata generation failed: {e}")
             hook_lead = clip_context.get("hook_summary", "").strip() or " ".join(clip_transcript.split()[:7])
             title = hook_lead if len(hook_lead) > 8 else "Wait until you see how this ends..."
             title = title.rstrip(".!?")
+            if part_idx and total_p:
+                title = f"PART {part_idx}/{total_p}: {title}"
+            tags = ["#fyp", "#viral", "#foryou", "#truth", "#trending"]
+            caption = f"{title}. Nobody talks about this part. Thoughts? 👇"
+            if part_idx and total_p and part_idx < total_p:
+                caption += f" Follow for Part {part_idx + 1}!"
+            single_para = f"{title} — {caption} {' '.join(tags)}"
             return PlatformClipMetadata(
-                tiktok_title=f"{title[:50]} 👀",
-                tiktok_caption=f"{title}. Nobody talks about this part. Thoughts? 👇",
-                tiktok_hashtags=["#fyp", "#viral", "#foryou", "#truth", "#trending"],
-                reels_caption=f"{title}\n\nThe part everyone completely missed.\n\n📌 Save this for later | 📲 Share with someone who needs this",
+                tiktok_title=f"{title[:50]}",
+                tiktok_caption=caption,
+                tiktok_hashtags=tags,
+                reels_caption=f"{title}\n\nThe part everyone completely missed.\n\n📌 Save this for later | 📲 Share with someone who needs this\n\n{' '.join(tags)}",
                 reels_hashtags=["#reels", "#explorepage", "#viralreels", "#mindset", "#shorts"],
                 shorts_title=f"{title[:45]} #shorts",
-                shorts_description=f"{clip_transcript[:200]}...\n\nSubscribe for daily clips!",
+                shorts_description=f"{clip_transcript[:200]}...\n\nSubscribe for daily clips!\n\n{' '.join(tags)}",
                 shorts_hashtags=["#shorts", "#viral", "#trending"],
+                single_para_copy=single_para,
+                part_index=part_idx,
+                total_parts=total_p,
             )
 
 

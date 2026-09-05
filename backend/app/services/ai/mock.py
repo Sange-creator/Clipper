@@ -146,10 +146,16 @@ class MockAIProvider(AIProvider):
     ) -> PlatformClipMetadata:
         hook = clip_context.get("hook_summary", "")
         payoff = clip_context.get("payoff_summary", "")
+        part_idx = clip_context.get("part_index")
+        total_p = clip_context.get("total_parts")
+        v_title = clip_context.get("video_title")
         return audio_hook_analyzer.generate_clip_metadata(
             clip_transcript=clip_transcript,
             hook_summary=hook,
             payoff_summary=payoff,
+            part_index=part_idx,
+            total_parts=total_p,
+            video_title=v_title,
         )
 
     async def analyze_visual_context(self, frame_paths: List[str]) -> Dict[str, Any]:

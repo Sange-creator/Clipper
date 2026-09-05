@@ -1,7 +1,7 @@
 """
 Audio Hook & Linguistic Momentum Analyzer.
 Extracts high-retention opening hooks, narrative arcs, and contextual platform metadata
-directly from spoken audio dialogue transcripts.
+directly from spoken audio dialogue transcripts with multi-genre and 10s intense hook evaluation.
 """
 
 import re
@@ -10,8 +10,6 @@ from typing import Any, Dict, List, Optional, Tuple
 from app.services.ai.base import PlatformClipMetadata, RawCandidateMoment
 
 # Emoji and Non-Standard Symbol Stripper for Subtitles & ASS Burn-in
-# Standard fonts (Arial Black, Impact, Georgia, etc.) in FFmpeg/libass lack emoji glyphs
-# and render missing character tofu boxes (□). This regex removes all such symbols.
 EMOJI_PATTERN = re.compile(
     "["
     "\U00010000-\U0010ffff"  # Supplemental Multilingual Plane (all emojis, symbols)
@@ -42,6 +40,45 @@ HIGH_RETENTION_KEYWORDS = [
     "realized", "discovered", "unexpected", "mind-blowing", "listen"
 ]
 
+# Action, POV Pursuits, Bodycam & Chaos Hooks
+CHAOS_ACTION_KEYWORDS = [
+    "stop", "get down", "hands up", "run", "chase", "officer", "suspect",
+    "watch out", "look out", "drop it", "faster", "bike", "crash", "danger",
+    "caught", "busted", "behind you", "move move", "freeze", "don't move",
+    "gun", "weapon", "call 911", "emergency", "backup", "he's running",
+    "got him", "pulled over", "pursuit", "speeding", "takedown"
+]
+
+# Arguments, Heated Clashes & Screaming
+ARGUMENT_CLASH_KEYWORDS = [
+    "shut up", "don't touch", "get out", "you're lying", "screaming",
+    "freaking out", "fight", "brawl", "call the cops", "what are you doing",
+    "holy shit", "oh my god", "no way", "you idiot", "back off", "get lost",
+    "are you kidding", "don't talk to me", "excuse me", "out of control"
+]
+
+# Military, History & Tactical Secrets
+MILITARY_HISTORY_KEYWORDS = [
+    "war", "attack", "invasion", "secret mission", "bomber", "strike",
+    "classified", "declassified", "weapon", "ambush", "surrender", "casualty",
+    "conspiracy", "unknown fact", "battle", "artillery", "soldier", "troops",
+    "navy", "air force", "army", "operation", "historical", "wwii", "vietnam"
+]
+
+# Nostalgia & Retro Memories
+NOSTALGIA_KEYWORDS = [
+    "remember when", "back in the day", "discontinued", "forgotten",
+    "grew up with", "childhood", "90s", "2000s", "retro", "nobody uses this",
+    "nostalgic", "throwback", "old school", "used to have", "can't believe we"
+]
+
+# Penalties for slow, boring, calm introductions in the first 10 seconds
+CALM_INTRO_PENALTIES = [
+    "welcome back", "hey guys", "hey everyone", "in this video", "today we are",
+    "today i am", "so basically", "thanks for watching", "make sure to subscribe",
+    "in today's episode", "as we all know", "hello everyone", "good morning"
+]
+
 PAYOFF_MARKERS = [
     "that is why", "that's why", "so that's", "the reason is", "which means",
     "in conclusion", "the result", "the takeaway", "the lesson", "remember",
@@ -67,9 +104,7 @@ def strip_emojis(text: str) -> str:
     """
     if not text:
         return ""
-    # Strip emojis matching the SMP range and symbols
     no_emoji = EMOJI_PATTERN.sub("", text)
-    # Strip extra whitespace created by removing emojis
     clean = re.sub(r"\s+", " ", no_emoji).strip()
     return clean
 
@@ -90,9 +125,7 @@ def extract_topic_keywords(transcript: str, top_n: int = 5) -> List[str]:
 def clean_hook_title(text: str, max_words: int = 9) -> str:
     """Format a spoken sentence into a punchy, clean title without punctuation noise or emojis."""
     clean = strip_emojis(text).strip()
-    # Remove surrounding quotes
     clean = re.sub(r"^[\"']|[\"']$", "", clean).strip()
-    # Remove trailing periods, commas, or semicolons
     clean = clean.rstrip(".,;:- ")
     words = clean.split()
     if len(words) > max_words:
@@ -100,55 +133,100 @@ def clean_hook_title(text: str, max_words: int = 9) -> str:
     return clean
 
 
+def build_single_para_post(
+    title: str,
+    caption: str,
+    hashtags: List[str],
+    part_index: Optional[int] = None,
+    total_parts: Optional[int] = None,
+) -> str:
+    """Format a ready-to-paste single paragraph combining title, description, and hashtags."""
+    t = title.strip()
+    c = caption.strip().replace("\n", " ")
+    c = re.sub(r"\s+", " ", c)
+    tags_str = " ".join(hashtags)
+    part_prefix = f"Part {part_index}/{total_parts}: " if (part_index and total_parts and total_parts > 1) else ""
+    if t in c:
+        return f"{part_prefix}{c} {tags_str}".strip()
+    return f"{part_prefix}{t} — {c} {tags_str}".strip()
+
+
 class AudioHookAnalyzer:
     """
     Analyzes spoken audio transcript timestamps and linguistic patterns
-    to discover high-velocity hooks, optimal narrative boundaries, and contextual metadata.
+    to discover high-velocity hooks (chaos, fights, arguments, police POV, history, nostalgia),
+    optimal narrative boundaries, and contextual metadata.
     """
 
-    def score_opening_hook(self, text: str, word_count: int) -> Tuple[float, str]:
+    def score_opening_hook(self, text: str, word_count: int, genre: Optional[str] = None) -> Tuple[float, str]:
         """
         Evaluate the hook strength of the opening 10-15 seconds.
-        Prefers direct questions, contrarian claims, surprising revelations, and high linguistic velocity.
+        Prefers chaos, fights, arguments, high-stakes pursuits, direct questions, and contrarian claims.
+        Penalizes calm, slow setups or pleasantries.
         """
         lower = text.lower().strip()
-        score = 70.0
+        score = 72.0
         reasons = []
 
-        # 1. Direct Question Hooks (Highest curiosity & immediate engagement)
-        if "?" in text or any(lower.startswith(q + " ") for q in HOOK_QUESTION_STARTERS):
-            score += 20.0
-            reasons.append("Direct question creates immediate curiosity")
+        # 1. Action, POV Pursuits, Police Cam & Chaos (Highest Adrenaline Boost)
+        action_hits = [w for w in CHAOS_ACTION_KEYWORDS if w in lower]
+        if action_hits:
+            score += min(24.0, 14.0 + len(action_hits) * 3.5)
+            reasons.append(f"High-adrenaline action/pursuit ('{action_hits[0]}')")
 
-        # 2. Contrarian / Myth-Busting Hooks (Stops scrolling immediately)
+        # 2. Arguments, Heated Clashes & Screaming
+        argument_hits = [w for w in ARGUMENT_CLASH_KEYWORDS if w in lower]
+        if argument_hits:
+            score += min(22.0, 14.0 + len(argument_hits) * 3.0)
+            reasons.append(f"Intense argument/clash ('{argument_hits[0]}')")
+
+        # 3. Direct Question Hooks (High curiosity & immediate engagement)
+        if "?" in text or any(lower.startswith(q + " ") for q in HOOK_QUESTION_STARTERS):
+            score += 16.0
+            reasons.append("Direct question creates curiosity")
+
+        # 4. Contrarian / Myth-Busting Hooks (Pattern Interrupt)
         contrarian_hits = [w for w in CONTRARIAN_KEYWORDS if w in lower]
         if contrarian_hits:
-            score += min(22.0, 12.0 + len(contrarian_hits) * 4.0)
+            score += min(18.0, 10.0 + len(contrarian_hits) * 3.0)
             reasons.append(f"Contrarian trigger ('{contrarian_hits[0]}')")
 
-        # 3. High-Intensity Emotional Triggers
+        # 5. Military / History Secrets & Nostalgia Triggers
+        history_hits = [w for w in MILITARY_HISTORY_KEYWORDS if w in lower]
+        if history_hits:
+            score += min(16.0, 8.0 + len(history_hits) * 2.5)
+            reasons.append(f"Historical stakes ('{history_hits[0]}')")
+
+        nostalgia_hits = [w for w in NOSTALGIA_KEYWORDS if w in lower]
+        if nostalgia_hits:
+            score += min(16.0, 10.0 + len(nostalgia_hits) * 3.0)
+            reasons.append("Nostalgia recognition hook")
+
+        # 6. High-Intensity Emotional Triggers
         retention_hits = [w for w in HIGH_RETENTION_KEYWORDS if w in lower]
         if retention_hits:
-            score += min(18.0, 10.0 + len(retention_hits) * 3.5)
+            score += min(14.0, 8.0 + len(retention_hits) * 2.5)
             reasons.append(f"High-impact emphasis ('{retention_hits[0]}')")
 
-        # 4. Numbers and Quantitative Proof
-        if re.search(r"\b\d+[%kKmMbB]?\b", lower) or "$" in text:
-            score += 8.0
-            reasons.append("Concrete quantitative detail")
+        # 7. Strict penalty for calm introductory fluff in first 10s
+        for calm_phrase in CALM_INTRO_PENALTIES:
+            if calm_phrase in lower:
+                score -= 22.0
+                reasons.append(f"Slow/calm intro penalty ('{calm_phrase}')")
+                break
 
-        # 5. Length penalty: Weak, slow setup (> 20 words before first punctuation)
+        # 8. Phrasing velocity
         first_clause = re.split(r"[.?!,]", text)[0].strip()
         first_words = first_clause.split()
         if len(first_words) > 18:
-            score -= 8.0
-            reasons.append("Opening sentence is too long/meandering")
-        elif 4 <= len(first_words) <= 12:
-            score += 6.0
-            reasons.append("Punchy, concise opening phrasing")
+            score -= 6.0
+            reasons.append("Meandering setup")
+        elif 3 <= len(first_words) <= 10:
+            score += 5.0
+            reasons.append("Punchy opening")
 
-        final_score = max(55.0, min(98.0, score))
-        summary = "; ".join(reasons) if reasons else "Engaging conversational opening"
+        final_score = max(40.0, min(99.0, score))
+        summary = "; ".join(reasons) if reasons else "Conversational opening"
         return round(final_score, 1), summary
 
     def score_payoff_resolution(self, text: str) -> Tuple[float, str]:
@@ -159,13 +237,13 @@ class AudioHookAnalyzer:
 
         if any(pm in lower for pm in PAYOFF_MARKERS):
             score += 20.0
-            reasons.append("Explicit takeaway or conclusion statement")
+            reasons.append("Explicit takeaway statement")
 
         if text.endswith((".", "!", "?")):
             score += 5.0
-            reasons.append("Natural sentence completion boundary")
+            reasons.append("Natural completion boundary")
 
-        final_score = max(60.0, min(96.0, score))
+        final_score = max(55.0, min(96.0, score))
         summary = "; ".join(reasons) if reasons else "Natural conclusion"
         return round(final_score, 1), summary
 
@@ -175,16 +253,16 @@ class AudioHookAnalyzer:
         media_info: Dict[str, Any],
         requested_count: int,
         duration_target: str = "30-45s",
-        mode: str = "podcast",
+        mode: str = "viral_moments",
+        genre: Optional[str] = None,
     ) -> List[RawCandidateMoment]:
         """
         Discovers candidate moments anchored to high-retention spoken dialogue hooks.
-        Ensures the first 10-15 seconds captivate the viewer and starts right on the hook.
+        Ensures the first 10 seconds captivate the viewer and starts right on the hook.
         """
         if not transcript_segments:
             return []
 
-        # Parse target duration
         target_min = 25.0
         target_max = 50.0
         if "15-30" in duration_target:
@@ -203,7 +281,8 @@ class AudioHookAnalyzer:
         num_segs = len(transcript_segments)
         candidates: List[RawCandidateMoment] = []
 
-        # Step through every transcript segment as a potential hook opening
+        active_genre = genre or media_info.get("genre") or mode
+
         for i in range(num_segs):
             start_seg = transcript_segments[i]
             start_time = float(start_seg.get("start", 0.0))
@@ -214,16 +293,14 @@ class AudioHookAnalyzer:
             if not start_text or len(start_text.split()) < 2:
                 continue
 
-            # Snap start_time cleanly to the first spoken word if word timestamps exist
             words = start_seg.get("words", [])
             if words and len(words) > 0:
                 first_w_start = words[0].get("start")
                 if first_w_start is not None:
                     start_time = float(first_w_start)
 
-            hook_score, hook_reason = self.score_opening_hook(start_text, len(start_text.split()))
+            hook_score, hook_reason = self.score_opening_hook(start_text, len(start_text.split()), genre=active_genre)
 
-            # Slide forward to accumulate narrative context up to target duration
             accumulated_text = []
             best_end_seg = None
             best_end_time = start_time + target_min
@@ -236,7 +313,6 @@ class AudioHookAnalyzer:
                 cur_dur = seg_end - start_time
 
                 if cur_dur >= target_min and seg_end <= total_dur:
-                    # Check if this segment represents a good boundary (sentence terminal)
                     is_terminal = seg_text.endswith((".", "!", "?"))
                     payoff_score, payoff_reason = self.score_payoff_resolution(seg_text)
 
@@ -257,7 +333,6 @@ class AudioHookAnalyzer:
             end_text = best_end_seg.get("text", "").strip()
             payoff_score, payoff_reason = self.score_payoff_resolution(end_text)
 
-            # Snap end_time cleanly to the last spoken word
             end_words = best_end_seg.get("words", [])
             if end_words and len(end_words) > 0:
                 last_w_end = end_words[-1].get("end")
@@ -270,9 +345,8 @@ class AudioHookAnalyzer:
 
             combined_text = " ".join(accumulated_text)
             total_words = len(combined_text.split())
-            word_velocity = total_words / max(1.0, clip_dur)  # words per second
+            word_velocity = total_words / max(1.0, clip_dur)
 
-            # Linguistic retention score
             retention_score = min(98.0, 70.0 + (hook_score - 70.0) * 0.4 + (payoff_score - 70.0) * 0.3 + min(15.0, word_velocity * 4.0))
             curiosity_score = min(98.0, hook_score * 0.95 + 4.0)
             story_score = min(96.0, 75.0 + min(15.0, (total_words / 15.0) * 2.5))
@@ -281,7 +355,6 @@ class AudioHookAnalyzer:
             novelty_score = min(94.0, 72.0 + (i % 12))
             quotability_score = min(96.0, 75.0 + (payoff_score * 0.2))
 
-            # Climax anchor (peak narrative moment inside clip)
             c_s = round(start_time + clip_dur * 0.55, 2)
             c_e = round(min(best_end_time, c_s + 4.0), 2)
 
@@ -309,20 +382,18 @@ class AudioHookAnalyzer:
                     visual_score=84.0,
                     audio_score=88.0,
                     platform_score=89.0,
-                    reason=f"[{mode}] Opening hook: \"{start_text[:50]}...\" ({hook_reason}). Clean payoff: \"{end_text[:40]}...\".",
+                    reason=f"[{active_genre}] 10s Hook: \"{start_text[:50]}...\" ({hook_reason}). Payoff: \"{end_text[:40]}...\".",
                     hook_summary=hook_title,
                     payoff_summary=payoff_clean,
                 )
             )
 
-        # Sort candidates by retention momentum
         candidates.sort(
-            key=lambda c: c.hook_score * 0.40 + c.retention_score * 0.35 + c.payoff_score * 0.25,
+            key=lambda c: c.hook_score * 0.45 + c.retention_score * 0.35 + c.payoff_score * 0.20,
             reverse=True,
         )
 
-        # Limit to top requested candidates
-        needed_pool = max(requested_count * 4, 25)
+        needed_pool = max(requested_count * 5, 30)
         return candidates[:needed_pool]
 
     def generate_clip_metadata(
@@ -330,49 +401,56 @@ class AudioHookAnalyzer:
         clip_transcript: str,
         hook_summary: str,
         payoff_summary: str,
+        part_index: Optional[int] = None,
+        total_parts: Optional[int] = None,
+        video_title: Optional[str] = None,
     ) -> PlatformClipMetadata:
         """
         Generates realistic, meaningful social metadata directly summarizing the spoken dialogue.
-        Derives accurate titles, captions, and platform hashtags from the spoken words.
+        Supports multi-part series tagging (e.g. 'PART 1/5') and single-paragraph copy export.
         """
         clean_text = strip_emojis(clip_transcript).strip()
-        first_clause = re.split(r"[.?!]", clean_text)[0].strip() if clean_text else "Insightful Clip"
-        
-        # Determine title from the genuine hook summary or first sentence
-        title = hook_summary.strip() or first_clause
-        title = clean_hook_title(title, max_words=9)
-        if len(title) < 8:
-            title = "Key Takeaway from This Discussion"
+        first_clause = re.split(r"[.?!]", clean_text)[0].strip() if clean_text else "High-Impact Short Clip"
 
-        # Topic keywords for hashtags
+        base_title = hook_summary.strip() or first_clause
+        base_title = clean_hook_title(base_title, max_words=9)
+        if len(base_title) < 8:
+            base_title = clean_hook_title(video_title or "Unbelievable Moment", max_words=8)
+
+        if part_index and total_parts:
+            title = f"PART {part_index}/{total_parts}: {base_title}"
+        else:
+            title = base_title
+
         keywords = extract_topic_keywords(clean_text, top_n=4)
         hashtags = [f"#{kw}" for kw in keywords]
         base_tags = ["#fyp", "#viral", "#shorts", "#mustwatch", "#trending"]
+        if part_index:
+            base_tags.insert(0, f"#part{part_index}")
         combined_tags = (hashtags + [t for t in base_tags if t not in hashtags])[:5]
 
-        # TikTok: Hook title, brief summary of dialogue, engaging open question
+        # TikTok
         tt_title = title[:75]
-        tt_caption = (
-            f"{title}. {first_clause[:100]}...\n\n"
-            f"What's your take on this? Let me know below! 👇\n\n"
-            f"{' '.join(combined_tags)}"
-        )
+        part_cta = f" Follow for Part {part_index + 1}! 🎬" if part_index and total_parts and part_index < total_parts else ""
+        tt_caption = f"{title}. {first_clause[:100]}...{part_cta}\n\n{' '.join(combined_tags)}"
 
-        # Reels: Aesthetic, clean takeaway, save CTA
+        # Reels
         reels_caption = (
             f"{title}\n\n"
             f"\"{clean_text[:140]}...\"\n\n"
-            f"📌 Save this for later | 📲 Share with someone who needs this\n\n"
+            f"📌 Save this for later | 📲 Share with someone who needs this{part_cta}\n\n"
             f"{' '.join(combined_tags)}"
         )
 
-        # Shorts: Punchy title with #shorts, detailed description
+        # Shorts
         shorts_title = f"{title[:45]} #shorts"
         shorts_desc = (
-            f"{clean_text[:220]}...\n\n"
-            f"Subscribe for more high-impact daily insights!\n\n"
+            f"{clean_text[:200]}...{part_cta}\n\n"
+            f"Subscribe for more daily clips!\n\n"
             f"{' '.join(combined_tags)}"
         )
+
+        single_para = build_single_para_post(title, tt_caption, combined_tags)
 
         return PlatformClipMetadata(
             tiktok_title=tt_title,
@@ -383,7 +461,12 @@ class AudioHookAnalyzer:
             shorts_title=shorts_title,
             shorts_description=shorts_desc,
             shorts_hashtags=combined_tags,
+            single_para_copy=single_para,
+            part_index=part_index,
+            total_parts=total_parts,
         )
 
 
 audio_hook_analyzer = AudioHookAnalyzer()
+AudioScriptAnalyzer = AudioHookAnalyzer
+

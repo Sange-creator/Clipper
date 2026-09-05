@@ -31,11 +31,16 @@ import {
   MessageSquare,
   Clock,
   BookOpen,
+  Copy,
+  Check,
+  Share2,
+  ShieldAlert,
+  Radio,
 } from "lucide-react";
 
 
 import { api } from "@/lib/api";
-import { CaptionStyleType, ProjectDetailResponse, VideoInfo } from "@/lib/types";
+import { CaptionStyleType, ProjectDetailResponse, VideoGenre, VideoInfo } from "@/lib/types";
 import { BatchUploader } from "@/components/upload/BatchUploader";
 import { CaptionPresetPicker } from "@/components/review/CaptionPresetPicker";
 import { ClipCard } from "@/components/review/ClipCard";
@@ -52,6 +57,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
   // V3 Discovery & Batch Processing Settings
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
+  const [genre, setGenre] = useState<VideoGenre>("auto");
+  const [enableSeriesParts, setEnableSeriesParts] = useState<boolean>(true);
+  const [aiProvider, setAiProvider] = useState<"hybrid" | "gemini" | "groq">("hybrid");
   const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
@@ -65,13 +73,14 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
   const [targetClips, setTargetClips] = useState(20);
   const [durationPreset, setDurationPreset] = useState("30-45s");
-  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_viral");
+  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_rounded_box");
   const [diversityWeight, setDiversityWeight] = useState(0.35);
   const [isStartingJob, setIsStartingJob] = useState(false);
 
   // Deletion & Bulk actions state
   const [selectedClips, setSelectedClips] = useState<string[]>([]);
-  const [bulkStyle, setBulkStyle] = useState<CaptionStyleType>("tiktok_viral");
+  const [copiedAllSinglePara, setCopiedAllSinglePara] = useState<boolean>(false);
+  const [bulkStyle, setBulkStyle] = useState<CaptionStyleType>("tiktok_rounded_box");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isExportingBatch, setIsExportingBatch] = useState(false);
   const [isDeletingProject, setIsDeletingProject] = useState(false);
@@ -113,6 +122,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     try {
       const res = await api.processProject(projectId, {
         mode: mode,
+        genre: genre,
+        enable_series_parts: enableSeriesParts,
+        ai_provider: aiProvider,
         target_clips_count: targetClips,
         duration_preset: durationPreset as any,
         caption_style: burnCaptions ? captionStyle : "none",
@@ -136,6 +148,85 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     } finally {
       setIsStartingJob(false);
     }
+  };
+
+  const handleCopyAllSinglePara = () => {
+    if (!project || project.clips.length === 0) return;
+    const clipsToCopy = selectedClips.length > 0
+      ? project.clips.filter((c) => selectedClips.includes(c.id))
+      : project.clips;
+
+    const lines = clipsToCopy.map((cl, idx) => {
+      if (cl.single_para_copy) return cl.single_para_copy;
+      const partPrefix = cl.part_index && cl.total_parts && cl.total_parts > 1
+        ? `Part ${cl.part_index}/${cl.total_parts}: `
+        : clipsToCopy.length > 1 ? `Part ${idx + 1}/${clipsToCopy.length}: ` : "";
+      const title = cl.hook_text || cl.metadata?.tiktok_title || `Viral Clip ${idx + 1}`;
+      const caption = (cl.metadata?.tiktok_caption || cl.metadata?.reels_caption || "").replace(/\n+/g, " ").trim();
+      const tags = (cl.metadata?.tiktok_hashtags || ["#viral", "#shorts", "#fyp"]).slice(0, 5).join(" ");
+      return `${partPrefix}${title} — ${caption} ${tags}`.trim();
+    });
+
+    navigator.clipboard.writeText(lines.join("\n\n"));
+    setCopiedAllSinglePara(true);
+    setTimeout(() => setCopiedAllSinglePara(false), 2500);
+  };
+
+  const handleDownloadAllSinglePara = () => {
+    if (!project || project.clips.length === 0) return;
+    const clipsToCopy = selectedClips.length > 0
+      ? project.clips.filter((c) => selectedClips.includes(c.id))
+      : project.clips;
+
+    const lines = [
+      "================================================================================",
+      `AI VIDEO CLIPPER — SINGLE-PARAGRAPH READY-TO-POST (${project.name.toUpperCase()})`,
+      "================================================================================",
+      `Total Clips: ${clipsToCopy.length}`,
+      "Each section below is formatted as a single self-contained paragraph with",
+      "Part Index, Title, Hook/Description, and 5 High-Impact Hashtags.",
+      "================================================================================\n",
+      "--- [ALL CLIPS CONSOLIDATED (1 PARAGRAPH PER CLIP)] ---",
+    ];
+
+    clipsToCopy.forEach((cl, idx) => {
+      const partPrefix = cl.part_index && cl.total_parts && cl.total_parts > 1
+        ? `Part ${cl.part_index}/${cl.total_parts}: `
+        : clipsToCopy.length > 1 ? `Part ${idx + 1}/${clipsToCopy.length}: ` : "";
+      const title = cl.hook_text || cl.metadata?.tiktok_title || `Viral Clip ${idx + 1}`;
+      const caption = (cl.metadata?.tiktok_caption || cl.metadata?.reels_caption || "").replace(/\n+/g, " ").trim();
+      const tags = (cl.metadata?.tiktok_hashtags || ["#viral", "#shorts", "#fyp"]).slice(0, 5).join(" ");
+      const single = cl.single_para_copy || `${partPrefix}${title} — ${caption} ${tags}`.trim();
+      lines.push(`${single}\n`);
+    });
+
+    lines.push("\n================================================================================");
+    lines.push("--- [INDIVIDUAL CLIP BREAKDOWN] ---");
+    lines.push("================================================================================\n");
+
+    clipsToCopy.forEach((cl, idx) => {
+      const partPrefix = cl.part_index && cl.total_parts && cl.total_parts > 1
+        ? `Part ${cl.part_index}/${cl.total_parts}: `
+        : clipsToCopy.length > 1 ? `Part ${idx + 1}/${clipsToCopy.length}: ` : "";
+      const title = cl.hook_text || cl.metadata?.tiktok_title || `Viral Clip ${idx + 1}`;
+      const caption = (cl.metadata?.tiktok_caption || cl.metadata?.reels_caption || "").replace(/\n+/g, " ").trim();
+      const tags = (cl.metadata?.tiktok_hashtags || ["#viral", "#shorts", "#fyp"]).slice(0, 5).join(" ");
+      const single = cl.single_para_copy || `${partPrefix}${title} — ${caption} ${tags}`.trim();
+
+      lines.push(`CLIP ${idx + 1} (Duration: ${cl.duration.toFixed(1)}s):`);
+      lines.push(single);
+      lines.push("");
+    });
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${project.name.toLowerCase().replace(/[^a-z0-9]+/g, "_")}_all_clips_single_para.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
 
   const handleBatchDownload = async () => {
@@ -401,6 +492,174 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                   <p className="text-[10px] text-zinc-400">Documentaries, commentary & peaks</p>
                 </button>
+              </div>
+            </div>
+
+            {/* Video Genre & 10-Second Hook Directives */}
+            <div className="space-y-3 pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-semibold text-white flex items-center gap-1.5">
+                    <Flame className="h-3.5 w-3.5 text-amber-400" /> Video Genre & 10-Second Hook Directives
+                  </label>
+                  <p className="text-[11px] text-zinc-400">Forces the first 10 seconds to hook on fights, chaos, arguments, or high adrenaline</p>
+                </div>
+                <span className="text-[9px] font-mono uppercase bg-amber-500/10 text-amber-300 border border-amber-500/20 px-2 py-0.5 rounded">
+                  {genre === "auto" ? "Any Genre" : genre.replace("_", " ")}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {[
+                  {
+                    id: "auto",
+                    label: "Auto-Detect / Any Genre",
+                    desc: "Intelligently extracts fights, arguments, high tension, or peak moments across any video topic",
+                    icon: Sparkles,
+                    color: "text-violet-400",
+                  },
+                  {
+                    id: "action_chase_pov",
+                    label: "Action, Police POV & Pursuits",
+                    desc: "Bodycam pursuits, runner/bike POV, tackles, siren chaos, shouts, and physical adrenaline",
+                    icon: ShieldAlert,
+                    color: "text-rose-400",
+                  },
+                  {
+                    id: "military_history",
+                    label: "Military & History Chronicles",
+                    desc: "Historic battles, tactical warfare, declassified secrets, and mind-bending historical facts",
+                    icon: BookOpen,
+                    color: "text-amber-400",
+                  },
+                  {
+                    id: "nostalgia",
+                    label: "Nostalgia & Retro Culture",
+                    desc: "90s/2000s tech relics, discontinued childhood moments, and emotional throwback memories",
+                    icon: Clock,
+                    color: "text-cyan-400",
+                  },
+                  {
+                    id: "vlog_pov",
+                    label: "POV Vlog & Street Tension",
+                    desc: "Chaotic public encounters, spontaneous tension, social awkwardness, and raw twists",
+                    icon: Film,
+                    color: "text-emerald-400",
+                  },
+                  {
+                    id: "podcast_debate",
+                    label: "Podcast & Heated Debates",
+                    desc: "Polarizing hot takes, shouting clashes, explosive confessions, and hard truths",
+                    icon: Mic,
+                    color: "text-indigo-400",
+                  },
+                ].map((g) => {
+                  const Icon = g.icon;
+                  const isSel = genre === g.id;
+                  return (
+                    <button
+                      key={g.id}
+                      type="button"
+                      onClick={() => setGenre(g.id as any)}
+                      className={`rounded-xl p-3 text-left border transition-all ${
+                        isSel
+                          ? "bg-amber-500/15 border-amber-400 text-white shadow-sm"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:border-white/20 hover:text-zinc-200"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-1.5">
+                          <Icon className={`h-3.5 w-3.5 ${g.color}`} />
+                          <span className="text-xs font-bold text-white">{g.label}</span>
+                        </div>
+                        {isSel && <Check className="h-3 w-3 text-amber-400" />}
+                      </div>
+                      <p className="text-[10px] text-zinc-400 leading-relaxed">{g.desc}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Multi-Part Series Branding Toggle */}
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-violet-400" />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold text-white">Multi-Part Series Branding</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">PART 1/N</span>
+                    </div>
+                    <p className="text-[11px] text-zinc-400">Automatically numbers clips (e.g. Part 1/5, Part 2/5) in video subtitles & platform copy</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEnableSeriesParts(!enableSeriesParts)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                    enableSeriesParts ? "bg-violet-600" : "bg-zinc-800"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      enableSeriesParts ? "translate-x-4.5" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* AI Engine Selection */}
+            <div className="space-y-2 pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-violet-400" /> AI Engine Specialization
+                </label>
+                <span className="text-[9px] font-mono text-violet-400 bg-violet-500/10 px-2 py-0.5 rounded border border-violet-500/20">
+                  {aiProvider === "hybrid" ? "Parallel Specialization" : aiProvider.toUpperCase()}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {[
+                  {
+                    id: "hybrid",
+                    title: "Parallel Hybrid",
+                    badge: "Recommended",
+                    desc: "Groq candidate discovery speed + Gemini multimodal reasoning & copywriting",
+                  },
+                  {
+                    id: "gemini",
+                    title: "Gemini 2.5 Flash",
+                    badge: "Multimodal",
+                    desc: "Direct reasoning, deep context analysis, and platform title copywriting",
+                  },
+                  {
+                    id: "groq",
+                    title: "Groq Llama-3.3",
+                    badge: "750 tok/s",
+                    desc: "Ultra-fast candidate discovery and transcript linguistic analysis",
+                  },
+                ].map((eng) => (
+                  <button
+                    key={eng.id}
+                    type="button"
+                    onClick={() => setAiProvider(eng.id as any)}
+                    className={`rounded-xl p-2.5 text-left border transition-all ${
+                      aiProvider === eng.id
+                        ? "bg-violet-600/20 border-violet-500 text-white"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:border-white/20"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-bold text-white">{eng.title}</span>
+                      <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-white/5 text-zinc-400 border border-white/10">
+                        {eng.badge}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-zinc-400">{eng.desc}</p>
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -947,7 +1206,55 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
       {activeTab === "clips" && (
         <div className="space-y-6">
           {project.clips.length > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-white/[0.02] border border-white/10 p-4">
+            <>
+              {/* Ready-to-Post Single-Paragraph Metadata Banner */}
+              <div className="rounded-2xl bg-gradient-to-r from-violet-950/40 via-indigo-950/30 to-purple-950/40 border border-violet-500/20 p-5 backdrop-blur-md shadow-lg space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <h3 className="text-sm font-bold text-white tracking-wide">
+                        1-Click Ready-to-Post Metadata (Single-Paragraph Format)
+                      </h3>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                        {project.clips.length} {project.clips.length === 1 ? "Clip" : "Clips"} Ready
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-400 leading-relaxed">
+                      Every clip includes a tailored Title, hooked Description, and 5 High-Impact Hashtags formatted into a single paragraph with Part numbering (e.g. Part 1/{project.clips.length}).
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleCopyAllSinglePara}
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-violet-600 text-xs font-bold text-white hover:bg-violet-500 shadow-md shadow-violet-600/25 transition-all"
+                    >
+                      {copiedAllSinglePara ? (
+                        <>
+                          <Check className="h-4 w-4 text-emerald-300" />
+                          <span>Copied All {project.clips.length} Clips!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-4 w-4" />
+                          <span>Copy All ({project.clips.length}) Single-Para</span>
+                        </>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadAllSinglePara}
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.05] border border-white/10 text-xs font-semibold text-zinc-200 hover:text-white hover:bg-white/[0.1] transition-all"
+                    >
+                      <FileText className="h-4 w-4 text-violet-400" />
+                      <span>Download .txt</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-white/[0.02] border border-white/10 p-4">
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleSelectAllClips}
@@ -993,7 +1300,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 </div>
               )}
             </div>
-          )}
+          </>
+        )}
 
           {project.clips.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-12 text-center space-y-3">

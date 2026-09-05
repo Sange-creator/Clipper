@@ -357,6 +357,14 @@ export const api = {
     return `${API_BASE}/export/job/${jobId}/titles-and-hashtags${download ? "?download=true" : ""}`;
   },
 
+  getSingleClipSingleParaUrl(clipId: string, download: boolean = false): string {
+    return `${API_BASE}/export/clip/${clipId}/single-para${download ? "?download=true" : ""}`;
+  },
+
+  getJobSingleParaAllUrl(jobId: string, download: boolean = false): string {
+    return `${API_BASE}/export/job/${jobId}/single-para-all${download ? "?download=true" : ""}`;
+  },
+
   async downloadSelectedClipsZip(clipIds: string[]): Promise<Blob> {
     const res = await fetch(`${API_BASE}/export/clips/batch`, {
       method: "POST",

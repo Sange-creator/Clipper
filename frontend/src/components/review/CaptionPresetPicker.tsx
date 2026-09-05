@@ -12,6 +12,20 @@ export interface CaptionPreset {
 
 const PRESETS: CaptionPreset[] = [
   {
+    id: "tiktok_rounded_box",
+    label: "TikTok Rounded Box",
+    desc: "Rounded translucent pill background with active neon yellow word highlight",
+    previewClass: "font-black text-yellow-300 bg-black/85 px-3 py-1 rounded-full uppercase tracking-wide border border-white/10 shadow-lg inline-block",
+    fontTag: "TikTok Pill",
+  },
+  {
+    id: "capcut_black_pill",
+    label: "CapCut Black Pill",
+    desc: "Solid deep black rounded pill with neon lime green active pop",
+    previewClass: "font-black text-lime-400 bg-black px-3 py-1 rounded-full uppercase tracking-wider shadow-lg inline-block",
+    fontTag: "Rounded Pill",
+  },
+  {
     id: "tiktok_viral",
     label: "TikTok Viral",
     desc: "Active word electric yellow & crisp white pop with bold shadow",

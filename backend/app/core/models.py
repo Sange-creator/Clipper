@@ -238,6 +238,9 @@ class RenderedClip(Base):
     shorts_title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     shorts_description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     shorts_hashtags: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    single_para_copy: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    part_index: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    total_parts: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     
     is_favorite: Mapped[bool] = mapped_column(Boolean, default=False)
     is_rejected: Mapped[bool] = mapped_column(Boolean, default=False)

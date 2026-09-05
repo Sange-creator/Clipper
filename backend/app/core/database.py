@@ -68,8 +68,11 @@ async def init_db() -> None:
             ("rendered_clips", "enhance_quality", "BOOLEAN DEFAULT 1"),
             ("rendered_clips", "hook_strategy", "VARCHAR(32) DEFAULT 'teaser_climax_hook'"),
             ("rendered_clips", "timeline_edit_json", "TEXT"),
-
-
+            ("rendered_clips", "single_para_copy", "TEXT"),
+            ("rendered_clips", "part_index", "INTEGER"),
+            ("rendered_clips", "total_parts", "INTEGER"),
+            ("jobs", "genre", "VARCHAR(64) DEFAULT 'auto'"),
+            ("jobs", "enable_series_parts", "BOOLEAN DEFAULT 1"),
         ]
 
         for table, col, col_type in migrations:

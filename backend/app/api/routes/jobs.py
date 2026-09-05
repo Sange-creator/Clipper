@@ -283,15 +283,23 @@ async def get_job_clips(
             penalty_deduction=cand.penalty_deduction if cand else 0.0,
         )
 
+        tags_list = json.loads(cl.tiktok_hashtags or "[]")
+        single_copy = getattr(cl, "single_para_copy", None) or f"{cl.tiktok_title or ''} — {cl.tiktok_caption or cl.shorts_description or ''} {' '.join(tags_list)}".strip()
+        part_idx = getattr(cl, "part_index", None)
+        total_p = getattr(cl, "total_parts", None)
+
         metadata = PlatformMetadata(
             tiktok_title=cl.tiktok_title or "",
             tiktok_caption=cl.tiktok_caption or "",
-            tiktok_hashtags=json.loads(cl.tiktok_hashtags or "[]"),
+            tiktok_hashtags=tags_list,
             reels_caption=cl.reels_caption or "",
             reels_hashtags=json.loads(cl.reels_hashtags or "[]"),
             shorts_title=cl.shorts_title or "",
             shorts_description=cl.shorts_description or "",
             shorts_hashtags=json.loads(cl.shorts_hashtags or "[]"),
+            single_para_copy=single_copy,
+            part_index=part_idx,
+            total_parts=total_p,
         )
 
         timeline_data = json.loads(cl.timeline_edit_json) if cl.timeline_edit_json else None
@@ -329,6 +337,9 @@ async def get_job_clips(
                 hook_text=cand.hook_text if cand else None,
                 payoff_text=cand.payoff_text if cand else None,
                 metadata=metadata,
+                single_para_copy=single_copy,
+                part_index=part_idx,
+                total_parts=total_p,
                 is_favorite=cl.is_favorite,
                 is_rejected=cl.is_rejected,
                 created_at=cl.created_at,

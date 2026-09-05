@@ -103,6 +103,9 @@ export interface PlatformMetadata {
   shorts_title: string;
   shorts_description: string;
   shorts_hashtags: string[];
+  single_para_copy?: string | null;
+  part_index?: number | null;
+  total_parts?: number | null;
 }
 
 export interface RenderedClipResponse {
@@ -133,6 +136,9 @@ export interface RenderedClipResponse {
   caption_style: string;
   burn_captions?: boolean;
   timeline_edit?: TimelineEditInfo | null;
+  single_para_copy?: string | null;
+  part_index?: number | null;
+  total_parts?: number | null;
   scores: CandidateScores;
   reason?: string | null;
   hook_text?: string | null;
@@ -187,13 +193,26 @@ export type CaptionStyleType =
   | "capcut_black_box"
   | "capcut_yellow_box"
   | "tiktok_boxed"
+  | "tiktok_rounded_box"
+  | "capcut_black_pill"
   | "none"
   | string;
+
+export type VideoGenre =
+  | "auto"
+  | "action_chase_pov"
+  | "military_history"
+  | "nostalgia"
+  | "vlog_pov"
+  | "podcast_debate"
+  | "viral_moments";
 
 export interface JobCreatePayload {
   video_id: string;
   project_id?: string;
   mode?: "podcast" | "viral_moments";
+  genre?: VideoGenre;
+  enable_series_parts?: boolean;
   target_clips_count?: number;
   duration_preset?: "15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom";
   caption_style?: CaptionStyleType;
@@ -210,7 +229,7 @@ export interface JobCreatePayload {
   enhance_quality?: boolean;
   hook_strategy?: "teaser_climax_hook" | "direct_chronological";
   reframing_mode?: "smart_face_track" | "center_crop";
-  ai_provider?: "gemini" | "groq" | "mock";
+  ai_provider?: "hybrid" | "gemini" | "groq" | "mock" | string;
   custom_instructions?: string;
 }
 
@@ -222,6 +241,8 @@ export interface ProjectCreatePayload {
 
 export interface ProjectProcessPayload {
   mode?: "podcast" | "viral_moments";
+  genre?: VideoGenre;
+  enable_series_parts?: boolean;
   target_clips_count?: number;
   duration_preset?: "15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom";
   caption_style?: CaptionStyleType;
@@ -239,7 +260,7 @@ export interface ProjectProcessPayload {
   hook_strategy?: "teaser_climax_hook" | "direct_chronological";
   reframing_mode?: "smart_face_track" | "center_crop";
   source_diversity_weight?: number;
-  ai_provider?: "gemini" | "groq" | "mock";
+  ai_provider?: "hybrid" | "gemini" | "groq" | "mock" | string;
   custom_instructions?: string;
 }
 

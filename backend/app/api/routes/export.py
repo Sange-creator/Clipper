@@ -67,6 +67,9 @@ async def export_single_clip_package(
             "duration": cl.duration,
             "start_time": cl.start_time,
             "end_time": cl.end_time,
+            "part_index": cl.part_index,
+            "total_parts": cl.total_parts,
+            "single_para_copy": cl.single_para_copy,
             "tiktok": {
                 "title": cl.tiktok_title,
                 "caption": cl.tiktok_caption,
@@ -83,6 +86,16 @@ async def export_single_clip_package(
             },
         }
         zf.writestr("metadata.json", json.dumps(meta_dict, indent=2))
+
+        # Single-paragraph copy-paste text
+        single_copy = cl.single_para_copy
+        if not single_copy:
+            part_str = f"Part {cl.part_index or 1}/{cl.total_parts or 1}: " if (cl.part_index or (cl.total_parts and cl.total_parts > 1)) else ""
+            t = cl.hook_header_text or cl.tiktok_title or cl.shorts_title or f"Viral Clip {clip_id[:8]}"
+            cap = cl.tiktok_caption or cl.reels_caption or cl.shorts_description or ""
+            tags = " ".join(extract_5_hashtags(cl))
+            single_copy = f"{part_str}{t} — {cap} {tags}".strip()
+        zf.writestr("single_paragraph_copy_paste.txt", single_copy)
 
     zip_buffer.seek(0)
     return StreamingResponse(
@@ -212,11 +225,17 @@ def build_title_text_content(cl: RenderedClip, idx: int) -> str:
     five_tags_str = " ".join(five_tags)
 
     title_main = cl.hook_header_text or cl.tiktok_title or cl.shorts_title or f"Viral Clip {idx:02d}"
+    single_para = cl.single_para_copy
+    if not single_para:
+        part_str = f"Part {cl.part_index or idx}/{cl.total_parts or 1}: " if (cl.part_index or (cl.total_parts and cl.total_parts > 1)) else ""
+        single_para = f"{part_str}{title_main} — {cl.tiktok_caption or cl.reels_caption or ''} {five_tags_str}".strip()
 
     return (
         f"==================================================\n"
         f"CLIP {idx:02d}: {title_main}\n"
         f"==================================================\n\n"
+        f"[SINGLE-PARAGRAPH 1-CLICK POST (TITLE + CAPTION + 5 HASHTAGS)]\n"
+        f"{single_para}\n\n"
         f"[TITLE]\n"
         f"{title_main}\n\n"
         f"[5 HASHTAGS]\n"
@@ -230,6 +249,56 @@ def build_title_text_content(cl: RenderedClip, idx: int) -> str:
     )
 
 
+def build_batch_single_para_text(clips_summary: List[Dict[str, Any]]) -> str:
+    """
+    Generate a clean text file where each clip has a 1-click single-paragraph
+    ready-to-paste Title + Description + 5 Hashtags block.
+    """
+    lines = [
+        "================================================================================",
+        "AI VIDEO CLIPPER — SINGLE-PARAGRAPH READY-TO-POST (ALL CLIPS)",
+        "================================================================================",
+        f"Total Clips: {len(clips_summary)}",
+        "Each clip below is formatted as a single self-contained paragraph with",
+        "Part Index, Title, Hook/Description, and 5 High-Impact Hashtags.",
+        "================================================================================\n",
+        "--- [ALL CLIPS CONSOLIDATED (1 PARAGRAPH PER CLIP — 1-CLICK COPY)] ---",
+    ]
+    for item in clips_summary:
+        cl: RenderedClip = item["clip"]
+        idx = item["idx"]
+        tot = len(clips_summary)
+        single_copy = cl.single_para_copy
+        if not single_copy:
+            part_str = f"Part {cl.part_index or idx}/{cl.total_parts or tot}: " if (cl.part_index or tot > 1) else ""
+            t = cl.hook_header_text or cl.tiktok_title or cl.shorts_title or f"Viral Moment {idx}"
+            cap = cl.tiktok_caption or cl.reels_caption or cl.shorts_description or ""
+            tags = " ".join(item["hashtags"])
+            single_copy = f"{part_str}{t} — {cap} {tags}".strip()
+        lines.append(f"{single_copy}\n")
+
+    lines.append("\n================================================================================")
+    lines.append("--- [INDIVIDUAL CLIP BREAKDOWN] ---")
+    lines.append("================================================================================\n")
+    for item in clips_summary:
+        cl: RenderedClip = item["clip"]
+        idx = item["idx"]
+        dur = item.get("duration", cl.duration)
+        filename = item.get("filename", f"clip_{idx:02d}.mp4")
+        single_copy = cl.single_para_copy
+        if not single_copy:
+            part_str = f"Part {cl.part_index or idx}/{cl.total_parts or len(clips_summary)}: " if (cl.part_index or len(clips_summary) > 1) else ""
+            t = cl.hook_header_text or cl.tiktok_title or cl.shorts_title or f"Viral Moment {idx}"
+            cap = cl.tiktok_caption or cl.reels_caption or cl.shorts_description or ""
+            tags = " ".join(item["hashtags"])
+            single_copy = f"{part_str}{t} — {cap} {tags}".strip()
+
+        lines.append(f"CLIP {idx:02d} | Duration: {dur:.1f}s | File: {filename}")
+        lines.append(f"{single_copy}\n")
+
+    return "\n".join(lines)
+
+
 @router.get("/job/{job_id}/batch")
 async def export_job_batch_package(
     job_id: str,
@@ -239,8 +308,8 @@ async def export_job_batch_package(
     Export all rendered clips in a job as a batch ZIP.
     Strictly organized into TWO folders only:
     1. 'videos/' — contains ONLY the rendered .mp4 video files.
-    2. 'titles_and_thumbnails/' — contains thumbnails, title text files, and
-       a consolidated 'all_titles_and_hashtags.txt' with titles & 5 hashtags for each video.
+    2. 'titles_and_thumbnails/' — contains thumbnails, title text files,
+       'copy_paste_single_para_all_clips.txt', and 'all_titles_and_hashtags.txt'.
     """
     stmt = select(RenderedClip).where(RenderedClip.job_id == job_id)
     res = await db.execute(stmt)
@@ -285,6 +354,9 @@ async def export_job_batch_package(
                 "clip_id": cl.id,
                 "duration": cl.duration,
                 "hook_title": cl.hook_header_text or cl.tiktok_title,
+                "part_index": cl.part_index,
+                "total_parts": cl.total_parts,
+                "single_para_copy": cl.single_para_copy,
                 "tiktok": {
                     "title": cl.tiktok_title,
                     "caption": cl.tiktok_caption,
@@ -307,6 +379,10 @@ async def export_job_batch_package(
         zf.writestr("titles_and_thumbnails/all_titles_and_hashtags.txt", all_titles_text)
         zf.writestr("titles_and_thumbnails/titles_and_hashtags.txt", all_titles_text)
 
+        # Single-paragraph ready-to-paste text for all clips
+        single_para_all_text = build_batch_single_para_text(clips_summary)
+        zf.writestr("titles_and_thumbnails/copy_paste_single_para_all_clips.txt", single_para_all_text)
+
     zip_buffer.seek(0)
     return StreamingResponse(
         zip_buffer,
@@ -325,7 +401,7 @@ async def export_custom_clips_batch(
     Strictly organized into TWO folders only:
     1. 'videos/' — contains ONLY the rendered .mp4 video files.
     2. 'titles_and_thumbnails/' — contains thumbnails, individual title text files,
-       and a consolidated 'all_titles_and_hashtags.txt' with titles & 5 hashtags for each video.
+       and consolidated single-para and hashtag documents.
     """
     clip_ids = payload.get("clip_ids", [])
     if not clip_ids:
@@ -374,6 +450,9 @@ async def export_custom_clips_batch(
                 "clip_id": cl.id,
                 "duration": cl.duration,
                 "hook_title": cl.hook_header_text or cl.tiktok_title,
+                "part_index": cl.part_index,
+                "total_parts": cl.total_parts,
+                "single_para_copy": cl.single_para_copy,
                 "tiktok": {
                     "title": cl.tiktok_title,
                     "caption": cl.tiktok_caption,
@@ -395,6 +474,10 @@ async def export_custom_clips_batch(
         all_titles_text = build_batch_titles_and_hashtags_text(clips_summary)
         zf.writestr("titles_and_thumbnails/all_titles_and_hashtags.txt", all_titles_text)
         zf.writestr("titles_and_thumbnails/titles_and_hashtags.txt", all_titles_text)
+
+        # Single-paragraph ready-to-paste text for all clips
+        single_para_all_text = build_batch_single_para_text(clips_summary)
+        zf.writestr("titles_and_thumbnails/copy_paste_single_para_all_clips.txt", single_para_all_text)
 
     zip_buffer.seek(0)
     return StreamingResponse(
@@ -444,4 +527,69 @@ async def get_job_titles_and_hashtags_text(
 
     from fastapi.responses import PlainTextResponse
     return PlainTextResponse(content=text_content, headers=headers)
+
+
+@router.get("/clip/{clip_id}/single-para")
+async def get_single_clip_single_para_text(
+    clip_id: str,
+    download: bool = False,
+    db: AsyncSession = Depends(get_db),
+):
+    """Return the single-paragraph Title + Caption + 5 Hashtags block for 1-click clipboard or download."""
+    cl = await db.get(RenderedClip, clip_id)
+    if not cl:
+        raise HTTPException(status_code=404, detail="Clip not found.")
+
+    text = cl.single_para_copy
+    if not text:
+        part_str = f"Part {cl.part_index or 1}/{cl.total_parts or 1}: " if (cl.part_index or (cl.total_parts and cl.total_parts > 1)) else ""
+        t = cl.hook_header_text or cl.tiktok_title or cl.shorts_title or f"Viral Clip {clip_id[:8]}"
+        cap = cl.tiktok_caption or cl.reels_caption or cl.shorts_description or ""
+        tags = " ".join(extract_5_hashtags(cl))
+        text = f"{part_str}{t} — {cap} {tags}".strip()
+
+    headers = {}
+    if download:
+        headers["Content-Disposition"] = f"attachment; filename=clip_{clip_id[:8]}_single_para.txt"
+
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse(content=text, headers=headers)
+
+
+@router.get("/job/{job_id}/single-para-all")
+async def get_job_single_para_all_text(
+    job_id: str,
+    download: bool = False,
+    db: AsyncSession = Depends(get_db),
+):
+    """Return consolidated single-paragraph blocks for all clips in a job for 1-click bulk clipboard copy or download."""
+    stmt = select(RenderedClip).where(RenderedClip.job_id == job_id).order_by(RenderedClip.created_at)
+    res = await db.execute(stmt)
+    clips = res.scalars().all()
+    if not clips:
+        raise HTTPException(status_code=404, detail="No rendered clips found for this job.")
+
+    clips_summary = []
+    for idx, cl in enumerate(clips, start=1):
+        title_hint = cl.hook_header_text or cl.tiktok_title or cl.shorts_title or f"clip_{idx:02d}"
+        slug = slugify_title(title_hint)
+        base_name = f"clip_{idx:02d}_{cl.id[:6]}_{slug}"
+        five_tags = extract_5_hashtags(cl)
+        clips_summary.append({
+            "idx": idx,
+            "clip": cl,
+            "title": title_hint,
+            "hashtags": five_tags,
+            "filename": f"{base_name}.mp4",
+            "duration": cl.duration,
+        })
+
+    text_content = build_batch_single_para_text(clips_summary)
+    headers = {}
+    if download:
+        headers["Content-Disposition"] = f"attachment; filename=job_{job_id[:8]}_single_para_all_clips.txt"
+
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse(content=text_content, headers=headers)
+
 

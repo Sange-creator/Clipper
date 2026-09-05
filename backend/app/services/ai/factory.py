@@ -1,4 +1,4 @@
-"""AI Provider Factory with dynamic configuration and automatic fallback chaining."""
+"""AI Provider Factory with dynamic configuration, multi-API orchestration, and automatic fallback chaining."""
 
 import logging
 from typing import Any, Dict, List, Optional
@@ -145,13 +145,133 @@ class ResilientAIProvider(AIProvider):
         return {"visual_engagement": 80.0, "face_detected": True}
 
 
+class HybridOrchestratedAIProvider(AIProvider):
+    """
+    Best-of-Breed Multi-API Orchestration Engine.
+    Assigns each AI provider to what it performs best at:
+    - Candidate Discovery: Groq (ultra-low latency candidate generation across large transcripts)
+    - Multimodal & Visual Context: Gemini (native multimodal understanding)
+    - Viral Social Copywriting & Metadata: Gemini (creative human-like titles, captions, hashtags)
+    - Full fallback chaining to ensure zero job failures.
+    """
+
+    def __init__(self):
+        self.groq_provider: Optional[AIProvider] = None
+        self.gemini_provider: Optional[AIProvider] = None
+        self.mock_provider = MockAIProvider()
+
+        if settings.GROQ_API_KEY:
+            try:
+                self.groq_provider = GroqProvider()
+            except Exception as e:
+                logger.warning(f"Could not init Groq for Orchestrated Provider: {e}")
+
+        if settings.GEMINI_API_KEY:
+            try:
+                self.gemini_provider = GeminiProvider()
+            except Exception as e:
+                logger.warning(f"Could not init Gemini for Orchestrated Provider: {e}")
+
+    async def analyze_content(self, transcript: str, media_info: Dict[str, Any]) -> ContentAnalysisResult:
+        # Prefer Gemini for holistic reasoning
+        for prov in [self.gemini_provider, self.groq_provider, self.mock_provider]:
+            if prov:
+                try:
+                    return await prov.analyze_content(transcript, media_info)
+                except Exception as e:
+                    logger.warning(f"{prov.__class__.__name__}.analyze_content failed in hybrid mode: {e}")
+        return ContentAnalysisResult(summary="Video content analysis", main_topics=["Shorts"], tone="engaging")
+
+    async def generate_candidates(
+        self,
+        transcript_segments: List[Dict[str, Any]],
+        media_info: Dict[str, Any],
+        requested_count: int,
+        duration_target: str = "30-45s",
+        mode: str = "podcast",
+        custom_instructions: Optional[str] = None,
+    ) -> List[RawCandidateMoment]:
+        # Fast candidate discovery: Groq is champion for rapid extraction, fallback to Gemini, then Mock
+        candidates_chain = [self.groq_provider, self.gemini_provider, self.mock_provider]
+        for prov in candidates_chain:
+            if prov:
+                try:
+                    logger.info(f"Hybrid Engine: Generating candidates using {prov.__class__.__name__}...")
+                    cands = await prov.generate_candidates(
+                        transcript_segments=transcript_segments,
+                        media_info=media_info,
+                        requested_count=requested_count,
+                        duration_target=duration_target,
+                        mode=mode,
+                        custom_instructions=custom_instructions,
+                    )
+                    if cands and len(cands) > 0:
+                        return cands
+                except Exception as e:
+                    logger.warning(f"{prov.__class__.__name__}.generate_candidates failed in hybrid: {e}")
+
+        return await self.mock_provider.generate_candidates(
+            transcript_segments=transcript_segments,
+            media_info=media_info,
+            requested_count=requested_count,
+            duration_target=duration_target,
+            mode=mode,
+            custom_instructions=custom_instructions,
+        )
+
+    async def rank_candidates(
+        self,
+        candidates: List[RawCandidateMoment],
+        transcript_context: str,
+    ) -> List[RawCandidateMoment]:
+        # Prefer Gemini for deep ranking
+        for prov in [self.gemini_provider, self.groq_provider, self.mock_provider]:
+            if prov:
+                try:
+                    return await prov.rank_candidates(candidates, transcript_context)
+                except Exception:
+                    pass
+        return await self.mock_provider.rank_candidates(candidates, transcript_context)
+
+    async def generate_metadata(
+        self,
+        clip_transcript: str,
+        clip_context: Dict[str, Any],
+    ) -> PlatformClipMetadata:
+        # Prefer Gemini for creative nuance, platform hashtags, and single-para copy
+        metadata_chain = [self.gemini_provider, self.groq_provider, self.mock_provider]
+        for prov in metadata_chain:
+            if prov:
+                try:
+                    logger.info(f"Hybrid Engine: Generating viral metadata using {prov.__class__.__name__}...")
+                    meta = await prov.generate_metadata(clip_transcript, clip_context)
+                    if meta:
+                        return meta
+                except Exception as e:
+                    logger.warning(f"{prov.__class__.__name__}.generate_metadata failed in hybrid: {e}")
+
+        return await self.mock_provider.generate_metadata(clip_transcript, clip_context)
+
+    async def analyze_visual_context(self, frame_paths: List[str]) -> Dict[str, Any]:
+        if self.gemini_provider:
+            try:
+                return await self.gemini_provider.analyze_visual_context(frame_paths)
+            except Exception:
+                pass
+        return {"visual_engagement": 85.0, "face_detected": True}
+
+
 def get_ai_provider(provider_name: Optional[str] = None) -> AIProvider:
     """
-    Return a resilient AI reasoning provider with automatic multi-provider fallback.
+    Return an AI reasoning provider:
+    - 'orchestrated' / 'hybrid': Best-of-breed (Groq for candidate speed + Gemini for reasoning/copywriting)
+    - 'gemini': Gemini primary with fallback
+    - 'groq': Groq primary with fallback
+    - 'mock': Deterministic local engine
     """
-    chosen = (provider_name or settings.AI_PROVIDER or "groq").lower()
+    chosen = (provider_name or settings.AI_PROVIDER or "orchestrated").lower().strip()
+    if chosen in ("orchestrated", "hybrid", "parallel"):
+        return HybridOrchestratedAIProvider()
     if chosen == "mock":
         return MockAIProvider()
     return ResilientAIProvider(chosen)
-
-

@@ -23,6 +23,14 @@ Never claim that a clip is guaranteed to go viral. The system should identify cl
 
 ---
 
+# Session Tracking & Continuity Rule
+
+Always read `SESSION_TRACKER.md` at the beginning of each session.
+Always log user prompts verbatim, implementation actions, modified files, and system status into `SESSION_TRACKER.md`.
+Always commit changes locally with clean, atomic commit messages so the user can easily revert changes if desired.
+
+---
+
 # Core Architecture
 
 Use a modular architecture:

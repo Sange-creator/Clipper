@@ -49,6 +49,9 @@ class PlatformClipMetadata(BaseModel):
     shorts_title: str
     shorts_description: str
     shorts_hashtags: List[str]
+    single_para_copy: Optional[str] = None
+    part_index: Optional[int] = None
+    total_parts: Optional[int] = None
 
 
 class AIProvider(ABC):

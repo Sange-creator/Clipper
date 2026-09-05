@@ -40,6 +40,16 @@ export function PlatformMetadataCard({ metadata, clipId }: PlatformMetadataCardP
 
   const fullCopyText = `${activeContent.title}\n\n${activeContent.caption}\n\n${activeContent.hashtags.join(" ")}`;
 
+  // Dedicated single-paragraph ready-to-paste block requested by user
+  const singleParaText = metadata.single_para_copy || (() => {
+    const partPrefix = metadata.part_index && metadata.total_parts && metadata.total_parts > 1
+      ? `Part ${metadata.part_index}/${metadata.total_parts}: `
+      : "";
+    const cleanCap = (activeContent.caption || "").replace(/\n+/g, " ").trim();
+    const tags = activeContent.hashtags.slice(0, 5).join(" ");
+    return `${partPrefix}${activeContent.title} — ${cleanCap} ${tags}`.trim();
+  })();
+
   return (
     <div className="glass-panel rounded-2xl p-6 space-y-6">
       {/* Header & Platform Tabs */}
@@ -69,6 +79,39 @@ export function PlatformMetadataCard({ metadata, clipId }: PlatformMetadataCardP
             </button>
           ))}
         </div>
+      </div>
+
+      {/* 1-Click Single Paragraph Post Banner */}
+      <div className="rounded-xl border border-violet-500/30 bg-violet-950/20 p-4 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-violet-400" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">
+              Single-Paragraph Ready-To-Post
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => copyToClipboard(singleParaText, "single_para")}
+              className="flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-violet-600/30 hover:bg-violet-500 transition-colors"
+            >
+              {copiedField === "single_para" ? <Check className="h-3.5 w-3.5 text-emerald-300" /> : <Copy className="h-3.5 w-3.5" />}
+              <span>{copiedField === "single_para" ? "Copied Paragraph!" : "Copy Single Paragraph"}</span>
+            </button>
+            <a
+              href={api.getSingleClipSingleParaUrl(clipId, true)}
+              download
+              className="flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 px-2.5 py-1.5 text-xs font-medium text-zinc-300 hover:bg-white/10 transition-colors"
+              title="Download text file"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>.TXT</span>
+            </a>
+          </div>
+        </div>
+        <p className="text-xs text-zinc-300 leading-relaxed bg-black/40 border border-white/5 p-3 rounded-lg font-mono selection:bg-violet-500 selection:text-white">
+          {singleParaText}
+        </p>
       </div>
 
       {/* Content Fields */}

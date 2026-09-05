@@ -63,6 +63,9 @@ class PlatformMetadata(BaseModel):
     shorts_title: str = ""
     shorts_description: str = ""
     shorts_hashtags: List[str] = []
+    single_para_copy: Optional[str] = None
+    part_index: Optional[int] = None
+    total_parts: Optional[int] = None
 
 
 # Candidate & Score schemas
@@ -136,6 +139,9 @@ class RenderedClipResponse(BaseModel):
     hook_text: Optional[str] = None
     payoff_text: Optional[str] = None
     metadata: PlatformMetadata
+    single_para_copy: Optional[str] = None
+    part_index: Optional[int] = None
+    total_parts: Optional[int] = None
     is_favorite: bool = False
     is_rejected: bool = False
     created_at: datetime

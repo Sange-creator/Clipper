@@ -282,6 +282,32 @@ class CaptionGenerator:
             "margin_v": 280,
             "uppercase": True,
         },
+        "tiktok_rounded_box": {
+            "font_name": "Arial Black",
+            "font_size": 48,
+            "primary_color": "&H00FFFFFF&",    # Crisp White
+            "secondary_color": "&H0000FFFF&",  # Electric Neon Yellow highlight
+            "outline_color": "&H00000000&",
+            "back_color": "&HC0101010&",       # Translucent Rounded Charcoal Pill Box
+            "border_style": 3,                 # Solid background bounding box
+            "outline": 10,                     # Generous pill box padding
+            "shadow": 0,
+            "margin_v": 280,
+            "uppercase": True,
+        },
+        "capcut_black_pill": {
+            "font_name": "Arial Black",
+            "font_size": 48,
+            "primary_color": "&H00FFFFFF&",    # Crisp White
+            "secondary_color": "&H0000FF00&",  # Neon Lime Green highlight
+            "outline_color": "&H00000000&",
+            "back_color": "&HE6080808&",       # Solid Deep Black Pill Box
+            "border_style": 3,
+            "outline": 11,
+            "shadow": 0,
+            "margin_v": 280,
+            "uppercase": True,
+        },
     }
 
     # Hook Header Visual Styles
@@ -380,6 +406,11 @@ class CaptionGenerator:
             "comic": "playful_comic",
             "editorial": "editorial_serif",
             "luxury": "editorial_serif",
+            "tiktok_rounded": "tiktok_rounded_box",
+            "rounded_box": "tiktok_rounded_box",
+            "tiktok_pill": "tiktok_rounded_box",
+            "rounded_pill": "tiktok_rounded_box",
+            "black_pill": "capcut_black_pill",
         }
         key = alias_map.get(raw, raw)
         return self.PRESET_CONFIGS.get(key, self.PRESET_CONFIGS["bold_yellow"])
@@ -425,11 +456,14 @@ class CaptionGenerator:
         hook_header_position: Optional[int] = 12,
         hook_header_style: Optional[str] = None,
         keep_intervals: Optional[List[List[float]]] = None,
+        part_index: Optional[int] = None,
+        total_parts: Optional[int] = None,
     ) -> Path:
         """
         Generate an Advanced SubStation Alpha (.ass) subtitle file.
         All timestamps are relative to the sliced clip start (0.0s).
-        Supports multi-interval splicing (e.g. 5s climax teaser followed by narrative build-up).
+        Supports multi-interval splicing (e.g. 5s climax teaser followed by narrative build-up)
+        and multi-part series branding (e.g. PART 1/5 • TITLE).
         """
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -496,7 +530,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         # 1. Add persistent TikTok Hook Header on Layer 1 throughout entire video
         if add_hook_header and hook_header_text:
-            formatted_hook = format_tiktok_hook_header(hook_header_text)
+            raw_hook = hook_header_text
+            if part_index and total_parts:
+                raw_hook = f"PART {part_index}/{total_parts} • {hook_header_text}"
+            elif part_index:
+                raw_hook = f"PART {part_index} • {hook_header_text}"
+            formatted_hook = format_tiktok_hook_header(raw_hook)
             start_str = self.format_timestamp_ass(0.0)
             end_str = self.format_timestamp_ass(max(0.5, total_duration))
             dialogue_lines.append(
@@ -576,6 +615,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         clip_end: float,
         output_path: Path | str,
         keep_intervals: Optional[List[List[float]]] = None,
+        part_index: Optional[int] = None,
+        total_parts: Optional[int] = None,
+        hook_header_text: Optional[str] = None,
     ) -> Path:
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -611,3 +653,5 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
 
 captioner = CaptionGenerator()
+CaptionService = CaptionGenerator
+

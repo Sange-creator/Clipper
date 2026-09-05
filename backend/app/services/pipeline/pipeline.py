@@ -278,10 +278,18 @@ class VideoProcessingPipeline:
                 )
                 
                 t0 = datetime.now()
+                media_info_payload = {
+                    "duration_seconds": video.duration_seconds,
+                    "width": video.width,
+                    "height": video.height,
+                    "video_title": video.filename,
+                    "genre": config.get("genre") or mode or "viral_moments",
+                    "filename": video.filename,
+                }
                 raw_candidates = await candidate_discovery_service.discover_candidates(
                     ai_provider=ai_provider,
                     transcript_segments=raw_segments,
-                    media_info={"duration_seconds": video.duration_seconds, "width": video.width, "height": video.height},
+                    media_info=media_info_payload,
                     requested_clips_count=requested_clips,
                     duration_preset=duration_preset,
                     mode=mode,
@@ -435,6 +443,8 @@ class VideoProcessingPipeline:
                     raw_hook = cand.hook_summary or cand.reason or ""
                     from app.services.media.audio_analyzer import strip_emojis
                     hook_title_text = strip_emojis(raw_hook)
+                    part_idx = idx
+                    tot_parts = len(ranked_clips)
 
                     captioner.generate_ass(
                         raw_segments,
@@ -448,6 +458,8 @@ class VideoProcessingPipeline:
                         hook_header_position=job_hook_pos,
                         hook_header_style=job_hook_style,
                         keep_intervals=t_edit.keep,
+                        part_index=part_idx,
+                        total_parts=tot_parts,
                     )
                     captioner.generate_srt(
                         raw_segments,
@@ -455,6 +467,8 @@ class VideoProcessingPipeline:
                         cand.end,
                         srt_path,
                         keep_intervals=t_edit.keep,
+                        part_index=part_idx,
+                        total_parts=tot_parts,
                     )
 
                     # FFmpeg render
@@ -502,9 +516,17 @@ class VideoProcessingPipeline:
                         f"Generating platform metadata for clip {idx}/{len(ranked_clips)}"
                     )
                     clip_text = " ".join([s.get("text", "") for s in raw_segments if s.get("end", 0) >= cand.start and s.get("start", 0) <= cand.end])
+                    v_title = getattr(video, "title", None) or getattr(video, "original_filename", None) or "Video"
                     meta_res = await ai_provider.generate_metadata(
                         clip_transcript=clip_text,
-                        clip_context={"hook_summary": cand.hook_summary, "payoff_summary": cand.payoff_summary},
+                        clip_context={
+                            "hook_summary": cand.hook_summary,
+                            "payoff_summary": cand.payoff_summary,
+                            "video_title": v_title,
+                            "genre": getattr(job, "genre", "auto") or "auto",
+                            "part_index": part_idx,
+                            "total_parts": tot_parts,
+                        },
                     )
 
                     # Stage 20: Store results
@@ -539,6 +561,9 @@ class VideoProcessingPipeline:
                         caption_style=caption_style if should_burn else "none",
                         burn_captions=should_burn,
                         timeline_edit_json=json.dumps(t_edit.model_dump()),
+                        single_para_copy=meta_res.single_para_copy,
+                        part_index=part_idx,
+                        total_parts=tot_parts,
                         tiktok_title=meta_res.tiktok_title,
                         tiktok_caption=meta_res.tiktok_caption,
                         tiktok_hashtags=json.dumps(meta_res.tiktok_hashtags),
@@ -549,14 +574,13 @@ class VideoProcessingPipeline:
                         shorts_hashtags=json.dumps(meta_res.shorts_hashtags),
                     )
 
-
                     session.add(rendered_rec)
                     await session.commit()
                     rendered_count += 1
 
-                # Generate consolidated titles & 5 hashtags single text file for easy copy-pasting
+                # Generate consolidated titles & 5 hashtags and single-para text files for easy copy-pasting
                 try:
-                    from app.api.routes.export import build_batch_titles_and_hashtags_text, extract_5_hashtags, slugify_title
+                    from app.api.routes.export import build_batch_titles_and_hashtags_text, build_batch_single_para_text, extract_5_hashtags, slugify_title
                     stmt_clips = select(RenderedClip).where(RenderedClip.job_id == job.id).order_by(RenderedClip.created_at)
                     res_clips = await session.execute(stmt_clips)
                     all_job_clips = res_clips.scalars().all()
@@ -576,26 +600,30 @@ class VideoProcessingPipeline:
                                 "duration": c_cl.duration,
                             })
                         combined_text = build_batch_titles_and_hashtags_text(clips_summary)
+                        single_para_text = build_batch_single_para_text(clips_summary)
 
                         # 1. Save in thumbnails directory
                         thumb_dir = settings.DATA_DIR / "thumbnails"
                         thumb_dir.mkdir(parents=True, exist_ok=True)
                         (thumb_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
                         (thumb_dir / "titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        (thumb_dir / "copy_paste_single_para_all_clips.txt").write_text(single_para_text, encoding="utf-8")
                         (thumb_dir / f"job_{job.id[:8]}_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
 
                         # 2. Save in specific video thumbnail directory if exists
                         v_thumb_dir = thumb_dir / video.id
                         if v_thumb_dir.exists():
                             (v_thumb_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                            (v_thumb_dir / "copy_paste_single_para_all_clips.txt").write_text(single_para_text, encoding="utf-8")
 
                         # 3. Save in titles_and_thumbnails directory
                         tt_dir = settings.DATA_DIR / "titles_and_thumbnails"
                         tt_dir.mkdir(parents=True, exist_ok=True)
                         (tt_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
                         (tt_dir / "titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                        (tt_dir / "copy_paste_single_para_all_clips.txt").write_text(single_para_text, encoding="utf-8")
                         (tt_dir / f"job_{job.id[:8]}_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
-                        logger.info(f"Generated single all_titles_and_hashtags.txt on disk for job {job.id}")
+                        logger.info(f"Generated single all_titles_and_hashtags.txt and copy_paste_single_para_all_clips.txt on disk for job {job.id}")
                 except Exception as ex:
                     logger.warning(f"Could not generate titles_and_hashtags file on disk: {ex}")
 
@@ -681,10 +709,16 @@ class VideoProcessingPipeline:
                 raw_segs = json.loads(tr.segments_json)
 
             # Discover candidates
+            v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or "Video"
             raw_cands = await candidate_discovery_service.discover_candidates(
                 ai_provider=ai_provider,
                 transcript_segments=raw_segs,
-                media_info={"duration_seconds": v.duration_seconds},
+                media_info={
+                    "duration_seconds": v.duration_seconds,
+                    "video_title": v_title,
+                    "genre": getattr(job, "genre", "auto") or "auto",
+                    "filename": getattr(v, "original_filename", "") or "",
+                },
                 requested_clips_count=max(5, requested_clips // len(project_videos)),
                 duration_preset=duration_preset,
                 mode=mode,
@@ -784,7 +818,11 @@ class VideoProcessingPipeline:
             job_add_hook = getattr(job, "add_hook_header", False)
             job_hook_pos = getattr(job, "hook_header_position", None) or 12
             job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
-            hook_title_text = cand.hook_summary or cand.reason or ""
+            raw_hook = cand.hook_summary or cand.reason or ""
+            from app.services.media.audio_analyzer import strip_emojis
+            hook_title_text = strip_emojis(raw_hook)
+            part_idx = idx
+            tot_parts = len(ranked_project_clips)
 
             captioner.generate_ass(
                 segs,
@@ -798,6 +836,8 @@ class VideoProcessingPipeline:
                 hook_header_position=job_hook_pos,
                 hook_header_style=job_hook_style,
                 keep_intervals=t_edit.keep,
+                part_index=part_idx,
+                total_parts=tot_parts,
             )
             captioner.generate_srt(
                 segs,
@@ -805,6 +845,8 @@ class VideoProcessingPipeline:
                 cand.end,
                 srt_path,
                 keep_intervals=t_edit.keep,
+                part_index=part_idx,
+                total_parts=tot_parts,
             )
 
             should_burn = burn_captions and caption_style != "none"
@@ -835,7 +877,18 @@ class VideoProcessingPipeline:
             await renderer.generate_thumbnail(out_video, 1.0, thumb)
 
             clip_text = " ".join([s.get("text", "") for s in segs if s.get("end", 0) >= cand.start and s.get("start", 0) <= cand.end])
-            meta_res = await ai_provider.generate_metadata(clip_text, {"hook_summary": cand.hook_summary, "payoff_summary": cand.payoff_summary})
+            v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or "Video"
+            meta_res = await ai_provider.generate_metadata(
+                clip_transcript=clip_text,
+                clip_context={
+                    "hook_summary": cand.hook_summary,
+                    "payoff_summary": cand.payoff_summary,
+                    "video_title": v_title,
+                    "genre": getattr(job, "genre", "auto") or "auto",
+                    "part_index": part_idx,
+                    "total_parts": tot_parts,
+                },
+            )
 
             session.add(RenderedClip(
                 candidate_id=cand_rec.id,
@@ -864,7 +917,9 @@ class VideoProcessingPipeline:
                 caption_style=caption_style if should_burn else "none",
                 burn_captions=should_burn,
                 timeline_edit_json=json.dumps(t_edit.model_dump()),
-
+                single_para_copy=meta_res.single_para_copy,
+                part_index=part_idx,
+                total_parts=tot_parts,
                 tiktok_title=meta_res.tiktok_title,
                 tiktok_caption=meta_res.tiktok_caption,
                 tiktok_hashtags=json.dumps(meta_res.tiktok_hashtags),
@@ -876,6 +931,39 @@ class VideoProcessingPipeline:
             ))
 
             await session.commit()
+
+        # Generate consolidated titles & 5 hashtags and single-para text files for project job
+        try:
+            from app.api.routes.export import build_batch_titles_and_hashtags_text, build_batch_single_para_text, extract_5_hashtags, slugify_title
+            stmt_clips = select(RenderedClip).where(RenderedClip.job_id == job.id).order_by(RenderedClip.created_at)
+            res_clips = await session.execute(stmt_clips)
+            all_job_clips = res_clips.scalars().all()
+            if all_job_clips:
+                clips_summary = []
+                for c_idx, c_cl in enumerate(all_job_clips, start=1):
+                    t_hint = c_cl.hook_header_text or c_cl.tiktok_title or c_cl.shorts_title or f"clip_{c_idx:02d}"
+                    s_slug = slugify_title(t_hint)
+                    b_name = f"clip_{c_idx:02d}_{c_cl.id[:6]}_{s_slug}"
+                    f_tags = extract_5_hashtags(c_cl)
+                    clips_summary.append({
+                        "idx": c_idx,
+                        "clip": c_cl,
+                        "title": t_hint,
+                        "hashtags": f_tags,
+                        "filename": f"{b_name}.mp4",
+                        "duration": c_cl.duration,
+                    })
+                combined_text = build_batch_titles_and_hashtags_text(clips_summary)
+                single_para_text = build_batch_single_para_text(clips_summary)
+
+                tt_dir = settings.DATA_DIR / "titles_and_thumbnails"
+                tt_dir.mkdir(parents=True, exist_ok=True)
+                (tt_dir / "all_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                (tt_dir / "copy_paste_single_para_all_clips.txt").write_text(single_para_text, encoding="utf-8")
+                (tt_dir / f"job_{job.id[:8]}_titles_and_hashtags.txt").write_text(combined_text, encoding="utf-8")
+                logger.info(f"Generated consolidated files for project job {job.id}")
+        except Exception as ex:
+            logger.warning(f"Could not generate project titles/single-para files: {ex}")
 
         await self.update_job_progress(
             session, job, 21,

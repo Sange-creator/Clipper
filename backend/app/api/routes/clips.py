@@ -78,15 +78,23 @@ async def list_all_clips(
             penalty_deduction=cand.penalty_deduction if cand else 0.0,
         )
 
+        tags_list = json.loads(clip.tiktok_hashtags or "[]")
+        single_copy = getattr(clip, "single_para_copy", None) or f"{clip.tiktok_title or ''} — {clip.tiktok_caption or clip.shorts_description or ''} {' '.join(tags_list)}".strip()
+        part_idx = getattr(clip, "part_index", None)
+        total_p = getattr(clip, "total_parts", None)
+
         metadata = PlatformMetadata(
             tiktok_title=clip.tiktok_title or "",
             tiktok_caption=clip.tiktok_caption or "",
-            tiktok_hashtags=json.loads(clip.tiktok_hashtags or "[]"),
+            tiktok_hashtags=tags_list,
             reels_caption=clip.reels_caption or "",
             reels_hashtags=json.loads(clip.reels_hashtags or "[]"),
             shorts_title=clip.shorts_title or "",
             shorts_description=clip.shorts_description or "",
             shorts_hashtags=json.loads(clip.shorts_hashtags or "[]"),
+            single_para_copy=single_copy,
+            part_index=part_idx,
+            total_parts=total_p,
         )
 
         timeline_data = json.loads(clip.timeline_edit_json) if clip.timeline_edit_json else None
@@ -125,6 +133,9 @@ async def list_all_clips(
                 hook_text=cand.hook_text if cand else None,
                 payoff_text=cand.payoff_text if cand else None,
                 metadata=metadata,
+                single_para_copy=single_copy,
+                part_index=part_idx,
+                total_parts=total_p,
                 is_favorite=clip.is_favorite,
                 is_rejected=clip.is_rejected,
                 created_at=clip.created_at,
@@ -169,15 +180,23 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         penalty_deduction=cand.penalty_deduction if cand else 0.0,
     )
 
+    tags_list = json.loads(clip.tiktok_hashtags or "[]")
+    single_copy = getattr(clip, "single_para_copy", None) or f"{clip.tiktok_title or ''} — {clip.tiktok_caption or clip.shorts_description or ''} {' '.join(tags_list)}".strip()
+    part_idx = getattr(clip, "part_index", None)
+    total_p = getattr(clip, "total_parts", None)
+
     metadata = PlatformMetadata(
         tiktok_title=clip.tiktok_title or "",
         tiktok_caption=clip.tiktok_caption or "",
-        tiktok_hashtags=json.loads(clip.tiktok_hashtags or "[]"),
+        tiktok_hashtags=tags_list,
         reels_caption=clip.reels_caption or "",
         reels_hashtags=json.loads(clip.reels_hashtags or "[]"),
         shorts_title=clip.shorts_title or "",
         shorts_description=clip.shorts_description or "",
         shorts_hashtags=json.loads(clip.shorts_hashtags or "[]"),
+        single_para_copy=single_copy,
+        part_index=part_idx,
+        total_parts=total_p,
     )
 
     timeline_data = json.loads(clip.timeline_edit_json) if clip.timeline_edit_json else None
@@ -215,6 +234,9 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         hook_text=cand.hook_text if cand else None,
         payoff_text=cand.payoff_text if cand else None,
         metadata=metadata,
+        single_para_copy=single_copy,
+        part_index=part_idx,
+        total_parts=total_p,
         is_favorite=clip.is_favorite,
         is_rejected=clip.is_rejected,
         created_at=clip.created_at,
