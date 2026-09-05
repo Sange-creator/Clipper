@@ -151,3 +151,18 @@
   4. **Engineering Guidelines Updated in `GEMINI.md`**:
      - Mandatory rule added: Every future session MUST begin by consulting `SESSION_TRACKER.md` and Graphify (`graphify-out/GRAPH_REPORT.md` or `graphify query "<question>"`).
      - After modifying code files, assistant must run `graphify update .` to keep the AST graph synchronized.
+
+---
+
+### Session 4: Production Deployment Alias Sync (`https://ai-clipper-pro.vercel.app/`)
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"update teh changes to vercerl : https://github.com/Graphify-Labs/graphify.git"*
+  > *"https://ai-clipper-pro.vercel.app/"*
+- **Status & Actions**:
+  - Latest production deployment: `dpl_5nSqB6TwobY6GbuwaPBHrnGKbNcv` (`ai-clipper-fauo77n4m-lama8050-1395s-projects.vercel.app`).
+  - Successfully mapped and verified production aliases:
+    - `https://ai-clipper-pro.vercel.app/` -> `dpl_5nSqB6TwobY6GbuwaPBHrnGKbNcv` (HTTP/2 200 OK)
+    - `https://clipper-ai-pro.vercel.app/` -> `dpl_5nSqB6TwobY6GbuwaPBHrnGKbNcv` (HTTP/2 200 OK)
+  - All multi-genre hooks, series numbering, TikTok rounded box subtitles, and Graphify integrations are live.
+
