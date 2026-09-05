@@ -1,248 +1,248 @@
 # AI Video Clipper Pro
 
-Production-grade AI video clipping and viral content discovery platform that automatically discovers, ranks, slices, and renders high-retention short-form clips for TikTok, Instagram Reels, and YouTube Shorts.
+AI Video Clipper Pro is an automated content discovery and short-form video optimization platform. It analyzes long-form media, detects high-retention narrative moments, reframes footage to vertical 9:16 aspect ratios, generates animated subtitles, and prepares distribution-ready packages for TikTok, Instagram Reels, and YouTube Shorts.
 
 ---
 
-![AI Video Clipper Pro Multi-Device Showcase](docs/assets/clipper_3devices_showcase.jpg)
+## Architecture Overview
+
+The system uses a decoupled client-server architecture:
+
+- **Web Client (Frontend)**: Built with Next.js 15, TypeScript, Tailwind CSS, and shadcn/ui. Handles user workflows, multi-video batch management, safe-zone previewing, and subtitle customization.
+- **Media Processing Engine (Backend)**: Built with Python 3.11, FastAPI, Pydantic, FFmpeg, OpenCV, and faster-whisper. Executes deterministic 21-stage media analysis, nonlinear editing, acoustic modeling, and hardware-accelerated video rendering.
+
+### Deployment Model
+
+Due to the compute and storage demands of video transcoding, acoustic analysis, and computer vision operations, the media processing backend runs outside serverless environments.
+
+| Component | Hosted Location | Description |
+|:---|:---|:---|
+| **Web Interface** | `https://ai-clipper-pro.vercel.app/` | Production web application. Connects to any accessible Clipper backend instance via user-configured API endpoints. |
+| **Media Engine** | Local Machine / Private Server (`localhost:8000`) | Handles all FFmpeg rendering, transcription, and candidate scoring on dedicated hardware. |
+
+Users can operate the software in two configurations:
+1. **Hybrid Execution (Recommended)**: Use the hosted web interface at `https://ai-clipper-pro.vercel.app/` connected to a backend running on `localhost:8000` or a remote server.
+2. **Local Execution**: Run both the web interface (`localhost:3000`) and the backend (`localhost:8000`) locally.
 
 ---
 
-## 🌐 Live Web Application & System Architecture
+## System Requirements
 
-### Frontend Live on Vercel
-The frontend is already built, optimized, and deployed live to production on Vercel:
-👉 **[https://ai-clipper-pro.vercel.app/](https://ai-clipper-pro.vercel.app/)**
+### Processing Backend
+- Operating System: macOS, Linux, or Windows (WSL2 recommended for Windows)
+- Python: 3.11 or higher
+- FFmpeg: Version 6.0 or higher, compiled with `libass` support
+- Memory: Minimum 8 GB RAM (16 GB recommended for concurrent video processing)
+- Storage: 10 GB free disk space for temporary media processing
 
-### Why the Backend Runs on Your Local Machine or VPS
-Heavy media operations—**FFmpeg vertical 9:16 reframing, OpenCV watermark detection/erasing, acoustic audio analysis, and faster-whisper/Deepgram transcription**—require dedicated compute and cannot run inside serverless frontend functions. 
-
-Therefore, the backend **runs on your local machine (localhost:8000) or on your own VPS / GPU server**.
-
----
-
-## 🚀 Two Ways to Run AI Video Clipper Pro
-
-You have two flexible execution options:
-
-### Option 1: Hybrid Mode (Zero Frontend Setup — Recommended)
-1. Keep the **live Vercel frontend** open in your browser: [https://ai-clipper-pro.vercel.app/](https://ai-clipper-pro.vercel.app/)
-2. Start the **FastAPI backend** on your local machine (`http://127.0.0.1:8000`) or VPS.
-3. The live Vercel app automatically connects to your local backend at `http://127.0.0.1:8000/api` (or configure your custom VPS URL under **Settings**).
-4. Upload your long-form videos, extract viral moments, and download rendered 9:16 clips directly to your computer!
-
-### Option 2: Full Local Stack (Frontend + Backend on Localhost)
-1. Run the **FastAPI backend** on `http://127.0.0.1:8000`.
-2. Run the **Next.js frontend** on `http://localhost:3000`.
-3. Ideal for offline editing, custom frontend UI modifications, and self-hosted environments.
+### Web Client (Optional for Local Hosting)
+- Node.js: 18.17.0 or higher
+- Package Manager: npm, pnpm, or yarn
 
 ---
 
-## 🛠️ Step-by-Step Installation Guide
+## Quick Start
 
-### Prerequisites
-- **Python 3.11+**
-- **Node.js 18+** (only required if running the frontend locally)
-- **FFmpeg 6.0+** with `libass` support:
-  - **macOS**: `brew install ffmpeg`
-  - **Ubuntu / Debian**: `sudo apt update && sudo apt install -y ffmpeg libass-dev`
-  - **Windows**: Install via `winget install Gyan.FFmpeg` or download from [ffmpeg.org](https://ffmpeg.org).
+### 1. Start the Media Processing Backend
 
----
+Clone the repository and enter the backend directory:
 
-### 1. Backend Setup (Local Machine or VPS)
-
-Clone the repository:
 ```bash
 git clone https://github.com/Sange-creator/Clipper.git
 cd Clipper/backend
 ```
 
 Create and activate a virtual environment:
+
 ```bash
 # macOS / Linux
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Windows (Command Prompt / PowerShell)
+# Windows (PowerShell)
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\Activate.ps1
 ```
 
 Install backend dependencies:
+
 ```bash
 pip install -e .
 ```
 
-Configure your environment variables:
+Configure environment settings:
+
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` and add your API keys (optional — the engine includes a resilient mock engine for instant offline testing):
-```env
-# AI Providers (At least one recommended for production AI reasoning)
-GEMINI_API_KEY="your-gemini-api-key"
-GROQ_API_KEY="your-groq-api-key"
-DEEPGRAM_API_KEY="your-deepgram-api-key"
+Edit `.env` to configure AI provider keys (optional; a deterministic mock engine is available for offline testing):
 
-# Media Directories
+```env
+# Reasoning and Transcription Providers
+GEMINI_API_KEY=""
+GROQ_API_KEY=""
+DEEPGRAM_API_KEY=""
+
+# Media Storage Paths
 UPLOAD_DIR="./storage/uploads"
 PROCESSED_DIR="./storage/processed"
 SUBTITLE_DIR="./storage/subtitles"
 THUMBNAIL_DIR="./storage/thumbnails"
 ```
 
-Start the FastAPI backend server:
+Start the service with Uvicorn:
+
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Verify backend health in your terminal:
+Verify the backend service status:
+
 ```bash
 curl http://127.0.0.1:8000/api/health
-# Returns: {"status":"healthy","app_name":"AI Video Clipper",...}
 ```
 
-Interactive OpenAPI documentation is live at: `http://127.0.0.1:8000/docs`.
+The interactive OpenAPI specification is available at `http://localhost:8000/docs`.
 
 ---
 
-### 2. Frontend Setup (Optional if using the Live Vercel App)
+### 2. Connect the Web Interface
 
-If you wish to run the frontend locally instead of using [https://ai-clipper-pro.vercel.app/](https://ai-clipper-pro.vercel.app/):
+#### Method A: Use Hosted Web Client
+1. Navigate to `https://ai-clipper-pro.vercel.app/` in your browser.
+2. The client defaults to `http://127.0.0.1:8000/api`. If your backend runs on a different port or remote server, navigate to **Settings** and update the API base URL.
+3. Verify connection via the health badge in the top navigation bar.
+
+#### Method B: Run Web Client Locally
+To host the frontend locally:
 
 ```bash
 cd ../frontend
 npm install
-```
-
-Configure environment (defaults to `http://127.0.0.1:8000/api`):
-```bash
-cp .env.example .env.local
-```
-
-Start the Next.js development server:
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open `http://localhost:3000` in your browser.
 
 ---
 
-## 🎯 How to Use the Software
+## Processing Pipeline
 
-### 1. Single Video Clipping
-1. Click **New Upload** on the dashboard.
-2. Drag and drop any long-form MP4, MOV, MKV, or WebM video.
-3. Select your target **Duration Preset** (`15-30s`, `30-45s`, `45-60s`, `60-90s`).
-4. Select your **Hook Strategy** and **Caption Preset** (`tiktok_rounded_box`, `capcut_black_pill`, etc.).
-5. Click **Start Processing**. The 21-stage deterministic pipeline will extract audio, transcribe speech, detect climax moments, reframe to 9:16 vertical, burn subtitles, and generate viral copy.
+Every media source passes through a deterministic 21-stage execution pipeline:
 
-### 2. Multi-Video Batch Projects & Series
-1. Navigate to **Projects** -> **Create Project**.
-2. Upload 2 to 20+ videos simultaneously (e.g., a podcast season, bodycam chase archives, documentary series).
-3. Select your **Genre Directive** (e.g. *Action & Police POV*, *Military History*, *Nostalgia*, *POV Vlog*).
-4. Configure **Multi-Part Series Branding** to automatically brand each clip sequentially (`PART 1`, `PART 2`, `PART 3`, `PART 4`).
-5. Click **Start Processing** to perform cross-video global candidate ranking.
-6. Export all clips in a single click using the **Dual-Folder ZIP** or copy single-paragraph social posts directly to your clipboard.
-
----
-
-## ⚡ Core Innovations & Features
-
-### 1. Dual Hook Extraction Strategies
-Creators can choose how every extracted clip hooks the audience:
-- **5-Second Climax Teaser Hook (`teaser_climax_hook`)**:
-  - Automatically analyzes dialogue velocity, argument clashes, and adrenaline keywords to locate the most explosive 5–8 second climax in the middle or end of the clip.
-  - Slices that climax moment directly to `0:00` as an opening teaser hook.
-  - Seamlessly restarts the chronological story to meet that cut again (`keep = [[climax_start, climax_end], [story_start, story_end]]`).
-  - While the teaser plays, displays `WAIT FOR IT...`, transitioning to the authentic script headline when the main story begins.
-- **Direct Chronological Cut (`direct_chronological`)**:
-  - Trims calm intro pleasantries (*"welcome back"*, *"hey guys"*, dead air/silence).
-  - Starts instantly at `0:00` on the intense hook sentence and flows forward chronologically.
-
----
-
-### 2. Dual-Level On-Screen Captions
-Every rendered clip features a coordinated caption hierarchy:
-- **Layer 2 (`PartBadge`)**: High-contrast top-center pill badge showing clean series progression: **`PART 1`**, **`PART 2`**, **`PART 3`**, **`PART 4`** (strictly no `/N` clutter).
-- **Layer 1 (`HookHeader`)**: Dynamic headline analyzed directly from the spoken audio script (e.g., `HE WOULD NOT PULL OVER`).
-- **Layer 0**: Word-by-word animated karaoke subtitles with electric yellow highlights and rounded bounding boxes (`tiktok_rounded_box`, `capcut_black_pill`).
-
----
-
-### 3. Automated OpenCV Watermark Detection & Eraser
-- **Temporal Persistence Analysis**: Samples frames across the video and analyzes pixel variance.
-- **Canny Edge Density Scoring**: Distinguishes static logos and channel bugs from natural scene movement.
-- **Autonomous Delogo Filter**: Automatically erases watermarks clamped to corners before vertical reframing.
-
----
-
-### 4. 1-Click Single-Paragraph Social Copy
-In the clip workstation and project review tabs, creators get ready-to-post single-paragraph copy:
 ```
-Part 1: Suspect Refused To Pull Over — High-speed chase through the intersection. Nobody expected what happened next. #fyp #viral #shorts #mustwatch #trending
-```
-- **1-Click Copy Post** button copies clean formatting directly to clipboard.
-- **Download .txt** exports ready-to-schedule social media files.
-
----
-
-### 5. Strict Dual-Folder Bulk ZIP Architecture
-Batch downloads format archives with strictly two root folders:
-```
-project_export.zip/
-├── videos/
-│   ├── clip_01_PART_1_SUSPECT_REFUSED_TO_PULL_OVER.mp4
-│   ├── clip_02_PART_2_OFFICERS_BOXED_HIM_IN.mp4
-│   └── ...
-└── titles_and_thumbnails/
-    ├── copy_paste_single_para_all_clips.txt         <-- 1-Click copy for all clips
-    ├── clip_01_PART_1_thumbnail.jpg
-    ├── clip_01_PART_1_title.txt
-    ├── clip_01_PART_1_metadata.json
-    └── ...
+[Upload / Ingestion]
+       |
+       v
+ 1. Container & Codec Validation (FFprobe)
+ 2. Stream Metadata Extraction
+ 3. Job Record Initialization
+ 4. Audio Extraction (16 kHz Mono PCM WAV)
+ 5. Transcription & Word Timestamp Alignment (Deepgram / Faster-Whisper)
+ 6. Acoustic Silence & Scene Transition Analysis
+ 7. Structured Transcript Serialization
+ 8. Candidate Moment Identification
+ 9. Narrative Context Expansion
+10. Linguistic Hook & Tension Analysis
+11. Multi-Factor Composite Quality Scoring
+12. Temporal Intersection-over-Union (IoU) Non-Maximum Suppression
+13. Global Ranking & Score Normalization
+14. Target Duration Constraint Enforcement (15-30s, 30-45s, 45-60s, 60-90s)
+15. Timeline Synthesis (Climax Teaser or Direct Chronological Cut)
+16. Video Reframing & Transcoding (FFmpeg 9:16 Vertical / Frosted Canvas)
+17. Multi-Interval Subtitle Alignment (ASS / SRT Burn-in)
+18. Keyframe Thumbnail Extraction
+19. Social Distribution Metadata Generation
+20. Database Record Synchronization
+21. Job Completion Signoff
 ```
 
 ---
 
-## 🧠 AI Provider Orchestration Matrix
+## Core Capabilities
 
-AI Video Clipper Pro features an abstracted multi-provider pipeline that coordinates models based on what they do best:
+### Nonlinear Climax Teaser Hook
+For content where the peak emotional or high-energy moment occurs midway through a narrative, the system offers nonlinear timeline restructuring:
+- Identifies the highest-intensity 5 to 8 second segment within the clip boundaries.
+- Slices and inserts this climax segment at the beginning (`0:00 - 0:06`).
+- Sequentially restarts the clip from its narrative beginning, building up to the climax and payoff.
+- Subtitle timecodes and audio transitions are dynamically retimed to prevent desynchronization.
 
-| Provider | Specialized Role | Advantage |
-|:---|:---|:---|
-| **Deepgram Nova-3** | Word-level acoustic transcription | Millisecond timestamp accuracy for karaoke subtitles |
-| **Groq LPU (Llama 3.3)** | High-throughput candidate discovery | 750+ tokens/sec linguistic candidate pooling |
-| **Gemini 2.5 Flash** | Multimodal reasoning & copywriting | Scene context awareness, title hook writing & tags |
-| **Faster-Whisper** | Local speech-to-text fallback | 100% offline transcription when no cloud keys are provided |
-| **Deterministic Heuristics** | Rule-based acoustic scoring | Guarantees resilient processing even during total API outages |
+### Direct Chronological Cut
+- Detects and trims conversational pleasantries, introductory greetings, and dead air.
+- Starts playback immediately on the opening hook statement while preserving chronological flow.
+
+### Coordinated On-Screen Captions
+- **Series Identifier Badge**: Dedicated pill badge displayed at top-center (`PART 1`, `PART 2`, etc.) without fraction indicators.
+- **Hook Headline**: Real-time dialogue-analyzed topical hook banner displayed beneath the series badge.
+- **Spoken Dialogue Subtitles**: Word-level karaoke highlighting with configurable styling (`tiktok_rounded_box`, `capcut_black_pill`, `hormozi_bold`, `clean_white`).
+
+### Automated Watermark Detection and Removal
+- Uses temporal persistence variance across sample frames to detect static network bugs and watermark coordinates.
+- Applies Canny edge density filters to identify static overlays.
+- Employs FFmpeg delogo filtering to interpolate and remove detected logos prior to vertical reframing.
+
+### Multi-Platform Distribution Assets
+- **1-Click Copy**: Structured post copy combining title, hook description, and curated hashtags into a single block.
+- **Structured ZIP Export**: Bulk export packages organized into clean, predictable directories:
+  ```
+  archive.zip/
+  ├── videos/
+  │   ├── clip_01_PART_1_HOOK_TITLE.mp4
+  │   └── clip_02_PART_2_HOOK_TITLE.mp4
+  └── titles_and_thumbnails/
+      ├── copy_paste_single_para_all_clips.txt
+      ├── clip_01_PART_1_thumbnail.jpg
+      ├── clip_01_PART_1_title.txt
+      └── clip_01_PART_1_metadata.json
+  ```
 
 ---
 
-## 🧪 Testing & Verification
+## Configuration Reference
 
-Run the comprehensive automated test suite (41 tests):
+Key configuration options supported via environment variables:
+
+| Variable | Type | Default | Description |
+|:---|:---|:---|:---|
+| `GEMINI_API_KEY` | String | None | Google Gemini API key for multimodal analysis and copywriting. |
+| `GROQ_API_KEY` | String | None | Groq API key for low-latency candidate moment extraction. |
+| `DEEPGRAM_API_KEY` | String | None | Deepgram API key for word-level speech-to-text. |
+| `DATABASE_URL` | String | `sqlite+aiosqlite:///./storage/clipper.db` | SQLAlchemy database connection URI. |
+| `UPLOAD_DIR` | Path | `./storage/uploads` | Path for raw video uploads. |
+| `PROCESSED_DIR` | Path | `./storage/processed` | Path for rendered video clips. |
+| `SUBTITLE_DIR` | Path | `./storage/subtitles` | Path for generated subtitle assets (ASS/SRT). |
+| `THUMBNAIL_DIR` | Path | `./storage/thumbnails` | Path for extracted thumbnail keyframes. |
+
+---
+
+## Automated Verification
+
+The backend includes a comprehensive test suite covering API contracts, subtitle retiming, AI provider fallbacks, and rendering pipelines.
+
+Run tests:
+
 ```bash
 cd backend
 .venv/bin/pytest -v
 ```
 
-Validate frontend TypeScript types:
+Type-check frontend:
+
 ```bash
 cd frontend
 npx tsc --noEmit
 ```
 
-Keep the AST knowledge graph updated:
+Update knowledge graph:
+
 ```bash
 graphify update .
 ```
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the Apache License 2.0.
+This project is licensed under the Apache License 2.0. See the LICENSE file for details.
