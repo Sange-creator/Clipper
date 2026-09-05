@@ -458,6 +458,8 @@ class CaptionGenerator:
         keep_intervals: Optional[List[List[float]]] = None,
         part_index: Optional[int] = None,
         total_parts: Optional[int] = None,
+        part_badge_position: Optional[int] = 6,
+        part_badge_align: Optional[str] = "center",
         canvas_background: Optional[str] = None,
         framing_mode: Optional[str] = None,
     ) -> Path:
@@ -467,6 +469,7 @@ class CaptionGenerator:
         Supports multi-interval splicing (e.g. 5s climax teaser followed by narrative build-up)
         and multi-part series branding (e.g. PART 1/5 • TITLE).
         Guarantees 100% text contrast and visibility across all canvas backgrounds (including pure white).
+        Allows customizable Part Badge position and alignment (left, center, right, top to bottom).
         """
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -494,6 +497,38 @@ class CaptionGenerator:
         # Calculate Hook Header MarginV (default 12% from top -> margin_v ~ 1689 from bottom)
         hook_pos_pct = max(8, min(90, hook_header_position if hook_header_position is not None else 12))
         hook_margin_v = max(60, min(1780, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))
+
+        # Calculate Part Badge Margin and Alignment
+        part_pos_pct = max(4, min(92, part_badge_position if part_badge_position is not None else 6))
+        align_str = (part_badge_align or "center").lower().strip()
+        if part_pos_pct > 50:
+            part_margin_v = max(40, min(1800, int(1920 * (1.0 - (part_pos_pct / 100.0)))))
+            if align_str == "left":
+                part_align = 1
+                part_margin_l = 60
+                part_margin_r = 40
+            elif align_str == "right":
+                part_align = 3
+                part_margin_l = 40
+                part_margin_r = 60
+            else:
+                part_align = 2
+                part_margin_l = 40
+                part_margin_r = 40
+        else:
+            part_margin_v = max(40, min(1800, int(1920 * (part_pos_pct / 100.0))))
+            if align_str == "left":
+                part_align = 7
+                part_margin_l = 60
+                part_margin_r = 40
+            elif align_str == "right":
+                part_align = 9
+                part_margin_l = 40
+                part_margin_r = 60
+            else:
+                part_align = 8
+                part_margin_l = 40
+                part_margin_r = 40
 
         # Resolve Hook Header style (explicit or inherit from matching caption style if available)
         resolved_hook_key = hook_header_style or (style if style in self.HOOK_HEADER_STYLES else "viral_creator")
@@ -537,7 +572,7 @@ PlayResY: 1920
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Default,{font_name},{font_size},{primary_color},{secondary_color},{outline_color},{back_color},-1,0,0,0,100,100,1,0,{border_style},{outline},{shadow},2,60,60,{margin_v},1
 Style: Emphasis,{font_name},{int(font_size * 1.1)},{secondary_color},{primary_color},{outline_color},{back_color},-1,0,0,0,110,110,1,0,{border_style},{outline + 1},{shadow + 1},2,60,60,{margin_v},1
-Style: PartBadge,Arial Black,36,&H00FFFFFF&,&H0000FFFF&,&H00000000&,&H000000E6&,-1,0,0,0,100,100,1,0,3,9,0,8,40,40,75,1
+Style: PartBadge,Arial Black,36,&H00FFFFFF&,&H0000FFFF&,&H00000000&,&H000000E6&,-1,0,0,0,100,100,1,0,3,9,0,{part_align},{part_margin_l},{part_margin_r},{part_margin_v},1
 Style: HookHeader,{hook_font},{hook_size},{hook_primary},{hook_secondary},{hook_outline},{hook_back},-1,0,0,0,100,100,1,0,{hook_border},{hook_out_px},{hook_shadow_px},8,50,50,{max(140, hook_margin_v)},1
 
 [Events]
@@ -583,66 +618,67 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
                 )
 
-        # 2. Add animated spoken karaoke subtitles on Layer 0 across all intervals
-        cumulative_time = 0.0
-        for iv_start, iv_end in intervals:
-            iv_dur = max(0.0, iv_end - iv_start)
-            for seg in segments:
-                seg_start = seg.get("start", 0.0)
-                seg_end = seg.get("end", 0.0)
-                words = seg.get("words", [])
+        # 3. Add animated spoken karaoke subtitles on Layer 0 across all intervals (if caption style is active)
+        if style and style.lower().strip() != "none":
+            cumulative_time = 0.0
+            for iv_start, iv_end in intervals:
+                iv_dur = max(0.0, iv_end - iv_start)
+                for seg in segments:
+                    seg_start = seg.get("start", 0.0)
+                    seg_end = seg.get("end", 0.0)
+                    words = seg.get("words", [])
 
-                if seg_end <= iv_start or seg_start >= iv_end:
-                    continue
+                    if seg_end <= iv_start or seg_start >= iv_end:
+                        continue
 
-                rel_start = cumulative_time + max(0.0, seg_start - iv_start)
-                rel_end = cumulative_time + max(0.1, min(iv_dur, seg_end - iv_start))
+                    rel_start = cumulative_time + max(0.0, seg_start - iv_start)
+                    rel_end = cumulative_time + max(0.1, min(iv_dur, seg_end - iv_start))
 
-                if words and len(words) > 0:
-                    chunk_size = 4
-                    for c in range(0, len(words), chunk_size):
-                        chunk = words[c : c + chunk_size]
-                        first_w_start = chunk[0].get("start", seg_start)
-                        last_w_end = chunk[-1].get("end", seg_end)
-                        if last_w_end <= iv_start or first_w_start >= iv_end:
-                            continue
-
-                        c_start = cumulative_time + max(0.0, first_w_start - iv_start)
-                        c_end = cumulative_time + max(0.1, min(iv_dur, last_w_end - iv_start))
-
-                        karaoke_parts = []
-                        for w in chunk:
-                            w_raw_start = w.get("start", seg_start)
-                            w_raw_end = w.get("end", seg_end)
-                            w_start = cumulative_time + max(0.0, w_raw_start - iv_start)
-                            w_end = cumulative_time + max(0.05, min(iv_dur, w_raw_end - iv_start))
-                            duration_cs = max(10, int((w_end - w_start) * 100))
-                            word_str = strip_emojis(w.get("word", "")).strip()
-                            if uppercase:
-                                word_str = word_str.upper()
-                            if not word_str:
+                    if words and len(words) > 0:
+                        chunk_size = 4
+                        for c in range(0, len(words), chunk_size):
+                            chunk = words[c : c + chunk_size]
+                            first_w_start = chunk[0].get("start", seg_start)
+                            last_w_end = chunk[-1].get("end", seg_end)
+                            if last_w_end <= iv_start or first_w_start >= iv_end:
                                 continue
 
-                            # Check keyword emphasis
-                            if self.is_keyword_emphasis(word_str):
-                                karaoke_parts.append(f"{{\\c{secondary_color}\\fscx110\\fscy110}}{{\\k{duration_cs}}}{word_str}{{\\r}}")
-                            else:
-                                karaoke_parts.append(f"{{\\k{duration_cs}}}{word_str}")
+                            c_start = cumulative_time + max(0.0, first_w_start - iv_start)
+                            c_end = cumulative_time + max(0.1, min(iv_dur, last_w_end - iv_start))
 
-                        text_content = " ".join(karaoke_parts)
-                        start_str = self.format_timestamp_ass(c_start)
-                        end_str = self.format_timestamp_ass(c_end)
-                        dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text_content}")
-                else:
-                    text = strip_emojis(seg.get("text", "")).strip()
-                    if uppercase:
-                        text = text.upper()
-                    if text:
-                        start_str = self.format_timestamp_ass(rel_start)
-                        end_str = self.format_timestamp_ass(rel_end)
-                        dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text}")
+                            karaoke_parts = []
+                            for w in chunk:
+                                w_raw_start = w.get("start", seg_start)
+                                w_raw_end = w.get("end", seg_end)
+                                w_start = cumulative_time + max(0.0, w_raw_start - iv_start)
+                                w_end = cumulative_time + max(0.05, min(iv_dur, w_raw_end - iv_start))
+                                duration_cs = max(10, int((w_end - w_start) * 100))
+                                word_str = strip_emojis(w.get("word", "")).strip()
+                                if uppercase:
+                                    word_str = word_str.upper()
+                                if not word_str:
+                                    continue
 
-            cumulative_time += iv_dur
+                                # Check keyword emphasis
+                                if self.is_keyword_emphasis(word_str):
+                                    karaoke_parts.append(f"{{\\c{secondary_color}\\fscx110\\fscy110}}{{\\k{duration_cs}}}{word_str}{{\\r}}")
+                                else:
+                                    karaoke_parts.append(f"{{\\k{duration_cs}}}{word_str}")
+
+                            text_content = " ".join(karaoke_parts)
+                            start_str = self.format_timestamp_ass(c_start)
+                            end_str = self.format_timestamp_ass(c_end)
+                            dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text_content}")
+                    else:
+                        text = strip_emojis(seg.get("text", "")).strip()
+                        if uppercase:
+                            text = text.upper()
+                        if text:
+                            start_str = self.format_timestamp_ass(rel_start)
+                            end_str = self.format_timestamp_ass(rel_end)
+                            dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text}")
+
+                cumulative_time += iv_dur
 
         with open(out_file, "w", encoding="utf-8") as f:
             f.write(ass_header + "\n".join(dialogue_lines) + "\n")

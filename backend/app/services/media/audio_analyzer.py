@@ -122,15 +122,48 @@ def extract_topic_keywords(transcript: str, top_n: int = 5) -> List[str]:
     return [w for w, _ in sorted_words[:top_n]]
 
 
-def clean_hook_title(text: str, max_words: int = 9) -> str:
-    """Format a spoken sentence into a punchy, clean title without punctuation noise or emojis."""
+TRAILING_STOP_WORDS = {
+    "the", "a", "an", "on", "in", "at", "to", "for", "of", "and", "or", "but", "with",
+    "by", "so", "that", "whether", "if", "into", "onto", "from", "my", "your", "his", "her",
+    "their", "our", "its"
+}
+
+
+def clean_hook_title(text: str, max_words: int = 8) -> str:
+    """
+    Format a spoken sentence into an engaging, high-CTR hook headline:
+    - Splits on first natural clause punctuation (?, !, :, ;) if it makes a punchy statement
+    - Enforces complete thoughts, never ending on hanging prepositions or stop words (e.g. 'THE THE', 'ON')
+    - Cleans punctuation noise, outer quotes, and emojis
+    """
     clean = strip_emojis(text).strip()
     clean = re.sub(r"^[\"']|[\"']$", "", clean).strip()
-    clean = clean.rstrip(".,;:- ")
+
+    is_question = "?" in clean
+    # If sentence contains a question mark, preserve the question up to the mark
+    if "?" in clean:
+        q_part = clean.split("?")[0] + "?"
+        if 2 <= len(q_part.split()) <= max_words:
+            clean = q_part
+
+    # Split into words and limit length
     words = clean.split()
     if len(words) > max_words:
-        clean = " ".join(words[:max_words])
-    return clean
+        words = words[:max_words]
+
+    # Strip trailing stop words and hanging prepositions/articles
+    while words and words[-1].lower().rstrip(".,;:-!?") in TRAILING_STOP_WORDS:
+        words.pop()
+
+    if not words:
+        words = clean.split()[:max_words]
+
+    result = " ".join(words).strip()
+    result = re.sub(r"^[\"']|[\"']$", "", result).strip()
+    result = result.rstrip(",;:- ")
+    if is_question and not result.endswith("?"):
+        result += "?"
+    return result
 
 
 def build_single_para_post(
@@ -372,19 +405,27 @@ class AudioHookAnalyzer:
         clip_start: float,
         clip_end: float,
         genre: Optional[str] = None,
-        max_words: int = 7,
+        max_words: int = 8,
+        candidate_summary: Optional[str] = None,
     ) -> str:
         """
         Extracts an eye-catching, hooked headline directly analyzing the spoken dialogue of the clip.
-        Prefers urgent commands, questions, shocking statements, or high-intensity phrases.
+        Prefers urgent commands, questions, shocking statements, high-stakes revelations, or high-intensity phrases.
         """
         clip_segs = [
             s for s in transcript_segments
             if float(s.get("end", 0.0)) > clip_start and float(s.get("start", 0.0)) < clip_end
         ]
 
+        # Prioritize candidate summary if it contains a verified punchy hook
+        cleaned_summary = ""
+        if candidate_summary:
+            cand_clean = clean_hook_title(candidate_summary, max_words=max_words)
+            if len(cand_clean.split()) >= 3 and not any(p in cand_clean.lower() for p in CALM_INTRO_PENALTIES):
+                cleaned_summary = cand_clean.upper()
+
         if not clip_segs:
-            return "WATCH TILL THE END"
+            return cleaned_summary or "WATCH TILL THE END"
 
         best_cand = ""
         best_score = -1.0
@@ -400,30 +441,34 @@ class AudioHookAnalyzer:
 
             score = 10.0
             if any(k in lower for k in CHAOS_ACTION_KEYWORDS):
-                score += 30.0
+                score += 35.0
             if any(k in lower for k in ARGUMENT_CLASH_KEYWORDS):
-                score += 28.0
+                score += 32.0
             if "?" in raw:
-                score += 20.0
+                score += 25.0
             if "!" in raw:
-                score += 15.0
+                score += 20.0
             if any(k in lower for k in HIGH_RETENTION_KEYWORDS):
-                score += 15.0
+                score += 20.0
 
             w_len = len(raw.split())
             if 3 <= w_len <= 8:
-                score += 10.0
+                score += 15.0
 
-            if score > best_score:
+            cand_headline = clean_hook_title(raw, max_words=max_words).upper()
+            if len(cand_headline.split()) >= 2 and score > best_score:
                 best_score = score
-                best_cand = clean_hook_title(raw, max_words=max_words).upper()
+                best_cand = cand_headline
 
-        if best_cand:
+        if best_cand and len(best_cand.split()) >= 2:
             return best_cand
+
+        if cleaned_summary:
+            return cleaned_summary
 
         first_text = strip_emojis(clip_segs[0].get("text", "")).strip()
         cleaned = clean_hook_title(first_text, max_words=max_words).upper()
-        return cleaned if cleaned else "WATCH TILL THE END"
+        return cleaned if (cleaned and len(cleaned.split()) >= 2) else "WATCH TILL THE END"
 
     def discover_candidates(
         self,

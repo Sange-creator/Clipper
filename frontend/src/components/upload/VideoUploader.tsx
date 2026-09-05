@@ -38,6 +38,11 @@ import {
   Sun,
   Moon,
   Eye,
+  Bookmark,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Tag,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
@@ -71,6 +76,8 @@ export function VideoUploader() {
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>("viral_creator");
+  const [partBadgePosition, setPartBadgePosition] = useState<number>(6);
+  const [partBadgeAlign, setPartBadgeAlign] = useState<"center" | "left" | "right">("center");
   const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
   const [watermarkPosition, setWatermarkPosition] = useState<string>("auto");
   const [isScanningWatermark, setIsScanningWatermark] = useState<boolean>(false);
@@ -172,8 +179,8 @@ export function VideoUploader() {
     setError(null);
 
     try {
-      const willBurn = burnCaptions && captionStyle !== "none";
-      const resolvedCaptionStyle = willBurn ? (captionStyle || "tiktok_viral") : "none";
+      const willBurn = Boolean(burnCaptions || addHookHeader);
+      const resolvedCaptionStyle = burnCaptions && captionStyle !== "none" ? (captionStyle || "tiktok_viral") : (addHookHeader ? "tiktok_viral" : "none");
 
       const job = await api.createJob({
         video_id: uploadedVideo.id,
@@ -185,6 +192,8 @@ export function VideoUploader() {
         add_hook_header: addHookHeader,
         hook_header_position: hookHeaderPosition,
         hook_header_style: hookHeaderStyle,
+        part_badge_position: partBadgePosition,
+        part_badge_align: partBadgeAlign,
         remove_watermark: removeWatermark,
         watermark_position: watermarkPosition,
         enhance_quality: enhanceQuality,
@@ -844,24 +853,42 @@ export function VideoUploader() {
                       : { background: "radial-gradient(circle, rgba(6,182,212,0.3) 0%, rgba(15,23,42,0.95) 100%)" }
                   }
                 >
-                  {/* Top Canvas Area */}
-                  <div className="flex flex-col items-center space-y-0.5 z-10 pt-0.5">
-                    <span className="px-1.5 py-0.2 rounded text-[7px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
+                  {/* Series Part Badge Overlay */}
+                  <div
+                    className={`absolute z-20 pointer-events-none transition-all duration-150 ${
+                      partBadgeAlign === "left"
+                        ? "left-2"
+                        : partBadgeAlign === "right"
+                        ? "right-2"
+                        : "left-1/2 -translate-x-1/2"
+                    }`}
+                    style={{ top: `${Math.min(Math.max(partBadgePosition, 3), 90)}%` }}
+                  >
+                    <span className="px-1.5 py-0.5 rounded text-[7px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
                       PART 1
                     </span>
-                    <span
-                      className="text-[7.5px] font-black text-center uppercase tracking-tight px-1 leading-tight"
-                      style={{
-                        color: "#FFFFFF",
-                        textShadow:
-                          canvasBackground === "white"
-                            ? "0 0 3px #000, 0 0 5px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
-                            : "0 0 2px #000, 1px 1px 1px #000",
-                      }}
-                    >
-                      {addHookHeader ? "CRITICAL REVELATION" : ""}
-                    </span>
                   </div>
+
+                  {/* Hook Header Overlay */}
+                  {addHookHeader && (
+                    <div
+                      className="absolute left-1 right-1 z-10 pointer-events-none transition-all duration-150 flex justify-center"
+                      style={{ top: `${Math.min(Math.max(hookHeaderPosition, 8), 85)}%` }}
+                    >
+                      <span
+                        className="text-[7.5px] font-black text-center uppercase tracking-tight px-1 leading-tight"
+                        style={{
+                          color: "#FFFFFF",
+                          textShadow:
+                            canvasBackground === "white"
+                              ? "0 0 3px #000, 0 0 5px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+                              : "0 0 2px #000, 1px 1px 1px #000",
+                        }}
+                      >
+                        CRITICAL REVELATION
+                      </span>
+                    </div>
+                  )}
 
                   {/* Centered 16:9 Video Frame */}
                   <div className="w-full aspect-video rounded bg-zinc-900 border border-white/20 flex items-center justify-center my-auto shadow relative overflow-hidden">
@@ -872,20 +899,25 @@ export function VideoUploader() {
                   </div>
 
                   {/* Bottom Canvas Area (Subtitles) */}
-                  <div className="flex flex-col items-center z-10 pb-0.5">
-                    <span
-                      className="text-[7.5px] font-black text-center uppercase tracking-tight leading-tight px-1"
-                      style={{
-                        color: "#FFFFFF",
-                        textShadow:
-                          canvasBackground === "white"
-                            ? "0 0 3px #000, 0 0 5px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
-                            : "0 0 2px #000, 1px 1px 1px #000",
-                      }}
+                  {burnCaptions && (
+                    <div
+                      className="absolute left-1 right-1 z-10 pointer-events-none transition-all duration-150 flex justify-center"
+                      style={{ top: `${Math.min(Math.max(subtitlePosition, 50), 90)}%` }}
                     >
-                      <span className="text-yellow-300">100% VISIBLE</span> TEXT
-                    </span>
-                  </div>
+                      <span
+                        className="text-[7.5px] font-black text-center uppercase tracking-tight leading-tight px-1"
+                        style={{
+                          color: "#FFFFFF",
+                          textShadow:
+                            canvasBackground === "white"
+                              ? "0 0 3px #000, 0 0 5px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+                              : "0 0 2px #000, 1px 1px 1px #000",
+                        }}
+                      >
+                        <span className="text-yellow-300">100% VISIBLE</span> TEXT
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Preview details */}
@@ -1221,6 +1253,17 @@ export function VideoUploader() {
 
                   {/* Phone Preview indicator */}
                   <div className="w-10 h-16 rounded-md bg-black/70 border border-amber-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                    {/* Part Badge indicator */}
+                    <div
+                      className={`absolute h-1 bg-violet-400 rounded-full shadow-sm shadow-violet-400/80 transition-all duration-150 ${
+                        partBadgeAlign === "left"
+                          ? "left-1 w-3"
+                          : partBadgeAlign === "right"
+                          ? "right-1 w-3"
+                          : "left-2.5 right-2.5"
+                      }`}
+                      style={{ top: `${partBadgePosition}%` }}
+                    />
                     <div
                       className="absolute left-1 right-1 h-1.5 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
                       style={{ top: `${hookHeaderPosition}%` }}
@@ -1322,6 +1365,159 @@ export function VideoUploader() {
                 No persistent top header overlay. Only spoken karaoke subtitles will be displayed.
               </p>
             )}
+          </div>
+
+          {/* Series Part Badge Position (Part 1, Part 2...) */}
+          <div className="glass-panel rounded-xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bookmark className="h-4 w-4 text-violet-400" />
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-semibold text-white">Series Part Badge Position</h4>
+                    <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/20">
+                      Part 1, Part 2...
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400">Choose exact on-screen position & alignment for multi-part series badges</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 bg-zinc-900/80 p-1 rounded-lg border border-white/10">
+                {(["left", "center", "right"] as const).map((align) => (
+                  <button
+                    key={align}
+                    type="button"
+                    onClick={() => setPartBadgeAlign(align)}
+                    className={`p-1.5 rounded text-xs transition-all ${
+                      partBadgeAlign === align
+                        ? "bg-violet-600 text-white shadow-sm"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                    title={`Align ${align}`}
+                  >
+                    {align === "left" && <AlignLeft className="h-3.5 w-3.5" />}
+                    {align === "center" && <AlignCenter className="h-3.5 w-3.5" />}
+                    {align === "right" && <AlignRight className="h-3.5 w-3.5" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3 pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-semibold text-violet-300 flex items-center gap-1.5">
+                  <span>Part Badge Screen Position:</span>
+                  <span className="font-mono text-white bg-violet-500/20 px-1.5 py-0.5 rounded text-[10px]">
+                    {partBadgePosition}% from Top ({partBadgeAlign})
+                  </span>
+                </label>
+                <span className="text-[10px] text-zinc-400">
+                  {partBadgePosition <= 10
+                    ? "Top Banner (Recommended)"
+                    : partBadgePosition <= 25
+                    ? "Upper-Third"
+                    : partBadgePosition <= 60
+                    ? "Center Screen"
+                    : "Bottom Anchor"}
+                </span>
+              </div>
+
+              {/* Position Presets */}
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                {[
+                  { label: "Top Center", pos: 6, align: "center" as const },
+                  { label: "Top Left", pos: 6, align: "left" as const },
+                  { label: "Top Right", pos: 6, align: "right" as const },
+                  { label: "Above Hook", pos: 4, align: "center" as const },
+                  { label: "Upper 3rd", pos: 20, align: "center" as const },
+                  { label: "Bottom Bar", pos: 88, align: "center" as const },
+                ].map((p, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setPartBadgePosition(p.pos);
+                      setPartBadgeAlign(p.align);
+                    }}
+                    className={`rounded-lg py-1.5 px-1.5 text-center text-[10px] font-medium border transition-all ${
+                      partBadgePosition === p.pos && partBadgeAlign === p.align
+                        ? "bg-violet-600/30 border-violet-400 text-white shadow-sm ring-1 ring-violet-500/50"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                    }`}
+                  >
+                    {p.label} ({p.pos}%)
+                  </button>
+                ))}
+              </div>
+
+              {/* Slider with Live Phone Mockup Indicator */}
+              <div className="flex items-center gap-3 pt-1">
+                <div className="flex-1 space-y-1">
+                  <input
+                    type="range"
+                    min={3}
+                    max={90}
+                    step={1}
+                    value={partBadgePosition}
+                    onChange={(e) => setPartBadgePosition(Number(e.target.value))}
+                    className="w-full accent-violet-500 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[9px] text-zinc-500">
+                    <span>Top (3%)</span>
+                    <span>Upper (20%)</span>
+                    <span>Center (50%)</span>
+                    <span>Bottom (90%)</span>
+                  </div>
+                </div>
+
+                {/* Phone Preview indicator */}
+                <div className="w-12 h-20 rounded-md bg-black/80 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-inner flex flex-col justify-between p-1">
+                  <div
+                    className={`absolute z-20 transition-all duration-150 ${
+                      partBadgeAlign === "left"
+                        ? "left-1"
+                        : partBadgeAlign === "right"
+                        ? "right-1"
+                        : "left-1/2 -translate-x-1/2"
+                    }`}
+                    style={{ top: `${partBadgePosition}%` }}
+                  >
+                    <span className="px-1 py-0.2 rounded text-[6px] font-black tracking-wider uppercase bg-violet-600 text-white shadow">
+                      PART 1
+                    </span>
+                  </div>
+
+                  {addHookHeader && (
+                    <div
+                      className="absolute left-1 right-1 h-1 bg-amber-400/60 rounded-full transition-all duration-150"
+                      style={{ top: `${hookHeaderPosition}%` }}
+                      title="Hook Header Position"
+                    />
+                  )}
+
+                  {burnCaptions && (
+                    <div
+                      className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
+                      style={{ top: `${subtitlePosition}%` }}
+                      title="Spoken Subtitles Position"
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-[10px] text-zinc-400 pt-1">
+                <span>Badge Preview:</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-zinc-500">Style:</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
+                    PART 1
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
+                    PART 2
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Dead-Air Removal Toggle */}

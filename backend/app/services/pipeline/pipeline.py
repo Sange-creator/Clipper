@@ -493,9 +493,19 @@ class VideoProcessingPipeline:
                         job_add_hook = True
                     job_hook_pos = getattr(job, "hook_header_position", None) or 12
                     job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
+                    job_part_pos = getattr(job, "part_badge_position", None)
+                    if job_part_pos is None:
+                        job_part_pos = config.get("part_badge_position", 6)
+                    job_part_align = getattr(job, "part_badge_align", None)
+                    if not job_part_align:
+                        job_part_align = config.get("part_badge_align", "center")
 
-                    script_headline = audio_analyzer.extract_hook_headline_from_script(raw_segments, cand.start, cand.end, video_genre)
-                    hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand.hook_summary or cand.reason or "")
+                    # Extract engaging, relevant hook headline from audio script and candidate context
+                    cand_summary_hint = getattr(cand, "hook_summary", None) or cand.reason or ""
+                    script_headline = audio_analyzer.extract_hook_headline_from_script(
+                        raw_segments, cand.start, cand.end, video_genre, candidate_summary=cand_summary_hint
+                    )
+                    hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand_summary_hint)
 
                     job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
                     job_canvas_background = getattr(job, "canvas_background", None) or "blur"
@@ -505,6 +515,12 @@ class VideoProcessingPipeline:
                     job_enhance_quality = getattr(job, "enhance_quality", True)
                     if job_enhance_quality is None:
                         job_enhance_quality = True
+
+                    # Guaranteed burn logic: Burn whenever subtitles, hook header, or series badges are active
+                    if burn_captions and (not caption_style or caption_style == "none"):
+                        caption_style = "tiktok_viral"
+
+                    should_burn = bool(burn_captions or (caption_style and caption_style != "none") or job_add_hook or (tot_parts and tot_parts > 1))
 
                     captioner.generate_ass(
                         raw_segments,
@@ -520,6 +536,8 @@ class VideoProcessingPipeline:
                         keep_intervals=t_edit.keep,
                         part_index=part_idx,
                         total_parts=tot_parts,
+                        part_badge_position=job_part_pos,
+                        part_badge_align=job_part_align,
                         canvas_background=job_canvas_background,
                         framing_mode=job_framing_mode,
                     )
@@ -535,7 +553,6 @@ class VideoProcessingPipeline:
 
                     # FFmpeg render
                     out_video_path = settings.PROCESSED_DIR / f"{clip_id}.mp4"
-                    should_burn = burn_captions and caption_style != "none"
 
                     if out_video_path.exists() and out_video_path.stat().st_size > 50000:
                         logger.info(f"Clip {clip_id} already rendered ({out_video_path.stat().st_size} bytes), skipping render.")
@@ -620,6 +637,8 @@ class VideoProcessingPipeline:
                         single_para_copy=meta_res.single_para_copy,
                         part_index=part_idx,
                         total_parts=tot_parts,
+                        part_badge_position=job_part_pos,
+                        part_badge_align=job_part_align,
                         tiktok_title=meta_res.tiktok_title,
                         tiktok_caption=meta_res.tiktok_caption,
                         tiktok_hashtags=json.dumps(meta_res.tiktok_hashtags),
@@ -884,10 +903,19 @@ class VideoProcessingPipeline:
                 job_add_hook = True
             job_hook_pos = getattr(job, "hook_header_position", None) or 12
             job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
+            job_part_pos = getattr(job, "part_badge_position", None)
+            if job_part_pos is None:
+                job_part_pos = config.get("part_badge_position", 6)
+            job_part_align = getattr(job, "part_badge_align", None)
+            if not job_part_align:
+                job_part_align = config.get("part_badge_align", "center")
             part_idx = idx
 
-            script_headline = audio_analyzer.extract_hook_headline_from_script(segs, cand.start, cand.end, v_genre)
-            hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand.hook_summary or cand.reason or "")
+            cand_summary_hint = cand.hook_summary or cand.reason or ""
+            script_headline = audio_analyzer.extract_hook_headline_from_script(
+                segs, cand.start, cand.end, v_genre, candidate_summary=cand_summary_hint
+            )
+            hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand_summary_hint)
 
             job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
             job_canvas_background = getattr(job, "canvas_background", None) or "blur"
@@ -897,6 +925,11 @@ class VideoProcessingPipeline:
             job_enhance_quality = getattr(job, "enhance_quality", True)
             if job_enhance_quality is None:
                 job_enhance_quality = True
+
+            if burn_captions and (not caption_style or caption_style == "none"):
+                caption_style = "tiktok_viral"
+
+            should_burn = bool(burn_captions or (caption_style and caption_style != "none") or job_add_hook or (tot_parts and tot_parts > 1))
 
             captioner.generate_ass(
                 segs,
@@ -912,6 +945,8 @@ class VideoProcessingPipeline:
                 keep_intervals=t_edit.keep,
                 part_index=part_idx,
                 total_parts=tot_parts,
+                part_badge_position=job_part_pos,
+                part_badge_align=job_part_align,
                 canvas_background=job_canvas_background,
                 framing_mode=job_framing_mode,
             )
@@ -924,8 +959,6 @@ class VideoProcessingPipeline:
                 part_index=part_idx,
                 total_parts=tot_parts,
             )
-
-            should_burn = burn_captions and caption_style != "none"
 
             await renderer.render_clip(
                 source_video_path=v_path,
@@ -990,6 +1023,8 @@ class VideoProcessingPipeline:
                 single_para_copy=meta_res.single_para_copy,
                 part_index=part_idx,
                 total_parts=tot_parts,
+                part_badge_position=job_part_pos,
+                part_badge_align=job_part_align,
                 tiktok_title=meta_res.tiktok_title,
                 tiktok_caption=meta_res.tiktok_caption,
                 tiktok_hashtags=json.dumps(meta_res.tiktok_hashtags),

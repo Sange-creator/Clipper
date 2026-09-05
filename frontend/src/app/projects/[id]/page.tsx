@@ -38,6 +38,11 @@ import {
   Radio,
   Palette,
   CheckCircle2,
+  Bookmark,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Tag,
 } from "lucide-react";
 
 
@@ -61,6 +66,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
   const [genre, setGenre] = useState<VideoGenre>("auto");
   const [enableSeriesParts, setEnableSeriesParts] = useState<boolean>(true);
+  const [partBadgePosition, setPartBadgePosition] = useState<number>(6);
+  const [partBadgeAlign, setPartBadgeAlign] = useState<"center" | "left" | "right">("center");
   const [aiProvider, setAiProvider] = useState<"hybrid" | "gemini" | "groq">("hybrid");
   const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
@@ -131,8 +138,10 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         ai_provider: aiProvider,
         target_clips_count: targetClips,
         duration_preset: durationPreset as any,
-        caption_style: burnCaptions ? (captionStyle || "tiktok_viral") : "none",
-        burn_captions: burnCaptions && captionStyle !== "none",
+        caption_style: burnCaptions && captionStyle !== "none" ? (captionStyle || "tiktok_viral") : (addHookHeader ? "tiktok_viral" : "none"),
+        burn_captions: Boolean(burnCaptions || addHookHeader),
+        part_badge_position: partBadgePosition,
+        part_badge_align: partBadgeAlign,
         add_hook_header: addHookHeader,
         hook_header_position: hookHeaderPosition,
         hook_header_style: hookHeaderStyle,
@@ -671,6 +680,117 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   />
                 </button>
               </div>
+
+              {enableSeriesParts && (
+                <div className="space-y-3 pt-3 border-t border-white/5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-semibold text-violet-300 flex items-center gap-1.5">
+                      <Bookmark className="h-3.5 w-3.5 text-violet-400" />
+                      <span>Part Badge Screen Position:</span>
+                      <span className="font-mono text-white bg-violet-500/20 px-1.5 py-0.5 rounded text-[10px]">
+                        {partBadgePosition}% from Top ({partBadgeAlign})
+                      </span>
+                    </label>
+                    <div className="flex items-center gap-1 bg-zinc-900/80 p-0.5 rounded-lg border border-white/10">
+                      {(["left", "center", "right"] as const).map((align) => (
+                        <button
+                          key={align}
+                          type="button"
+                          onClick={() => setPartBadgeAlign(align)}
+                          className={`p-1 rounded text-xs transition-all ${
+                            partBadgeAlign === align
+                              ? "bg-violet-600 text-white shadow-sm"
+                              : "text-zinc-400 hover:text-white"
+                          }`}
+                          title={`Align ${align}`}
+                        >
+                          {align === "left" && <AlignLeft className="h-3 w-3" />}
+                          {align === "center" && <AlignCenter className="h-3 w-3" />}
+                          {align === "right" && <AlignRight className="h-3 w-3" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Position Presets */}
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                    {[
+                      { label: "Top Center", pos: 6, align: "center" as const },
+                      { label: "Top Left", pos: 6, align: "left" as const },
+                      { label: "Top Right", pos: 6, align: "right" as const },
+                      { label: "Above Hook", pos: 4, align: "center" as const },
+                      { label: "Upper 3rd", pos: 20, align: "center" as const },
+                      { label: "Bottom Bar", pos: 88, align: "center" as const },
+                    ].map((p, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setPartBadgePosition(p.pos);
+                          setPartBadgeAlign(p.align);
+                        }}
+                        className={`rounded-lg py-1 px-1 text-center text-[10px] font-medium border transition-all ${
+                          partBadgePosition === p.pos && partBadgeAlign === p.align
+                            ? "bg-violet-600/30 border-violet-400 text-white shadow-sm ring-1 ring-violet-500/50"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                        }`}
+                      >
+                        {p.label} ({p.pos}%)
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Slider with Live Phone Mockup */}
+                  <div className="flex items-center gap-3 pt-1">
+                    <div className="flex-1 space-y-1">
+                      <input
+                        type="range"
+                        min={3}
+                        max={90}
+                        step={1}
+                        value={partBadgePosition}
+                        onChange={(e) => setPartBadgePosition(Number(e.target.value))}
+                        className="w-full accent-violet-500 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                      />
+                      <div className="flex justify-between text-[9px] text-zinc-500">
+                        <span>Top (3%)</span>
+                        <span>Upper (20%)</span>
+                        <span>Center (50%)</span>
+                        <span>Bottom (90%)</span>
+                      </div>
+                    </div>
+
+                    <div className="w-12 h-20 rounded-md bg-black/80 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-inner flex flex-col justify-between p-1">
+                      <div
+                        className={`absolute z-20 transition-all duration-150 ${
+                          partBadgeAlign === "left"
+                            ? "left-1"
+                            : partBadgeAlign === "right"
+                            ? "right-1"
+                            : "left-1/2 -translate-x-1/2"
+                        }`}
+                        style={{ top: `${partBadgePosition}%` }}
+                      >
+                        <span className="px-1 py-0.2 rounded text-[6px] font-black tracking-wider uppercase bg-violet-600 text-white shadow">
+                          PART 1
+                        </span>
+                      </div>
+                      {addHookHeader && (
+                        <div
+                          className="absolute left-1 right-1 h-1 bg-amber-400/60 rounded-full transition-all duration-150"
+                          style={{ top: `${hookHeaderPosition}%` }}
+                        />
+                      )}
+                      {burnCaptions && (
+                        <div
+                          className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
+                          style={{ top: `${subtitlePosition}%` }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* AI Engine Selection */}
@@ -1123,6 +1243,18 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </div>
 
                     <div className="w-9 h-14 rounded-md bg-black/80 border border-amber-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                      {enableSeriesParts && (
+                        <div
+                          className={`absolute h-1 bg-violet-400 rounded-full shadow-sm shadow-violet-400/80 transition-all duration-150 ${
+                            partBadgeAlign === "left"
+                              ? "left-1 w-2.5"
+                              : partBadgeAlign === "right"
+                              ? "right-1 w-2.5"
+                              : "left-2 right-2"
+                          }`}
+                          style={{ top: `${partBadgePosition}%` }}
+                        />
+                      )}
                       <div
                         className="absolute left-1 right-1 h-1.5 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
                         style={{ top: `${hookHeaderPosition}%` }}

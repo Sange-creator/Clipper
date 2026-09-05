@@ -42,6 +42,8 @@ async def create_clipping_job(
         req.burn_captions = True
     elif req.burn_captions and (not req.caption_style or req.caption_style == "none"):
         req.caption_style = "tiktok_viral"
+    if req.add_hook_header:
+        req.burn_captions = True
 
     config_dict = req.model_dump()
     db_job = Job(
@@ -57,6 +59,8 @@ async def create_clipping_job(
         add_hook_header=req.add_hook_header,
         hook_header_position=req.hook_header_position or 12,
         hook_header_style=getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
+        part_badge_position=getattr(req, "part_badge_position", 6) or 6,
+        part_badge_align=getattr(req, "part_badge_align", "center") or "center",
         remove_watermark=req.remove_watermark,
         watermark_position=req.watermark_position or "top_right",
         enhance_quality=req.enhance_quality if req.enhance_quality is not None else True,

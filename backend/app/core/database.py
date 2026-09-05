@@ -74,7 +74,11 @@ async def init_db() -> None:
             ("jobs", "genre", "VARCHAR(64) DEFAULT 'auto'"),
             ("jobs", "enable_series_parts", "BOOLEAN DEFAULT 1"),
             ("jobs", "canvas_background", "VARCHAR(32) DEFAULT 'blur'"),
+            ("jobs", "part_badge_position", "INTEGER DEFAULT 6"),
+            ("jobs", "part_badge_align", "VARCHAR(16) DEFAULT 'center'"),
             ("rendered_clips", "canvas_background", "VARCHAR(32) DEFAULT 'blur'"),
+            ("rendered_clips", "part_badge_position", "INTEGER DEFAULT 6"),
+            ("rendered_clips", "part_badge_align", "VARCHAR(16) DEFAULT 'center'"),
         ]
 
         for table, col, col_type in migrations:

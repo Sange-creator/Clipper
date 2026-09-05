@@ -1,16 +1,16 @@
 # Graph Report - Clipper  (2026-09-06)
 
 ## Corpus Check
-- 113 files · ~6,006,606 words
+- 113 files · ~6,027,246 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1299 nodes · 1737 edges · 128 communities (110 shown, 18 thin omitted)
-- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 224 edges (avg confidence: 0.71)
+- 1341 nodes · 1780 edges · 138 communities (119 shown, 19 thin omitted)
+- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 225 edges (avg confidence: 0.71)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `25c12f7d`
+- Built from commit: `6ba3f295`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -140,6 +140,16 @@
 - [[_COMMUNITY_Community 125|Community 125]]
 - [[_COMMUNITY_Community 126|Community 126]]
 - [[_COMMUNITY_Community 127|Community 127]]
+- [[_COMMUNITY_Community 128|Community 128]]
+- [[_COMMUNITY_Community 129|Community 129]]
+- [[_COMMUNITY_Community 130|Community 130]]
+- [[_COMMUNITY_Community 131|Community 131]]
+- [[_COMMUNITY_Community 132|Community 132]]
+- [[_COMMUNITY_Community 133|Community 133]]
+- [[_COMMUNITY_Community 134|Community 134]]
+- [[_COMMUNITY_Community 135|Community 135]]
+- [[_COMMUNITY_Community 136|Community 136]]
+- [[_COMMUNITY_Community 137|Community 137]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `RawCandidateMoment` - 28 edges
@@ -162,22 +172,22 @@
   backend/app/services/pipeline/pipeline.py → backend/app/core/models.py
 - `create_project()` --calls--> `Project`  [INFERRED]
   backend/app/api/routes/projects.py → backend/app/core/models.py
-- `VideoProcessingPipeline` --uses--> `Video`  [INFERRED]
-  backend/app/services/pipeline/pipeline.py → backend/app/core/models.py
+- `test_single_mp4_and_batch_export_endpoints()` --calls--> `Project`  [INFERRED]
+  backend/tests/test_export.py → backend/app/core/models.py
 
-## Communities (128 total, 18 thin omitted)
+## Communities (138 total, 19 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.1
 Nodes (31): BaseModel, AdminMetricsResponse, BatchUploadResponse, BulkClipActionRequest, CandidateDetail, CandidateScores, ClipEditRequest, ClipRegenerateRequest (+23 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.12
-Nodes (15): bulk_delete_projects(), create_project(), delete_project(), list_projects(), process_project(), Project management, multi-video batch upload, and project-wide clipping endpoint, Triggers cross-video global candidate discovery and ranking across all project v, Delete a single project workspace and cascade all its jobs, clips, and candidate (+7 more)
+Cohesion: 0.18
+Nodes (10): create_project(), get_project(), list_projects(), process_project(), Project management, multi-video batch upload, and project-wide clipping endpoint, Get project details, containing all source videos and generated clips., Triggers cross-video global candidate discovery and ranking across all project v, Triggers cross-video global candidate discovery and ranking across all project v (+2 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.06
-Nodes (32): health_check(), lifespan(), FastAPI application entrypoint for AI Video Clipper platform., Application lifespan context for startup and shutdown routines., System health check and diagnostic information., get_db(), init_db(), Database setup, async engine and session management with automatic SQLite migrat (+24 more)
+Nodes (33): health_check(), lifespan(), FastAPI application entrypoint for AI Video Clipper platform., Application lifespan context for startup and shutdown routines., System health check and diagnostic information., get_db(), init_db(), Database setup, async engine and session management with automatic SQLite migrat (+25 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.1
@@ -188,12 +198,12 @@ Cohesion: 0.06
 Nodes (33): AI Provider Abstraction, API Cost Control, Candidate Discovery, Captions, Clip Review Interface, Code Style, Context Expansion, Core Architecture (+25 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.06
-Nodes (34): AudioHookAnalyzer, build_single_para_post(), clean_hook_title(), extract_topic_keywords(), Audio Hook & Linguistic Momentum Analyzer. Extracts high-retention opening hooks, Remove Unicode emojis and decorative pictographs from text.     Guarantees clean, Extract salient, meaningful topic keywords from the spoken dialogue., Format a spoken sentence into a punchy, clean title without punctuation noise or (+26 more)
+Cohesion: 0.15
+Nodes (12): CaptionGenerator, Resolve caption preset configuration with normalized alias matching., Check if a word matches high-impact keyword patterns (numbers, shock adjectives), Generate an Advanced SubStation Alpha (.ass) subtitle file.         All timestam, Generate an Advanced SubStation Alpha (.ass) subtitle file.         All timestam, Generate an Advanced SubStation Alpha (.ass) subtitle file.         All timestam, Generates styled animated ASS and standard SRT subtitle files with keyword empha, Unit tests for the 6 caption presets and keyword emphasis engine. (+4 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.06
-Nodes (27): get_discovery_prompt(), Prompt templates and structured schemas for AI reasoning providers (Multi-Genre,, Return the optimized system prompt with genre directives and video title analysi, Silence and Dead-Air Detector using FFmpeg analysis., Detects silence and dead-air intervals in audio/video media., Run FFmpeg silencedetect filter to extract quiet audio regions., SilenceDetector, SilenceInterval (+19 more)
+Cohesion: 0.24
+Nodes (7): Silence and Dead-Air Detector using FFmpeg analysis., Detects silence and dead-air intervals in audio/video media., Run FFmpeg silencedetect filter to extract quiet audio regions., SilenceDetector, SilenceInterval, Test dead-air interval removal and kept segments generation., test_silence_detector_timeline_cuts()
 
 ### Community 7 - "Community 7"
 Cohesion: 0.06
@@ -212,8 +222,8 @@ Cohesion: 0.1
 Nodes (16): get_ai_provider(), HybridOrchestratedAIProvider, AI Provider Factory with dynamic configuration, multi-API orchestration, and aut, Best-of-Breed Multi-API Orchestration Engine.     Assigns each AI provider to wh, High-resilience composite AI Provider that automatically handles provider failur, Return an AI reasoning provider:     - 'orchestrated' / 'hybrid': Best-of-breed, ResilientAIProvider, MockAIProvider (+8 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.14
-Nodes (14): dependencies, class-variance-authority, clsx, lucide-react, @radix-ui/react-dialog, @radix-ui/react-progress, @radix-ui/react-slider, @radix-ui/react-slot (+6 more)
+Cohesion: 0.06
+Nodes (34): dependencies, class-variance-authority, clsx, lucide-react, next, @radix-ui/react-dialog, @radix-ui/react-progress, @radix-ui/react-slider (+26 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.22
@@ -229,15 +239,15 @@ Nodes (25): build_batch_single_para_text(), build_batch_titles_and_hashtags_text
 
 ### Community 15 - "Community 15"
 Cohesion: 0.15
-Nodes (11): Represents a timestamped speech-to-text transcript., Represents a detected visual scene cut., Scene, Transcript, Update job stage, calculated progress percentage, logs, and stage checkpoints., Executes the 21-stage deterministic pipeline for short-form content generation., Execute all 21 pipeline stages sequentially with stage resumption., Update job stage, calculated progress percentage, logs, and stage checkpoints. (+3 more)
+Nodes (11): AIRequestLog, Audit trail and observability log for external and local AI requests., Audit trail and observability log for external and local AI requests., Audit trail and observability log for external and local AI requests., Update job stage, calculated progress percentage, logs, and stage checkpoints., Executes the 21-stage deterministic pipeline for short-form content generation., Execute all 21 pipeline stages sequentially with stage resumption., Update job stage, calculated progress percentage, logs, and stage checkpoints. (+3 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.17
 Nodes (15): AdminMetricsResponse, BatchUploadResponse, CandidateDetail, JobCreatePayload, LogEntry, ProjectCreatePayload, ProjectDetailResponse, ProjectListItem (+7 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.29
-Nodes (6): ClipCandidate, Represents a high-potential clip candidate moment scored across 12 dimensions., Represents a high-potential clip candidate moment scored across 12 dimensions., ClipRegeneratorService, Strategic Clip Regeneration Engine implementing user intents., Regenerates clips based on user strategic feedback (stronger hook, shorter, long
+Cohesion: 0.25
+Nodes (7): Represents a rendered 9:16 vertical short clip with burned captions and platform, Represents a rendered 9:16 vertical short clip with burned captions and platform, Represents a rendered 9:16 vertical short clip with burned captions and platform, RenderedClip, ClipRegeneratorService, Strategic Clip Regeneration Engine implementing user intents., Regenerates clips based on user strategic feedback (stronger hook, shorter, long
 
 ### Community 18 - "Community 18"
 Cohesion: 0.1
@@ -256,16 +266,16 @@ Cohesion: 0.11
 Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.16
-Nodes (14): bulk_delete_clips(), get_clip(), Clip details, interactive re-trimming, strategic regeneration, and user feedback, Retrieve full clip information, 12-score breakdown, and platform metadata., Manually edit boundaries, hook header, and layout, then re-render clip., Re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered cl, Re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered cl, Strategic AI Clip Regeneration (stronger hook, shorter, longer, different payoff (+6 more)
+Cohesion: 0.06
+Nodes (39): Tracks human review actions and feedback for future quality learning., Tracks human review actions and feedback for future quality learning., Tracks human review actions and feedback for future quality learning., UserFeedback, bulk_delete_clips(), delete_clip(), get_clip(), Clip details, interactive re-trimming, strategic regeneration, and user feedback (+31 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.08
-Nodes (29): AIRequestLog, Base, generate_uuid(), Job, PerformanceAnalytics, Project, SQLAlchemy ORM models for the AI Video Clipper platform (Next Version)., Represents a 21-stage clipping processing pipeline job with checkpointing. (+21 more)
+Cohesion: 0.11
+Nodes (21): Base, generate_uuid(), PerformanceAnalytics, Project, SQLAlchemy ORM models for the AI Video Clipper platform (Next Version)., Generate a clean hex UUID string., Return current UTC timestamp., Schema for future learning system to track historical clip performance. (+13 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.06
-Nodes (31): cancel_job(), create_clipping_job(), delete_job(), get_job_candidates(), get_job_status(), list_all_jobs(), Job creation, status monitoring, and real-time SSE progress streaming., Retrieve current status, stage progress, and logs for a job. (+23 more)
+Cohesion: 0.05
+Nodes (38): cancel_job(), create_clipping_job(), delete_job(), get_job_candidates(), get_job_status(), list_all_jobs(), Job creation, status monitoring, and real-time SSE progress streaming., List all processing jobs across single videos and projects. (+30 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.13
@@ -277,7 +287,7 @@ Nodes (10): Computer Vision-based automatic watermark and logo detector using Op
 
 ### Community 27 - "Community 27"
 Cohesion: 0.12
-Nodes (16): AI Clipper — Next Version Backlog, Backlog Rules for Future Development, Definition of Done — Next Version, EPIC 14 — Quality Evaluation, EPIC 15 — Learning From Real Performance, EPIC 8 — Thumbnails & Visual Packaging, P0-44 — Offline Evaluation Dataset, P1-26 — Automatic Thumbnail Selection (+8 more)
+Nodes (15): AI Clipper — Next Version Backlog, Backlog Rules for Future Development, code:text (AI finds clips), code:text (AI discovers), Definition of Done — Next Version, EPIC 15 — Learning From Real Performance, EPIC 8 — Thumbnails & Visual Packaging, Future Vision (+7 more)
 
 ### Community 28 - "Community 28"
 Cohesion: 0.19
@@ -380,12 +390,12 @@ Cohesion: 0.33
 Nodes (6): code:text (accepted), EPIC 6 — Clip Review Studio, P0-19 — Clip Review Grid, P0-20 — Manual Boundary Editing, P1-21 — Regenerate Clip, P1-22 — Favorites & Rejection Feedback
 
 ### Community 53 - "Community 53"
-Cohesion: 0.15
-Nodes (12): AI Video Clipper — Session & Progress Tracker, Current Architecture & System Overview, Session 1: Multi-Genre Viral Hook Detection, Series Branding & Single-Paragraph Export, Session 2: Session Tracking System, Git Commits & Vercel Deployment, Session 3: Live Server Alias Correction & Graphify Installation (Local & Global Antigravity), Session 4: Production Deployment Alias Sync (`https://ai-clipper-pro.vercel.app/`), Session 5: Dual Captions (Part 1..N + Script Headline) & Teaser Climax Timeline Splicing, Session 6: Clean Series Numbering (Strictly `PART 1`, `PART 2` without `/N`) (+4 more)
+Cohesion: 0.14
+Nodes (13): AI Video Clipper — Session & Progress Tracker, Current Architecture & System Overview, Session 10: Canvas Background Customization & High-Contrast Readability Guarantee, Session 1: Multi-Genre Viral Hook Detection, Series Branding & Single-Paragraph Export, Session 2: Session Tracking System, Git Commits & Vercel Deployment, Session 3: Live Server Alias Correction & Graphify Installation (Local & Global Antigravity), Session 4: Production Deployment Alias Sync (`https://ai-clipper-pro.vercel.app/`), Session 5: Dual Captions (Part 1..N + Script Headline) & Teaser Climax Timeline Splicing (+5 more)
 
 ### Community 54 - "Community 54"
-Cohesion: 0.2
-Nodes (9): get_delogo_filter(), Video rendering service utilizing FFmpeg for 9:16 crop, timeline splicing, subti, Generate safe delogo filter coordinates to cleanly remove watermarks/logos witho, Retime subtitle Dialogue events when dead-air intervals have been spliced out of, Renders a short-form video clip from source:         - Accurately cuts between s, Renders a short-form video clip from source:         - Accurately cuts between s, retime_ass_subtitles(), Test delogo coordinates for all corners and comprehensive metadata stripping arg (+1 more)
+Cohesion: 0.33
+Nodes (5): get_delogo_filter(), Video rendering service utilizing FFmpeg for 9:16 crop, timeline splicing, subti, Generate safe delogo filter coordinates to cleanly remove watermarks/logos witho, Test delogo coordinates for all corners and comprehensive metadata stripping arg, test_watermark_removal_filter_and_metadata_stripping()
 
 ### Community 55 - "Community 55"
 Cohesion: 0.4
@@ -420,16 +430,16 @@ Cohesion: 0.4
 Nodes (4): buildCommand, devCommand, framework, installCommand
 
 ### Community 64 - "Community 64"
-Cohesion: 0.12
-Nodes (15): Build kept timeline slices [ [t1, t2], [t3, t4] ] for a candidate window [start_, TimelineEdit, Deterministic 21-stage video processing pipeline orchestrator with stage checkpo, Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project., Constructs the clip timeline and script-analyzed hook headline based on user hoo (+7 more)
+Cohesion: 0.17
+Nodes (10): Build kept timeline slices [ [t1, t2], [t3, t4] ] for a candidate window [start_, TimelineEdit, Deterministic 21-stage video processing pipeline orchestrator with stage checkpo, Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project., Executes multi-video batch processing across all videos in a project. (+2 more)
 
 ### Community 65 - "Community 65"
 Cohesion: 0.5
 Nodes (4): code:text (originals/), EPIC 11 — Storage & Media Lifecycle, P0-36 — Object Storage, P1-37 — Cleanup Policies
 
 ### Community 66 - "Community 66"
-Cohesion: 0.22
-Nodes (8): name, private, scripts, build, dev, lint, start, version
+Cohesion: 0.15
+Nodes (12): AudioHookAnalyzer, Analyzes spoken audio transcript timestamps and linguistic patterns     to disco, Evaluate the hook strength of the opening 10-15 seconds.         Prefers chaos,, Analyzes spoken audio transcript timestamps and linguistic patterns     to disco, Evaluate the hook strength of the opening 10-15 seconds.         Prefers chaos,, Evaluate how cleanly the clip concludes with a payoff or clear takeaway., Locate the single most explosive 5-8 second climax/fight/chaos/argument window, Discovers candidate moments anchored to high-retention spoken dialogue hooks. (+4 more)
 
 ### Community 67 - "Community 67"
 Cohesion: 0.5
@@ -536,16 +546,16 @@ Cohesion: 0.14
 Nodes (13): AI Video Clipper Pro, Architecture Overview, code:block9 ([Upload / Ingestion]), Configuration Reference, Deployment Model, Deterministic 21-Stage Video Pipeline, License, Live Deployment (+5 more)
 
 ### Community 100 - "Community 100"
-Cohesion: 0.15
-Nodes (12): batch_upload_videos(), Batch Upload (20–30+ files):     Validates, computes stable SHA-256 hashes, dete, Upload a long-form video file:     - Validates extension and file integrity., upload_video(), compute_file_hash(), compute_string_hash(), Hashing utilities for content identification and caching., Compute SHA-256 hash of a string. (+4 more)
+Cohesion: 0.25
+Nodes (7): Upload a long-form video file:     - Validates extension and file integrity., upload_video(), compute_file_hash(), compute_string_hash(), Hashing utilities for content identification and caching., Compute SHA-256 hash of a string., Compute SHA-256 hash of a file efficiently without loading entirely into memory.
 
 ### Community 113 - "Community 113"
-Cohesion: 0.15
-Nodes (13): Tracks human review actions and feedback for future quality learning., Tracks human review actions and feedback for future quality learning., UserFeedback, Store human review action (accepted, rejected, favorite, edited) for future lear, Store human review action (accepted, rejected, favorite, edited) for future lear, Toggle clip favorite state., Toggle clip favorite state., submit_feedback() (+5 more)
+Cohesion: 0.2
+Nodes (9): build_single_para_post(), extract_topic_keywords(), Audio Hook & Linguistic Momentum Analyzer. Extracts high-retention opening hooks, Extract salient, meaningful topic keywords from the spoken dialogue., Format a ready-to-paste single paragraph combining title, description, and hasht, Format a ready-to-paste single paragraph combining title, description, and hasht, Generates realistic, meaningful social metadata directly summarizing the spoken, Generates realistic, meaningful social metadata directly summarizing the spoken (+1 more)
 
 ### Community 114 - "Community 114"
-Cohesion: 0.2
-Nodes (10): list_all_clips(), Retrieve all globally generated rendered clips across all jobs with filtering., get_job_clips(), Retrieve all rendered 9:16 clips for a job., Retrieve all rendered 9:16 clips for a job., Retrieve all rendered 9:16 clips for a job., get_project(), Get project details, containing all source videos and generated clips. (+2 more)
+Cohesion: 0.22
+Nodes (9): list_all_clips(), Retrieve all globally generated rendered clips across all jobs with filtering., get_job_clips(), Retrieve all rendered 9:16 clips for a job., Retrieve all rendered 9:16 clips for a job., Retrieve all rendered 9:16 clips for a job., Retrieve all rendered 9:16 clips for a job., get_media_url() (+1 more)
 
 ### Community 115 - "Community 115"
 Cohesion: 0.25
@@ -568,8 +578,8 @@ Cohesion: 0.4
 Nodes (5): 2. Connect the Web Interface, code:bash (cd ../frontend), Method A: Use Hosted Web Client, Method B: Run Web Client Locally, Quick Start
 
 ### Community 120 - "Community 120"
-Cohesion: 0.25
-Nodes (8): devDependencies, autoprefixer, postcss, tailwindcss, @types/node, @types/react, @types/react-dom, typescript
+Cohesion: 0.22
+Nodes (8): Job, Represents a 21-stage clipping processing pipeline job with checkpointing., Represents an uploaded source video., Video, Tests for single MP4 download, clip ZIP packages, and batch exports., test_single_mp4_and_batch_export_endpoints(), End-to-end test of the full 21-stage deterministic video processing pipeline., test_end_to_end_21_stage_pipeline()
 
 ### Community 121 - "Community 121"
 Cohesion: 0.5
@@ -584,31 +594,65 @@ Cohesion: 0.25
 Nodes (6): Renders sliced, vertically reframed, and captioned 9:16 video clips with FFmpeg., Extract a crisp, high-quality, representative non-black frame for thumbnail prev, Extract a crisp, high-quality, representative non-black frame for thumbnail prev, Extract a crisp, high-quality, representative non-black frame for thumbnail prev, Extract a crisp, high-quality, representative non-black frame for thumbnail prev, VideoRenderer
 
 ### Community 125 - "Community 125"
-Cohesion: 0.4
-Nodes (4): next, Tests for canvas backgrounds (white, black, obsidian, violet, sunset, ocean) and, Verify that white canvas enforces thick 8px solid black stroke and deep shadow f, test_white_canvas_high_contrast_subtitles()
+Cohesion: 0.22
+Nodes (8): Test user requirement:     - 4 clips generated by user must show PART 1/4, PART, Test user requirement:     - User must be able to choose custom screen position, Test timeline structure for teaser_climax_hook vs direct_chronological., Test that ASS and SRT subtitles cleanly retime across teaser + story intervals., test_captioner_keep_intervals_teaser_retiming(), test_custom_part_badge_position_and_alignment(), test_four_clips_part_badges_and_audio_script_hook_captions(), test_hook_strategy_timeline_edits()
 
 ### Community 126 - "Community 126"
-Cohesion: 0.67
-Nodes (3): code:text (AI finds clips), code:text (AI discovers), Future Vision
+Cohesion: 0.22
+Nodes (8): Tests for intense 10-second hook scoring, multi-genre candidate discovery, multi, Verify that calm greetings receive heavy penalties and chaos/fights receive stro, Test generating subtitles with the tiktok_rounded_box (rounded translucent pill), Test building a 1-click single-paragraph copy-paste block., Test building a 1-click single-paragraph copy-paste block., test_audio_script_analyzer_hook_penalties_and_boosts(), test_single_para_builder(), test_tiktok_rounded_box_caption_preset()
 
 ### Community 127 - "Community 127"
-Cohesion: 0.67
-Nodes (3): delete_clip(), Permanently delete a rendered clip., Permanently delete a rendered clip.
+Cohesion: 0.29
+Nodes (7): clean_hook_title(), Remove Unicode emojis and decorative pictographs from text.     Guarantees clean, Format a spoken sentence into a punchy, clean title without punctuation noise or, Format a spoken sentence into an engaging, high-CTR hook headline:     - Splits, Extracts an eye-catching, hooked headline directly analyzing the spoken dialogue, Extracts an eye-catching, hooked headline directly analyzing the spoken dialogue, strip_emojis()
+
+### Community 128 - "Community 128"
+Cohesion: 0.29
+Nodes (6): batch_upload_videos(), Batch Upload (20–30+ files):     Validates, computes stable SHA-256 hashes, dete, Batch Upload (20–30+ files):     Validates, computes stable SHA-256 hashes, dete, Storage and path management utilities., Sanitize a filename to prevent path traversal and shell injection., sanitize_filename()
+
+### Community 129 - "Community 129"
+Cohesion: 0.29
+Nodes (6): Retime subtitle Dialogue events when dead-air intervals have been spliced out of, Renders a short-form video clip from source:         - Accurately cuts between s, Renders a short-form video clip from source:         - Accurately cuts between s, retime_ass_subtitles(), Test re-timing of ASS subtitle dialog lines when dead air is cut., test_retime_ass_subtitles()
+
+### Community 130 - "Community 130"
+Cohesion: 0.33
+Nodes (5): get_discovery_prompt(), Prompt templates and structured schemas for AI reasoning providers (Multi-Genre,, Return the optimized system prompt with genre directives and video title analysi, Verify that all genres are configured and include first 10-second hook directive, test_genre_directives_and_hook_prompts()
+
+### Community 131 - "Community 131"
+Cohesion: 0.33
+Nodes (5): Tests for V3 Backlog Features: Silence Detection, Timeline Cuts, Subtitle Toggli, Test dedicated system prompts for Podcast vs Viral Moments., Test that MockAIProvider respects mode and generates 14-factor V3 scores., test_mock_ai_provider_modes_and_v3_scores(), test_v3_prompt_generation_for_modes()
+
+### Community 132 - "Community 132"
+Cohesion: 0.4
+Nodes (5): bulk_delete_projects(), Delete multiple project workspaces and their contents., Delete multiple project workspaces and their contents., Delete multiple project workspaces and their contents., Delete multiple project workspaces and their contents.
+
+### Community 133 - "Community 133"
+Cohesion: 0.4
+Nodes (5): delete_project(), Delete a single project workspace and cascade all its jobs, clips, and candidate, Delete a single project workspace and cascade all its jobs, clips, and candidate, Delete a single project workspace and cascade all its jobs, clips, and candidate, Delete a single project workspace and cascade all its jobs, clips, and candidate
+
+### Community 134 - "Community 134"
+Cohesion: 0.5
+Nodes (3): format_tiktok_hook_header(), Config-driven caption generator with captivating TikTok creator styling, animate, Format text into a high-CTR, punchy TikTok creator hook header:     - Clean uppe
+
+### Community 135 - "Community 135"
+Cohesion: 0.5
+Nodes (4): EPIC 14 — Quality Evaluation, P0-44 — Offline Evaluation Dataset, P1-45 — Clip Quality Metrics, P2-46 — A/B Prompt Evaluation
+
+### Community 136 - "Community 136"
+Cohesion: 0.5
+Nodes (4): ClipCandidate, Represents a high-potential clip candidate moment scored across 12 dimensions., Represents a high-potential clip candidate moment scored across 12 dimensions., Represents a high-potential clip candidate moment scored across 12 dimensions.
 
 ## Knowledge Gaps
-- **641 isolated node(s):** `framework`, `buildCommand`, `devCommand`, `installCommand`, `config` (+636 more)
+- **682 isolated node(s):** `framework`, `buildCommand`, `devCommand`, `installCommand`, `config` (+677 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `next` connect `Community 125` to `Community 64`, `Community 11`, `Community 54`, `Community 15`?**
-  _High betweenness centrality (0.161) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `Community 11` to `Community 66`, `Community 125`?**
-  _High betweenness centrality (0.148) - this node is a cross-community bridge._
+- **Why does `next` connect `Community 11` to `Community 64`, `Community 129`, `Community 15`?**
+  _High betweenness centrality (0.164) - this node is a cross-community bridge._
 - **Why does `cn()` connect `Community 8` to `Community 11`, `Community 28`?**
-  _High betweenness centrality (0.130) - this node is a cross-community bridge._
+  _High betweenness centrality (0.132) - this node is a cross-community bridge._
 - **Are the 25 inferred relationships involving `RawCandidateMoment` (e.g. with `DeduplicationService` and `RankingService`) actually correct?**
   _`RawCandidateMoment` has 25 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 17 inferred relationships involving `MockAIProvider` (e.g. with `CandidateDiscoveryService` and `ResilientAIProvider`) actually correct?**
@@ -617,3 +661,5 @@ _Questions this graph is uniquely positioned to answer:_
   _`VideoProcessingPipeline` has 10 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 9 inferred relationships involving `GeminiProvider` (e.g. with `AIProviderError` and `AIProvider`) actually correct?**
   _`GeminiProvider` has 9 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `framework`, `buildCommand`, `devCommand` to the rest of the system?**
+  _682 weakly-connected nodes found - possible documentation gaps or missing edges._

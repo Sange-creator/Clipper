@@ -257,6 +257,8 @@ export const api = {
     hook_header_position?: number;
     hook_header_style?: string;
     hook_header_text?: string;
+    part_badge_position?: number;
+    part_badge_align?: "center" | "left" | "right";
     remove_watermark?: boolean;
     watermark_position?: string;
     enhance_quality?: boolean;
@@ -287,6 +289,8 @@ export const api = {
     hook_header_position?: number;
     hook_header_style?: string;
     hook_header_text?: string;
+    part_badge_position?: number;
+    part_badge_align?: "center" | "left" | "right";
     remove_watermark?: boolean;
     watermark_position?: string;
     enhance_quality?: boolean;

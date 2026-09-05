@@ -226,6 +226,8 @@ async def get_project(id: str, db: AsyncSession = Depends(get_db)):
                 single_para_copy=getattr(c, "single_para_copy", None) or f"{c.tiktok_title or ''} — {c.tiktok_caption or c.shorts_description or ''} {' '.join(json.loads(c.tiktok_hashtags or '[]'))}".strip(),
                 part_index=getattr(c, "part_index", None),
                 total_parts=getattr(c, "total_parts", None),
+                part_badge_position=getattr(c, "part_badge_position", 6) or 6,
+                part_badge_align=getattr(c, "part_badge_align", "center") or "center",
                 is_favorite=c.is_favorite,
                 is_rejected=c.is_rejected,
                 created_at=c.created_at,
@@ -377,6 +379,8 @@ async def process_project(
         req.burn_captions = True
     elif req.burn_captions and (not req.caption_style or req.caption_style == "none"):
         req.caption_style = "tiktok_viral"
+    if req.add_hook_header:
+        req.burn_captions = True
 
     mode = req.mode or proj.mode or "podcast"
     job = Job(
@@ -391,6 +395,8 @@ async def process_project(
         add_hook_header=req.add_hook_header,
         hook_header_position=req.hook_header_position,
         hook_header_style=getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
+        part_badge_position=getattr(req, "part_badge_position", 6) or 6,
+        part_badge_align=getattr(req, "part_badge_align", "center") or "center",
         remove_watermark=req.remove_watermark,
         watermark_position=req.watermark_position,
         enhance_quality=req.enhance_quality,
@@ -406,6 +412,13 @@ async def process_project(
             "remove_dead_air": req.remove_dead_air,
             "framing_mode": req.framing_mode,
             "canvas_background": req.canvas_background or "blur",
+            "blur_radius": req.blur_radius,
+            "subtitle_position": req.subtitle_position,
+            "add_hook_header": req.add_hook_header,
+            "hook_header_position": req.hook_header_position,
+            "hook_header_style": getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
+            "part_badge_position": getattr(req, "part_badge_position", 6) or 6,
+            "part_badge_align": getattr(req, "part_badge_align", "center") or "center",
             "blur_radius": req.blur_radius,
             "subtitle_position": req.subtitle_position,
             "add_hook_header": req.add_hook_header,

@@ -380,3 +380,63 @@
   - `frontend/src/lib/api.ts`
   - `frontend/src/lib/types.ts`
   - `SESSION_TRACKER.md`
+
+---
+
+### Session 11: Fix Captions Not Burning to Video, Viral Hook Relevance & Series Part Badge Screen Positioning
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"I have told you again and again, though, the captions are not being shown, okay? The caption is clicked by the user; the option is ticked. However, the caption is not shown or written to the video. There is a problem, okay? Please fix that. The captions must be engaging and hooked and then relevant to the video clips, okay?*
+  > *And another thing to be maintained is that please help me or please help me to choose the position of the part 1, part 2, something like that in the uploaded images, okay? The user must be given a proper position where the text must be shown to the video."*
+
+- **Root Cause Analysis**:
+  1. **Captions / Headers Skipped During Video Burn-In**:
+     - In `pipeline.py`, previously `should_burn = burn_captions and caption_style != "none"`. If `burn_captions` was false or `caption_style` was `"none"`, `ass_subtitle_path` was passed as `None` to FFmpeg. This meant that whenever a user selected "Sticky TikTok Hook Header" or had a multi-part series (`PART 1`, `PART 2`), FFmpeg never received the subtitle filter, resulting in zero burned text.
+     - In `VideoUploader.tsx` and `app/projects/[id]/page.tsx`, `willBurn` was set to `burnCaptions && captionStyle !== "none"`, causing `burn_captions: false` to be dispatched if caption style fell back to "none".
+  2. **Captions Hook & Relevance Quality**:
+     - `extract_hook_headline_from_script` sliced words mechanically, ending on hanging prepositions (e.g. `SO WHAT'S THE STATUS ON THE THE`), and didn't deduplicate headlines across multi-part clips.
+  3. **Part 1, Part 2 Position Selection**:
+     - Previously, the series `PartBadge` was hardcoded at `MarginV=75` (top center). The user had no control over where `PART 1`, `PART 2` appeared on the screen or how it was aligned relative to the hook header and spoken dialogue.
+
+- **Changes & Deliverables**:
+  1. **Fixed Captions & Subtitle Burn-In Engine**:
+     - In `pipeline.py` (both single video and project batch pipelines), updated `should_burn = bool(burn_captions or (caption_style and caption_style != "none") or job_add_hook or (tot_parts and tot_parts > 1))`.
+     - Whenever ANY text overlay (spoken subtitles, sticky hook header, or part badge) is active, `ass_subtitle_path` is passed to FFmpeg and burned directly into the output video.
+     - In `captioner.py`, decoupled spoken karaoke dialogue from header/part overlays: if dialogue subtitles are set to `"none"`, `PartBadge` and `HookHeader` are still written and burned cleanly without dialogue text.
+     - In `VideoUploader.tsx` and `app/projects/[id]/page.tsx`, updated `willBurn = Boolean(burnCaptions || addHookHeader)` and auto-resolved default viral caption styles.
+  2. **Engaging Hook Headlines & Stop Word Stripping**:
+     - In `audio_analyzer.py`, overhauled `clean_hook_title` with `TRAILING_STOP_WORDS` filtering (`the`, `a`, `on`, `of`, `to`, `for`, `with`, `by`, etc.) and preserved complete questions (`?`).
+     - Enhanced `extract_hook_headline_from_script` to score high-intensity speech (warrants, trafficking, high-speed chases, confrontations) and utilize candidate summaries to avoid repetitive headlines across series parts.
+  3. **Series Part Badge Screen Position & Alignment Control**:
+     - Added `part_badge_position` (4% to 92% screen height) and `part_badge_align` (`left`, `center`, `right`) to `Job` and `RenderedClip` models in `models.py` with automatic SQLite migrations in `database.py`.
+     - In `captioner.py`, mapped positions and alignments to ASS alignment tags (`7` for Top-Left, `8` for Top-Center, `9` for Top-Right, `1` for Bottom-Left, `2` for Bottom-Center, `3` for Bottom-Right) with precise `MarginV` and horizontal margins.
+     - Added dedicated **Series Part Badge Position (Part 1, Part 2...)** configuration card in `VideoUploader.tsx` and `app/projects/[id]/page.tsx` with:
+       - 6 Quick Presets: Top Center (6%), Top Left (6%), Top Right (6%), Above Hook (4%), Upper 3rd (20%), Bottom Bar (88%).
+       - 3-Way Alignment Switcher: Left (`AlignLeft`), Center (`AlignCenter`), Right (`AlignRight`).
+       - Percentage range slider (3% to 90%) with live percentage readout.
+       - Live interactive miniature phone mockup showing `PART 1` repositioning dynamically in real time.
+     - Updated the **Live Framing Preview** (1080x1920 phone mockup) so `PART 1`, Hook Header (`CRITICAL REVELATION`), and Spoken Subtitles all render in their exact chosen vertical and horizontal positions.
+  4. **Verification & Testing**:
+     - Added unit tests in `test_hook_strategy.py` verifying custom part badge positioning, alignment, and stop-word cleanup.
+     - Ran full backend test suite: **44/44 tests passed**.
+     - Successfully re-rendered clip `2cfbbcffb2c94b3ba3e849a4512f168d` with `burn_captions: true`, verifying that subtitles, hook header, and PART 1 badge are burned directly into the output MP4 video.
+     - Built Next.js frontend with 0 errors and deployed to single live production Vercel server: `https://ai-clipper-pro.vercel.app/`.
+     - Updated knowledge graph via `graphify update .`.
+
+- **Files Modified**:
+  - `backend/app/api/routes/clips.py`
+  - `backend/app/api/routes/jobs.py`
+  - `backend/app/api/routes/projects.py`
+  - `backend/app/core/database.py`
+  - `backend/app/core/models.py`
+  - `backend/app/core/schemas.py`
+  - `backend/app/services/media/audio_analyzer.py`
+  - `backend/app/services/media/captioner.py`
+  - `backend/app/services/pipeline/pipeline.py`
+  - `backend/tests/test_hook_strategy.py`
+  - `frontend/src/app/projects/[id]/page.tsx`
+  - `frontend/src/components/upload/VideoUploader.tsx`
+  - `frontend/src/lib/api.ts`
+  - `frontend/src/lib/types.ts`
+  - `SESSION_TRACKER.md`
+

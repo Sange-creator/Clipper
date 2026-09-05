@@ -142,6 +142,8 @@ class RenderedClipResponse(BaseModel):
     single_para_copy: Optional[str] = None
     part_index: Optional[int] = None
     total_parts: Optional[int] = None
+    part_badge_position: Optional[int] = 6
+    part_badge_align: Optional[str] = "center"
     is_favorite: bool = False
     is_rejected: bool = False
     created_at: datetime
@@ -195,6 +197,8 @@ class ProjectProcessRequest(BaseModel):
     watermark_position: str = "top_right"
     enhance_quality: bool = True
     hook_strategy: Literal["teaser_climax_hook", "direct_chronological"] = "teaser_climax_hook"
+    part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
+    part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
     source_diversity_weight: float = Field(default=0.35, ge=0.0, le=1.0)
@@ -221,6 +225,8 @@ class JobCreateRequest(BaseModel):
     add_hook_header: bool = False
     hook_header_position: int = Field(default=12, ge=8, le=90)
     hook_header_style: Optional[str] = "viral_creator"
+    part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
+    part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
     remove_watermark: bool = False
     watermark_position: str = "top_right"
     enhance_quality: bool = True
@@ -260,6 +266,8 @@ class ClipEditRequest(BaseModel):
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     hook_header_style: Optional[str] = None
     hook_header_text: Optional[str] = None
+    part_badge_position: Optional[int] = Field(default=None, ge=4, le=92)
+    part_badge_align: Optional[Literal["center", "left", "right"]] = None
     remove_watermark: Optional[bool] = None
     watermark_position: Optional[str] = None
     enhance_quality: Optional[bool] = None
@@ -276,6 +284,8 @@ class ClipRegenerateRequest(BaseModel):
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     hook_header_style: Optional[str] = None
     hook_header_text: Optional[str] = None
+    part_badge_position: Optional[int] = Field(default=None, ge=4, le=92)
+    part_badge_align: Optional[Literal["center", "left", "right"]] = None
     remove_watermark: Optional[bool] = None
     watermark_position: Optional[str] = None
     enhance_quality: Optional[bool] = None

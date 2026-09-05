@@ -237,6 +237,8 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         single_para_copy=single_copy,
         part_index=part_idx,
         total_parts=total_p,
+        part_badge_position=getattr(clip, "part_badge_position", 6) or 6,
+        part_badge_align=getattr(clip, "part_badge_align", "center") or "center",
         is_favorite=clip.is_favorite,
         is_rejected=clip.is_rejected,
         created_at=clip.created_at,
@@ -308,6 +310,10 @@ async def rerender_clip(
     clip.duration = final_dur
     clip.caption_style = style
     hook_style = req.hook_header_style if req.hook_header_style is not None else (getattr(clip, "hook_header_style", "viral_creator") or "viral_creator")
+    part_pos = req.part_badge_position if req.part_badge_position is not None else (getattr(clip, "part_badge_position", None) or 6)
+    part_align = req.part_badge_align if req.part_badge_align is not None else (getattr(clip, "part_badge_align", "center") or "center")
+    clip.part_badge_position = part_pos
+    clip.part_badge_align = part_align
     clip.burn_captions = req.burn_captions
     clip.framing_mode = framing
     clip.canvas_background = canvas_bg
@@ -343,15 +349,27 @@ async def rerender_clip(
         hook_header_position=hook_pos,
         hook_header_style=hook_style,
         keep_intervals=t_edit.keep,
+        part_index=clip.part_index,
+        total_parts=clip.total_parts,
+        part_badge_position=part_pos,
+        part_badge_align=part_align,
         canvas_background=canvas_bg,
         framing_mode=framing,
     )
-    captioner.generate_srt(segments, start_time, end_time, srt_path, keep_intervals=t_edit.keep)
+    captioner.generate_srt(
+        segments,
+        start_time,
+        end_time,
+        srt_path,
+        keep_intervals=t_edit.keep,
+        part_index=clip.part_index,
+        total_parts=clip.total_parts,
+    )
 
     out_video_path = settings.PROCESSED_DIR / f"{clip.id}.mp4"
     crop_info = {"mode": "center_crop"}
 
-    should_burn = req.burn_captions and style != "none"
+    should_burn = bool(req.burn_captions or (style and style != "none") or add_hook or (clip.total_parts and clip.total_parts > 1))
     await renderer.render_clip(
         source_video_path=video_path,
         start_time=start_time,

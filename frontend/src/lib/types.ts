@@ -140,6 +140,8 @@ export interface RenderedClipResponse {
   single_para_copy?: string | null;
   part_index?: number | null;
   total_parts?: number | null;
+  part_badge_position?: number;
+  part_badge_align?: "center" | "left" | "right" | string;
   scores: CandidateScores;
   reason?: string | null;
   hook_text?: string | null;
@@ -226,6 +228,8 @@ export interface JobCreatePayload {
   add_hook_header?: boolean;
   hook_header_position?: number;
   hook_header_style?: string;
+  part_badge_position?: number;
+  part_badge_align?: "center" | "left" | "right";
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;
@@ -257,6 +261,8 @@ export interface ProjectProcessPayload {
   add_hook_header?: boolean;
   hook_header_position?: number;
   hook_header_style?: string;
+  part_badge_position?: number;
+  part_badge_align?: "center" | "left" | "right";
   remove_watermark?: boolean;
   watermark_position?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   enhance_quality?: boolean;

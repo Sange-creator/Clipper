@@ -202,3 +202,64 @@ def test_four_clips_part_badges_and_audio_script_hook_captions(tmp_path):
         assert "Style: HookHeader" in content
         assert "WAIT FOR IT..." in content
         assert headline in content
+
+
+def test_custom_part_badge_position_and_alignment(tmp_path):
+    """
+    Test user requirement:
+    - User must be able to choose custom screen position and alignment for PART 1, PART 2...
+    - Trailing stop words (the, of, a, to) must be stripped from hook headlines for engagement.
+    - If style="none" but part_badge is active, PartBadge is generated without dialogue captions.
+    """
+    from app.services.media.captioner import captioner
+    from app.services.media.audio_analyzer import clean_hook_title
+
+    # 1. Test clean_hook_title trailing stop words stripping
+    raw_title_1 = "Why Nobody Talks About The The"
+    cleaned_1 = clean_hook_title(raw_title_1)
+    assert cleaned_1 == "Why Nobody Talks About"
+
+    raw_title_2 = "What Is Happening To?"
+    cleaned_2 = clean_hook_title(raw_title_2)
+    assert cleaned_2 == "What Is Happening?"
+
+    # 2. Test ASS generation with custom part_badge_position and alignment
+    # Test Left alignment at 15%
+    ass_left = tmp_path / "left.ass"
+    captioner.generate_ass(
+        segments=[{"start": 0.0, "end": 5.0, "text": "Hello world"}],
+        clip_start=0.0,
+        clip_end=5.0,
+        output_path=ass_left,
+        style="none",
+        part_index=1,
+        total_parts=3,
+        part_badge_position=15,
+        part_badge_align="left",
+    )
+    left_content = ass_left.read_text(encoding="utf-8")
+    # Alignment 7 is Top-Left in ASS format, MarginV is 288 (15% of 1920)
+    assert "Style: PartBadge,Arial Black,36,&H00FFFFFF&,&H0000FFFF&,&H00000000&,&H000000E6&,-1,0,0,0,100,100,1,0,3,9,0,7,60,40,288,1" in left_content
+    assert "PART 1" in left_content
+    # Since style="none", no dialogue karaoke lines should exist
+    assert "Dialogue: 2,0:00:00.00,0:00:05.00,PartBadge,,0,0,0,,PART 1" in left_content
+    assert "{\\k" not in left_content  # No karaoke tags
+
+    # Test Right alignment at 85% (Bottom)
+    ass_right = tmp_path / "right.ass"
+    captioner.generate_ass(
+        segments=[{"start": 0.0, "end": 5.0, "text": "Hello world"}],
+        clip_start=0.0,
+        clip_end=5.0,
+        output_path=ass_right,
+        style="none",
+        part_index=2,
+        total_parts=3,
+        part_badge_position=85,
+        part_badge_align="right",
+    )
+    right_content = ass_right.read_text(encoding="utf-8")
+    # Alignment 3 is Bottom-Right in ASS format (pos > 50%), MarginV is 288 (100 - 85 = 15% of 1920)
+    assert "Style: PartBadge,Arial Black,36,&H00FFFFFF&,&H0000FFFF&,&H00000000&,&H000000E6&,-1,0,0,0,100,100,1,0,3,9,0,3,40,60,288,1" in right_content
+    assert "PART 2" in right_content
+
