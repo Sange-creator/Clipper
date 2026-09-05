@@ -30,28 +30,34 @@ class ResilientAIProvider(AIProvider):
     def _setup_providers(self, primary_name: Optional[str]):
         chosen = (primary_name or settings.AI_PROVIDER or "groq").lower()
 
-        provider_instances: Dict[str, AIProvider] = {}
-        if settings.GROQ_API_KEY:
-            try:
-                provider_instances["groq"] = GroqProvider()
-            except Exception as e:
-                logger.warning(f"Could not init GroqProvider: {e}")
+        def is_real_key(k: Optional[str]) -> bool:
+            if not k or not k.strip():
+                return False
+            clean = k.strip()
+            return not (clean.startswith("AIzaSyTest") or clean.startswith("gsk_test") or "test1234" in clean)
 
-        if settings.GEMINI_API_KEY:
+        provider_instances: Dict[str, AIProvider] = {}
+        if is_real_key(settings.GEMINI_API_KEY):
             try:
                 provider_instances["gemini"] = GeminiProvider()
             except Exception as e:
                 logger.warning(f"Could not init GeminiProvider: {e}")
 
+        if is_real_key(settings.GROQ_API_KEY):
+            try:
+                provider_instances["groq"] = GroqProvider()
+            except Exception as e:
+                logger.warning(f"Could not init GroqProvider: {e}")
+
         provider_instances["mock"] = MockAIProvider()
 
-        # Order chain based on preference
-        if chosen == "groq":
+        # Order chain based on preference: Gemini is primary reasoning provider per GEMINI.md
+        if chosen == "mock":
+            chain = ["mock", "gemini", "groq"]
+        elif chosen == "groq":
             chain = ["groq", "gemini", "mock"]
-        elif chosen == "gemini":
-            chain = ["gemini", "groq", "mock"]
         else:
-            chain = ["mock", "groq", "gemini"]
+            chain = ["gemini", "groq", "mock"]
 
         for name in chain:
             if name in provider_instances and provider_instances[name] not in self.providers:

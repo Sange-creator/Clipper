@@ -24,9 +24,19 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/settings", tags=["Settings"])
 
 
+def is_valid_or_real_key(key: Optional[str]) -> bool:
+    """Check if key is non-empty and not a dummy test placeholder like AIzaSyTest..."""
+    if not key or len(key.strip()) == 0:
+        return False
+    clean = key.strip()
+    if clean.startswith("AIzaSyTest") or clean.startswith("gsk_test") or "test1234" in clean:
+        return False
+    return True
+
+
 def mask_key(key: Optional[str]) -> str:
     """Return masked API key string (e.g. AIzaSy...9x1z) for security."""
-    if not key or len(key.strip()) == 0:
+    if not is_valid_or_real_key(key):
         return ""
     clean = key.strip()
     if len(clean) <= 8:
@@ -122,10 +132,10 @@ async def get_settings(db: AsyncSession = Depends(get_db)):
 
     return SettingsResponse(
         ai_provider=settings.AI_PROVIDER,
-        gemini_api_key_configured=bool(settings.GEMINI_API_KEY),
+        gemini_api_key_configured=is_valid_or_real_key(settings.GEMINI_API_KEY),
         gemini_api_key_masked=mask_key(settings.GEMINI_API_KEY),
         gemini_model=settings.GEMINI_MODEL,
-        groq_api_key_configured=bool(settings.GROQ_API_KEY),
+        groq_api_key_configured=is_valid_or_real_key(settings.GROQ_API_KEY),
         groq_api_key_masked=mask_key(settings.GROQ_API_KEY),
         groq_model=settings.GROQ_MODEL,
         deepgram_api_key_configured=bool(settings.DEEPGRAM_API_KEY),
@@ -267,10 +277,10 @@ async def test_api_key(req: TestApiKeyRequest):
         elif req.provider == "deepgram" and settings.DEEPGRAM_API_KEY:
             key = settings.DEEPGRAM_API_KEY
 
-    if not key:
+    if not key or not is_valid_or_real_key(key):
         return TestApiKeyResponse(
             valid=False,
-            message="API key cannot be empty. Please paste your API key.",
+            message="No valid API key provided. Please paste your API key to test connectivity.",
             model_tested=req.provider,
         )
 

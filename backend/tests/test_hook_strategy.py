@@ -198,9 +198,9 @@ def test_four_clips_part_badges_and_audio_script_hook_captions(tmp_path):
         assert f"PART {part_num}" in content
         assert f"PART {part_num}/" not in content
 
-        # Must have dedicated HookHeader style and hook title line
+        # Must have dedicated HookHeader style and permanent hook title line (no mid-video switch)
         assert "Style: HookHeader" in content
-        assert "WAIT FOR IT..." in content
+        assert "WAIT FOR IT..." not in content
         assert headline in content
 
 

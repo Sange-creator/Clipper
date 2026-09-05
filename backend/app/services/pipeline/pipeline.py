@@ -500,10 +500,11 @@ class VideoProcessingPipeline:
                     if not job_part_align:
                         job_part_align = config.get("part_badge_align", "center")
 
-                    # Extract engaging, relevant hook headline from audio script and candidate context
+                    # Extract engaging, relevant hook headline from audio script, video title, and candidate context
+                    v_title = getattr(video, "title", None) or getattr(video, "original_filename", None) or getattr(video, "filename", None) or "Video"
                     cand_summary_hint = getattr(cand, "hook_summary", None) or cand.reason or ""
                     script_headline = audio_analyzer.extract_hook_headline_from_script(
-                        raw_segments, cand.start, cand.end, video_genre, candidate_summary=cand_summary_hint
+                        raw_segments, cand.start, cand.end, video_genre, candidate_summary=cand_summary_hint, video_title=v_title
                     )
                     hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand_summary_hint)
 
@@ -588,7 +589,7 @@ class VideoProcessingPipeline:
                         f"Generating platform metadata for clip {idx}/{len(ranked_clips)}"
                     )
                     clip_text = " ".join([s.get("text", "") for s in raw_segments if s.get("end", 0) >= cand.start and s.get("start", 0) <= cand.end])
-                    v_title = getattr(video, "title", None) or getattr(video, "original_filename", None) or "Video"
+                    v_title = getattr(video, "title", None) or getattr(video, "original_filename", None) or getattr(video, "filename", None) or "Video"
                     meta_res = await ai_provider.generate_metadata(
                         clip_transcript=clip_text,
                         clip_context={
@@ -787,7 +788,7 @@ class VideoProcessingPipeline:
                 raw_segs = json.loads(tr.segments_json)
 
             # Discover candidates
-            v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or "Video"
+            v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or getattr(v, "filename", None) or "Video"
             raw_cands = await candidate_discovery_service.discover_candidates(
                 ai_provider=ai_provider,
                 transcript_segments=raw_segs,
@@ -795,7 +796,7 @@ class VideoProcessingPipeline:
                     "duration_seconds": v.duration_seconds,
                     "video_title": v_title,
                     "genre": getattr(job, "genre", "auto") or "auto",
-                    "filename": getattr(v, "original_filename", "") or "",
+                    "filename": getattr(v, "filename", "") or getattr(v, "original_filename", "") or "",
                 },
                 requested_clips_count=max(5, requested_clips // len(project_videos)),
                 duration_preset=duration_preset,
@@ -979,7 +980,7 @@ class VideoProcessingPipeline:
             await renderer.generate_thumbnail(out_video, 1.0, thumb)
 
             clip_text = " ".join([s.get("text", "") for s in segs if s.get("end", 0) >= cand.start and s.get("start", 0) <= cand.end])
-            v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or "Video"
+            v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or getattr(v, "filename", None) or "Video"
             meta_res = await ai_provider.generate_metadata(
                 clip_transcript=clip_text,
                 clip_context={

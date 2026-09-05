@@ -48,41 +48,63 @@ class GeminiProvider(AIProvider):
             self.client = None
 
     async def analyze_content(self, transcript: str, media_info: Dict[str, Any]) -> ContentAnalysisResult:
-        """Analyze overall themes and structure."""
+        """Analyze overall themes, scenario, and structure."""
         if not self.client:
             raise AIProviderError("Gemini API key is not configured.")
 
-        prompt = f"""Analyze this video transcript:
-{transcript[:8000]}
+        v_title = media_info.get("video_title") or media_info.get("filename") or "Video"
+        clean_title = str(v_title).replace("_", " ").replace("-", " ").strip()
+        dur = media_info.get("duration_seconds", 0)
+
+        prompt = f"""You are a world-class video content analyst for viral short-form clips.
+Analyze this video:
+Video Title / Filename: "{clean_title}"
+Video Duration: {dur:.1f}s
+
+Timestamped Spoken Dialogue Transcript:
+\"\"\"{transcript[:12000]}\"\"\"
+
+Identify:
+1. Exact scenario & genre (e.g. Police Bodycam / Traffic Stop Arrest, Military Training, Documentary, Street Confrontation).
+2. What is the central confrontation, high-stakes incident, or hook?
+3. Who are the participants?
 
 Return JSON with:
 {{
-  "summary": "2-3 sentence overview of content",
-  "main_topics": ["topic1", "topic2"],
-  "tone": "energetic/educational/etc",
-  "key_themes": ["theme1", "theme2"]
+  "summary": "2-3 sentence overview describing what happens in the video",
+  "main_topics": ["topic1", "topic2", "topic3"],
+  "tone": "intense/dramatic/suspenseful",
+  "key_themes": ["theme1", "theme2", "theme3"]
 }}
 """
-        try:
-            response = await self.client.aio.models.generate_content(
-                model=self.model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.3,
-                ),
-            )
-            raw = clean_json_text(response.text or "{}")
-            data = json.loads(raw)
-            return ContentAnalysisResult(**data)
-        except Exception as e:
-            logger.error(f"Gemini content analysis failed: {e}")
-            return ContentAnalysisResult(
-                summary="Source video content analysis",
-                main_topics=["General Content"],
-                tone="Informative",
-                key_themes=["Key Highlights"],
-            )
+        models_to_try = [self.model, "gemini-2.0-flash", "gemini-1.5-flash"]
+        models_to_try = list(dict.fromkeys([m for m in models_to_try if m]))
+        last_err = None
+
+        for model_name in models_to_try:
+            try:
+                response = await self.client.aio.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.3,
+                    ),
+                )
+                raw = clean_json_text(response.text or "{}")
+                data = json.loads(raw)
+                return ContentAnalysisResult(**data)
+            except Exception as e:
+                last_err = e
+                continue
+
+        logger.error(f"Gemini content analysis failed across models: {last_err}")
+        return ContentAnalysisResult(
+            summary=f"Analysis of {clean_title}",
+            main_topics=["Viral Moment", "High Retention"],
+            tone="Dramatic",
+            key_themes=["Action", "Payoff"],
+        )
 
     async def generate_candidates(
         self,
@@ -236,29 +258,15 @@ Payoff Summary: {clip_context.get('payoff_summary', '')}{title_line}{series_line
             data["total_parts"] = total_p
             return PlatformClipMetadata(**data)
         except Exception as e:
-            logger.error(f"Gemini metadata generation failed: {e}")
-            hook_lead = clip_context.get("hook_summary", "").strip() or " ".join(clip_transcript.split()[:7])
-            title = hook_lead if len(hook_lead) > 8 else "Wait until you see how this ends..."
-            title = title.rstrip(".!?")
-            if part_idx:
-                title = f"PART {part_idx}: {title}"
-            tags = ["#fyp", "#viral", "#foryou", "#truth", "#trending"]
-            caption = f"{title}. Nobody talks about this part. Thoughts? 👇"
-            if part_idx and total_p and part_idx < total_p:
-                caption += f" Follow for Part {part_idx + 1}!"
-            single_para = f"{title} — {caption} {' '.join(tags)}"
-            return PlatformClipMetadata(
-                tiktok_title=f"{title[:50]}",
-                tiktok_caption=caption,
-                tiktok_hashtags=tags,
-                reels_caption=f"{title}\n\nThe part everyone completely missed.\n\n📌 Save this for later | 📲 Share with someone who needs this\n\n{' '.join(tags)}",
-                reels_hashtags=["#reels", "#explorepage", "#viralreels", "#mindset", "#shorts"],
-                shorts_title=f"{title[:45]} #shorts",
-                shorts_description=f"{clip_transcript[:200]}...\n\nSubscribe for daily clips!\n\n{' '.join(tags)}",
-                shorts_hashtags=["#shorts", "#viral", "#trending"],
-                single_para_copy=single_para,
+            logger.error(f"Gemini metadata generation failed: {e}. Using domain-aware fallback...")
+            from app.services.media.audio_analyzer import audio_hook_analyzer
+            return audio_hook_analyzer.generate_clip_metadata(
+                clip_transcript=clip_transcript,
+                hook_summary=clip_context.get("hook_summary", ""),
+                payoff_summary=clip_context.get("payoff_summary", ""),
                 part_index=part_idx,
                 total_parts=total_p,
+                video_title=source_title,
             )
 
 

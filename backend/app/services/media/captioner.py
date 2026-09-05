@@ -597,31 +597,15 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 f"Dialogue: 2,{start_str},{end_str},PartBadge,,0,0,0,,{part_str}"
             )
 
-        # 2. Add dedicated on-screen Hook Title on Layer 1 (analyzed from audio script)
+        # 2. Add dedicated on-screen Hook Title on Layer 1 (constant throughout the entire video)
         should_render_hook = (add_hook_header or (total_parts and total_parts > 1)) and hook_header_text
         if should_render_hook:
-            # If multi-interval teaser is active (first interval is 3-8s teaser):
-            if len(intervals) > 1 and intervals[0] != intervals[-1]:
-                teaser_dur = max(0.5, intervals[0][1] - intervals[0][0])
-                t_end_str = self.format_timestamp_ass(teaser_dur)
-                total_end_str = self.format_timestamp_ass(max(0.5, total_duration))
-
-                # During teaser (0.0 to teaser_dur): show eye-catching teaser cue
-                dialogue_lines.append(
-                    f"Dialogue: 1,{self.format_timestamp_ass(0.0)},{t_end_str},HookHeader,,0,0,0,,WAIT FOR IT..."
-                )
-                # During main story (teaser_dur to end): show authentic hook title from script
-                formatted_hook = format_tiktok_hook_header(hook_header_text)
-                dialogue_lines.append(
-                    f"Dialogue: 1,{t_end_str},{total_end_str},HookHeader,,0,0,0,,{formatted_hook}"
-                )
-            else:
-                formatted_hook = format_tiktok_hook_header(hook_header_text)
-                start_str = self.format_timestamp_ass(0.0)
-                end_str = self.format_timestamp_ass(max(0.5, total_duration))
-                dialogue_lines.append(
-                    f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
-                )
+            formatted_hook = format_tiktok_hook_header(hook_header_text)
+            start_str = self.format_timestamp_ass(0.0)
+            end_str = self.format_timestamp_ass(max(0.5, total_duration))
+            dialogue_lines.append(
+                f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
+            )
 
         # 3. Add animated spoken karaoke subtitles on Layer 0 across all intervals (if caption style is active)
         if style and style.lower().strip() != "none":
