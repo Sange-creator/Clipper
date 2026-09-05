@@ -193,9 +193,10 @@ def test_four_clips_part_badges_and_audio_script_hook_captions(tmp_path):
         assert ass_path.exists()
         content = ass_path.read_text(encoding="utf-8")
 
-        # Must have dedicated PartBadge style and on-screen PART X/4 line
+        # Must have dedicated PartBadge style and on-screen PART X (strictly no /N)
         assert "Style: PartBadge" in content
-        assert f"PART {part_num}/4" in content
+        assert f"PART {part_num}" in content
+        assert f"PART {part_num}/" not in content
 
         # Must have dedicated HookHeader style and hook title line
         assert "Style: HookHeader" in content

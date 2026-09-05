@@ -1,16 +1,16 @@
 # Graph Report - Clipper  (2026-09-06)
 
 ## Corpus Check
-- 112 files · ~5,982,101 words
+- 112 files · ~5,985,590 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1221 nodes · 1649 edges · 113 communities (95 shown, 18 thin omitted)
+- 1223 nodes · 1651 edges · 111 communities (94 shown, 17 thin omitted)
 - Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 220 edges (avg confidence: 0.71)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b6d52f75`
+- Built from commit: `2a64887f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -114,8 +114,6 @@
 - [[_COMMUNITY_Community 96|Community 96]]
 - [[_COMMUNITY_Community 97|Community 97]]
 - [[_COMMUNITY_Community 98|Community 98]]
-- [[_COMMUNITY_Community 99|Community 99]]
-- [[_COMMUNITY_Community 100|Community 100]]
 - [[_COMMUNITY_Community 101|Community 101]]
 - [[_COMMUNITY_Community 103|Community 103]]
 - [[_COMMUNITY_Community 104|Community 104]]
@@ -150,7 +148,7 @@
 - `upload_video()` --calls--> `Video`  [INFERRED]
   backend/app/api/routes/upload.py → backend/app/core/models.py
 
-## Communities (113 total, 18 thin omitted)
+## Communities (111 total, 17 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.11
@@ -174,7 +172,7 @@ Nodes (33): AI Provider Abstraction, API Cost Control, Candidate Discovery, Capt
 
 ### Community 5 - "Community 5"
 Cohesion: 0.07
-Nodes (25): AudioHookAnalyzer, build_single_para_post(), clean_hook_title(), extract_topic_keywords(), Audio Hook & Linguistic Momentum Analyzer. Extracts high-retention opening hooks, Extract salient, meaningful topic keywords from the spoken dialogue., Format a spoken sentence into a punchy, clean title without punctuation noise or, Format a ready-to-paste single paragraph combining title, description, and hasht (+17 more)
+Nodes (26): AudioHookAnalyzer, build_single_para_post(), clean_hook_title(), extract_topic_keywords(), Audio Hook & Linguistic Momentum Analyzer. Extracts high-retention opening hooks, Extract salient, meaningful topic keywords from the spoken dialogue., Format a spoken sentence into a punchy, clean title without punctuation noise or, Format a ready-to-paste single paragraph combining title, description, and hasht (+18 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.05
@@ -182,7 +180,7 @@ Nodes (32): get_discovery_prompt(), Prompt templates and structured schemas for 
 
 ### Community 7 - "Community 7"
 Cohesion: 0.06
-Nodes (32): 10. Mode B — Long Video Viral Moment Clipper, 15. AI Candidate Analysis, 17. Boundary Optimization, 21. Global Ranking, 27. Thumbnail Generation, 32. Structured AI Schema, 35. Results UI, 38. Regenerate Clip (+24 more)
+Nodes (34): 15. AI Candidate Analysis, 17. Boundary Optimization, 19. Filler Editing, 20. Duplicate / Overlap Removal, 21. Global Ranking, 26. Caption Sync After Cuts, 27. Thumbnail Generation, 31. AI Prompt Architecture (+26 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.08
@@ -261,8 +259,8 @@ Cohesion: 0.14
 Nodes (10): Computer Vision-based automatic watermark and logo detector using OpenCV. Detect, Calculates a static watermark likelihood score for a region across frames:, Automated watermark and logo detection service.     Analyzes temporal persistenc, Asynchronously run watermark detection in an executor thread to keep event loop, WatermarkDetectionResult, WatermarkDetector, Tests for automated watermark and logo detection using OpenCV., test_score_roi_watermark_flat_frames() (+2 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.15
-Nodes (12): AI Clipper — Next Version Backlog, Backlog Rules for Future Development, code:text (AI finds clips), code:text (AI discovers), Definition of Done — Next Version, EPIC 8 — Thumbnails & Visual Packaging, Future Vision, P1-26 — Automatic Thumbnail Selection (+4 more)
+Cohesion: 0.12
+Nodes (15): AI Clipper — Next Version Backlog, Backlog Rules for Future Development, code:text (AI finds clips), code:text (AI discovers), Definition of Done — Next Version, EPIC 15 — Learning From Real Performance, EPIC 8 — Thumbnails & Visual Packaging, Future Vision (+7 more)
 
 ### Community 28 - "Community 28"
 Cohesion: 0.26
@@ -365,8 +363,8 @@ Cohesion: 0.33
 Nodes (6): code:text (accepted), EPIC 6 — Clip Review Studio, P0-19 — Clip Review Grid, P0-20 — Manual Boundary Editing, P1-21 — Regenerate Clip, P1-22 — Favorites & Rejection Feedback
 
 ### Community 53 - "Community 53"
-Cohesion: 0.25
-Nodes (7): AI Video Clipper — Session & Progress Tracker, Current Architecture & System Overview, Session 1: Multi-Genre Viral Hook Detection, Series Branding & Single-Paragraph Export, Session 2: Session Tracking System, Git Commits & Vercel Deployment, Session 3: Live Server Alias Correction & Graphify Installation (Local & Global Antigravity), Session 4: Production Deployment Alias Sync (`https://ai-clipper-pro.vercel.app/`), Session History Log
+Cohesion: 0.22
+Nodes (8): AI Video Clipper — Session & Progress Tracker, Current Architecture & System Overview, Session 1: Multi-Genre Viral Hook Detection, Series Branding & Single-Paragraph Export, Session 2: Session Tracking System, Git Commits & Vercel Deployment, Session 3: Live Server Alias Correction & Graphify Installation (Local & Global Antigravity), Session 4: Production Deployment Alias Sync (`https://ai-clipper-pro.vercel.app/`), Session 5: Dual Captions (Part 1..N + Script Headline) & Teaser Climax Timeline Splicing, Session History Log
 
 ### Community 54 - "Community 54"
 Cohesion: 0.11
@@ -403,10 +401,6 @@ Nodes (5): 46. Metrics, Editing, Performance, Selection, V3-044 — Internal Qua
 ### Community 62 - "Community 62"
 Cohesion: 0.4
 Nodes (4): buildCommand, devCommand, framework, installCommand
-
-### Community 63 - "Community 63"
-Cohesion: 0.67
-Nodes (3): EPIC 15 — Learning From Real Performance, P2-47 — Performance Data Model, P3-48 — Learned Ranking Model
 
 ### Community 64 - "Community 64"
 Cohesion: 0.29
@@ -521,9 +515,9 @@ Cohesion: 0.67
 Nodes (3): 33. Processing Cost Control, code:text (Local media analysis), V3-031 — AI Usage Optimization
 
 ## Knowledge Gaps
-- **583 isolated node(s):** `framework`, `buildCommand`, `devCommand`, `installCommand`, `config` (+578 more)
+- **585 isolated node(s):** `framework`, `buildCommand`, `devCommand`, `installCommand`, `config` (+580 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

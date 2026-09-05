@@ -240,8 +240,8 @@ Payoff Summary: {clip_context.get('payoff_summary', '')}{title_line}{series_line
             hook_lead = clip_context.get("hook_summary", "").strip() or " ".join(clip_transcript.split()[:7])
             title = hook_lead if len(hook_lead) > 8 else "Wait until you see how this ends..."
             title = title.rstrip(".!?")
-            if part_idx and total_p:
-                title = f"PART {part_idx}/{total_p}: {title}"
+            if part_idx:
+                title = f"PART {part_idx}: {title}"
             tags = ["#fyp", "#viral", "#foryou", "#truth", "#trending"]
             caption = f"{title}. Nobody talks about this part. Thoughts? 👇"
             if part_idx and total_p and part_idx < total_p:

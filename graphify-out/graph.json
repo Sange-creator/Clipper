@@ -7477,7 +7477,7 @@
       "label": "test_single_para_builder()",
       "file_type": "code",
       "source_file": "backend/tests/test_viral_hook_and_series.py",
-      "source_location": "L92",
+      "source_location": "L93",
       "id": "tests_test_viral_hook_and_series_test_single_para_builder",
       "community": 5,
       "norm_label": "test_single_para_builder()"
@@ -7522,8 +7522,8 @@
       "label": "Test building a 1-click single-paragraph copy-paste block.",
       "file_type": "rationale",
       "source_file": "backend/tests/test_viral_hook_and_series.py",
-      "source_location": "L93",
-      "id": "tests_test_viral_hook_and_series_rationale_93",
+      "source_location": "L94",
+      "id": "tests_test_viral_hook_and_series_rationale_94",
       "community": 5,
       "norm_label": "test building a 1-click single-paragraph copy-paste block."
     },
@@ -8023,6 +8023,15 @@
       "norm_label": "session 4: production deployment alias sync (`https://ai-clipper-pro.vercel.app/`)"
     },
     {
+      "label": "Session 5: Dual Captions (Part 1..N + Script Headline) & Teaser Climax Timeline Splicing",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L171",
+      "id": "clipper_session_tracker_session_5_dual_captions_part_1_n_script_headline_teaser_climax_timeline_splicing",
+      "community": 53,
+      "norm_label": "session 5: dual captions (part 1..n + script headline) & teaser climax timeline splicing"
+    },
+    {
       "label": "gemini.md",
       "file_type": "document",
       "source_file": "gemini.md",
@@ -8478,7 +8487,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L175",
       "id": "clipper_ai_clipper_v3_detailed_backlog_3_media_inspection",
-      "community": 94,
+      "community": 7,
       "norm_label": "3. media inspection"
     },
     {
@@ -8487,7 +8496,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L177",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_003_ffprobe_ffmpeg_inspection",
-      "community": 94,
+      "community": 7,
       "norm_label": "v3-003 \u2014 ffprobe/ffmpeg inspection"
     },
     {
@@ -8496,7 +8505,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L193",
       "id": "clipper_ai_clipper_v3_detailed_backlog_4_audio_extraction",
-      "community": 98,
+      "community": 7,
       "norm_label": "4. audio extraction"
     },
     {
@@ -8505,7 +8514,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L195",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_004_audio_extraction",
-      "community": 98,
+      "community": 7,
       "norm_label": "v3-004 \u2014 audio extraction"
     },
     {
@@ -8622,7 +8631,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L321",
       "id": "clipper_ai_clipper_v3_detailed_backlog_9_mode_a_regular_podcast_clipper",
-      "community": 97,
+      "community": 7,
       "norm_label": "9. mode a \u2014 regular podcast clipper"
     },
     {
@@ -8631,7 +8640,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L323",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_009_podcast_candidate_discovery",
-      "community": 97,
+      "community": 7,
       "norm_label": "v3-009 \u2014 podcast candidate discovery"
     },
     {
@@ -8640,7 +8649,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L355",
       "id": "clipper_ai_clipper_v3_detailed_backlog_10_mode_b_long_video_viral_moment_clipper",
-      "community": 7,
+      "community": 63,
       "norm_label": "10. mode b \u2014 long video viral moment clipper"
     },
     {
@@ -8649,7 +8658,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L357",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_010_long_video_candidate_discovery",
-      "community": 7,
+      "community": 63,
       "norm_label": "v3-010 \u2014 long video candidate discovery"
     },
     {
@@ -8892,7 +8901,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L667",
       "id": "clipper_ai_clipper_v3_detailed_backlog_19_filler_editing",
-      "community": 99,
+      "community": 7,
       "norm_label": "19. filler editing"
     },
     {
@@ -8901,7 +8910,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L669",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_019_safe_filler_cuts",
-      "community": 99,
+      "community": 7,
       "norm_label": "v3-019 \u2014 safe filler cuts"
     },
     {
@@ -8910,7 +8919,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L685",
       "id": "clipper_ai_clipper_v3_detailed_backlog_20_duplicate_overlap_removal",
-      "community": 92,
+      "community": 7,
       "norm_label": "20. duplicate / overlap removal"
     },
     {
@@ -8919,7 +8928,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L687",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_020_candidate_deduplication",
-      "community": 92,
+      "community": 7,
       "norm_label": "v3-020 \u2014 candidate deduplication"
     },
     {
@@ -9081,7 +9090,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L839",
       "id": "clipper_ai_clipper_v3_detailed_backlog_26_caption_sync_after_cuts",
-      "community": 100,
+      "community": 7,
       "norm_label": "26. caption sync after cuts"
     },
     {
@@ -9090,7 +9099,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L841",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_026_edited_timeline_subtitle_mapping",
-      "community": 100,
+      "community": 7,
       "norm_label": "v3-026 \u2014 edited-timeline subtitle mapping"
     },
     {
@@ -9225,7 +9234,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L986",
       "id": "clipper_ai_clipper_v3_detailed_backlog_31_ai_prompt_architecture",
-      "community": 93,
+      "community": 7,
       "norm_label": "31. ai prompt architecture"
     },
     {
@@ -9234,7 +9243,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L990",
       "id": "clipper_ai_clipper_v3_detailed_backlog_codeblock_32",
-      "community": 93,
+      "community": 7,
       "norm_label": "code:text (prompts/)"
     },
     {
@@ -9243,7 +9252,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1016",
       "id": "clipper_ai_clipper_v3_detailed_backlog_32_structured_ai_schema",
-      "community": 7,
+      "community": 92,
       "norm_label": "32. structured ai schema"
     },
     {
@@ -9252,7 +9261,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1020",
       "id": "clipper_ai_clipper_v3_detailed_backlog_codeblock_33",
-      "community": 7,
+      "community": 92,
       "norm_label": "code:json ({)"
     },
     {
@@ -9315,7 +9324,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1105",
       "id": "clipper_ai_clipper_v3_detailed_backlog_35_results_ui",
-      "community": 7,
+      "community": 93,
       "norm_label": "35. results ui"
     },
     {
@@ -9324,7 +9333,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1107",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_033_results_grid",
-      "community": 7,
+      "community": 93,
       "norm_label": "v3-033 \u2014 results grid"
     },
     {
@@ -9387,7 +9396,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1172",
       "id": "clipper_ai_clipper_v3_detailed_backlog_38_regenerate_clip",
-      "community": 7,
+      "community": 94,
       "norm_label": "38. regenerate clip"
     },
     {
@@ -9396,7 +9405,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1174",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_036_regeneration",
-      "community": 7,
+      "community": 94,
       "norm_label": "v3-036 \u2014 regeneration"
     },
     {
@@ -9531,7 +9540,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1315",
       "id": "clipper_ai_clipper_v3_detailed_backlog_44_testing_dataset",
-      "community": 96,
+      "community": 7,
       "norm_label": "44. testing dataset"
     },
     {
@@ -9540,7 +9549,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1317",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_042_quality_test_set",
-      "community": 96,
+      "community": 7,
       "norm_label": "v3-042 \u2014 quality test set"
     },
     {
@@ -9549,7 +9558,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1345",
       "id": "clipper_ai_clipper_v3_detailed_backlog_45_quality_rules",
-      "community": 7,
+      "community": 96,
       "norm_label": "45. quality rules"
     },
     {
@@ -9558,7 +9567,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1347",
       "id": "clipper_ai_clipper_v3_detailed_backlog_v3_043_human_qa_checklist",
-      "community": 7,
+      "community": 96,
       "norm_label": "v3-043 \u2014 human qa checklist"
     },
     {
@@ -9693,7 +9702,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1490",
       "id": "clipper_ai_clipper_v3_detailed_backlog_recommended_technical_architecture",
-      "community": 7,
+      "community": 97,
       "norm_label": "recommended technical architecture"
     },
     {
@@ -9702,7 +9711,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1492",
       "id": "clipper_ai_clipper_v3_detailed_backlog_codeblock_42",
-      "community": 7,
+      "community": 97,
       "norm_label": "code:text (\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510)"
     },
     {
@@ -9711,7 +9720,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1535",
       "id": "clipper_ai_clipper_v3_detailed_backlog_final_v3_product_principle",
-      "community": 7,
+      "community": 98,
       "norm_label": "final v3 product principle"
     },
     {
@@ -9720,7 +9729,7 @@
       "source_file": "AI-Clipper-V3-DETAILED-BACKLOG.md",
       "source_location": "L1541",
       "id": "clipper_ai_clipper_v3_detailed_backlog_codeblock_43",
-      "community": 7,
+      "community": 98,
       "norm_label": "code:text (understand the long video)"
     },
     {
@@ -10674,7 +10683,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L904",
       "id": "clipper_ai_clipper_next_version_backlog_epic_15_learning_from_real_performance",
-      "community": 63,
+      "community": 27,
       "norm_label": "epic 15 \u2014 learning from real performance"
     },
     {
@@ -10683,7 +10692,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L906",
       "id": "clipper_ai_clipper_next_version_backlog_p2_47_performance_data_model",
-      "community": 63,
+      "community": 27,
       "norm_label": "p2-47 \u2014 performance data model"
     },
     {
@@ -10692,7 +10701,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L925",
       "id": "clipper_ai_clipper_next_version_backlog_p3_48_learned_ranking_model",
-      "community": 63,
+      "community": 27,
       "norm_label": "p3-48 \u2014 learned ranking model"
     },
     {
@@ -10928,6 +10937,15 @@
       "id": "clipper_ai_clipper_next_version_backlog_backlog_rules_for_future_development",
       "community": 27,
       "norm_label": "backlog rules for future development"
+    },
+    {
+      "label": "Test building a 1-click single-paragraph copy-paste block.",
+      "file_type": "rationale",
+      "source_file": "backend/tests/test_viral_hook_and_series.py",
+      "source_location": "L93",
+      "community": 5,
+      "norm_label": "test building a 1-click single-paragraph copy-paste block.",
+      "id": "tests_test_viral_hook_and_series_rationale_93"
     },
     {
       "label": "Executes the 21-stage deterministic pipeline for short-form content generation.",
@@ -18833,9 +18851,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "backend_app_services_pipeline_pipeline_py",
-      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook"
     },
     {
       "relation": "contains",
@@ -18864,9 +18882,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L422",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_videoprocessingpipeline_run_pipeline",
-      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook"
     },
     {
       "relation": "calls",
@@ -18875,9 +18893,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L818",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline",
-      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook"
     },
     {
       "relation": "rationale_for",
@@ -18885,9 +18903,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_rationale_78",
-      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_resolve_clip_timeline_and_hook"
     },
     {
       "relation": "calls",
@@ -18998,9 +19016,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L139",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_rationale_139",
-      "target": "pipeline_pipeline_videoprocessingpipeline",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_videoprocessingpipeline"
     },
     {
       "relation": "uses",
@@ -19072,9 +19090,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L174",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_rationale_174",
-      "target": "pipeline_pipeline_videoprocessingpipeline_update_job_progress",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_videoprocessingpipeline_update_job_progress"
     },
     {
       "relation": "rationale_for",
@@ -19103,9 +19121,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L218",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_rationale_218",
-      "target": "pipeline_pipeline_videoprocessingpipeline_run_pipeline",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_videoprocessingpipeline_run_pipeline"
     },
     {
       "relation": "calls",
@@ -19156,9 +19174,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L698",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_rationale_698",
-      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline"
     },
     {
       "relation": "calls",
@@ -22388,9 +22406,9 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L467",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_renderer_rationale_467",
-      "target": "media_renderer_videorenderer_generate_thumbnail",
-      "confidence_score": 1.0
+      "target": "media_renderer_videorenderer_generate_thumbnail"
     },
     {
       "relation": "rationale_for",
@@ -22817,9 +22835,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L393",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script",
-      "target": "media_audio_analyzer_strip_emojis",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_strip_emojis"
     },
     {
       "relation": "calls",
@@ -22870,9 +22888,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L419",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script",
-      "target": "media_audio_analyzer_clean_hook_title",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_clean_hook_title"
     },
     {
       "relation": "calls",
@@ -22964,9 +22982,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L250",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer",
-      "target": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment"
     },
     {
       "relation": "method",
@@ -22974,9 +22992,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L330",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer",
-      "target": "media_audio_analyzer_audiohookanalyzer_trim_calm_intro_to_hook",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_trim_calm_intro_to_hook"
     },
     {
       "relation": "method",
@@ -22984,9 +23002,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L369",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer",
-      "target": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script"
     },
     {
       "relation": "method",
@@ -23067,9 +23085,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L537",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer_discover_candidates",
-      "target": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment"
     },
     {
       "relation": "rationale_for",
@@ -23077,9 +23095,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L258",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_rationale_258",
-      "target": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment"
     },
     {
       "relation": "rationale_for",
@@ -23087,9 +23105,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L337",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_rationale_337",
-      "target": "media_audio_analyzer_audiohookanalyzer_trim_calm_intro_to_hook",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_trim_calm_intro_to_hook"
     },
     {
       "relation": "calls",
@@ -23098,9 +23116,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L546",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_audiohookanalyzer_discover_candidates",
-      "target": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script"
     },
     {
       "relation": "rationale_for",
@@ -23108,9 +23126,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L377",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_rationale_377",
-      "target": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script"
     },
     {
       "relation": "rationale_for",
@@ -23118,9 +23136,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L437",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_rationale_437",
-      "target": "media_audio_analyzer_audiohookanalyzer_discover_candidates",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_discover_candidates"
     },
     {
       "relation": "rationale_for",
@@ -23138,9 +23156,9 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L598",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_audio_analyzer_rationale_598",
-      "target": "media_audio_analyzer_audiohookanalyzer_generate_clip_metadata",
-      "confidence_score": 1.0
+      "target": "media_audio_analyzer_audiohookanalyzer_generate_clip_metadata"
     },
     {
       "relation": "rationale_for",
@@ -23808,9 +23826,9 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L129",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "backend_tests_test_hook_strategy_py",
-      "target": "tests_test_hook_strategy_test_four_clips_part_badges_and_audio_script_hook_captions",
-      "confidence_score": 1.0
+      "target": "tests_test_hook_strategy_test_four_clips_part_badges_and_audio_script_hook_captions"
     },
     {
       "relation": "rationale_for",
@@ -23838,9 +23856,9 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_hook_strategy_rationale_130",
-      "target": "tests_test_hook_strategy_test_four_clips_part_badges_and_audio_script_hook_captions",
-      "confidence_score": 1.0
+      "target": "tests_test_hook_strategy_test_four_clips_part_badges_and_audio_script_hook_captions"
     },
     {
       "relation": "contains",
@@ -24211,6 +24229,16 @@
       "confidence_score": 1.0,
       "source": "tests_test_viral_hook_and_series_rationale_48",
       "target": "tests_test_viral_hook_and_series_test_tiktok_rounded_box_caption_preset"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_viral_hook_and_series.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "tests_test_viral_hook_and_series_rationale_94",
+      "target": "tests_test_viral_hook_and_series_test_single_para_builder",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -24698,9 +24726,9 @@
       "source_file": "SESSION_TRACKER.md",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "clipper_session_tracker_session_history_log",
-      "target": "clipper_session_tracker_session_3_live_server_alias_correction_graphify_installation_local_global_antigravity",
-      "confidence_score": 1.0
+      "target": "clipper_session_tracker_session_3_live_server_alias_correction_graphify_installation_local_global_antigravity"
     },
     {
       "relation": "contains",
@@ -24708,8 +24736,18 @@
       "source_file": "SESSION_TRACKER.md",
       "source_location": "L157",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "clipper_session_tracker_session_history_log",
-      "target": "clipper_session_tracker_session_4_production_deployment_alias_sync_https_ai_clipper_pro_vercel_app",
+      "target": "clipper_session_tracker_session_4_production_deployment_alias_sync_https_ai_clipper_pro_vercel_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L171",
+      "weight": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_5_dual_captions_part_1_n_script_headline_teaser_climax_timeline_splicing",
       "confidence_score": 1.0
     },
     {
@@ -27914,5 +27952,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b6d52f7518f05da3f1f39c076266051b5a15dd96"
+  "built_at_commit": "2a64887f113ec499f1fe4cd44888835b3a388a4e"
 }

@@ -648,9 +648,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs font-semibold text-white">Multi-Part Series Branding</span>
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">PART 1/N</span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">PART 1, 2...</span>
                     </div>
-                    <p className="text-[11px] text-zinc-400">Automatically numbers clips (e.g. Part 1/5, Part 2/5) in video subtitles & platform copy</p>
+                    <p className="text-[11px] text-zinc-400">Automatically numbers clips (e.g. Part 1, Part 2) in video subtitles & platform copy</p>
                   </div>
                 </div>
                 <button

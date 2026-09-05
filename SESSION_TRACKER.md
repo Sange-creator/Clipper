@@ -211,3 +211,33 @@
   - Primary Production URL: `https://ai-clipper-pro.vercel.app/` (HTTP/2 200 OK)
   - Alternative Alias: `https://clipper-ai-pro.vercel.app/` (HTTP/2 200 OK)
 
+---
+
+### Session 6: Clean Series Numbering (Strictly `PART 1`, `PART 2` without `/N`)
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"don't /4, only part 1, part 2..."*
+
+- **Changes & Deliverables**:
+  1. **On-Screen Subtitle Badges**:
+     - Updated `captioner.py` line 534 to format `PartBadge` strictly as `PART {part_index}` (e.g. `PART 1`, `PART 2`, `PART 3`, `PART 4`), eliminating the `/4` total parts fraction.
+  2. **Platform Copy & Titles**:
+     - Updated `audio_analyzer.py`, `gemini.py`, and `groq.py` to format titles as `PART {part_index}: {title}` instead of `PART {part_index}/{total_parts}`.
+  3. **UI Badges**:
+     - Updated `frontend/src/app/projects/[id]/page.tsx` multi-part series toggle badge from `PART 1/N` to `PART 1, 2...`.
+  4. **Tests & Knowledge Graph**:
+     - Updated `test_hook_strategy.py` and `test_viral_hook_and_series.py` to verify `PART {part_index}` and assert `PART {part_index}/` is never present.
+     - 41/41 pytest tests passing.
+     - Frontend `tsc --noEmit` passing with 0 errors.
+     - `graphify update .` synced (1,223 nodes, 1,651 edges).
+
+- **Files Modified**:
+  - `backend/app/services/media/captioner.py`
+  - `backend/app/services/media/audio_analyzer.py`
+  - `backend/app/services/ai/gemini.py`
+  - `backend/app/services/ai/groq.py`
+  - `backend/tests/test_hook_strategy.py`
+  - `backend/tests/test_viral_hook_and_series.py`
+  - `frontend/src/app/projects/[id]/page.tsx`
+  - `SESSION_TRACKER.md`
+

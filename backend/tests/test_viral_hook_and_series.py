@@ -83,8 +83,9 @@ def test_tiktok_rounded_box_caption_preset(tmp_path):
     content = ass_file.read_text(encoding="utf-8")
     # Must use rounded pill styling (border style 3 with padding)
     assert ",3,10,0," in content
-    # Header must include Part 1/5 and hook title (cleanly 2-line wrapped for 9:16 screen)
-    assert "PART 1/5" in content
+    # Header must include Part 1 (strictly no /5) and hook title
+    assert "PART 1" in content
+    assert "PART 1/" not in content
     assert "INSANE POLICE CHASE" in content
     assert "HookHeader" in content
 

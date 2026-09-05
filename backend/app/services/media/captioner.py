@@ -529,9 +529,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         total_duration = sum(max(0.0, e - s) for s, e in intervals)
         dialogue_lines: List[str] = []
 
-        # 1. Add dedicated on-screen Part Badge on Layer 2 (e.g. "PART 1/4" or "PART 1")
-        if part_index and (total_parts or add_hook_header):
-            part_str = f"PART {part_index}/{total_parts}" if total_parts and total_parts > 1 else f"PART {part_index}"
+        # 1. Add dedicated on-screen Part Badge on Layer 2 (e.g. "PART 1" or "PART 2")
+        if part_index:
+            part_str = f"PART {part_index}"
             start_str = self.format_timestamp_ass(0.0)
             end_str = self.format_timestamp_ass(max(0.5, total_duration))
             dialogue_lines.append(

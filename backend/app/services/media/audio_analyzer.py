@@ -607,8 +607,8 @@ class AudioHookAnalyzer:
         if len(base_title) < 8:
             base_title = clean_hook_title(video_title or "Unbelievable Moment", max_words=8)
 
-        if part_index and total_parts:
-            title = f"PART {part_index}/{total_parts}: {base_title}"
+        if part_index:
+            title = f"PART {part_index}: {base_title}"
         else:
             title = base_title
 
