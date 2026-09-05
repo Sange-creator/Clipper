@@ -247,3 +247,26 @@
   - Primary Production URL: `https://ai-clipper-pro.vercel.app/` (HTTP/2 200 OK)
   - Alternative Alias: `https://clipper-ai-pro.vercel.app/` (HTTP/2 200 OK)
 
+---
+
+### Session 7: Comprehensive Setup & Architecture Documentation (`README.md`)
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"In the README file properly, show how to run the app for people when they clone my repo. What it must do is tell that the frontend has been deployed to Vercel, however the backend must be run in their local server or in a separate VPS. The frontend and backend both can be run on their localhost and also if they don't want to run the frontend on the localhost, the frontend has been already deployed in Vercel. They can run from there and then attach the backend in the localhost and then run the software. Tell them how to run the software as well and the features and all those things properly mentioned in the README file.Deploy the GitHub."*
+
+- **Changes & Deliverables**:
+  1. **Comprehensive `README.md` Overhaul**:
+     - Clarified that the **Frontend is already live on Vercel** at `https://ai-clipper-pro.vercel.app/`.
+     - Explained the technical rationale: heavy media rendering (FFmpeg, OpenCV, faster-whisper/Deepgram) requires dedicated local or VPS server resources.
+     - Documented the **Two Execution Modes**:
+       - **Mode 1 (Hybrid / Zero Frontend Setup)**: Open `https://ai-clipper-pro.vercel.app/` and run the FastAPI backend locally on port 8000 (connected automatically to `http://127.0.0.1:8000/api`).
+       - **Mode 2 (Full Local Stack)**: Run both frontend (`localhost:3000`) and backend (`localhost:8000`) locally.
+     - Documented step-by-step setup guides for both backend (virtual environment, dependencies, `.env` API keys, mock mode) and frontend (`npm install`, `npm run dev`).
+     - Fully documented platform features: 5s climax teaser nonlinear hook vs direct chronological cut, dual on-screen captions (Part 1, Part 2... + script-analyzed headlines), OpenCV watermark erasing, 1-click single-para clipboard export, dual-folder bulk ZIP structure, and multi-provider AI orchestration.
+  2. **GitHub Deployment**:
+     - Committed and pushed to `https://github.com/Sange-creator/Clipper.git` on branch `main`.
+
+- **Files Modified**:
+  - `README.md`
+  - `SESSION_TRACKER.md`
+
