@@ -36,6 +36,8 @@ import {
   Share2,
   ShieldAlert,
   Radio,
+  Palette,
+  CheckCircle2,
 } from "lucide-react";
 
 
@@ -69,6 +71,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
+  const [canvasBackground, setCanvasBackground] = useState<"blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean">("blur");
   const [blurRadius, setBlurRadius] = useState<number>(30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
   const [hookStrategy, setHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
@@ -138,6 +141,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         enhance_quality: enhanceQuality,
         remove_dead_air: removeDeadAir,
         framing_mode: framingMode,
+        canvas_background: canvasBackground,
         blur_radius: blurRadius,
         subtitle_position: subtitlePosition,
         hook_strategy: hookStrategy,
@@ -846,9 +850,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 >
                   <div className="flex items-center gap-1.5">
                     <Maximize2 className="h-3.5 w-3.5 text-cyan-400" />
-                    <p className="text-xs font-semibold">16:9 Frosted Blur</p>
+                    <p className="text-xs font-semibold">16:9 Canvas</p>
                   </div>
-                  <p className="text-[10px] text-zinc-400 mt-0.5">Fit with canvas blur</p>
+                  <p className="text-[10px] text-zinc-400 mt-0.5">Fit with custom backdrop</p>
                 </button>
                 <button
                   type="button"
@@ -867,22 +871,84 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                 </button>
               </div>
 
-
               {framingMode === "blur_fit_9_16" && (
-                <div className="rounded-xl bg-black/40 border border-cyan-500/30 p-3 space-y-2">
-                  <div className="flex items-center justify-between text-[11px] text-cyan-300 font-semibold">
-                    <span>Background Blur: {blurRadius}px</span>
-                    <span className="text-zinc-500 text-[10px]">35% Dimmed</span>
+                <div className="rounded-xl bg-black/40 border border-cyan-500/30 p-3.5 space-y-3 animate-in fade-in duration-150">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Palette className="h-3.5 w-3.5 text-cyan-400" />
+                      <span className="text-xs font-semibold text-white">Canvas Backdrop</span>
+                    </div>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                      {canvasBackground === "blur"
+                        ? "Frosted Blur"
+                        : canvasBackground === "black"
+                        ? "Pitch Black"
+                        : canvasBackground === "white"
+                        ? "Pure White"
+                        : canvasBackground === "gradient_obsidian"
+                        ? "Obsidian Navy"
+                        : canvasBackground === "gradient_violet"
+                        ? "Cyber Violet"
+                        : canvasBackground === "gradient_sunset"
+                        ? "Sunset Ember"
+                        : "Oceanic Teal"}
+                    </span>
                   </div>
-                  <input
-                    type="range"
-                    min={10}
-                    max={80}
-                    step={5}
-                    value={blurRadius}
-                    onChange={(e) => setBlurRadius(Number(e.target.value))}
-                    className="w-full accent-cyan-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
-                  />
+
+                  {/* 7 Backdrop Options */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5">
+                    {[
+                      { id: "blur", label: "Frosted Blur", preview: "bg-cyan-950/60 border-cyan-500/40" },
+                      { id: "black", label: "Pitch Black", preview: "bg-black border-zinc-700" },
+                      { id: "white", label: "Pure White", preview: "bg-white border-zinc-300 text-zinc-950" },
+                      { id: "gradient_obsidian", label: "Obsidian", preview: "bg-gradient-to-b from-[#07090E] to-[#181829] border-blue-900/50" },
+                      { id: "gradient_violet", label: "Cyber Violet", preview: "bg-gradient-to-b from-[#130722] to-[#2B0E4F] border-purple-900/50" },
+                      { id: "gradient_sunset", label: "Sunset Ember", preview: "bg-gradient-to-b from-[#180909] to-[#381212] border-rose-900/50" },
+                      { id: "gradient_ocean", label: "Ocean Teal", preview: "bg-gradient-to-b from-[#04131A] to-[#0C2D3D] border-teal-900/50" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setCanvasBackground(opt.id as any)}
+                        className={`rounded-lg p-2 text-left border transition-all ${
+                          canvasBackground === opt.id
+                            ? "bg-cyan-500/20 border-cyan-400 text-white shadow-sm ring-1 ring-cyan-400/30"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        <div className={`w-3 h-3 rounded-full border mb-1 ${opt.preview}`} />
+                        <span className="text-[10px] font-semibold block leading-tight">{opt.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {canvasBackground === "blur" && (
+                    <div className="space-y-1.5 pt-1">
+                      <div className="flex items-center justify-between text-[11px] text-cyan-300 font-semibold">
+                        <span>Background Blur: {blurRadius}px</span>
+                        <span className="text-zinc-500 text-[10px]">35% Dimmed</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={10}
+                        max={80}
+                        step={5}
+                        value={blurRadius}
+                        onChange={(e) => setBlurRadius(Number(e.target.value))}
+                        className="w-full accent-cyan-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                      />
+                    </div>
+                  )}
+
+                  {canvasBackground === "white" && (
+                    <div className="rounded-lg p-2.5 bg-emerald-500/10 border border-emerald-500/25 flex items-start gap-2">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-[11px] text-zinc-300">
+                        <strong className="text-emerald-300 font-medium">High-Contrast Active: </strong>
+                        Solid 8px black stroke & dark backing ensure subtitles and headers pop with 100% legibility on white.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -34,6 +34,10 @@ import {
   Smile,
   Feather,
   Square,
+  Palette,
+  Sun,
+  Moon,
+  Eye,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
@@ -80,6 +84,7 @@ export function VideoUploader() {
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
+  const [canvasBackground, setCanvasBackground] = useState<"blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean">("blur");
   const [blurRadius, setBlurRadius] = useState<number>(30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
   const [targetClipsCount, setTargetClipsCount] = useState<number>(10);
@@ -186,6 +191,7 @@ export function VideoUploader() {
         hook_strategy: hookStrategy,
         remove_dead_air: removeDeadAir,
         framing_mode: framingMode,
+        canvas_background: canvasBackground,
         blur_radius: blurRadius,
         subtitle_position: subtitlePosition,
         reframing_mode: "center_crop",
@@ -591,7 +597,7 @@ export function VideoUploader() {
               </p>
             </div>
 
-            {/* Mode 2: 16:9 in 9:16 Blurred Canvas */}
+            {/* Mode 2: 16:9 in 9:16 Custom Canvas */}
             <div
               onClick={() => setFramingMode("blur_fit_9_16")}
               className={`rounded-xl p-3.5 cursor-pointer border transition-all ${
@@ -606,10 +612,10 @@ export function VideoUploader() {
                   Popular
                 </span>
               </div>
-              <h5 className="text-xs font-semibold text-white">16:9 in 9:16 Blurred</h5>
+              <h5 className="text-xs font-semibold text-white">16:9 in 9:16 Canvas</h5>
               <p className="text-[10px] text-cyan-400 font-medium mt-0.5">Podcasts & Gameplay</p>
               <p className="text-[10px] text-zinc-400 mt-2 leading-relaxed">
-                Fits 100% of widescreen video centered with an aesthetic frosted blurred background.
+                Fits 100% of widescreen video centered with your choice of blurred, solid, or gradient backgrounds.
               </p>
             </div>
 
@@ -636,62 +642,263 @@ export function VideoUploader() {
             </div>
           </div>
 
-          {/* If Blurred Canvas is chosen, show Blur Ratio Controls */}
+          {/* Canvas Background Style & Contrast Studio */}
           {framingMode === "blur_fit_9_16" && (
-            <div className="rounded-xl bg-black/40 border border-cyan-500/30 p-4 space-y-3.5 animate-in fade-in duration-200">
+            <div className="rounded-xl bg-black/40 border border-cyan-500/30 p-4 space-y-4 animate-in fade-in duration-200">
               <div className="flex items-center justify-between">
-                <label className="text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5">
-                  <span>Background Blur Ratio & Intensity:</span>
-                  <span className="font-mono text-white bg-cyan-500/20 px-1.5 py-0.5 rounded text-[10px]">
-                    {blurRadius}px
-                  </span>
-                </label>
-                <span className="text-[10px] text-zinc-400">Dimmed 35% overlay</span>
+                <div className="flex items-center gap-2">
+                  <Palette className="h-4 w-4 text-cyan-400" />
+                  <div>
+                    <h5 className="text-xs font-semibold text-white">Canvas Background Style</h5>
+                    <p className="text-[10px] text-zinc-400">Choose canvas backdrop style behind the centered widescreen frame</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                  {canvasBackground === "blur"
+                    ? "Frosted Blur"
+                    : canvasBackground === "black"
+                    ? "Pitch Black"
+                    : canvasBackground === "white"
+                    ? "Pure White"
+                    : canvasBackground === "gradient_obsidian"
+                    ? "Obsidian Navy"
+                    : canvasBackground === "gradient_violet"
+                    ? "Cyber Violet"
+                    : canvasBackground === "gradient_sunset"
+                    ? "Sunset Ember"
+                    : "Oceanic Teal"}
+                </span>
               </div>
 
-              {/* Preset Buttons */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {/* 7 Background Style Option Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
                 {[
-                  { label: "Light", radius: 15, desc: "Subtle motion" },
-                  { label: "Medium", radius: 30, desc: "Standard aesthetic" },
-                  { label: "Heavy", radius: 50, desc: "Frosted glass" },
-                  { label: "Ultra", radius: 80, desc: "Ambient glow" },
-                ].map((b) => (
+                  {
+                    id: "blur",
+                    label: "Frosted Blur",
+                    sub: "Video Motion",
+                    colorPreview: "bg-cyan-950/60 border-cyan-500/40",
+                    badge: "Dynamic",
+                  },
+                  {
+                    id: "black",
+                    label: "Pitch Black",
+                    sub: "Cinema OLED",
+                    colorPreview: "bg-black border-zinc-700",
+                    badge: "OLED",
+                  },
+                  {
+                    id: "white",
+                    label: "Pure White",
+                    sub: "Clean Studio",
+                    colorPreview: "bg-white text-zinc-950 border-zinc-200",
+                    badge: "Contrast+",
+                  },
+                  {
+                    id: "gradient_obsidian",
+                    label: "Obsidian",
+                    sub: "Navy Gradient",
+                    colorPreview: "bg-gradient-to-b from-[#07090E] to-[#181829] border-blue-900/50",
+                    badge: "Studio",
+                  },
+                  {
+                    id: "gradient_violet",
+                    label: "Cyber Violet",
+                    sub: "Neon Purple",
+                    colorPreview: "bg-gradient-to-b from-[#130722] to-[#2B0E4F] border-purple-900/50",
+                    badge: "Vibrant",
+                  },
+                  {
+                    id: "gradient_sunset",
+                    label: "Sunset Ember",
+                    sub: "Charcoal Ruby",
+                    colorPreview: "bg-gradient-to-b from-[#180909] to-[#381212] border-rose-900/50",
+                    badge: "Warm",
+                  },
+                  {
+                    id: "gradient_ocean",
+                    label: "Ocean Teal",
+                    sub: "Deep Abyss",
+                    colorPreview: "bg-gradient-to-b from-[#04131A] to-[#0C2D3D] border-teal-900/50",
+                    badge: "Teal",
+                  },
+                ].map((opt) => (
                   <button
-                    key={b.radius}
+                    key={opt.id}
                     type="button"
-                    onClick={() => setBlurRadius(b.radius)}
-                    className={`rounded-lg py-2 px-2.5 text-left border transition-all ${
-                      blurRadius === b.radius
-                        ? "bg-cyan-500/20 border-cyan-400 text-white shadow-sm"
+                    onClick={() => setCanvasBackground(opt.id as any)}
+                    className={`rounded-lg p-2 text-left border transition-all flex flex-col justify-between ${
+                      canvasBackground === opt.id
+                        ? "bg-cyan-500/15 border-cyan-400 text-white shadow-md shadow-cyan-500/10 ring-1 ring-cyan-400/30"
                         : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold">{b.label}</span>
-                      <span className="text-[10px] font-mono text-cyan-400">{b.radius}px</span>
+                    <div className="flex items-center justify-between w-full mb-1.5">
+                      <div className={`w-3.5 h-3.5 rounded-full border ${opt.colorPreview}`} />
+                      <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-white/10 text-zinc-300">
+                        {opt.badge}
+                      </span>
                     </div>
-                    <p className="text-[9px] text-zinc-500 mt-0.5">{b.desc}</p>
+                    <div>
+                      <span className="text-[11px] font-semibold block leading-tight">{opt.label}</span>
+                      <span className="text-[9px] text-zinc-400 leading-tight block mt-0.5">{opt.sub}</span>
+                    </div>
                   </button>
                 ))}
               </div>
 
-              {/* Slider */}
-              <div className="space-y-1 pt-1">
-                <input
-                  type="range"
-                  min={10}
-                  max={80}
-                  step={5}
-                  value={blurRadius}
-                  onChange={(e) => setBlurRadius(Number(e.target.value))}
-                  className="w-full accent-cyan-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
-                />
-                <div className="flex justify-between text-[9px] text-zinc-500">
-                  <span>10px (Sharpest)</span>
-                  <span>30px (Default)</span>
-                  <span>50px (Heavy)</span>
-                  <span>80px (Softest)</span>
+              {/* If Blurred Canvas is chosen, show Blur Ratio Controls */}
+              {canvasBackground === "blur" && (
+                <div className="pt-2 border-t border-white/5 space-y-2.5 animate-in fade-in duration-150">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5">
+                      <span>Background Blur Radius:</span>
+                      <span className="font-mono text-white bg-cyan-500/20 px-1.5 py-0.5 rounded text-[10px]">
+                        {blurRadius}px
+                      </span>
+                    </label>
+                    <span className="text-[10px] text-zinc-400">Dimmed 35% overlay</span>
+                  </div>
+
+                  {/* Preset Buttons */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { label: "Light", radius: 15, desc: "Subtle motion" },
+                      { label: "Medium", radius: 30, desc: "Standard aesthetic" },
+                      { label: "Heavy", radius: 50, desc: "Frosted glass" },
+                      { label: "Ultra", radius: 80, desc: "Ambient glow" },
+                    ].map((b) => (
+                      <button
+                        key={b.radius}
+                        type="button"
+                        onClick={() => setBlurRadius(b.radius)}
+                        className={`rounded-lg py-1.5 px-2 text-left border transition-all ${
+                          blurRadius === b.radius
+                            ? "bg-cyan-500/20 border-cyan-400 text-white shadow-sm"
+                            : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold">{b.label}</span>
+                          <span className="text-[10px] font-mono text-cyan-400">{b.radius}px</span>
+                        </div>
+                        <p className="text-[9px] text-zinc-400 mt-0.5">{b.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Slider */}
+                  <div className="space-y-1 pt-1">
+                    <input
+                      type="range"
+                      min={10}
+                      max={80}
+                      step={5}
+                      value={blurRadius}
+                      onChange={(e) => setBlurRadius(Number(e.target.value))}
+                      className="w-full accent-cyan-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[9px] text-zinc-400">
+                      <span>10px (Sharpest)</span>
+                      <span>30px (Default)</span>
+                      <span>50px (Heavy)</span>
+                      <span>80px (Softest)</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* High-Contrast Reassurance Banner if White Canvas is Selected */}
+              {canvasBackground === "white" && (
+                <div className="rounded-lg p-3 bg-emerald-500/10 border border-emerald-500/25 flex items-start gap-2.5 animate-in fade-in duration-200">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <div className="space-y-0.5 text-left">
+                    <p className="text-xs font-semibold text-emerald-300">
+                      High-Contrast Subtitle & Headline Mode Active
+                    </p>
+                    <p className="text-[11px] text-zinc-300 leading-relaxed">
+                      Captions automatically receive thick 8px solid black borders, dark pill backings, and drop shadows. Spoken words and titles remain 100% visible and razor-sharp against the bright white canvas.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Live Mini Preview Mockup */}
+              <div className="rounded-lg bg-black/60 border border-white/10 p-3 flex flex-col sm:flex-row items-center gap-4">
+                {/* 9:16 Aspect Ratio Mini Frame */}
+                <div
+                  className="relative w-28 h-48 rounded-xl overflow-hidden border-2 border-zinc-700 shadow-xl flex flex-col justify-between p-1.5 flex-shrink-0"
+                  style={
+                    canvasBackground === "white"
+                      ? { backgroundColor: "#FFFFFF" }
+                      : canvasBackground === "black"
+                      ? { backgroundColor: "#000000" }
+                      : canvasBackground === "gradient_obsidian"
+                      ? { background: "linear-gradient(180deg, #07090E 0%, #181829 100%)" }
+                      : canvasBackground === "gradient_violet"
+                      ? { background: "linear-gradient(180deg, #130722 0%, #2B0E4F 100%)" }
+                      : canvasBackground === "gradient_sunset"
+                      ? { background: "linear-gradient(180deg, #180909 0%, #381212 100%)" }
+                      : canvasBackground === "gradient_ocean"
+                      ? { background: "linear-gradient(180deg, #04131A 0%, #0C2D3D 100%)" }
+                      : { background: "radial-gradient(circle, rgba(6,182,212,0.3) 0%, rgba(15,23,42,0.95) 100%)" }
+                  }
+                >
+                  {/* Top Canvas Area */}
+                  <div className="flex flex-col items-center space-y-0.5 z-10 pt-0.5">
+                    <span className="px-1.5 py-0.2 rounded text-[7px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
+                      PART 1
+                    </span>
+                    <span
+                      className="text-[7.5px] font-black text-center uppercase tracking-tight px-1 leading-tight"
+                      style={{
+                        color: "#FFFFFF",
+                        textShadow:
+                          canvasBackground === "white"
+                            ? "0 0 3px #000, 0 0 5px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+                            : "0 0 2px #000, 1px 1px 1px #000",
+                      }}
+                    >
+                      {addHookHeader ? "CRITICAL REVELATION" : ""}
+                    </span>
+                  </div>
+
+                  {/* Centered 16:9 Video Frame */}
+                  <div className="w-full aspect-video rounded bg-zinc-900 border border-white/20 flex items-center justify-center my-auto shadow relative overflow-hidden">
+                    <Play className="h-4 w-4 text-white/80 fill-white/20" />
+                    <span className="absolute bottom-0.5 right-0.5 text-[6px] font-mono px-0.5 rounded bg-black/80 text-zinc-300">
+                      16:9
+                    </span>
+                  </div>
+
+                  {/* Bottom Canvas Area (Subtitles) */}
+                  <div className="flex flex-col items-center z-10 pb-0.5">
+                    <span
+                      className="text-[7.5px] font-black text-center uppercase tracking-tight leading-tight px-1"
+                      style={{
+                        color: "#FFFFFF",
+                        textShadow:
+                          canvasBackground === "white"
+                            ? "0 0 3px #000, 0 0 5px #000, 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000"
+                            : "0 0 2px #000, 1px 1px 1px #000",
+                      }}
+                    >
+                      <span className="text-yellow-300">100% VISIBLE</span> TEXT
+                    </span>
+                  </div>
+                </div>
+
+                {/* Preview details */}
+                <div className="space-y-1 text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-white">Live Framing Preview</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-cyan-300">
+                      1080 x 1920
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    The 16:9 video is centered with zero cropping. Your chosen background fills the top and bottom bars, with the Part badge & Hook Header positioned on top and spoken subtitles on the bottom.
+                  </p>
                 </div>
               </div>
             </div>

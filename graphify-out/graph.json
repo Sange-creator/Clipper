@@ -117,7 +117,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L1",
       "id": "frontend_package_json",
-      "community": 11,
+      "community": 66,
       "norm_label": "package.json"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L2",
       "id": "frontend_package_name",
-      "community": 11,
+      "community": 66,
       "norm_label": "name"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L3",
       "id": "frontend_package_version",
-      "community": 11,
+      "community": 66,
       "norm_label": "version"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L4",
       "id": "frontend_package_private",
-      "community": 11,
+      "community": 66,
       "norm_label": "private"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L5",
       "id": "frontend_package_scripts",
-      "community": 11,
+      "community": 66,
       "norm_label": "scripts"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L6",
       "id": "frontend_package_scripts_dev",
-      "community": 11,
+      "community": 66,
       "norm_label": "dev"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L7",
       "id": "frontend_package_scripts_build",
-      "community": 11,
+      "community": 66,
       "norm_label": "build"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L8",
       "id": "frontend_package_scripts_start",
-      "community": 11,
+      "community": 66,
       "norm_label": "start"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L9",
       "id": "frontend_package_scripts_lint",
-      "community": 11,
+      "community": 66,
       "norm_label": "lint"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L21",
       "id": "frontend_package_dependencies_next",
-      "community": 15,
+      "community": 125,
       "norm_label": "next"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L27",
       "id": "frontend_package_devdependencies",
-      "community": 11,
+      "community": 120,
       "norm_label": "devdependencies"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L28",
       "id": "frontend_package_devdependencies_types_node",
-      "community": 11,
+      "community": 120,
       "norm_label": "@types/node"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L29",
       "id": "frontend_package_devdependencies_types_react",
-      "community": 11,
+      "community": 120,
       "norm_label": "@types/react"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L30",
       "id": "frontend_package_devdependencies_types_react_dom",
-      "community": 11,
+      "community": 120,
       "norm_label": "@types/react-dom"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L31",
       "id": "frontend_package_devdependencies_autoprefixer",
-      "community": 11,
+      "community": 120,
       "norm_label": "autoprefixer"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L32",
       "id": "frontend_package_devdependencies_postcss",
-      "community": 11,
+      "community": 120,
       "norm_label": "postcss"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L33",
       "id": "frontend_package_devdependencies_tailwindcss",
-      "community": 11,
+      "community": 120,
       "norm_label": "tailwindcss"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L34",
       "id": "frontend_package_devdependencies_typescript",
-      "community": 11,
+      "community": 120,
       "norm_label": "typescript"
     },
     {
@@ -961,7 +961,7 @@
       "label": "ProjectDetailPage()",
       "file_type": "code",
       "source_file": "frontend/src/app/projects/[id]/page.tsx",
-      "source_location": "L49",
+      "source_location": "L51",
       "id": "id_page_projectdetailpage",
       "community": 19,
       "norm_label": "projectdetailpage()"
@@ -1269,7 +1269,7 @@
       "source_file": "frontend/src/components/ui/badge.tsx",
       "source_location": "L1",
       "id": "frontend_src_components_ui_badge_tsx",
-      "community": 8,
+      "community": 28,
       "norm_label": "badge.tsx"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "frontend/src/components/ui/badge.tsx",
       "source_location": "L5",
       "id": "ui_badge_badgevariants",
-      "community": 8,
+      "community": 28,
       "norm_label": "badgevariants"
     },
     {
@@ -1287,7 +1287,7 @@
       "source_file": "frontend/src/components/ui/badge.tsx",
       "source_location": "L30",
       "id": "ui_badge_badgeprops",
-      "community": 8,
+      "community": 28,
       "norm_label": "badgeprops"
     },
     {
@@ -1296,7 +1296,7 @@
       "source_file": "frontend/src/components/ui/badge.tsx",
       "source_location": "L34",
       "id": "ui_badge_badge",
-      "community": 8,
+      "community": 28,
       "norm_label": "badge()"
     },
     {
@@ -1780,7 +1780,7 @@
       "label": "VideoUploader()",
       "file_type": "code",
       "source_file": "frontend/src/components/upload/VideoUploader.tsx",
-      "source_location": "L43",
+      "source_location": "L47",
       "id": "upload_videouploader_videouploader",
       "community": 28,
       "norm_label": "videouploader()"
@@ -1969,7 +1969,7 @@
       "label": "LogEntry",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L152",
+      "source_location": "L153",
       "id": "lib_types_logentry",
       "community": 16,
       "norm_label": "logentry"
@@ -1978,7 +1978,7 @@
       "label": "JobLog",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L159",
+      "source_location": "L160",
       "id": "lib_types_joblog",
       "community": 32,
       "norm_label": "joblog"
@@ -1987,7 +1987,7 @@
       "label": "JobStatusResponse",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L161",
+      "source_location": "L162",
       "id": "lib_types_jobstatusresponse",
       "community": 32,
       "norm_label": "jobstatusresponse"
@@ -1996,7 +1996,7 @@
       "label": "CaptionStyleType",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L178",
+      "source_location": "L179",
       "id": "lib_types_captionstyletype",
       "community": 39,
       "norm_label": "captionstyletype"
@@ -2005,7 +2005,7 @@
       "label": "VideoGenre",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L201",
+      "source_location": "L202",
       "id": "lib_types_videogenre",
       "community": 19,
       "norm_label": "videogenre"
@@ -2014,7 +2014,7 @@
       "label": "JobCreatePayload",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L210",
+      "source_location": "L211",
       "id": "lib_types_jobcreatepayload",
       "community": 16,
       "norm_label": "jobcreatepayload"
@@ -2023,7 +2023,7 @@
       "label": "ProjectCreatePayload",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L236",
+      "source_location": "L238",
       "id": "lib_types_projectcreatepayload",
       "community": 16,
       "norm_label": "projectcreatepayload"
@@ -2032,7 +2032,7 @@
       "label": "ProjectProcessPayload",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L242",
+      "source_location": "L244",
       "id": "lib_types_projectprocesspayload",
       "community": 16,
       "norm_label": "projectprocesspayload"
@@ -2041,7 +2041,7 @@
       "label": "AdminMetricsResponse",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L267",
+      "source_location": "L270",
       "id": "lib_types_adminmetricsresponse",
       "community": 16,
       "norm_label": "adminmetricsresponse"
@@ -2050,7 +2050,7 @@
       "label": "SettingsResponse",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L283",
+      "source_location": "L286",
       "id": "lib_types_settingsresponse",
       "community": 16,
       "norm_label": "settingsresponse"
@@ -2059,7 +2059,7 @@
       "label": "SettingsUpdateRequest",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L312",
+      "source_location": "L315",
       "id": "lib_types_settingsupdaterequest",
       "community": 16,
       "norm_label": "settingsupdaterequest"
@@ -2068,7 +2068,7 @@
       "label": "TestApiKeyResponse",
       "file_type": "code",
       "source_file": "frontend/src/lib/types.ts",
-      "source_location": "L335",
+      "source_location": "L338",
       "id": "lib_types_testapikeyresponse",
       "community": 16,
       "norm_label": "testapikeyresponse"
@@ -2268,7 +2268,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L79",
       "id": "core_models_transcript",
-      "community": 23,
+      "community": 15,
       "norm_label": "transcript"
     },
     {
@@ -2277,7 +2277,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L94",
       "id": "core_models_scene",
-      "community": 23,
+      "community": 15,
       "norm_label": "scene"
     },
     {
@@ -2293,16 +2293,16 @@
       "label": "ClipCandidate",
       "file_type": "code",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L151",
+      "source_location": "L152",
       "id": "core_models_clipcandidate",
-      "community": 23,
+      "community": 17,
       "norm_label": "clipcandidate"
     },
     {
       "label": "RenderedClip",
       "file_type": "code",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L194",
+      "source_location": "L195",
       "id": "core_models_renderedclip",
       "community": 23,
       "norm_label": "renderedclip"
@@ -2311,16 +2311,16 @@
       "label": "UserFeedback",
       "file_type": "code",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L256",
+      "source_location": "L258",
       "id": "core_models_userfeedback",
-      "community": 22,
+      "community": 113,
       "norm_label": "userfeedback"
     },
     {
       "label": "AIRequestLog",
       "file_type": "code",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L270",
+      "source_location": "L272",
       "id": "core_models_airequestlog",
       "community": 23,
       "norm_label": "airequestlog"
@@ -2329,7 +2329,7 @@
       "label": "PerformanceAnalytics",
       "file_type": "code",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L286",
+      "source_location": "L288",
       "id": "core_models_performanceanalytics",
       "community": 23,
       "norm_label": "performanceanalytics"
@@ -2338,7 +2338,7 @@
       "label": "SystemSetting",
       "file_type": "code",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L305",
+      "source_location": "L307",
       "id": "core_models_systemsetting",
       "community": 23,
       "norm_label": "systemsetting"
@@ -2394,7 +2394,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L80",
       "id": "core_models_rationale_80",
-      "community": 23,
+      "community": 15,
       "norm_label": "represents a timestamped speech-to-text transcript."
     },
     {
@@ -2403,7 +2403,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L95",
       "id": "core_models_rationale_95",
-      "community": 23,
+      "community": 15,
       "norm_label": "represents a detected visual scene cut."
     },
     {
@@ -2419,17 +2419,17 @@
       "label": "Represents a high-potential clip candidate moment scored across 12 dimensions.",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L152",
-      "id": "core_models_rationale_152",
-      "community": 23,
+      "source_location": "L153",
+      "id": "core_models_rationale_153",
+      "community": 17,
       "norm_label": "represents a high-potential clip candidate moment scored across 12 dimensions."
     },
     {
       "label": "Represents a rendered 9:16 vertical short clip with burned captions and platform",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L195",
-      "id": "core_models_rationale_195",
+      "source_location": "L196",
+      "id": "core_models_rationale_196",
       "community": 23,
       "norm_label": "represents a rendered 9:16 vertical short clip with burned captions and platform"
     },
@@ -2437,17 +2437,17 @@
       "label": "Tracks human review actions and feedback for future quality learning.",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L257",
-      "id": "core_models_rationale_257",
-      "community": 22,
+      "source_location": "L259",
+      "id": "core_models_rationale_259",
+      "community": 113,
       "norm_label": "tracks human review actions and feedback for future quality learning."
     },
     {
       "label": "Audit trail and observability log for external and local AI requests.",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L271",
-      "id": "core_models_rationale_271",
+      "source_location": "L273",
+      "id": "core_models_rationale_273",
       "community": 23,
       "norm_label": "audit trail and observability log for external and local ai requests."
     },
@@ -2455,8 +2455,8 @@
       "label": "Schema for future learning system to track historical clip performance.",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L287",
-      "id": "core_models_rationale_287",
+      "source_location": "L289",
+      "id": "core_models_rationale_289",
       "community": 23,
       "norm_label": "schema for future learning system to track historical clip performance."
     },
@@ -2464,8 +2464,8 @@
       "label": "Dynamic system and API settings persisted in database.",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L306",
-      "id": "core_models_rationale_306",
+      "source_location": "L308",
+      "id": "core_models_rationale_308",
       "community": 23,
       "norm_label": "dynamic system and api settings persisted in database."
     },
@@ -2491,7 +2491,7 @@
       "label": "get_db()",
       "file_type": "code",
       "source_file": "backend/app/core/database.py",
-      "source_location": "L86",
+      "source_location": "L88",
       "id": "core_database_get_db",
       "community": 2,
       "norm_label": "get_db()"
@@ -2518,8 +2518,8 @@
       "label": "Dependency for providing a transactional async database session.",
       "file_type": "rationale",
       "source_file": "backend/app/core/database.py",
-      "source_location": "L87",
-      "id": "core_database_rationale_87",
+      "source_location": "L89",
+      "id": "core_database_rationale_89",
       "community": 2,
       "norm_label": "dependency for providing a transactional async database session."
     },
@@ -2644,7 +2644,7 @@
       "label": "JobCreateRequest",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L204",
+      "source_location": "L205",
       "id": "core_schemas_jobcreaterequest",
       "community": 0,
       "norm_label": "jobcreaterequest"
@@ -2653,7 +2653,7 @@
       "label": "JobStatusResponse",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L230",
+      "source_location": "L232",
       "id": "core_schemas_jobstatusresponse",
       "community": 0,
       "norm_label": "jobstatusresponse"
@@ -2662,7 +2662,7 @@
       "label": "ClipEditRequest",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L247",
+      "source_location": "L249",
       "id": "core_schemas_clipeditrequest",
       "community": 0,
       "norm_label": "clipeditrequest"
@@ -2671,7 +2671,7 @@
       "label": "ClipRegenerateRequest",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L265",
+      "source_location": "L268",
       "id": "core_schemas_clipregeneraterequest",
       "community": 0,
       "norm_label": "clipregeneraterequest"
@@ -2680,7 +2680,7 @@
       "label": "UserFeedbackCreate",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L279",
+      "source_location": "L285",
       "id": "core_schemas_userfeedbackcreate",
       "community": 0,
       "norm_label": "userfeedbackcreate"
@@ -2689,7 +2689,7 @@
       "label": "BulkClipActionRequest",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L285",
+      "source_location": "L291",
       "id": "core_schemas_bulkclipactionrequest",
       "community": 0,
       "norm_label": "bulkclipactionrequest"
@@ -2698,7 +2698,7 @@
       "label": "AdminMetricsResponse",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L291",
+      "source_location": "L297",
       "id": "core_schemas_adminmetricsresponse",
       "community": 0,
       "norm_label": "adminmetricsresponse"
@@ -2707,7 +2707,7 @@
       "label": "SettingsResponse",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L308",
+      "source_location": "L314",
       "id": "core_schemas_settingsresponse",
       "community": 0,
       "norm_label": "settingsresponse"
@@ -2716,7 +2716,7 @@
       "label": "SettingsUpdateRequest",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L335",
+      "source_location": "L342",
       "id": "core_schemas_settingsupdaterequest",
       "community": 0,
       "norm_label": "settingsupdaterequest"
@@ -2725,7 +2725,7 @@
       "label": "TestApiKeyRequest",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L359",
+      "source_location": "L367",
       "id": "core_schemas_testapikeyrequest",
       "community": 0,
       "norm_label": "testapikeyrequest"
@@ -2734,7 +2734,7 @@
       "label": "TestApiKeyResponse",
       "file_type": "code",
       "source_file": "backend/app/core/schemas.py",
-      "source_location": "L365",
+      "source_location": "L373",
       "id": "core_schemas_testapikeyresponse",
       "community": 0,
       "norm_label": "testapikeyresponse"
@@ -2916,7 +2916,7 @@
       "source_file": "backend/app/utils/storage.py",
       "source_location": "L1",
       "id": "backend_app_utils_storage_py",
-      "community": 1,
+      "community": 100,
       "norm_label": "storage.py"
     },
     {
@@ -2925,7 +2925,7 @@
       "source_file": "backend/app/utils/storage.py",
       "source_location": "L9",
       "id": "utils_storage_sanitize_filename",
-      "community": 1,
+      "community": 100,
       "norm_label": "sanitize_filename()"
     },
     {
@@ -2934,7 +2934,7 @@
       "source_file": "backend/app/utils/storage.py",
       "source_location": "L20",
       "id": "utils_storage_get_media_url",
-      "community": 1,
+      "community": 114,
       "norm_label": "get_media_url()"
     },
     {
@@ -2943,7 +2943,7 @@
       "source_file": "backend/app/utils/storage.py",
       "source_location": "L1",
       "id": "utils_storage_rationale_1",
-      "community": 1,
+      "community": 100,
       "norm_label": "storage and path management utilities."
     },
     {
@@ -2952,7 +2952,7 @@
       "source_file": "backend/app/utils/storage.py",
       "source_location": "L10",
       "id": "utils_storage_rationale_10",
-      "community": 1,
+      "community": 100,
       "norm_label": "sanitize a filename to prevent path traversal and shell injection."
     },
     {
@@ -2961,7 +2961,7 @@
       "source_file": "backend/app/utils/storage.py",
       "source_location": "L21",
       "id": "utils_storage_rationale_21",
-      "community": 1,
+      "community": 114,
       "norm_label": "convert an absolute or relative path inside data dir into an api media stream ur"
     },
     {
@@ -2970,7 +2970,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L1",
       "id": "backend_app_utils_hashing_py",
-      "community": 1,
+      "community": 100,
       "norm_label": "hashing.py"
     },
     {
@@ -2979,7 +2979,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L7",
       "id": "utils_hashing_compute_file_hash",
-      "community": 1,
+      "community": 100,
       "norm_label": "compute_file_hash()"
     },
     {
@@ -2988,7 +2988,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L17",
       "id": "utils_hashing_compute_string_hash",
-      "community": 1,
+      "community": 100,
       "norm_label": "compute_string_hash()"
     },
     {
@@ -2997,7 +2997,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L1",
       "id": "utils_hashing_rationale_1",
-      "community": 1,
+      "community": 100,
       "norm_label": "hashing utilities for content identification and caching."
     },
     {
@@ -3006,7 +3006,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L8",
       "id": "utils_hashing_rationale_8",
-      "community": 1,
+      "community": 100,
       "norm_label": "compute sha-256 hash of a file efficiently without loading entirely into memory."
     },
     {
@@ -3015,7 +3015,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L18",
       "id": "utils_hashing_rationale_18",
-      "community": 1,
+      "community": 100,
       "norm_label": "compute sha-256 hash of a string."
     },
     {
@@ -3060,7 +3060,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L1",
       "id": "backend_app_api_routes_upload_py",
-      "community": 1,
+      "community": 117,
       "norm_label": "upload.py"
     },
     {
@@ -3069,7 +3069,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L24",
       "id": "routes_upload_get_recent_videos",
-      "community": 1,
+      "community": 117,
       "norm_label": "get_recent_videos()"
     },
     {
@@ -3078,7 +3078,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L52",
       "id": "routes_upload_upload_video",
-      "community": 1,
+      "community": 100,
       "norm_label": "upload_video()"
     },
     {
@@ -3087,7 +3087,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L167",
       "id": "routes_upload_detect_video_watermark",
-      "community": 1,
+      "community": 117,
       "norm_label": "detect_video_watermark()"
     },
     {
@@ -3096,7 +3096,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L1",
       "id": "routes_upload_rationale_1",
-      "community": 1,
+      "community": 117,
       "norm_label": "video upload and validation endpoint."
     },
     {
@@ -3105,7 +3105,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L28",
       "id": "routes_upload_rationale_28",
-      "community": 1,
+      "community": 117,
       "norm_label": "retrieve recently uploaded videos from library."
     },
     {
@@ -3114,7 +3114,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L56",
       "id": "routes_upload_rationale_56",
-      "community": 1,
+      "community": 100,
       "norm_label": "upload a long-form video file:     - validates extension and file integrity."
     },
     {
@@ -3123,7 +3123,7 @@
       "source_file": "backend/app/api/routes/upload.py",
       "source_location": "L171",
       "id": "routes_upload_rationale_171",
-      "community": 1,
+      "community": 117,
       "norm_label": "run computer vision analysis to automatically detect if and where     a watermar"
     },
     {
@@ -3141,7 +3141,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L38",
       "id": "routes_clips_list_all_clips",
-      "community": 1,
+      "community": 114,
       "norm_label": "list_all_clips()"
     },
     {
@@ -3166,7 +3166,7 @@
       "label": "refresh_thumbnail()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L380",
+      "source_location": "L385",
       "id": "routes_clips_refresh_thumbnail",
       "community": 22,
       "norm_label": "refresh_thumbnail()"
@@ -3175,7 +3175,7 @@
       "label": "regenerate_clip()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L404",
+      "source_location": "L409",
       "id": "routes_clips_regenerate_clip",
       "community": 22,
       "norm_label": "regenerate_clip()"
@@ -3184,34 +3184,34 @@
       "label": "submit_feedback()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L433",
+      "source_location": "L438",
       "id": "routes_clips_submit_feedback",
-      "community": 22,
+      "community": 113,
       "norm_label": "submit_feedback()"
     },
     {
       "label": "toggle_favorite()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L461",
+      "source_location": "L466",
       "id": "routes_clips_toggle_favorite",
-      "community": 22,
+      "community": 113,
       "norm_label": "toggle_favorite()"
     },
     {
       "label": "delete_clip()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L476",
+      "source_location": "L481",
       "id": "routes_clips_delete_clip",
-      "community": 22,
+      "community": 127,
       "norm_label": "delete_clip()"
     },
     {
       "label": "bulk_delete_clips()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L497",
+      "source_location": "L502",
       "id": "routes_clips_bulk_delete_clips",
       "community": 22,
       "norm_label": "bulk_delete_clips()"
@@ -3231,7 +3231,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L44",
       "id": "routes_clips_rationale_44",
-      "community": 1,
+      "community": 114,
       "norm_label": "retrieve all globally generated rendered clips across all jobs with filtering."
     },
     {
@@ -3256,8 +3256,8 @@
       "label": "Re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered cl",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L384",
-      "id": "routes_clips_rationale_384",
+      "source_location": "L389",
+      "id": "routes_clips_rationale_389",
       "community": 22,
       "norm_label": "re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered cl"
     },
@@ -3265,8 +3265,8 @@
       "label": "Strategic AI Clip Regeneration (stronger hook, shorter, longer, different payoff",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L409",
-      "id": "routes_clips_rationale_409",
+      "source_location": "L414",
+      "id": "routes_clips_rationale_414",
       "community": 22,
       "norm_label": "strategic ai clip regeneration (stronger hook, shorter, longer, different payoff"
     },
@@ -3274,35 +3274,35 @@
       "label": "Store human review action (accepted, rejected, favorite, edited) for future lear",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L438",
-      "id": "routes_clips_rationale_438",
-      "community": 22,
+      "source_location": "L443",
+      "id": "routes_clips_rationale_443",
+      "community": 113,
       "norm_label": "store human review action (accepted, rejected, favorite, edited) for future lear"
     },
     {
       "label": "Toggle clip favorite state.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L462",
-      "id": "routes_clips_rationale_462",
-      "community": 22,
+      "source_location": "L467",
+      "id": "routes_clips_rationale_467",
+      "community": 113,
       "norm_label": "toggle clip favorite state."
     },
     {
       "label": "Permanently delete a rendered clip.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L477",
-      "id": "routes_clips_rationale_477",
-      "community": 22,
+      "source_location": "L482",
+      "id": "routes_clips_rationale_482",
+      "community": 127,
       "norm_label": "permanently delete a rendered clip."
     },
     {
       "label": "Delete multiple rendered clips permanently.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
-      "source_location": "L501",
-      "id": "routes_clips_rationale_501",
+      "source_location": "L506",
+      "id": "routes_clips_rationale_506",
       "community": 22,
       "norm_label": "delete multiple rendered clips permanently."
     },
@@ -3571,7 +3571,7 @@
       "label": "list_all_jobs()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L89",
+      "source_location": "L95",
       "id": "routes_jobs_list_all_jobs",
       "community": 24,
       "norm_label": "list_all_jobs()"
@@ -3580,7 +3580,7 @@
       "label": "get_job_status()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L129",
+      "source_location": "L135",
       "id": "routes_jobs_get_job_status",
       "community": 24,
       "norm_label": "get_job_status()"
@@ -3589,7 +3589,7 @@
       "label": "stream_job_events()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L164",
+      "source_location": "L170",
       "id": "routes_jobs_stream_job_events",
       "community": 24,
       "norm_label": "stream_job_events()"
@@ -3598,7 +3598,7 @@
       "label": "get_job_candidates()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L194",
+      "source_location": "L200",
       "id": "routes_jobs_get_job_candidates",
       "community": 24,
       "norm_label": "get_job_candidates()"
@@ -3607,16 +3607,16 @@
       "label": "get_job_clips()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L251",
+      "source_location": "L257",
       "id": "routes_jobs_get_job_clips",
-      "community": 1,
+      "community": 114,
       "norm_label": "get_job_clips()"
     },
     {
       "label": "cancel_job()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L353",
+      "source_location": "L359",
       "id": "routes_jobs_cancel_job",
       "community": 24,
       "norm_label": "cancel_job()"
@@ -3625,7 +3625,7 @@
       "label": "retry_job()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L366",
+      "source_location": "L372",
       "id": "routes_jobs_retry_job",
       "community": 24,
       "norm_label": "retry_job()"
@@ -3634,7 +3634,7 @@
       "label": "delete_job()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L398",
+      "source_location": "L404",
       "id": "routes_jobs_delete_job",
       "community": 24,
       "norm_label": "delete_job()"
@@ -3661,8 +3661,8 @@
       "label": "List all processing jobs across single videos and projects.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L93",
-      "id": "routes_jobs_rationale_93",
+      "source_location": "L99",
+      "id": "routes_jobs_rationale_99",
       "community": 24,
       "norm_label": "list all processing jobs across single videos and projects."
     },
@@ -3670,8 +3670,8 @@
       "label": "Retrieve current status, stage progress, and logs for a job.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L133",
-      "id": "routes_jobs_rationale_133",
+      "source_location": "L139",
+      "id": "routes_jobs_rationale_139",
       "community": 24,
       "norm_label": "retrieve current status, stage progress, and logs for a job."
     },
@@ -3679,8 +3679,8 @@
       "label": "Server-Sent Events (SSE) stream for real-time progress updates.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L165",
-      "id": "routes_jobs_rationale_165",
+      "source_location": "L171",
+      "id": "routes_jobs_rationale_171",
       "community": 24,
       "norm_label": "server-sent events (sse) stream for real-time progress updates."
     },
@@ -3688,8 +3688,8 @@
       "label": "Retrieve scored candidates for a job.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L199",
-      "id": "routes_jobs_rationale_199",
+      "source_location": "L205",
+      "id": "routes_jobs_rationale_205",
       "community": 24,
       "norm_label": "retrieve scored candidates for a job."
     },
@@ -3697,17 +3697,17 @@
       "label": "Retrieve all rendered 9:16 clips for a job.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L255",
-      "id": "routes_jobs_rationale_255",
-      "community": 1,
+      "source_location": "L261",
+      "id": "routes_jobs_rationale_261",
+      "community": 114,
       "norm_label": "retrieve all rendered 9:16 clips for a job."
     },
     {
       "label": "Cancel an active processing job.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L354",
-      "id": "routes_jobs_rationale_354",
+      "source_location": "L360",
+      "id": "routes_jobs_rationale_360",
       "community": 24,
       "norm_label": "cancel an active processing job."
     },
@@ -3715,8 +3715,8 @@
       "label": "Restart or resume a stuck, cancelled, or failed processing job.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L367",
-      "id": "routes_jobs_rationale_367",
+      "source_location": "L373",
+      "id": "routes_jobs_rationale_373",
       "community": 24,
       "norm_label": "restart or resume a stuck, cancelled, or failed processing job."
     },
@@ -3724,8 +3724,8 @@
       "label": "Permanently delete a processing job and its associated rendered clips and candid",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/jobs.py",
-      "source_location": "L399",
-      "id": "routes_jobs_rationale_399",
+      "source_location": "L405",
+      "id": "routes_jobs_rationale_405",
       "community": 24,
       "norm_label": "permanently delete a processing job and its associated rendered clips and candid"
     },
@@ -3942,7 +3942,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L114",
       "id": "routes_projects_get_project",
-      "community": 1,
+      "community": 114,
       "norm_label": "get_project()"
     },
     {
@@ -3951,7 +3951,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L250",
       "id": "routes_projects_batch_upload_videos",
-      "community": 1,
+      "community": 100,
       "norm_label": "batch_upload_videos()"
     },
     {
@@ -3967,16 +3967,16 @@
       "label": "bulk_clip_action()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/projects.py",
-      "source_location": "L427",
+      "source_location": "L434",
       "id": "routes_projects_bulk_clip_action",
-      "community": 1,
+      "community": 113,
       "norm_label": "bulk_clip_action()"
     },
     {
       "label": "delete_project()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/projects.py",
-      "source_location": "L452",
+      "source_location": "L459",
       "id": "routes_projects_delete_project",
       "community": 1,
       "norm_label": "delete_project()"
@@ -3985,7 +3985,7 @@
       "label": "bulk_delete_projects()",
       "file_type": "code",
       "source_file": "backend/app/api/routes/projects.py",
-      "source_location": "L495",
+      "source_location": "L502",
       "id": "routes_projects_bulk_delete_projects",
       "community": 1,
       "norm_label": "bulk_delete_projects()"
@@ -4023,7 +4023,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L115",
       "id": "routes_projects_rationale_115",
-      "community": 1,
+      "community": 114,
       "norm_label": "get project details, containing all source videos and generated clips."
     },
     {
@@ -4032,7 +4032,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L255",
       "id": "routes_projects_rationale_255",
-      "community": 1,
+      "community": 100,
       "norm_label": "batch upload (20\u201330+ files):     validates, computes stable sha-256 hashes, dete"
     },
     {
@@ -4048,17 +4048,17 @@
       "label": "Applies bulk actions to multiple clips (apply style, favorite, reject, delete).",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
-      "source_location": "L432",
-      "id": "routes_projects_rationale_432",
-      "community": 1,
+      "source_location": "L439",
+      "id": "routes_projects_rationale_439",
+      "community": 113,
       "norm_label": "applies bulk actions to multiple clips (apply style, favorite, reject, delete)."
     },
     {
       "label": "Delete a single project workspace and cascade all its jobs, clips, and candidate",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
-      "source_location": "L453",
-      "id": "routes_projects_rationale_453",
+      "source_location": "L460",
+      "id": "routes_projects_rationale_460",
       "community": 1,
       "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate"
     },
@@ -4066,8 +4066,8 @@
       "label": "Delete multiple project workspaces and their contents.",
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
-      "source_location": "L499",
-      "id": "routes_projects_rationale_499",
+      "source_location": "L506",
+      "id": "routes_projects_rationale_506",
       "community": 1,
       "norm_label": "delete multiple project workspaces and their contents."
     },
@@ -4167,7 +4167,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L1",
       "id": "backend_app_services_pipeline_pipeline_py",
-      "community": 15,
+      "community": 64,
       "norm_label": "pipeline.py"
     },
     {
@@ -4176,7 +4176,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L69",
       "id": "pipeline_pipeline_resolve_clip_timeline_and_hook",
-      "community": 15,
+      "community": 64,
       "norm_label": "resolve_clip_timeline_and_hook()"
     },
     {
@@ -4246,9 +4246,9 @@
       "label": "._run_project_pipeline()",
       "file_type": "code",
       "source_file": "backend/app/services/pipeline/pipeline.py",
-      "source_location": "L697",
+      "source_location": "L706",
       "id": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline",
-      "community": 15,
+      "community": 64,
       "norm_label": "._run_project_pipeline()"
     },
     {
@@ -4257,7 +4257,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L1",
       "id": "pipeline_pipeline_rationale_1",
-      "community": 15,
+      "community": 64,
       "norm_label": "deterministic 21-stage video processing pipeline orchestrator with stage checkpo"
     },
     {
@@ -4266,7 +4266,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L78",
       "id": "pipeline_pipeline_rationale_78",
-      "community": 15,
+      "community": 64,
       "norm_label": "constructs the clip timeline and script-analyzed hook headline based on user hoo"
     },
     {
@@ -4300,9 +4300,9 @@
       "label": "Executes multi-video batch processing across all videos in a project.",
       "file_type": "rationale",
       "source_file": "backend/app/services/pipeline/pipeline.py",
-      "source_location": "L698",
-      "id": "pipeline_pipeline_rationale_698",
-      "community": 15,
+      "source_location": "L707",
+      "id": "pipeline_pipeline_rationale_707",
+      "community": 64,
       "norm_label": "executes multi-video batch processing across all videos in a project."
     },
     {
@@ -4446,7 +4446,7 @@
       "source_file": "backend/app/services/pipeline/regenerator.py",
       "source_location": "L1",
       "id": "backend_app_services_pipeline_regenerator_py",
-      "community": 23,
+      "community": 17,
       "norm_label": "regenerator.py"
     },
     {
@@ -4455,7 +4455,7 @@
       "source_file": "backend/app/services/pipeline/regenerator.py",
       "source_location": "L22",
       "id": "pipeline_regenerator_clipregeneratorservice",
-      "community": 23,
+      "community": 17,
       "norm_label": "clipregeneratorservice"
     },
     {
@@ -4473,7 +4473,7 @@
       "source_file": "backend/app/services/pipeline/regenerator.py",
       "source_location": "L1",
       "id": "pipeline_regenerator_rationale_1",
-      "community": 23,
+      "community": 17,
       "norm_label": "strategic clip regeneration engine implementing user intents."
     },
     {
@@ -4482,7 +4482,7 @@
       "source_file": "backend/app/services/pipeline/regenerator.py",
       "source_location": "L23",
       "id": "pipeline_regenerator_rationale_23",
-      "community": 23,
+      "community": 17,
       "norm_label": "regenerates clips based on user strategic feedback (stronger hook, shorter, long"
     },
     {
@@ -4500,7 +4500,7 @@
       "source_file": "backend/app/services/pipeline/candidate_discovery.py",
       "source_location": "L1",
       "id": "backend_app_services_pipeline_candidate_discovery_py",
-      "community": 54,
+      "community": 118,
       "norm_label": "candidate_discovery.py"
     },
     {
@@ -4509,7 +4509,7 @@
       "source_file": "backend/app/services/pipeline/candidate_discovery.py",
       "source_location": "L10",
       "id": "pipeline_candidate_discovery_candidatediscoveryservice",
-      "community": 54,
+      "community": 118,
       "norm_label": "candidatediscoveryservice"
     },
     {
@@ -4518,7 +4518,7 @@
       "source_file": "backend/app/services/pipeline/candidate_discovery.py",
       "source_location": "L13",
       "id": "pipeline_candidate_discovery_candidatediscoveryservice_discover_candidates",
-      "community": 54,
+      "community": 118,
       "norm_label": ".discover_candidates()"
     },
     {
@@ -4527,7 +4527,7 @@
       "source_file": "backend/app/services/pipeline/candidate_discovery.py",
       "source_location": "L1",
       "id": "pipeline_candidate_discovery_rationale_1",
-      "community": 54,
+      "community": 118,
       "norm_label": "candidate discovery engine generating a massive candidate moment pool."
     },
     {
@@ -4536,7 +4536,7 @@
       "source_file": "backend/app/services/pipeline/candidate_discovery.py",
       "source_location": "L11",
       "id": "pipeline_candidate_discovery_rationale_11",
-      "community": 54,
+      "community": 118,
       "norm_label": "discovers high-potential short-form candidate moments from transcript & media co"
     },
     {
@@ -4545,7 +4545,7 @@
       "source_file": "backend/app/services/pipeline/candidate_discovery.py",
       "source_location": "L23",
       "id": "pipeline_candidate_discovery_rationale_23",
-      "community": 54,
+      "community": 118,
       "norm_label": "discovers an oversized candidate pool (e.g. 5x - 10x of requested count)"
     },
     {
@@ -4968,7 +4968,7 @@
       "source_file": "",
       "source_location": "",
       "id": "aiprovider",
-      "community": 25,
+      "community": 10,
       "norm_label": "aiprovider"
     },
     {
@@ -5139,7 +5139,7 @@
       "source_file": "backend/app/services/ai/factory.py",
       "source_location": "L65",
       "id": "ai_factory_resilientaiprovider_analyze_content",
-      "community": 10,
+      "community": 124,
       "norm_label": ".analyze_content()"
     },
     {
@@ -5193,7 +5193,7 @@
       "source_file": "backend/app/services/ai/factory.py",
       "source_location": "L158",
       "id": "ai_factory_hybridorchestratedaiprovider_init",
-      "community": 10,
+      "community": 25,
       "norm_label": ".__init__()"
     },
     {
@@ -5202,7 +5202,7 @@
       "source_file": "backend/app/services/ai/factory.py",
       "source_location": "L175",
       "id": "ai_factory_hybridorchestratedaiprovider_analyze_content",
-      "community": 10,
+      "community": 124,
       "norm_label": ".analyze_content()"
     },
     {
@@ -5247,7 +5247,7 @@
       "source_file": "backend/app/services/ai/factory.py",
       "source_location": "L264",
       "id": "ai_factory_get_ai_provider",
-      "community": 54,
+      "community": 10,
       "norm_label": "get_ai_provider()"
     },
     {
@@ -5283,7 +5283,7 @@
       "source_file": "backend/app/services/ai/factory.py",
       "source_location": "L265",
       "id": "ai_factory_rationale_265",
-      "community": 54,
+      "community": 10,
       "norm_label": "return an ai reasoning provider:     - 'orchestrated' / 'hybrid': best-of-breed"
     },
     {
@@ -5418,7 +5418,7 @@
       "source_file": "backend/app/services/ai/base.py",
       "source_location": "L34",
       "id": "ai_base_contentanalysisresult",
-      "community": 10,
+      "community": 124,
       "norm_label": "contentanalysisresult"
     },
     {
@@ -5517,7 +5517,7 @@
       "source_file": "backend/app/services/ai/base.py",
       "source_location": "L35",
       "id": "ai_base_rationale_35",
-      "community": 10,
+      "community": 124,
       "norm_label": "overall summary and structural breakdown of the source video."
     },
     {
@@ -5589,7 +5589,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L1",
       "id": "backend_app_services_ai_mock_py",
-      "community": 54,
+      "community": 10,
       "norm_label": "mock.py"
     },
     {
@@ -5598,7 +5598,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L43",
       "id": "ai_mock_mockaiprovider",
-      "community": 54,
+      "community": 10,
       "norm_label": "mockaiprovider"
     },
     {
@@ -5607,7 +5607,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L46",
       "id": "ai_mock_mockaiprovider_analyze_content",
-      "community": 10,
+      "community": 124,
       "norm_label": ".analyze_content()"
     },
     {
@@ -5625,7 +5625,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L130",
       "id": "ai_mock_mockaiprovider_rank_candidates",
-      "community": 54,
+      "community": 10,
       "norm_label": ".rank_candidates()"
     },
     {
@@ -5634,7 +5634,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L142",
       "id": "ai_mock_mockaiprovider_generate_metadata",
-      "community": 54,
+      "community": 10,
       "norm_label": ".generate_metadata()"
     },
     {
@@ -5643,7 +5643,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L161",
       "id": "ai_mock_mockaiprovider_analyze_visual_context",
-      "community": 54,
+      "community": 10,
       "norm_label": ".analyze_visual_context()"
     },
     {
@@ -5652,7 +5652,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L1",
       "id": "ai_mock_rationale_1",
-      "community": 54,
+      "community": 10,
       "norm_label": "mock / heuristic ai provider for deterministic testing and offline operation."
     },
     {
@@ -5661,7 +5661,7 @@
       "source_file": "backend/app/services/ai/mock.py",
       "source_location": "L44",
       "id": "ai_mock_rationale_44",
-      "community": 54,
+      "community": 10,
       "norm_label": "linguistic & acoustic ai provider that analyzes real spoken dialogue determinist"
     },
     {
@@ -5778,7 +5778,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L1",
       "id": "backend_app_services_media_captioner_py",
-      "community": 17,
+      "community": 5,
       "norm_label": "captioner.py"
     },
     {
@@ -5787,7 +5787,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L29",
       "id": "media_captioner_format_tiktok_hook_header",
-      "community": 17,
+      "community": 5,
       "norm_label": "format_tiktok_hook_header()"
     },
     {
@@ -5796,7 +5796,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L59",
       "id": "media_captioner_captiongenerator",
-      "community": 17,
+      "community": 5,
       "norm_label": "captiongenerator"
     },
     {
@@ -5805,7 +5805,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L394",
       "id": "media_captioner_captiongenerator_get_preset_config",
-      "community": 17,
+      "community": 5,
       "norm_label": ".get_preset_config()"
     },
     {
@@ -5814,7 +5814,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L418",
       "id": "media_captioner_captiongenerator_format_timestamp_ass",
-      "community": 17,
+      "community": 5,
       "norm_label": ".format_timestamp_ass()"
     },
     {
@@ -5823,7 +5823,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L428",
       "id": "media_captioner_captiongenerator_format_timestamp_srt",
-      "community": 17,
+      "community": 5,
       "norm_label": ".format_timestamp_srt()"
     },
     {
@@ -5832,7 +5832,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L438",
       "id": "media_captioner_captiongenerator_is_keyword_emphasis",
-      "community": 17,
+      "community": 5,
       "norm_label": ".is_keyword_emphasis()"
     },
     {
@@ -5841,16 +5841,16 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L446",
       "id": "media_captioner_captiongenerator_generate_ass",
-      "community": 17,
+      "community": 5,
       "norm_label": ".generate_ass()"
     },
     {
       "label": ".generate_srt()",
       "file_type": "code",
       "source_file": "backend/app/services/media/captioner.py",
-      "source_location": "L633",
+      "source_location": "L652",
       "id": "media_captioner_captiongenerator_generate_srt",
-      "community": 17,
+      "community": 5,
       "norm_label": ".generate_srt()"
     },
     {
@@ -5859,7 +5859,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L1",
       "id": "media_captioner_rationale_1",
-      "community": 17,
+      "community": 5,
       "norm_label": "config-driven caption generator with captivating tiktok creator styling, animate"
     },
     {
@@ -5868,7 +5868,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L30",
       "id": "media_captioner_rationale_30",
-      "community": 17,
+      "community": 5,
       "norm_label": "format text into a high-ctr, punchy tiktok creator hook header:     - clean uppe"
     },
     {
@@ -5877,7 +5877,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L60",
       "id": "media_captioner_rationale_60",
-      "community": 17,
+      "community": 5,
       "norm_label": "generates styled animated ass and standard srt subtitle files with keyword empha"
     },
     {
@@ -5886,7 +5886,7 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L395",
       "id": "media_captioner_rationale_395",
-      "community": 17,
+      "community": 5,
       "norm_label": "resolve caption preset configuration with normalized alias matching."
     },
     {
@@ -5895,16 +5895,16 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L439",
       "id": "media_captioner_rationale_439",
-      "community": 17,
+      "community": 5,
       "norm_label": "check if a word matches high-impact keyword patterns (numbers, shock adjectives)"
     },
     {
       "label": "Generate an Advanced SubStation Alpha (.ass) subtitle file.         All timestam",
       "file_type": "rationale",
       "source_file": "backend/app/services/media/captioner.py",
-      "source_location": "L462",
-      "id": "media_captioner_rationale_462",
-      "community": 17,
+      "source_location": "L464",
+      "id": "media_captioner_rationale_464",
+      "community": 5,
       "norm_label": "generate an advanced substation alpha (.ass) subtitle file.         all timestam"
     },
     {
@@ -5913,7 +5913,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L1",
       "id": "backend_app_services_media_renderer_py",
-      "community": 6,
+      "community": 54,
       "norm_label": "renderer.py"
     },
     {
@@ -5922,7 +5922,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L15",
       "id": "media_renderer_retime_ass_subtitles",
-      "community": 6,
+      "community": 54,
       "norm_label": "retime_ass_subtitles()"
     },
     {
@@ -5931,7 +5931,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L113",
       "id": "media_renderer_get_delogo_filter",
-      "community": 6,
+      "community": 54,
       "norm_label": "get_delogo_filter()"
     },
     {
@@ -5940,7 +5940,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L150",
       "id": "media_renderer_videorenderer",
-      "community": 6,
+      "community": 123,
       "norm_label": "videorenderer"
     },
     {
@@ -5949,7 +5949,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L153",
       "id": "media_renderer_videorenderer_init",
-      "community": 6,
+      "community": 123,
       "norm_label": ".__init__()"
     },
     {
@@ -5958,16 +5958,16 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L156",
       "id": "media_renderer_videorenderer_render_clip",
-      "community": 6,
+      "community": 54,
       "norm_label": ".render_clip()"
     },
     {
       "label": ".generate_thumbnail()",
       "file_type": "code",
       "source_file": "backend/app/services/media/renderer.py",
-      "source_location": "L461",
+      "source_location": "L524",
       "id": "media_renderer_videorenderer_generate_thumbnail",
-      "community": 6,
+      "community": 123,
       "norm_label": ".generate_thumbnail()"
     },
     {
@@ -5976,7 +5976,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L1",
       "id": "media_renderer_rationale_1",
-      "community": 6,
+      "community": 54,
       "norm_label": "video rendering service utilizing ffmpeg for 9:16 crop, timeline splicing, subti"
     },
     {
@@ -5985,7 +5985,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L16",
       "id": "media_renderer_rationale_16",
-      "community": 6,
+      "community": 54,
       "norm_label": "retime subtitle dialogue events when dead-air intervals have been spliced out of"
     },
     {
@@ -5994,7 +5994,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L114",
       "id": "media_renderer_rationale_114",
-      "community": 6,
+      "community": 54,
       "norm_label": "generate safe delogo filter coordinates to cleanly remove watermarks/logos witho"
     },
     {
@@ -6003,25 +6003,25 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L151",
       "id": "media_renderer_rationale_151",
-      "community": 6,
+      "community": 123,
       "norm_label": "renders sliced, vertically reframed, and captioned 9:16 video clips with ffmpeg."
     },
     {
       "label": "Renders a short-form video clip from source:         - Accurately cuts between s",
       "file_type": "rationale",
       "source_file": "backend/app/services/media/renderer.py",
-      "source_location": "L173",
-      "id": "media_renderer_rationale_173",
-      "community": 6,
+      "source_location": "L174",
+      "id": "media_renderer_rationale_174",
+      "community": 54,
       "norm_label": "renders a short-form video clip from source:         - accurately cuts between s"
     },
     {
       "label": "Extract a crisp, high-quality, representative non-black frame for thumbnail prev",
       "file_type": "rationale",
       "source_file": "backend/app/services/media/renderer.py",
-      "source_location": "L467",
-      "id": "media_renderer_rationale_467",
-      "community": 6,
+      "source_location": "L530",
+      "id": "media_renderer_rationale_530",
+      "community": 123,
       "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev"
     },
     {
@@ -6210,7 +6210,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L19",
       "id": "media_silence_detector_timelineedit",
-      "community": 15,
+      "community": 64,
       "norm_label": "timelineedit"
     },
     {
@@ -6246,7 +6246,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L88",
       "id": "media_silence_detector_silencedetector_build_edited_timeline",
-      "community": 6,
+      "community": 64,
       "norm_label": ".build_edited_timeline()"
     },
     {
@@ -6282,7 +6282,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L96",
       "id": "media_silence_detector_rationale_96",
-      "community": 6,
+      "community": 64,
       "norm_label": "build kept timeline slices [ [t1, t2], [t3, t4] ] for a candidate window [start_"
     },
     {
@@ -6300,7 +6300,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L100",
       "id": "media_audio_analyzer_strip_emojis",
-      "community": 15,
+      "community": 5,
       "norm_label": "strip_emojis()"
     },
     {
@@ -6417,7 +6417,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L101",
       "id": "media_audio_analyzer_rationale_101",
-      "community": 15,
+      "community": 5,
       "norm_label": "remove unicode emojis and decorative pictographs from text.     guarantees clean"
     },
     {
@@ -6993,7 +6993,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L94",
       "id": "tests_test_v3_features_test_watermark_removal_filter_and_metadata_stripping",
-      "community": 6,
+      "community": 54,
       "norm_label": "test_watermark_removal_filter_and_metadata_stripping()"
     },
     {
@@ -7047,7 +7047,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L95",
       "id": "tests_test_v3_features_rationale_95",
-      "community": 6,
+      "community": 54,
       "norm_label": "test delogo coordinates for all corners and comprehensive metadata stripping arg"
     },
     {
@@ -7119,7 +7119,7 @@
       "source_file": "backend/tests/test_ai_provider.py",
       "source_location": "L1",
       "id": "backend_tests_test_ai_provider_py",
-      "community": 54,
+      "community": 10,
       "norm_label": "test_ai_provider.py"
     },
     {
@@ -7128,7 +7128,7 @@
       "source_file": "backend/tests/test_ai_provider.py",
       "source_location": "L10",
       "id": "tests_test_ai_provider_test_mock_ai_provider_generates_valid_candidates",
-      "community": 54,
+      "community": 10,
       "norm_label": "test_mock_ai_provider_generates_valid_candidates()"
     },
     {
@@ -7137,7 +7137,7 @@
       "source_file": "backend/tests/test_ai_provider.py",
       "source_location": "L32",
       "id": "tests_test_ai_provider_test_ai_provider_generates_metadata",
-      "community": 54,
+      "community": 10,
       "norm_label": "test_ai_provider_generates_metadata()"
     },
     {
@@ -7146,7 +7146,7 @@
       "source_file": "backend/tests/test_ai_provider.py",
       "source_location": "L44",
       "id": "tests_test_ai_provider_test_factory_fallback_to_mock_when_no_keys",
-      "community": 54,
+      "community": 10,
       "norm_label": "test_factory_fallback_to_mock_when_no_keys()"
     },
     {
@@ -7155,7 +7155,7 @@
       "source_file": "backend/tests/test_ai_provider.py",
       "source_location": "L50",
       "id": "tests_test_ai_provider_test_resilient_ai_provider_failover_on_error",
-      "community": 54,
+      "community": 10,
       "norm_label": "test_resilient_ai_provider_failover_on_error()"
     },
     {
@@ -7164,7 +7164,7 @@
       "source_file": "backend/tests/test_ai_provider.py",
       "source_location": "L1",
       "id": "tests_test_ai_provider_rationale_1",
-      "community": 54,
+      "community": 10,
       "norm_label": "tests for ai provider abstraction, mock provider, and factory fallback."
     },
     {
@@ -7362,7 +7362,7 @@
       "source_file": "backend/tests/test_caption_presets.py",
       "source_location": "L1",
       "id": "backend_tests_test_caption_presets_py",
-      "community": 17,
+      "community": 5,
       "norm_label": "test_caption_presets.py"
     },
     {
@@ -7371,7 +7371,7 @@
       "source_file": "backend/tests/test_caption_presets.py",
       "source_location": "L7",
       "id": "tests_test_caption_presets_test_caption_preset_configs_available",
-      "community": 17,
+      "community": 5,
       "norm_label": "test_caption_preset_configs_available()"
     },
     {
@@ -7380,7 +7380,7 @@
       "source_file": "backend/tests/test_caption_presets.py",
       "source_location": "L32",
       "id": "tests_test_caption_presets_test_preset_aliases_and_hook_styles",
-      "community": 17,
+      "community": 5,
       "norm_label": "test_preset_aliases_and_hook_styles()"
     },
     {
@@ -7389,7 +7389,7 @@
       "source_file": "backend/tests/test_caption_presets.py",
       "source_location": "L70",
       "id": "tests_test_caption_presets_test_keyword_emphasis_detection",
-      "community": 17,
+      "community": 5,
       "norm_label": "test_keyword_emphasis_detection()"
     },
     {
@@ -7398,7 +7398,7 @@
       "source_file": "backend/tests/test_caption_presets.py",
       "source_location": "L82",
       "id": "tests_test_caption_presets_test_ass_generation_with_presets",
-      "community": 17,
+      "community": 5,
       "norm_label": "test_ass_generation_with_presets()"
     },
     {
@@ -7407,8 +7407,62 @@
       "source_file": "backend/tests/test_caption_presets.py",
       "source_location": "L1",
       "id": "tests_test_caption_presets_rationale_1",
-      "community": 17,
+      "community": 5,
       "norm_label": "unit tests for the 6 caption presets and keyword emphasis engine."
+    },
+    {
+      "label": "test_canvas_backgrounds.py",
+      "file_type": "code",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L1",
+      "id": "backend_tests_test_canvas_backgrounds_py",
+      "community": 125,
+      "norm_label": "test_canvas_backgrounds.py"
+    },
+    {
+      "label": "test_canvas_background_schemas()",
+      "file_type": "code",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L9",
+      "id": "tests_test_canvas_backgrounds_test_canvas_background_schemas",
+      "community": 0,
+      "norm_label": "test_canvas_background_schemas()"
+    },
+    {
+      "label": "test_white_canvas_high_contrast_subtitles()",
+      "file_type": "code",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L33",
+      "id": "tests_test_canvas_backgrounds_test_white_canvas_high_contrast_subtitles",
+      "community": 125,
+      "norm_label": "test_white_canvas_high_contrast_subtitles()"
+    },
+    {
+      "label": "Tests for canvas backgrounds (white, black, obsidian, violet, sunset, ocean) and",
+      "file_type": "rationale",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L1",
+      "id": "tests_test_canvas_backgrounds_rationale_1",
+      "community": 125,
+      "norm_label": "tests for canvas backgrounds (white, black, obsidian, violet, sunset, ocean) and"
+    },
+    {
+      "label": "Verify schemas accept canvas_background.",
+      "file_type": "rationale",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L10",
+      "id": "tests_test_canvas_backgrounds_rationale_10",
+      "community": 0,
+      "norm_label": "verify schemas accept canvas_background."
+    },
+    {
+      "label": "Verify that white canvas enforces thick 8px solid black stroke and deep shadow f",
+      "file_type": "rationale",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L34",
+      "id": "tests_test_canvas_backgrounds_rationale_34",
+      "community": 125,
+      "norm_label": "verify that white canvas enforces thick 8px solid black stroke and deep shadow f"
     },
     {
       "label": "test_api.py",
@@ -7443,7 +7497,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L1",
       "id": "backend_tests_test_viral_hook_and_series_py",
-      "community": 5,
+      "community": 6,
       "norm_label": "test_viral_hook_and_series.py"
     },
     {
@@ -7461,7 +7515,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L27",
       "id": "tests_test_viral_hook_and_series_test_audio_script_analyzer_hook_penalties_and_boosts",
-      "community": 5,
+      "community": 6,
       "norm_label": "test_audio_script_analyzer_hook_penalties_and_boosts()"
     },
     {
@@ -7470,7 +7524,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L47",
       "id": "tests_test_viral_hook_and_series_test_tiktok_rounded_box_caption_preset",
-      "community": 5,
+      "community": 6,
       "norm_label": "test_tiktok_rounded_box_caption_preset()"
     },
     {
@@ -7479,7 +7533,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L93",
       "id": "tests_test_viral_hook_and_series_test_single_para_builder",
-      "community": 5,
+      "community": 6,
       "norm_label": "test_single_para_builder()"
     },
     {
@@ -7488,7 +7542,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L1",
       "id": "tests_test_viral_hook_and_series_rationale_1",
-      "community": 5,
+      "community": 6,
       "norm_label": "tests for intense 10-second hook scoring, multi-genre candidate discovery, multi"
     },
     {
@@ -7506,7 +7560,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L28",
       "id": "tests_test_viral_hook_and_series_rationale_28",
-      "community": 5,
+      "community": 6,
       "norm_label": "verify that calm greetings receive heavy penalties and chaos/fights receive stro"
     },
     {
@@ -7515,7 +7569,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L48",
       "id": "tests_test_viral_hook_and_series_rationale_48",
-      "community": 5,
+      "community": 6,
       "norm_label": "test generating subtitles with the tiktok_rounded_box (rounded translucent pill)"
     },
     {
@@ -7524,7 +7578,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L94",
       "id": "tests_test_viral_hook_and_series_rationale_94",
-      "community": 5,
+      "community": 6,
       "norm_label": "test building a 1-click single-paragraph copy-paste block."
     },
     {
@@ -7704,7 +7758,7 @@
       "source_file": "README.md",
       "source_location": "L1",
       "id": "readme_md",
-      "community": 12,
+      "community": 99,
       "norm_label": "readme.md"
     },
     {
@@ -7713,241 +7767,304 @@
       "source_file": "README.md",
       "source_location": "L1",
       "id": "clipper_readme_ai_video_clipper_pro",
-      "community": 12,
+      "community": 99,
       "norm_label": "ai video clipper pro"
     },
     {
-      "label": "Key Capabilities & Features",
+      "label": "Architecture Overview",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L11",
-      "id": "clipper_readme_key_capabilities_features",
-      "community": 12,
-      "norm_label": "key capabilities & features"
+      "source_location": "L7",
+      "id": "clipper_readme_architecture_overview",
+      "community": 99,
+      "norm_label": "architecture overview"
     },
     {
-      "label": "1. Dual Pre-Clipping Hook Strategies (User Choice)",
+      "label": "Deployment Model",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L13",
-      "id": "clipper_readme_1_dual_pre_clipping_hook_strategies_user_choice",
-      "community": 12,
-      "norm_label": "1. dual pre-clipping hook strategies (user choice)"
+      "source_location": "L14",
+      "id": "clipper_readme_deployment_model",
+      "community": 99,
+      "norm_label": "deployment model"
     },
     {
-      "label": "2. Intense Clash, Fight & Conflict Discovery",
+      "label": "System Requirements",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L24",
-      "id": "clipper_readme_2_intense_clash_fight_conflict_discovery",
-      "community": 12,
-      "norm_label": "2. intense clash, fight & conflict discovery"
+      "source_location": "L29",
+      "id": "clipper_readme_system_requirements",
+      "community": 99,
+      "norm_label": "system requirements"
     },
     {
-      "label": "3. Automated OpenCV Computer Vision Watermark Detection & Eraser",
+      "label": "Processing Backend",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L30",
-      "id": "clipper_readme_3_automated_opencv_computer_vision_watermark_detection_eraser",
-      "community": 12,
-      "norm_label": "3. automated opencv computer vision watermark detection & eraser"
+      "source_location": "L31",
+      "id": "clipper_readme_processing_backend",
+      "community": 99,
+      "norm_label": "processing backend"
     },
     {
-      "label": "4. Complete Metadata Stripping & Anti-Duplicate Architecture",
+      "label": "Web Client (Optional for Local Hosting)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L36",
-      "id": "clipper_readme_4_complete_metadata_stripping_anti_duplicate_architecture",
-      "community": 12,
-      "norm_label": "4. complete metadata stripping & anti-duplicate architecture"
+      "source_location": "L38",
+      "id": "clipper_readme_web_client_optional_for_local_hosting",
+      "community": 99,
+      "norm_label": "web client (optional for local hosting)"
     },
     {
-      "label": "5. CapCut & TikTok Boxed Caption Styles",
+      "label": "Quick Start",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L40",
-      "id": "clipper_readme_5_capcut_tiktok_boxed_caption_styles",
-      "community": 12,
-      "norm_label": "5. capcut & tiktok boxed caption styles"
+      "source_location": "L44",
+      "id": "clipper_readme_quick_start",
+      "community": 119,
+      "norm_label": "quick start"
     },
     {
-      "label": "6. Strict Dual-Folder Bulk Download ZIP Architecture",
+      "label": "1. Start the Media Processing Backend",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L45",
-      "id": "clipper_readme_6_strict_dual_folder_bulk_download_zip_architecture",
+      "source_location": "L46",
+      "id": "clipper_readme_1_start_the_media_processing_backend",
       "community": 12,
-      "norm_label": "6. strict dual-folder bulk download zip architecture"
+      "norm_label": "1. start the media processing backend"
     },
     {
-      "label": "code:block1 (zip_root/)",
+      "label": "code:bash (git clone https://github.com/Sange-creator/Clipper.git)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L47",
+      "source_location": "L50",
       "id": "clipper_readme_codeblock_1",
-      "community": 12,
-      "norm_label": "code:block1 (zip_root/)"
+      "community": 115,
+      "norm_label": "code:bash (git clone https://github.com/sange-creator/clipper.git)"
     },
     {
-      "label": "Multi-Device & Canvas Format Support",
+      "label": "code:bash (# macOS / Linux)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L65",
-      "id": "clipper_readme_multi_device_canvas_format_support",
-      "community": 12,
-      "norm_label": "multi-device & canvas format support"
-    },
-    {
-      "label": "Deterministic 21-Stage Video Pipeline",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L77",
-      "id": "clipper_readme_deterministic_21_stage_video_pipeline",
-      "community": 12,
-      "norm_label": "deterministic 21-stage video pipeline"
-    },
-    {
-      "label": "AI Provider Resilience and Fallback Matrix",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L105",
-      "id": "clipper_readme_ai_provider_resilience_and_fallback_matrix",
-      "community": 12,
-      "norm_label": "ai provider resilience and fallback matrix"
-    },
-    {
-      "label": "code:block2 (+-----------------------------------------------------------)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L107",
+      "source_location": "L57",
       "id": "clipper_readme_codeblock_2",
       "community": 12,
-      "norm_label": "code:block2 (+-----------------------------------------------------------)"
+      "norm_label": "code:bash (# macos / linux)"
     },
     {
-      "label": "Project Structure",
+      "label": "code:bash (pip install -e .)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L138",
-      "id": "clipper_readme_project_structure",
-      "community": 12,
-      "norm_label": "project structure"
-    },
-    {
-      "label": "code:block3 (Clipper/)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L140",
+      "source_location": "L69",
       "id": "clipper_readme_codeblock_3",
       "community": 12,
-      "norm_label": "code:block3 (clipper/)"
+      "norm_label": "code:bash (pip install -e .)"
     },
     {
-      "label": "Installation and Setup",
+      "label": "code:bash (cp .env.example .env)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L169",
-      "id": "clipper_readme_installation_and_setup",
-      "community": 12,
-      "norm_label": "installation and setup"
-    },
-    {
-      "label": "Prerequisites",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L171",
-      "id": "clipper_readme_prerequisites",
-      "community": 12,
-      "norm_label": "prerequisites"
-    },
-    {
-      "label": "Quickstart (Single Command)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L176",
-      "id": "clipper_readme_quickstart_single_command",
-      "community": 12,
-      "norm_label": "quickstart (single command)"
-    },
-    {
-      "label": "code:bash (./dev.sh)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L180",
+      "source_location": "L75",
       "id": "clipper_readme_codeblock_4",
-      "community": 12,
-      "norm_label": "code:bash (./dev.sh)"
+      "community": 122,
+      "norm_label": "code:bash (cp .env.example .env)"
     },
     {
-      "label": "Manual Setup & Running Separately",
+      "label": "code:env (# Reasoning and Transcription Providers)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L186",
-      "id": "clipper_readme_manual_setup_running_separately",
-      "community": 12,
-      "norm_label": "manual setup & running separately"
-    },
-    {
-      "label": "1. Backend Setup",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L188",
-      "id": "clipper_readme_1_backend_setup",
-      "community": 12,
-      "norm_label": "1. backend setup"
-    },
-    {
-      "label": "code:bash (cd backend)",
-      "file_type": "document",
-      "source_file": "README.md",
-      "source_location": "L190",
+      "source_location": "L81",
       "id": "clipper_readme_codeblock_5",
       "community": 12,
-      "norm_label": "code:bash (cd backend)"
+      "norm_label": "code:env (# reasoning and transcription providers)"
     },
     {
       "label": "code:bash (uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L199",
+      "source_location": "L96",
       "id": "clipper_readme_codeblock_6",
       "community": 12,
       "norm_label": "code:bash (uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload)"
     },
     {
-      "label": "2. Frontend Setup",
+      "label": "code:bash (curl http://127.0.0.1:8000/api/health)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L205",
-      "id": "clipper_readme_2_frontend_setup",
+      "source_location": "L102",
+      "id": "clipper_readme_codeblock_7",
       "community": 12,
-      "norm_label": "2. frontend setup"
+      "norm_label": "code:bash (curl http://127.0.0.1:8000/api/health)"
+    },
+    {
+      "label": "2. Connect the Web Interface",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L110",
+      "id": "clipper_readme_2_connect_the_web_interface",
+      "community": 119,
+      "norm_label": "2. connect the web interface"
+    },
+    {
+      "label": "Method A: Use Hosted Web Client",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L112",
+      "id": "clipper_readme_method_a_use_hosted_web_client",
+      "community": 119,
+      "norm_label": "method a: use hosted web client"
+    },
+    {
+      "label": "Method B: Run Web Client Locally",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L117",
+      "id": "clipper_readme_method_b_run_web_client_locally",
+      "community": 119,
+      "norm_label": "method b: run web client locally"
+    },
+    {
+      "label": "code:bash (cd ../frontend)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L120",
+      "id": "clipper_readme_codeblock_8",
+      "community": 119,
+      "norm_label": "code:bash (cd ../frontend)"
+    },
+    {
+      "label": "Processing Pipeline",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L130",
+      "id": "clipper_readme_processing_pipeline",
+      "community": 99,
+      "norm_label": "processing pipeline"
+    },
+    {
+      "label": "code:block9 ([Upload / Ingestion])",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L134",
+      "id": "clipper_readme_codeblock_9",
+      "community": 99,
+      "norm_label": "code:block9 ([upload / ingestion])"
+    },
+    {
+      "label": "Core Capabilities",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L163",
+      "id": "clipper_readme_core_capabilities",
+      "community": 116,
+      "norm_label": "core capabilities"
+    },
+    {
+      "label": "Nonlinear Climax Teaser Hook",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L165",
+      "id": "clipper_readme_nonlinear_climax_teaser_hook",
+      "community": 116,
+      "norm_label": "nonlinear climax teaser hook"
+    },
+    {
+      "label": "Direct Chronological Cut",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L172",
+      "id": "clipper_readme_direct_chronological_cut",
+      "community": 116,
+      "norm_label": "direct chronological cut"
+    },
+    {
+      "label": "Coordinated On-Screen Captions",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L176",
+      "id": "clipper_readme_coordinated_on_screen_captions",
+      "community": 116,
+      "norm_label": "coordinated on-screen captions"
+    },
+    {
+      "label": "Automated Watermark Detection and Removal",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L181",
+      "id": "clipper_readme_automated_watermark_detection_and_removal",
+      "community": 116,
+      "norm_label": "automated watermark detection and removal"
+    },
+    {
+      "label": "Multi-Platform Distribution Assets",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L186",
+      "id": "clipper_readme_multi_platform_distribution_assets",
+      "community": 116,
+      "norm_label": "multi-platform distribution assets"
+    },
+    {
+      "label": "code:block10 (archive.zip/)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L189",
+      "id": "clipper_readme_codeblock_10",
+      "community": 116,
+      "norm_label": "code:block10 (archive.zip/)"
+    },
+    {
+      "label": "Configuration Reference",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L203",
+      "id": "clipper_readme_configuration_reference",
+      "community": 99,
+      "norm_label": "configuration reference"
+    },
+    {
+      "label": "Automated Verification",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L220",
+      "id": "clipper_readme_automated_verification",
+      "community": 121,
+      "norm_label": "automated verification"
+    },
+    {
+      "label": "code:bash (cd backend)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L226",
+      "id": "clipper_readme_codeblock_11",
+      "community": 121,
+      "norm_label": "code:bash (cd backend)"
     },
     {
       "label": "code:bash (cd frontend)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L207",
-      "id": "clipper_readme_codeblock_7",
-      "community": 12,
+      "source_location": "L233",
+      "id": "clipper_readme_codeblock_12",
+      "community": 121,
       "norm_label": "code:bash (cd frontend)"
     },
     {
-      "label": "Live Deployment",
+      "label": "code:bash (graphify update .)",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L217",
-      "id": "clipper_readme_live_deployment",
-      "community": 12,
-      "norm_label": "live deployment"
+      "source_location": "L240",
+      "id": "clipper_readme_codeblock_13",
+      "community": 121,
+      "norm_label": "code:bash (graphify update .)"
     },
     {
       "label": "License",
       "file_type": "document",
       "source_file": "README.md",
-      "source_location": "L224",
+      "source_location": "L246",
       "id": "clipper_readme_license",
-      "community": 12,
+      "community": 99,
       "norm_label": "license"
     },
     {
@@ -8030,6 +8147,42 @@
       "id": "clipper_session_tracker_session_5_dual_captions_part_1_n_script_headline_teaser_climax_timeline_splicing",
       "community": 53,
       "norm_label": "session 5: dual captions (part 1..n + script headline) & teaser climax timeline splicing"
+    },
+    {
+      "label": "Session 6: Clean Series Numbering (Strictly `PART 1`, `PART 2` without `/N`)",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L216",
+      "id": "clipper_session_tracker_session_6_clean_series_numbering_strictly_part_1_part_2_without_n",
+      "community": 53,
+      "norm_label": "session 6: clean series numbering (strictly `part 1`, `part 2` without `/n`)"
+    },
+    {
+      "label": "Session 7: Comprehensive Setup & Architecture Documentation (`README.md`)",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L252",
+      "id": "clipper_session_tracker_session_7_comprehensive_setup_architecture_documentation_readme_md",
+      "community": 53,
+      "norm_label": "session 7: comprehensive setup & architecture documentation (`readme.md`)"
+    },
+    {
+      "label": "Session 8: Professional Zero-Emoji Standard for Documentation",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L275",
+      "id": "clipper_session_tracker_session_8_professional_zero_emoji_standard_for_documentation",
+      "community": 53,
+      "norm_label": "session 8: professional zero-emoji standard for documentation"
+    },
+    {
+      "label": "Session 9: Subtitle Burn-In Fix & Single Vercel Production Cleanup",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L292",
+      "id": "clipper_session_tracker_session_9_subtitle_burn_in_fix_single_vercel_production_cleanup",
+      "community": 53,
+      "norm_label": "session 9: subtitle burn-in fix & single vercel production cleanup"
     },
     {
       "label": "gemini.md",
@@ -10647,7 +10800,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L855",
       "id": "clipper_ai_clipper_next_version_backlog_epic_14_quality_evaluation",
-      "community": 66,
+      "community": 27,
       "norm_label": "epic 14 \u2014 quality evaluation"
     },
     {
@@ -10656,7 +10809,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L857",
       "id": "clipper_ai_clipper_next_version_backlog_p0_44_offline_evaluation_dataset",
-      "community": 66,
+      "community": 27,
       "norm_label": "p0-44 \u2014 offline evaluation dataset"
     },
     {
@@ -10665,7 +10818,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L874",
       "id": "clipper_ai_clipper_next_version_backlog_p1_45_clip_quality_metrics",
-      "community": 66,
+      "community": 27,
       "norm_label": "p1-45 \u2014 clip quality metrics"
     },
     {
@@ -10674,7 +10827,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L889",
       "id": "clipper_ai_clipper_next_version_backlog_p2_46_a_b_prompt_evaluation",
-      "community": 66,
+      "community": 27,
       "norm_label": "p2-46 \u2014 a/b prompt evaluation"
     },
     {
@@ -10908,7 +11061,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L1123",
       "id": "clipper_ai_clipper_next_version_backlog_future_vision",
-      "community": 27,
+      "community": 126,
       "norm_label": "future vision"
     },
     {
@@ -10917,7 +11070,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L1127",
       "id": "clipper_ai_clipper_next_version_backlog_codeblock_22",
-      "community": 27,
+      "community": 126,
       "norm_label": "code:text (ai finds clips)"
     },
     {
@@ -10926,7 +11079,7 @@
       "source_file": "AI-Clipper-NEXT-VERSION-BACKLOG.md",
       "source_location": "L1133",
       "id": "clipper_ai_clipper_next_version_backlog_codeblock_23",
-      "community": 27,
+      "community": 126,
       "norm_label": "code:text (ai discovers)"
     },
     {
@@ -10939,11 +11092,542 @@
       "norm_label": "backlog rules for future development"
     },
     {
+      "label": "Represents a high-potential clip candidate moment scored across 12 dimensions.",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L152",
+      "community": 17,
+      "norm_label": "represents a high-potential clip candidate moment scored across 12 dimensions.",
+      "id": "core_models_rationale_152"
+    },
+    {
+      "label": "Represents a rendered 9:16 vertical short clip with burned captions and platform",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L195",
+      "community": 23,
+      "norm_label": "represents a rendered 9:16 vertical short clip with burned captions and platform",
+      "id": "core_models_rationale_195"
+    },
+    {
+      "label": "Tracks human review actions and feedback for future quality learning.",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L257",
+      "community": 113,
+      "norm_label": "tracks human review actions and feedback for future quality learning.",
+      "id": "core_models_rationale_257"
+    },
+    {
+      "label": "Audit trail and observability log for external and local AI requests.",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L271",
+      "community": 23,
+      "norm_label": "audit trail and observability log for external and local ai requests.",
+      "id": "core_models_rationale_271"
+    },
+    {
+      "label": "Schema for future learning system to track historical clip performance.",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L287",
+      "community": 23,
+      "norm_label": "schema for future learning system to track historical clip performance.",
+      "id": "core_models_rationale_287"
+    },
+    {
+      "label": "Dynamic system and API settings persisted in database.",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L306",
+      "community": 23,
+      "norm_label": "dynamic system and api settings persisted in database.",
+      "id": "core_models_rationale_306"
+    },
+    {
+      "label": "Dependency for providing a transactional async database session.",
+      "file_type": "rationale",
+      "source_file": "backend/app/core/database.py",
+      "source_location": "L87",
+      "community": 2,
+      "norm_label": "dependency for providing a transactional async database session.",
+      "id": "core_database_rationale_87"
+    },
+    {
+      "label": "Re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered cl",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L384",
+      "community": 22,
+      "norm_label": "re-extract a fresh, non-black 9:16 thumbnail frame directly from the rendered cl",
+      "id": "routes_clips_rationale_384"
+    },
+    {
+      "label": "Strategic AI Clip Regeneration (stronger hook, shorter, longer, different payoff",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L409",
+      "community": 22,
+      "norm_label": "strategic ai clip regeneration (stronger hook, shorter, longer, different payoff",
+      "id": "routes_clips_rationale_409"
+    },
+    {
+      "label": "Store human review action (accepted, rejected, favorite, edited) for future lear",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L438",
+      "community": 113,
+      "norm_label": "store human review action (accepted, rejected, favorite, edited) for future lear",
+      "id": "routes_clips_rationale_438"
+    },
+    {
+      "label": "Toggle clip favorite state.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L462",
+      "community": 113,
+      "norm_label": "toggle clip favorite state.",
+      "id": "routes_clips_rationale_462"
+    },
+    {
+      "label": "Permanently delete a rendered clip.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L477",
+      "community": 127,
+      "norm_label": "permanently delete a rendered clip.",
+      "id": "routes_clips_rationale_477"
+    },
+    {
+      "label": "Delete multiple rendered clips permanently.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L501",
+      "community": 22,
+      "norm_label": "delete multiple rendered clips permanently.",
+      "id": "routes_clips_rationale_501"
+    },
+    {
+      "label": "List all processing jobs across single videos and projects.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L98",
+      "community": 24,
+      "norm_label": "list all processing jobs across single videos and projects.",
+      "id": "routes_jobs_rationale_98"
+    },
+    {
+      "label": "Retrieve current status, stage progress, and logs for a job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L138",
+      "community": 24,
+      "norm_label": "retrieve current status, stage progress, and logs for a job.",
+      "id": "routes_jobs_rationale_138"
+    },
+    {
+      "label": "Server-Sent Events (SSE) stream for real-time progress updates.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L170",
+      "community": 24,
+      "norm_label": "server-sent events (sse) stream for real-time progress updates.",
+      "id": "routes_jobs_rationale_170"
+    },
+    {
+      "label": "Retrieve scored candidates for a job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L204",
+      "community": 24,
+      "norm_label": "retrieve scored candidates for a job.",
+      "id": "routes_jobs_rationale_204"
+    },
+    {
+      "label": "Retrieve all rendered 9:16 clips for a job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L260",
+      "community": 114,
+      "norm_label": "retrieve all rendered 9:16 clips for a job.",
+      "id": "routes_jobs_rationale_260"
+    },
+    {
+      "label": "Cancel an active processing job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L359",
+      "community": 24,
+      "norm_label": "cancel an active processing job.",
+      "id": "routes_jobs_rationale_359"
+    },
+    {
+      "label": "Restart or resume a stuck, cancelled, or failed processing job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L372",
+      "community": 24,
+      "norm_label": "restart or resume a stuck, cancelled, or failed processing job.",
+      "id": "routes_jobs_rationale_372"
+    },
+    {
+      "label": "Permanently delete a processing job and its associated rendered clips and candid",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L404",
+      "community": 24,
+      "norm_label": "permanently delete a processing job and its associated rendered clips and candid",
+      "id": "routes_jobs_rationale_404"
+    },
+    {
+      "label": "Applies bulk actions to multiple clips (apply style, favorite, reject, delete).",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L437",
+      "community": 113,
+      "norm_label": "applies bulk actions to multiple clips (apply style, favorite, reject, delete).",
+      "id": "routes_projects_rationale_437"
+    },
+    {
+      "label": "Delete a single project workspace and cascade all its jobs, clips, and candidate",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L458",
+      "community": 1,
+      "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate",
+      "id": "routes_projects_rationale_458"
+    },
+    {
+      "label": "Delete multiple project workspaces and their contents.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L504",
+      "community": 1,
+      "norm_label": "delete multiple project workspaces and their contents.",
+      "id": "routes_projects_rationale_504"
+    },
+    {
+      "label": "Executes multi-video batch processing across all videos in a project.",
+      "file_type": "rationale",
+      "source_file": "backend/app/services/pipeline/pipeline.py",
+      "source_location": "L702",
+      "community": 64,
+      "norm_label": "executes multi-video batch processing across all videos in a project.",
+      "id": "pipeline_pipeline_rationale_702"
+    },
+    {
+      "label": "Generate an Advanced SubStation Alpha (.ass) subtitle file.         All timestam",
+      "file_type": "rationale",
+      "source_file": "backend/app/services/media/captioner.py",
+      "source_location": "L462",
+      "community": 5,
+      "norm_label": "generate an advanced substation alpha (.ass) subtitle file.         all timestam",
+      "id": "media_captioner_rationale_462"
+    },
+    {
+      "label": "Renders a short-form video clip from source:         - Accurately cuts between s",
+      "file_type": "rationale",
+      "source_file": "backend/app/services/media/renderer.py",
+      "source_location": "L173",
+      "community": 54,
+      "norm_label": "renders a short-form video clip from source:         - accurately cuts between s",
+      "id": "media_renderer_rationale_173"
+    },
+    {
+      "label": "Extract a crisp, high-quality, representative non-black frame for thumbnail prev",
+      "file_type": "rationale",
+      "source_file": "backend/app/services/media/renderer.py",
+      "source_location": "L472",
+      "community": 123,
+      "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev",
+      "id": "media_renderer_rationale_472"
+    },
+    {
+      "label": "List all processing jobs across single videos and projects.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L93",
+      "community": 24,
+      "norm_label": "list all processing jobs across single videos and projects.",
+      "id": "routes_jobs_rationale_93"
+    },
+    {
+      "label": "Retrieve current status, stage progress, and logs for a job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L133",
+      "community": 24,
+      "norm_label": "retrieve current status, stage progress, and logs for a job.",
+      "id": "routes_jobs_rationale_133"
+    },
+    {
+      "label": "Server-Sent Events (SSE) stream for real-time progress updates.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L165",
+      "community": 24,
+      "norm_label": "server-sent events (sse) stream for real-time progress updates.",
+      "id": "routes_jobs_rationale_165"
+    },
+    {
+      "label": "Retrieve scored candidates for a job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L199",
+      "community": 24,
+      "norm_label": "retrieve scored candidates for a job.",
+      "id": "routes_jobs_rationale_199"
+    },
+    {
+      "label": "Retrieve all rendered 9:16 clips for a job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L255",
+      "community": 114,
+      "norm_label": "retrieve all rendered 9:16 clips for a job.",
+      "id": "routes_jobs_rationale_255"
+    },
+    {
+      "label": "Cancel an active processing job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L354",
+      "community": 24,
+      "norm_label": "cancel an active processing job.",
+      "id": "routes_jobs_rationale_354"
+    },
+    {
+      "label": "Restart or resume a stuck, cancelled, or failed processing job.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L367",
+      "community": 24,
+      "norm_label": "restart or resume a stuck, cancelled, or failed processing job.",
+      "id": "routes_jobs_rationale_367"
+    },
+    {
+      "label": "Permanently delete a processing job and its associated rendered clips and candid",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L399",
+      "community": 24,
+      "norm_label": "permanently delete a processing job and its associated rendered clips and candid",
+      "id": "routes_jobs_rationale_399"
+    },
+    {
+      "label": "Applies bulk actions to multiple clips (apply style, favorite, reject, delete).",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L432",
+      "community": 113,
+      "norm_label": "applies bulk actions to multiple clips (apply style, favorite, reject, delete).",
+      "id": "routes_projects_rationale_432"
+    },
+    {
+      "label": "Delete a single project workspace and cascade all its jobs, clips, and candidate",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L453",
+      "community": 1,
+      "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate",
+      "id": "routes_projects_rationale_453"
+    },
+    {
+      "label": "Delete multiple project workspaces and their contents.",
+      "file_type": "rationale",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L499",
+      "community": 1,
+      "norm_label": "delete multiple project workspaces and their contents.",
+      "id": "routes_projects_rationale_499"
+    },
+    {
+      "label": "Executes multi-video batch processing across all videos in a project.",
+      "file_type": "rationale",
+      "source_file": "backend/app/services/pipeline/pipeline.py",
+      "source_location": "L698",
+      "community": 64,
+      "norm_label": "executes multi-video batch processing across all videos in a project.",
+      "id": "pipeline_pipeline_rationale_698"
+    },
+    {
+      "label": "Extract a crisp, high-quality, representative non-black frame for thumbnail prev",
+      "file_type": "rationale",
+      "source_file": "backend/app/services/media/renderer.py",
+      "source_location": "L467",
+      "community": 123,
+      "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev",
+      "id": "media_renderer_rationale_467"
+    },
+    {
+      "label": "Key Capabilities & Features",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L11",
+      "community": 115,
+      "norm_label": "key capabilities & features",
+      "id": "clipper_readme_key_capabilities_features"
+    },
+    {
+      "label": "1. Dual Pre-Clipping Hook Strategies (User Choice)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L13",
+      "community": 115,
+      "norm_label": "1. dual pre-clipping hook strategies (user choice)",
+      "id": "clipper_readme_1_dual_pre_clipping_hook_strategies_user_choice"
+    },
+    {
+      "label": "2. Intense Clash, Fight & Conflict Discovery",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L24",
+      "community": 115,
+      "norm_label": "2. intense clash, fight & conflict discovery",
+      "id": "clipper_readme_2_intense_clash_fight_conflict_discovery"
+    },
+    {
+      "label": "3. Automated OpenCV Computer Vision Watermark Detection & Eraser",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L30",
+      "community": 115,
+      "norm_label": "3. automated opencv computer vision watermark detection & eraser",
+      "id": "clipper_readme_3_automated_opencv_computer_vision_watermark_detection_eraser"
+    },
+    {
+      "label": "4. Complete Metadata Stripping & Anti-Duplicate Architecture",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L36",
+      "community": 115,
+      "norm_label": "4. complete metadata stripping & anti-duplicate architecture",
+      "id": "clipper_readme_4_complete_metadata_stripping_anti_duplicate_architecture"
+    },
+    {
+      "label": "5. CapCut & TikTok Boxed Caption Styles",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L40",
+      "community": 115,
+      "norm_label": "5. capcut & tiktok boxed caption styles",
+      "id": "clipper_readme_5_capcut_tiktok_boxed_caption_styles"
+    },
+    {
+      "label": "6. Strict Dual-Folder Bulk Download ZIP Architecture",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L45",
+      "community": 115,
+      "norm_label": "6. strict dual-folder bulk download zip architecture",
+      "id": "clipper_readme_6_strict_dual_folder_bulk_download_zip_architecture"
+    },
+    {
+      "label": "Multi-Device & Canvas Format Support",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L65",
+      "community": 99,
+      "norm_label": "multi-device & canvas format support",
+      "id": "clipper_readme_multi_device_canvas_format_support"
+    },
+    {
+      "label": "Deterministic 21-Stage Video Pipeline",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L77",
+      "community": 99,
+      "norm_label": "deterministic 21-stage video pipeline",
+      "id": "clipper_readme_deterministic_21_stage_video_pipeline"
+    },
+    {
+      "label": "AI Provider Resilience and Fallback Matrix",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L105",
+      "community": 12,
+      "norm_label": "ai provider resilience and fallback matrix",
+      "id": "clipper_readme_ai_provider_resilience_and_fallback_matrix"
+    },
+    {
+      "label": "Project Structure",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L138",
+      "community": 12,
+      "norm_label": "project structure",
+      "id": "clipper_readme_project_structure"
+    },
+    {
+      "label": "Installation and Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L169",
+      "community": 122,
+      "norm_label": "installation and setup",
+      "id": "clipper_readme_installation_and_setup"
+    },
+    {
+      "label": "Prerequisites",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L171",
+      "community": 122,
+      "norm_label": "prerequisites",
+      "id": "clipper_readme_prerequisites"
+    },
+    {
+      "label": "Quickstart (Single Command)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L176",
+      "community": 122,
+      "norm_label": "quickstart (single command)",
+      "id": "clipper_readme_quickstart_single_command"
+    },
+    {
+      "label": "Manual Setup & Running Separately",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L186",
+      "community": 12,
+      "norm_label": "manual setup & running separately",
+      "id": "clipper_readme_manual_setup_running_separately"
+    },
+    {
+      "label": "1. Backend Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L188",
+      "community": 12,
+      "norm_label": "1. backend setup",
+      "id": "clipper_readme_1_backend_setup"
+    },
+    {
+      "label": "2. Frontend Setup",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L205",
+      "community": 12,
+      "norm_label": "2. frontend setup",
+      "id": "clipper_readme_2_frontend_setup"
+    },
+    {
+      "label": "Live Deployment",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": "L217",
+      "community": 99,
+      "norm_label": "live deployment",
+      "id": "clipper_readme_live_deployment"
+    },
+    {
       "label": "Test building a 1-click single-paragraph copy-paste block.",
       "file_type": "rationale",
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L93",
-      "community": 5,
+      "community": 6,
       "norm_label": "test building a 1-click single-paragraph copy-paste block.",
       "id": "tests_test_viral_hook_and_series_rationale_93"
     },
@@ -10979,7 +11663,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L651",
-      "community": 15,
+      "community": 64,
       "norm_label": "executes multi-video batch processing across all videos in a project.",
       "id": "pipeline_pipeline_rationale_651"
     },
@@ -10988,7 +11672,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L454",
-      "community": 6,
+      "community": 123,
       "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev",
       "id": "media_renderer_rationale_454"
     },
@@ -11364,6 +12048,17 @@
       "source_location": "L220",
       "weight": 1.0,
       "source": "media_renderer_videorenderer_render_clip",
+      "target": "frontend_package_dependencies_next"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_test_white_canvas_high_contrast_subtitles",
       "target": "frontend_package_dependencies_next"
     },
     {
@@ -15510,11 +16205,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L152",
+      "source_location": "L153",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "core_models_rationale_152",
-      "target": "core_models_clipcandidate"
+      "source": "core_models_rationale_153",
+      "target": "core_models_clipcandidate",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -15573,11 +16268,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L195",
+      "source_location": "L152",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "core_models_rationale_195",
-      "target": "core_models_renderedclip"
+      "source": "core_models_rationale_152",
+      "target": "core_models_clipcandidate"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L196",
+      "weight": 1.0,
+      "source": "core_models_rationale_196",
+      "target": "core_models_renderedclip",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -15636,11 +16341,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L257",
+      "source_location": "L195",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "core_models_rationale_257",
-      "target": "core_models_userfeedback"
+      "source": "core_models_rationale_195",
+      "target": "core_models_renderedclip"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L259",
+      "weight": 1.0,
+      "source": "core_models_rationale_259",
+      "target": "core_models_userfeedback",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -15701,11 +16416,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/core/models.py",
-      "source_location": "L271",
+      "source_location": "L257",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "core_models_rationale_271",
-      "target": "core_models_airequestlog"
+      "source": "core_models_rationale_257",
+      "target": "core_models_userfeedback"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L273",
+      "weight": 1.0,
+      "source": "core_models_rationale_273",
+      "target": "core_models_airequestlog",
+      "confidence_score": 1.0
     },
     {
       "relation": "uses",
@@ -15732,11 +16457,41 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/core/models.py",
+      "source_location": "L271",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "core_models_rationale_271",
+      "target": "core_models_airequestlog"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L289",
+      "weight": 1.0,
+      "source": "core_models_rationale_289",
+      "target": "core_models_performanceanalytics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/models.py",
       "source_location": "L287",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "core_models_rationale_287",
       "target": "core_models_performanceanalytics"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/models.py",
+      "source_location": "L308",
+      "weight": 1.0,
+      "source": "core_models_rationale_308",
+      "target": "core_models_systemsetting",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -15864,6 +16619,16 @@
       "weight": 1.0,
       "source": "tests_test_settings_test_get_and_update_settings",
       "target": "core_database_init_db"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/core/database.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "core_database_rationale_89",
+      "target": "core_database_get_db",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -16434,6 +17199,39 @@
       "confidence_score": 1.0,
       "source": "media_scene_detector_sceneboundary",
       "target": "basemodel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_test_canvas_background_schemas",
+      "target": "core_schemas_projectprocessrequest"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_test_canvas_background_schemas",
+      "target": "core_schemas_jobcreaterequest"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_test_canvas_background_schemas",
+      "target": "core_schemas_clipeditrequest"
     },
     {
       "relation": "contains",
@@ -17470,11 +18268,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L389",
+      "weight": 1.0,
+      "source": "routes_clips_rationale_389",
+      "target": "routes_clips_refresh_thumbnail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L384",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_clips_rationale_384",
       "target": "routes_clips_refresh_thumbnail"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L414",
+      "weight": 1.0,
+      "source": "routes_clips_rationale_414",
+      "target": "routes_clips_regenerate_clip",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -17490,11 +18308,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L443",
+      "weight": 1.0,
+      "source": "routes_clips_rationale_443",
+      "target": "routes_clips_submit_feedback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L438",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_clips_rationale_438",
       "target": "routes_clips_submit_feedback"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L467",
+      "weight": 1.0,
+      "source": "routes_clips_rationale_467",
+      "target": "routes_clips_toggle_favorite",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -17510,11 +18348,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L482",
+      "weight": 1.0,
+      "source": "routes_clips_rationale_482",
+      "target": "routes_clips_delete_clip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L477",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_clips_rationale_477",
       "target": "routes_clips_delete_clip"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/clips.py",
+      "source_location": "L506",
+      "weight": 1.0,
+      "source": "routes_clips_rationale_506",
+      "target": "routes_clips_bulk_delete_clips",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -18187,11 +19045,51 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_99",
+      "target": "routes_jobs_list_all_jobs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_98",
+      "target": "routes_jobs_list_all_jobs"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L93",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_jobs_rationale_93",
       "target": "routes_jobs_list_all_jobs"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L139",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_139",
+      "target": "routes_jobs_get_job_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L138",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_138",
+      "target": "routes_jobs_get_job_status"
     },
     {
       "relation": "rationale_for",
@@ -18207,6 +19105,26 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L171",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_171",
+      "target": "routes_jobs_stream_job_events",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L170",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_170",
+      "target": "routes_jobs_stream_job_events"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L165",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18217,11 +19135,51 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_205",
+      "target": "routes_jobs_get_job_candidates",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L204",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_204",
+      "target": "routes_jobs_get_job_candidates"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L199",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_jobs_rationale_199",
       "target": "routes_jobs_get_job_candidates"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L261",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_261",
+      "target": "routes_jobs_get_job_clips",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L260",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_260",
+      "target": "routes_jobs_get_job_clips"
     },
     {
       "relation": "rationale_for",
@@ -18248,6 +19206,26 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L360",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_360",
+      "target": "routes_jobs_cancel_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L359",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_359",
+      "target": "routes_jobs_cancel_job"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L354",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18258,11 +19236,51 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L373",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_373",
+      "target": "routes_jobs_retry_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L372",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_372",
+      "target": "routes_jobs_retry_job"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L367",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_jobs_rationale_367",
       "target": "routes_jobs_retry_job"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L405",
+      "weight": 1.0,
+      "source": "routes_jobs_rationale_405",
+      "target": "routes_jobs_delete_job",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/jobs.py",
+      "source_location": "L404",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_jobs_rationale_404",
+      "target": "routes_jobs_delete_job"
     },
     {
       "relation": "rationale_for",
@@ -18664,6 +19682,26 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L439",
+      "weight": 1.0,
+      "source": "routes_projects_rationale_439",
+      "target": "routes_projects_bulk_clip_action",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L437",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_projects_rationale_437",
+      "target": "routes_projects_bulk_clip_action"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L432",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -18674,11 +19712,51 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L460",
+      "weight": 1.0,
+      "source": "routes_projects_rationale_460",
+      "target": "routes_projects_delete_project",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L458",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_projects_rationale_458",
+      "target": "routes_projects_delete_project"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L453",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "routes_projects_rationale_453",
       "target": "routes_projects_delete_project"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L506",
+      "weight": 1.0,
+      "source": "routes_projects_rationale_506",
+      "target": "routes_projects_bulk_delete_projects",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/api/routes/projects.py",
+      "source_location": "L504",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "routes_projects_rationale_504",
+      "target": "routes_projects_bulk_delete_projects"
     },
     {
       "relation": "rationale_for",
@@ -19172,11 +20250,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/services/pipeline/pipeline.py",
-      "source_location": "L698",
+      "source_location": "L707",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "pipeline_pipeline_rationale_698",
-      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline"
+      "source": "pipeline_pipeline_rationale_707",
+      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -19199,6 +20277,26 @@
       "weight": 1.0,
       "source": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline",
       "target": "media_audio_analyzer_strip_emojis"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/services/pipeline/pipeline.py",
+      "source_location": "L702",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pipeline_pipeline_rationale_702",
+      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/services/pipeline/pipeline.py",
+      "source_location": "L698",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "pipeline_pipeline_rationale_698",
+      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline"
     },
     {
       "relation": "rationale_for",
@@ -22207,11 +23305,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/services/media/captioner.py",
-      "source_location": "L462",
+      "source_location": "L464",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "media_captioner_rationale_462",
-      "target": "media_captioner_captiongenerator_generate_ass"
+      "source": "media_captioner_rationale_464",
+      "target": "media_captioner_captiongenerator_generate_ass",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -22223,6 +23321,16 @@
       "weight": 1.0,
       "source": "media_captioner_captiongenerator_generate_ass",
       "target": "media_audio_analyzer_strip_emojis"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/services/media/captioner.py",
+      "source_location": "L462",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "media_captioner_rationale_462",
+      "target": "media_captioner_captiongenerator_generate_ass"
     },
     {
       "relation": "calls",
@@ -22394,11 +23502,41 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/services/media/renderer.py",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "media_renderer_rationale_174",
+      "target": "media_renderer_videorenderer_render_clip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L173",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "media_renderer_rationale_173",
       "target": "media_renderer_videorenderer_render_clip"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/services/media/renderer.py",
+      "source_location": "L530",
+      "weight": 1.0,
+      "source": "media_renderer_rationale_530",
+      "target": "media_renderer_videorenderer_generate_thumbnail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/services/media/renderer.py",
+      "source_location": "L472",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "media_renderer_rationale_472",
+      "target": "media_renderer_videorenderer_generate_thumbnail"
     },
     {
       "relation": "rationale_for",
@@ -24133,6 +25271,56 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_tests_test_canvas_backgrounds_py",
+      "target": "tests_test_canvas_backgrounds_test_canvas_background_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "backend_tests_test_canvas_backgrounds_py",
+      "target": "tests_test_canvas_backgrounds_test_white_canvas_high_contrast_subtitles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_rationale_1",
+      "target": "backend_tests_test_canvas_backgrounds_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_rationale_10",
+      "target": "tests_test_canvas_backgrounds_test_canvas_background_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_canvas_backgrounds.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_test_canvas_backgrounds_rationale_34",
+      "target": "tests_test_canvas_backgrounds_test_white_canvas_high_contrast_subtitles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_api.py",
       "source_location": "L10",
       "weight": 1.0,
@@ -24236,9 +25424,9 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_test_viral_hook_and_series_rationale_94",
-      "target": "tests_test_viral_hook_and_series_test_single_para_builder",
-      "confidence_score": 1.0
+      "target": "tests_test_viral_hook_and_series_test_single_para_builder"
     },
     {
       "relation": "rationale_for",
@@ -24414,6 +25602,86 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_architecture_overview"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_system_requirements"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_quick_start"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L130",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_processing_pipeline"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L163",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_core_capabilities"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L203",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_configuration_reference"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L220",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_automated_verification"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L224",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_ai_video_clipper_pro",
+      "target": "clipper_readme_license"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
       "source_location": "L11",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -24484,71 +25752,121 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L224",
+      "source_location": "L14",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_ai_video_clipper_pro",
-      "target": "clipper_readme_license"
+      "source": "clipper_readme_architecture_overview",
+      "target": "clipper_readme_deployment_model"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L13",
+      "source_location": "L31",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_key_capabilities_features",
-      "target": "clipper_readme_1_dual_pre_clipping_hook_strategies_user_choice"
+      "source": "clipper_readme_system_requirements",
+      "target": "clipper_readme_processing_backend"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L24",
+      "source_location": "L38",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_key_capabilities_features",
-      "target": "clipper_readme_2_intense_clash_fight_conflict_discovery"
+      "source": "clipper_readme_system_requirements",
+      "target": "clipper_readme_web_client_optional_for_local_hosting"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L30",
+      "source_location": "L46",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_key_capabilities_features",
-      "target": "clipper_readme_3_automated_opencv_computer_vision_watermark_detection_eraser"
+      "source": "clipper_readme_quick_start",
+      "target": "clipper_readme_1_start_the_media_processing_backend"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L36",
+      "source_location": "L110",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_key_capabilities_features",
-      "target": "clipper_readme_4_complete_metadata_stripping_anti_duplicate_architecture"
+      "source": "clipper_readme_quick_start",
+      "target": "clipper_readme_2_connect_the_web_interface"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L40",
+      "source_location": "L50",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_key_capabilities_features",
-      "target": "clipper_readme_5_capcut_tiktok_boxed_caption_styles"
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_1"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L45",
+      "source_location": "L57",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "clipper_readme_key_capabilities_features",
-      "target": "clipper_readme_6_strict_dual_folder_bulk_download_zip_architecture"
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_2"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L69",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_3"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L75",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_4"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_5"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L96",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_6"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_1_start_the_media_processing_backend",
+      "target": "clipper_readme_codeblock_7"
     },
     {
       "relation": "contains",
@@ -24584,61 +25902,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
-      "source_location": "L171",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "clipper_readme_installation_and_setup",
-      "target": "clipper_readme_prerequisites"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L176",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "clipper_readme_installation_and_setup",
-      "target": "clipper_readme_quickstart_single_command"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L186",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "clipper_readme_installation_and_setup",
-      "target": "clipper_readme_manual_setup_running_separately"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
       "source_location": "L180",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "clipper_readme_quickstart_single_command",
       "target": "clipper_readme_codeblock_4"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L188",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "clipper_readme_manual_setup_running_separately",
-      "target": "clipper_readme_1_backend_setup"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L205",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "clipper_readme_manual_setup_running_separately",
-      "target": "clipper_readme_2_frontend_setup"
     },
     {
       "relation": "contains",
@@ -24669,6 +25937,136 @@
       "confidence_score": 1.0,
       "source": "clipper_readme_2_frontend_setup",
       "target": "clipper_readme_codeblock_7"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L112",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_2_connect_the_web_interface",
+      "target": "clipper_readme_method_a_use_hosted_web_client"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L117",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_2_connect_the_web_interface",
+      "target": "clipper_readme_method_b_run_web_client_locally"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L120",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_method_b_run_web_client_locally",
+      "target": "clipper_readme_codeblock_8"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L134",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_processing_pipeline",
+      "target": "clipper_readme_codeblock_9"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L165",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_core_capabilities",
+      "target": "clipper_readme_nonlinear_climax_teaser_hook"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L172",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_core_capabilities",
+      "target": "clipper_readme_direct_chronological_cut"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L176",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_core_capabilities",
+      "target": "clipper_readme_coordinated_on_screen_captions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L181",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_core_capabilities",
+      "target": "clipper_readme_automated_watermark_detection_and_removal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L186",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_core_capabilities",
+      "target": "clipper_readme_multi_platform_distribution_assets"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L189",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_multi_platform_distribution_assets",
+      "target": "clipper_readme_codeblock_10"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L226",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_automated_verification",
+      "target": "clipper_readme_codeblock_11"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L233",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_automated_verification",
+      "target": "clipper_readme_codeblock_12"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L240",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_automated_verification",
+      "target": "clipper_readme_codeblock_13"
     },
     {
       "relation": "contains",
@@ -24746,9 +26144,49 @@
       "source_file": "SESSION_TRACKER.md",
       "source_location": "L171",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "clipper_session_tracker_session_history_log",
-      "target": "clipper_session_tracker_session_5_dual_captions_part_1_n_script_headline_teaser_climax_timeline_splicing",
-      "confidence_score": 1.0
+      "target": "clipper_session_tracker_session_5_dual_captions_part_1_n_script_headline_teaser_climax_timeline_splicing"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L216",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_6_clean_series_numbering_strictly_part_1_part_2_without_n"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L252",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_7_comprehensive_setup_architecture_documentation_readme_md"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L275",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_8_professional_zero_emoji_standard_for_documentation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L292",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_9_subtitle_burn_in_fix_single_vercel_production_cleanup"
     },
     {
       "relation": "contains",
@@ -27949,8 +29387,118 @@
       "confidence_score": 1.0,
       "source": "clipper_ai_clipper_next_version_backlog_future_vision",
       "target": "clipper_ai_clipper_next_version_backlog_codeblock_23"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_key_capabilities_features",
+      "target": "clipper_readme_1_dual_pre_clipping_hook_strategies_user_choice"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_key_capabilities_features",
+      "target": "clipper_readme_2_intense_clash_fight_conflict_discovery"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_key_capabilities_features",
+      "target": "clipper_readme_3_automated_opencv_computer_vision_watermark_detection_eraser"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_key_capabilities_features",
+      "target": "clipper_readme_4_complete_metadata_stripping_anti_duplicate_architecture"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L40",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_key_capabilities_features",
+      "target": "clipper_readme_5_capcut_tiktok_boxed_caption_styles"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_key_capabilities_features",
+      "target": "clipper_readme_6_strict_dual_folder_bulk_download_zip_architecture"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L171",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_installation_and_setup",
+      "target": "clipper_readme_prerequisites"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L176",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_installation_and_setup",
+      "target": "clipper_readme_quickstart_single_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L186",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_installation_and_setup",
+      "target": "clipper_readme_manual_setup_running_separately"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L188",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_manual_setup_running_separately",
+      "target": "clipper_readme_1_backend_setup"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L205",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "clipper_readme_manual_setup_running_separately",
+      "target": "clipper_readme_2_frontend_setup"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2a64887f113ec499f1fe4cd44888835b3a388a4e"
+  "built_at_commit": "25c12f7df04f6e9f1230d6a3c83ce15a631a3392"
 }

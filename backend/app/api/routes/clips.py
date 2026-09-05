@@ -276,6 +276,7 @@ async def rerender_clip(
 
     style = req.caption_style or clip.caption_style or "bold_yellow"
     framing = req.framing_mode or getattr(clip, "framing_mode", "crop_9_16") or "crop_9_16"
+    canvas_bg = req.canvas_background or getattr(clip, "canvas_background", "blur") or "blur"
     blur_r = req.blur_radius if req.blur_radius is not None else getattr(clip, "blur_radius", 30) or 30
     sub_pos = req.subtitle_position if req.subtitle_position is not None else getattr(clip, "subtitle_position", 75) or 75
     add_hook = req.add_hook_header if req.add_hook_header is not None else getattr(clip, "add_hook_header", False)
@@ -309,6 +310,7 @@ async def rerender_clip(
     hook_style = req.hook_header_style if req.hook_header_style is not None else (getattr(clip, "hook_header_style", "viral_creator") or "viral_creator")
     clip.burn_captions = req.burn_captions
     clip.framing_mode = framing
+    clip.canvas_background = canvas_bg
     clip.blur_radius = blur_r
     clip.subtitle_position = sub_pos
     clip.add_hook_header = add_hook
@@ -341,6 +343,8 @@ async def rerender_clip(
         hook_header_position=hook_pos,
         hook_header_style=hook_style,
         keep_intervals=t_edit.keep,
+        canvas_background=canvas_bg,
+        framing_mode=framing,
     )
     captioner.generate_srt(segments, start_time, end_time, srt_path, keep_intervals=t_edit.keep)
 
@@ -359,6 +363,7 @@ async def rerender_clip(
         keep_intervals=t_edit.keep,
         framing_mode=framing,
         blur_radius=blur_r,
+        canvas_background=canvas_bg,
         remove_watermark=remove_wm,
         watermark_position=wm_pos,
         enhance_quality=enhance,

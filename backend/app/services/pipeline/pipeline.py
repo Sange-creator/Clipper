@@ -497,6 +497,15 @@ class VideoProcessingPipeline:
                     script_headline = audio_analyzer.extract_hook_headline_from_script(raw_segments, cand.start, cand.end, video_genre)
                     hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand.hook_summary or cand.reason or "")
 
+                    job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
+                    job_canvas_background = getattr(job, "canvas_background", None) or "blur"
+                    job_blur_radius = getattr(job, "blur_radius", None) or 30
+                    job_remove_watermark = getattr(job, "remove_watermark", False) or False
+                    job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
+                    job_enhance_quality = getattr(job, "enhance_quality", True)
+                    if job_enhance_quality is None:
+                        job_enhance_quality = True
+
                     captioner.generate_ass(
                         raw_segments,
                         cand.start,
@@ -511,6 +520,8 @@ class VideoProcessingPipeline:
                         keep_intervals=t_edit.keep,
                         part_index=part_idx,
                         total_parts=tot_parts,
+                        canvas_background=job_canvas_background,
+                        framing_mode=job_framing_mode,
                     )
                     captioner.generate_srt(
                         raw_segments,
@@ -525,13 +536,6 @@ class VideoProcessingPipeline:
                     # FFmpeg render
                     out_video_path = settings.PROCESSED_DIR / f"{clip_id}.mp4"
                     should_burn = burn_captions and caption_style != "none"
-                    job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
-                    job_blur_radius = getattr(job, "blur_radius", None) or 30
-                    job_remove_watermark = getattr(job, "remove_watermark", False) or False
-                    job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
-                    job_enhance_quality = getattr(job, "enhance_quality", True)
-                    if job_enhance_quality is None:
-                        job_enhance_quality = True
 
                     if out_video_path.exists() and out_video_path.stat().st_size > 50000:
                         logger.info(f"Clip {clip_id} already rendered ({out_video_path.stat().st_size} bytes), skipping render.")
@@ -547,6 +551,7 @@ class VideoProcessingPipeline:
                             keep_intervals=t_edit.keep,
                             framing_mode=job_framing_mode,
                             blur_radius=job_blur_radius,
+                            canvas_background=job_canvas_background,
                             remove_watermark=job_remove_watermark,
                             watermark_position=job_watermark_position,
                             enhance_quality=job_enhance_quality,
@@ -884,6 +889,15 @@ class VideoProcessingPipeline:
             script_headline = audio_analyzer.extract_hook_headline_from_script(segs, cand.start, cand.end, v_genre)
             hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand.hook_summary or cand.reason or "")
 
+            job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
+            job_canvas_background = getattr(job, "canvas_background", None) or "blur"
+            job_blur_radius = getattr(job, "blur_radius", None) or 30
+            job_remove_watermark = getattr(job, "remove_watermark", False) or False
+            job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
+            job_enhance_quality = getattr(job, "enhance_quality", True)
+            if job_enhance_quality is None:
+                job_enhance_quality = True
+
             captioner.generate_ass(
                 segs,
                 cand.start,
@@ -898,6 +912,8 @@ class VideoProcessingPipeline:
                 keep_intervals=t_edit.keep,
                 part_index=part_idx,
                 total_parts=tot_parts,
+                canvas_background=job_canvas_background,
+                framing_mode=job_framing_mode,
             )
             captioner.generate_srt(
                 segs,
@@ -910,13 +926,6 @@ class VideoProcessingPipeline:
             )
 
             should_burn = burn_captions and caption_style != "none"
-            job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
-            job_blur_radius = getattr(job, "blur_radius", None) or 30
-            job_remove_watermark = getattr(job, "remove_watermark", False) or False
-            job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
-            job_enhance_quality = getattr(job, "enhance_quality", True)
-            if job_enhance_quality is None:
-                job_enhance_quality = True
 
             await renderer.render_clip(
                 source_video_path=v_path,
@@ -929,6 +938,7 @@ class VideoProcessingPipeline:
                 keep_intervals=t_edit.keep,
                 framing_mode=job_framing_mode,
                 blur_radius=job_blur_radius,
+                canvas_background=job_canvas_background,
                 remove_watermark=job_remove_watermark,
                 watermark_position=job_watermark_position,
                 enhance_quality=job_enhance_quality,

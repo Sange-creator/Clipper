@@ -123,6 +123,7 @@ export interface RenderedClipResponse {
   duration: number;
   aspect_ratio: string;
   framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9" | string;
+  canvas_background?: "blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean" | string;
   blur_radius?: number;
   subtitle_position?: number;
   add_hook_header?: boolean;
@@ -218,7 +219,8 @@ export interface JobCreatePayload {
   caption_style?: CaptionStyleType;
   burn_captions?: boolean;
   remove_dead_air?: boolean;
-  framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9";
+  framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9" | string;
+  canvas_background?: "blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean" | string;
   blur_radius?: number;
   subtitle_position?: number;
   add_hook_header?: boolean;
@@ -248,7 +250,8 @@ export interface ProjectProcessPayload {
   caption_style?: CaptionStyleType;
   burn_captions?: boolean;
   remove_dead_air?: boolean;
-  framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9";
+  framing_mode?: "crop_9_16" | "blur_fit_9_16" | "original_16_9" | string;
+  canvas_background?: "blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean" | string;
   blur_radius?: number;
   subtitle_position?: number;
   add_hook_header?: boolean;

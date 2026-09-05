@@ -458,12 +458,15 @@ class CaptionGenerator:
         keep_intervals: Optional[List[List[float]]] = None,
         part_index: Optional[int] = None,
         total_parts: Optional[int] = None,
+        canvas_background: Optional[str] = None,
+        framing_mode: Optional[str] = None,
     ) -> Path:
         """
         Generate an Advanced SubStation Alpha (.ass) subtitle file.
         All timestamps are relative to the sliced clip start (0.0s).
         Supports multi-interval splicing (e.g. 5s climax teaser followed by narrative build-up)
         and multi-part series branding (e.g. PART 1/5 • TITLE).
+        Guarantees 100% text contrast and visibility across all canvas backgrounds (including pure white).
         """
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -504,6 +507,22 @@ class CaptionGenerator:
         hook_border = hook_cfg.get("border_style", 1)
         hook_out_px = hook_cfg.get("outline", 6)
         hook_shadow_px = hook_cfg.get("shadow", 3)
+
+        # High-contrast guarantee for white and light canvas backgrounds:
+        is_white_canvas = (
+            (canvas_background and canvas_background.lower().strip() == "white")
+            or (framing_mode and "white" in framing_mode.lower())
+        )
+        if is_white_canvas:
+            outline_color = "&H00000000&"
+            outline = max(outline, 8)
+            shadow = max(shadow, 4)
+            back_color = "&H90000000&"
+
+            hook_outline = "&H00000000&"
+            hook_out_px = max(hook_out_px, 8)
+            hook_shadow_px = max(hook_shadow_px, 4)
+            hook_back = "&H90000000&"
 
         ass_header = f"""[Script Info]
 Title: AI Clipper Animated Captions & TikTok Hook

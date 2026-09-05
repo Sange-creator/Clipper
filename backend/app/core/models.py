@@ -121,6 +121,7 @@ class Job(Base):
     burn_captions: Mapped[bool] = mapped_column(Boolean, default=True)
     remove_dead_air: Mapped[bool] = mapped_column(Boolean, default=True)
     framing_mode: Mapped[str] = mapped_column(String(32), default="crop_9_16")  # "crop_9_16", "blur_fit_9_16", "original_16_9"
+    canvas_background: Mapped[str] = mapped_column(String(32), default="blur")  # blur, black, white, gradient_obsidian, gradient_violet, gradient_sunset, gradient_ocean
     blur_radius: Mapped[int] = mapped_column(Integer, default=30)  # 10..80
     subtitle_position: Mapped[int] = mapped_column(Integer, default=75)  # 10..90 percent from top
     add_hook_header: Mapped[bool] = mapped_column(Boolean, default=False)  # Sticky TikTok hook header
@@ -211,6 +212,7 @@ class RenderedClip(Base):
     duration: Mapped[float] = mapped_column(Float)
     aspect_ratio: Mapped[str] = mapped_column(String(16), default="9:16")
     framing_mode: Mapped[str] = mapped_column(String(32), default="crop_9_16")  # "crop_9_16", "blur_fit_9_16", "original_16_9"
+    canvas_background: Mapped[str] = mapped_column(String(32), default="blur")
     blur_radius: Mapped[int] = mapped_column(Integer, default=30)  # 10..80
     subtitle_position: Mapped[int] = mapped_column(Integer, default=75)  # 10..90 percent from top
     add_hook_header: Mapped[bool] = mapped_column(Boolean, default=False)  # Sticky TikTok hook header

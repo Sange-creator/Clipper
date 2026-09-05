@@ -184,7 +184,8 @@ class ProjectProcessRequest(BaseModel):
     caption_style: str = "bold_yellow"
     burn_captions: bool = True
     remove_dead_air: bool = True
-    framing_mode: Literal["crop_9_16", "blur_fit_9_16", "original_16_9"] = "crop_9_16"
+    framing_mode: str = "crop_9_16"
+    canvas_background: Optional[str] = "blur"
     blur_radius: int = Field(default=30, ge=5, le=100)
     subtitle_position: int = Field(default=75, ge=10, le=90)
     add_hook_header: bool = False
@@ -213,7 +214,8 @@ class JobCreateRequest(BaseModel):
     caption_style: str = "bold_yellow"
     burn_captions: bool = True
     remove_dead_air: bool = True
-    framing_mode: Literal["crop_9_16", "blur_fit_9_16", "original_16_9"] = "crop_9_16"
+    framing_mode: str = "crop_9_16"
+    canvas_background: Optional[str] = "blur"
     blur_radius: int = Field(default=30, ge=5, le=100)
     subtitle_position: int = Field(default=75, ge=10, le=90)
     add_hook_header: bool = False
@@ -250,7 +252,8 @@ class ClipEditRequest(BaseModel):
     caption_style: Optional[str] = None
     burn_captions: bool = True
     remove_dead_air: bool = True
-    framing_mode: Optional[Literal["crop_9_16", "blur_fit_9_16", "original_16_9"]] = None
+    framing_mode: Optional[str] = None
+    canvas_background: Optional[str] = None
     blur_radius: Optional[int] = Field(default=None, ge=5, le=100)
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     add_hook_header: Optional[bool] = None
@@ -265,6 +268,9 @@ class ClipEditRequest(BaseModel):
 class ClipRegenerateRequest(BaseModel):
     intent: Literal["stronger_hook", "shorter_duration", "longer_context", "different_payoff", "style_change"]
     caption_style: Optional[str] = None
+    framing_mode: Optional[str] = None
+    canvas_background: Optional[str] = None
+    blur_radius: Optional[int] = Field(default=None, ge=5, le=100)
     subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     add_hook_header: Optional[bool] = None
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
@@ -319,6 +325,7 @@ class SettingsResponse(BaseModel):
     transcriber_provider: str = "auto"
     whisper_model_size: str
     default_framing_mode: str = "crop_9_16"
+    default_canvas_background: str = "blur"
     default_blur_radius: int = 30
     default_subtitle_position: int = 75
     default_add_hook_header: bool = False
@@ -342,7 +349,8 @@ class SettingsUpdateRequest(BaseModel):
     deepgram_model: Optional[str] = None
     transcriber_provider: Optional[str] = None
     whisper_model_size: Optional[str] = None
-    default_framing_mode: Optional[Literal["crop_9_16", "blur_fit_9_16", "original_16_9"]] = None
+    default_framing_mode: Optional[str] = None
+    default_canvas_background: Optional[str] = None
     default_blur_radius: Optional[int] = Field(default=None, ge=5, le=100)
     default_subtitle_position: Optional[int] = Field(default=None, ge=10, le=90)
     default_add_hook_header: Optional[bool] = None

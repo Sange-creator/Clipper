@@ -323,3 +323,60 @@
   - `backend/app/services/pipeline/pipeline.py`
   - `backend/app/services/media/renderer.py`
   - `SESSION_TRACKER.md`
+
+---
+
+### Session 10: Canvas Background Customization & High-Contrast Readability Guarantee
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"for this add other options too, such as full white, full black or other gradient color that would suit best. The texts must be properly visible though"*
+
+- **Technical Objectives**:
+  1. Expand the 16:9 in 9:16 Canvas framing mode with multiple curated canvas backgrounds:
+     - Frosted Blur (`blur` — with adjustable blur radius)
+     - Pitch Black (`black` — OLED cinema aesthetic)
+     - Pure White (`white` — high-key studio aesthetic)
+     - Obsidian Navy Gradient (`gradient_obsidian` — `#07090E` to `#181829`)
+     - Cyber Violet Gradient (`gradient_violet` — `#130722` to `#2B0E4F`)
+     - Sunset Ember Gradient (`gradient_sunset` — `#180909` to `#381212`)
+     - Oceanic Teal Gradient (`gradient_ocean` — `#04131A` to `#0C2D3D`)
+  2. Guarantee 100% text readability and contrast across all backgrounds, especially on Pure White canvas:
+     - In `captioner.py`, when `canvas_background == "white"`, enforce thick pitch-black outlines (`outline=8`, `shadow=4`, `&H00000000&`) on both Default/Emphasis dialogue subtitles and HookHeader headlines, with dark backing for series part badges.
+  3. Deploy updated frontend to the single primary Vercel deployment: `https://ai-clipper-pro.vercel.app/`.
+
+- **Changes & Deliverables**:
+  1. **Backend Media Engine (`renderer.py` & `captioner.py`)**:
+     - Added `canvas_background` parameter to `render_clip` supporting fast-seek single-segment and multi-segment timeline concat modes.
+     - Implemented FFmpeg `pad=1080:1920:(ow-iw)/2:(oh-ih)/2:color=...` for solid `white` and `black`.
+     - Implemented FFmpeg `gradients=s=1080x1920:c0=...:c1=...:x0=540:y0=0:x1=540:y1=1920` for smooth vertical background gradients.
+     - In `captioner.py`, added high-contrast text styling rules automatically active when `canvas_background == "white"`.
+  2. **Data Layer, Schemas & API Routes**:
+     - Added `canvas_background` column to `Job` and `RenderedClip` in `models.py` and auto-migration in `database.py`.
+     - Added `canvas_background` field across `schemas.py`, `jobs.py`, `projects.py`, and `clips.py`.
+     - Added unit tests in `test_canvas_backgrounds.py` verifying schema validation and high-contrast subtitle generation.
+  3. **Frontend UI & Interactive Preview**:
+     - In `VideoUploader.tsx`, updated Mode 2 to **16:9 in 9:16 Canvas** with 7 curated background style cards.
+     - Added interactive mini 9:16 phone mockup displaying live canvas background styling, centered 16:9 video placeholder, sticky `PART 1` pill, hook headline, and animated subtitle preview.
+     - Added high-contrast reassurance callout when Pure White is chosen.
+     - Synchronized 7 background cards into `app/projects/[id]/page.tsx` Tab 2 processing configuration.
+  4. **Deployment & Quality Verification**:
+     - Compiled TypeScript with 0 errors (`npx tsc --noEmit`).
+     - Deployed production bundle to Vercel (`https://ai-clipper-pro.vercel.app/`). Verified HTTP 200 response.
+     - Ran complete pytest suite (43/43 tests passed).
+
+- **Files Modified**:
+  - `backend/app/api/routes/clips.py`
+  - `backend/app/api/routes/jobs.py`
+  - `backend/app/api/routes/projects.py`
+  - `backend/app/core/database.py`
+  - `backend/app/core/models.py`
+  - `backend/app/core/schemas.py`
+  - `backend/app/services/media/captioner.py`
+  - `backend/app/services/media/renderer.py`
+  - `backend/app/services/pipeline/pipeline.py`
+  - `backend/tests/test_canvas_backgrounds.py`
+  - `frontend/src/app/projects/[id]/page.tsx`
+  - `frontend/src/components/upload/VideoUploader.tsx`
+  - `frontend/src/lib/api.ts`
+  - `frontend/src/lib/types.ts`
+  - `SESSION_TRACKER.md`

@@ -51,6 +51,7 @@ async def create_clipping_job(
         burn_captions=req.burn_captions,
         remove_dead_air=req.remove_dead_air,
         framing_mode=req.framing_mode,
+        canvas_background=req.canvas_background or "blur",
         blur_radius=req.blur_radius,
         subtitle_position=req.subtitle_position or 75,
         add_hook_header=req.add_hook_header,

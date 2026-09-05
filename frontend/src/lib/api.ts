@@ -250,6 +250,7 @@ export const api = {
     burn_captions?: boolean;
     remove_dead_air?: boolean;
     framing_mode?: string;
+    canvas_background?: string;
     blur_radius?: number;
     subtitle_position?: number;
     add_hook_header?: boolean;

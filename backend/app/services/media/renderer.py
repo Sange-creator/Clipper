@@ -165,6 +165,7 @@ class VideoRenderer:
         keep_intervals: Optional[List[List[float]]] = None,
         framing_mode: str = "crop_9_16",
         blur_radius: int = 30,
+        canvas_background: Optional[str] = "blur",
         remove_watermark: bool = False,
         watermark_position: str = "top_right",
         enhance_quality: bool = True,
@@ -199,6 +200,33 @@ class VideoRenderer:
         crop_cfg = reframing_config or {}
         mode = framing_mode or "crop_9_16"
         r = max(5, min(100, blur_radius or 30))
+
+        # Canvas background resolution (blur, black, white, gradient_obsidian, gradient_violet, gradient_sunset, gradient_ocean)
+        GRADIENT_PALETTES = {
+            "gradient_obsidian": ("0x07090E", "0x181829"),
+            "gradient_violet": ("0x130722", "0x2B0E4F"),
+            "gradient_sunset": ("0x180909", "0x381212"),
+            "gradient_ocean": ("0x04131A", "0x0C2D3D"),
+        }
+        canvas_bg = (canvas_background or "").lower().strip()
+        if not canvas_bg:
+            if mode.startswith("gradient_"):
+                for k in GRADIENT_PALETTES:
+                    if mode.startswith(k):
+                        canvas_bg = k
+                        break
+            elif "white" in mode:
+                canvas_bg = "white"
+            elif "black" in mode:
+                canvas_bg = "black"
+            elif mode == "blur_fit_9_16":
+                canvas_bg = "blur"
+
+        is_canvas_fit = (
+            mode == "blur_fit_9_16"
+            or "fit_9_16" in mode
+            or canvas_bg in ("blur", "black", "white", *GRADIENT_PALETTES.keys())
+        ) and mode not in ("original_16_9", "crop_9_16")
 
         # Inspect source resolution if watermark removal is active
         src_w, src_h = 1920, 1080
@@ -276,14 +304,27 @@ class VideoRenderer:
             if delogo_cmd:
                 filter_parts.append(delogo_cmd)
 
-            if mode == "blur_fit_9_16":
+            if is_canvas_fit:
                 prefix = f"{filter_parts[0]}," if filter_parts else ""
-                v_filter = (
-                    f"{prefix}split=2[bg_raw][fg_raw];"
-                    f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg];"
-                    f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
-                    f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
-                )
+                if canvas_bg == "white":
+                    v_filter = f"{prefix}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=white"
+                elif canvas_bg == "black":
+                    v_filter = f"{prefix}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=black"
+                elif canvas_bg in GRADIENT_PALETTES:
+                    c0, c1 = GRADIENT_PALETTES[canvas_bg]
+                    v_filter = (
+                        f"gradients=s={settings.TARGET_WIDTH}x{settings.TARGET_HEIGHT}:c0={c0}:c1={c1}:x0={settings.TARGET_WIDTH//2}:y0=0:x1={settings.TARGET_WIDTH//2}:y1={settings.TARGET_HEIGHT}[bg];"
+                        f"[in]{prefix}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
+                        f"[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1"
+                    )
+                else:
+                    # Default: frosted blur
+                    v_filter = (
+                        f"{prefix}split=2[bg_raw][fg_raw];"
+                        f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg];"
+                        f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
+                        f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
+                    )
             elif mode == "original_16_9":
                 filter_parts.append("scale=1920:1080:force_original_aspect_ratio=decrease:flags=bilinear")
                 v_filter = ",".join(filter_parts)
@@ -333,13 +374,30 @@ class VideoRenderer:
 
                 # Reframe each input video stream to standard canvas (apply delogo to raw stream if present)
                 in_v = f"[{idx}:v]{delogo_cmd}," if delogo_cmd else f"[{idx}:v]"
-                if mode == "blur_fit_9_16":
-                    filter_chunks.append(
-                        f"{in_v}split=2[bg_raw_{idx}][fg_raw_{idx}];"
-                        f"[bg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg_{idx}];"
-                        f"[fg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg_{idx}];"
-                        f"[bg_{idx}][fg_{idx}]overlay=(W-w)/2:(H-h)/2,setsar=1[v{idx}]"
-                    )
+                if is_canvas_fit:
+                    if canvas_bg == "white":
+                        filter_chunks.append(
+                            f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=white,setsar=1[v{idx}]"
+                        )
+                    elif canvas_bg == "black":
+                        filter_chunks.append(
+                            f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1[v{idx}]"
+                        )
+                    elif canvas_bg in GRADIENT_PALETTES:
+                        c0, c1 = GRADIENT_PALETTES[canvas_bg]
+                        filter_chunks.append(
+                            f"gradients=s={settings.TARGET_WIDTH}x{settings.TARGET_HEIGHT}:c0={c0}:c1={c1}:x0={settings.TARGET_WIDTH//2}:y0=0:x1={settings.TARGET_WIDTH//2}:y1={settings.TARGET_HEIGHT}[bg{idx}];"
+                            f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg{idx}];"
+                            f"[bg{idx}][fg{idx}]overlay=(W-w)/2:(H-h)/2:shortest=1,setsar=1[v{idx}]"
+                        )
+                    else:
+                        # Frosted blur
+                        filter_chunks.append(
+                            f"{in_v}split=2[bg_raw_{idx}][fg_raw_{idx}];"
+                            f"[bg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg_{idx}];"
+                            f"[fg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg_{idx}];"
+                            f"[bg_{idx}][fg_{idx}]overlay=(W-w)/2:(H-h)/2,setsar=1[v{idx}]"
+                        )
                 elif mode == "original_16_9":
                     filter_chunks.append(
                         f"{in_v}scale=1920:1080:force_original_aspect_ratio=decrease:flags=bilinear,setsar=1[v{idx}]"
