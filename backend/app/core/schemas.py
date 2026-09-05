@@ -181,20 +181,21 @@ class ProjectDetailResponse(BaseModel):
 
 class ProjectProcessRequest(BaseModel):
     mode: Optional[Literal["podcast", "viral_moments"]] = None
-    target_clips_count: int = Field(default=20, ge=1, le=100)
-    duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "30-45s"
-    caption_style: str = "bold_yellow"
+    genre: Optional[str] = "documentary"
+    target_clips_count: int = Field(default=5, ge=1, le=100)
+    duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "60-90s"
+    caption_style: str = "tiktok_rounded_box"
     burn_captions: bool = True
     remove_dead_air: bool = True
-    framing_mode: str = "crop_9_16"
+    framing_mode: str = "blur_fit_9_16"
     canvas_background: Optional[str] = "blur"
     blur_radius: int = Field(default=30, ge=5, le=100)
-    subtitle_position: int = Field(default=75, ge=10, le=90)
-    add_hook_header: bool = False
+    subtitle_position: int = Field(default=78, ge=10, le=90)
+    add_hook_header: bool = True
     hook_header_position: int = Field(default=12, ge=8, le=90)
     hook_header_style: Optional[str] = "viral_creator"
-    remove_watermark: bool = False
-    watermark_position: str = "top_right"
+    remove_watermark: bool = True
+    watermark_position: str = "auto"
     enhance_quality: bool = True
     hook_strategy: Literal["teaser_climax_hook", "direct_chronological"] = "teaser_climax_hook"
     part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
@@ -210,25 +211,26 @@ class JobCreateRequest(BaseModel):
     video_id: Optional[str] = None
     project_id: Optional[str] = None
     mode: Literal["podcast", "viral_moments"] = "podcast"
-    target_clips_count: int = Field(default=10, ge=1, le=50)
-    duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "30-45s"
+    genre: Optional[str] = "documentary"
+    target_clips_count: int = Field(default=5, ge=1, le=50)
+    duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "60-90s"
     min_duration: Optional[float] = None
     max_duration: Optional[float] = None
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
-    caption_style: str = "bold_yellow"
+    caption_style: str = "tiktok_rounded_box"
     burn_captions: bool = True
     remove_dead_air: bool = True
-    framing_mode: str = "crop_9_16"
+    framing_mode: str = "blur_fit_9_16"
     canvas_background: Optional[str] = "blur"
     blur_radius: int = Field(default=30, ge=5, le=100)
-    subtitle_position: int = Field(default=75, ge=10, le=90)
-    add_hook_header: bool = False
+    subtitle_position: int = Field(default=78, ge=10, le=90)
+    add_hook_header: bool = True
     hook_header_position: int = Field(default=12, ge=8, le=90)
     hook_header_style: Optional[str] = "viral_creator"
     part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
-    remove_watermark: bool = False
-    watermark_position: str = "top_right"
+    remove_watermark: bool = True
+    watermark_position: str = "auto"
     enhance_quality: bool = True
     hook_strategy: Literal["teaser_climax_hook", "direct_chronological"] = "teaser_climax_hook"
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"

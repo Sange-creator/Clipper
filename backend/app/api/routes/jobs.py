@@ -50,6 +50,7 @@ async def create_clipping_job(
         video_id=req.video_id,
         project_id=req.project_id,
         mode=req.mode,
+        genre=getattr(req, "genre", "documentary") or "documentary",
         burn_captions=req.burn_captions,
         remove_dead_air=req.remove_dead_air,
         framing_mode=req.framing_mode,

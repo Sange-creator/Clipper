@@ -38,6 +38,7 @@ import {
   MessageSquare,
   Clock,
   BookOpen,
+  ArrowRight,
 } from "lucide-react";
 
 
@@ -74,14 +75,14 @@ export default function SettingsPage() {
   const [geminiTestResult, setGeminiTestResult] = useState<{ valid: boolean; message: string } | null>(null);
 
   // Framing & Aspect Ratio defaults
-  const [defaultFramingMode, setDefaultFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
+  const [defaultFramingMode, setDefaultFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("blur_fit_9_16");
   const [defaultBlurRadius, setDefaultBlurRadius] = useState<number>(30);
-  const [defaultSubtitlePosition, setDefaultSubtitlePosition] = useState<number>(75);
+  const [defaultSubtitlePosition, setDefaultSubtitlePosition] = useState<number>(78);
   const [defaultAddHookHeader, setDefaultAddHookHeader] = useState<boolean>(true);
   const [defaultHookHeaderPosition, setDefaultHookHeaderPosition] = useState<number>(12);
   const [defaultHookHeaderStyle, setDefaultHookHeaderStyle] = useState<string>("viral_creator");
-  const [defaultRemoveWatermark, setDefaultRemoveWatermark] = useState<boolean>(false);
-  const [defaultWatermarkPosition, setDefaultWatermarkPosition] = useState<string>("top_right");
+  const [defaultRemoveWatermark, setDefaultRemoveWatermark] = useState<boolean>(true);
+  const [defaultWatermarkPosition, setDefaultWatermarkPosition] = useState<string>("auto");
   const [defaultEnhanceQuality, setDefaultEnhanceQuality] = useState<boolean>(true);
   const [defaultHookStrategy, setDefaultHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
 
@@ -841,7 +842,7 @@ export default function SettingsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 font-bold text-sm">
-                ⚡
+                <Zap className="h-4 w-4" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-200 flex items-center gap-2">
@@ -853,8 +854,18 @@ export default function SettingsPage() {
                 <p className="text-xs text-zinc-400">Choose default editing structure applied when auto-generating clips</p>
               </div>
             </div>
-            <span className="text-xs font-mono px-2.5 py-1 rounded bg-zinc-900 border border-white/10 text-zinc-300">
-              {defaultHookStrategy === "teaser_climax_hook" ? "⚡ 5s Climax Teaser First" : "▶ Direct Chronological Cut"}
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-zinc-900 border border-white/10 text-zinc-300 flex items-center gap-1.5">
+              {defaultHookStrategy === "teaser_climax_hook" ? (
+                <>
+                  <Zap className="h-3 w-3 text-amber-400" />
+                  <span>5s Climax Teaser First</span>
+                </>
+              ) : (
+                <>
+                  <Play className="h-3 w-3 text-violet-400" />
+                  <span>Direct Chronological Cut</span>
+                </>
+              )}
             </span>
           </div>
 
@@ -893,7 +904,7 @@ export default function SettingsPage() {
               </p>
               <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 bg-black/40 rounded-lg p-2 border border-white/5 font-mono">
                 <span className="text-red-400 font-bold">[0-5s: PEAK CLASH]</span>
-                <span>➔</span>
+                <ArrowRight className="h-3 w-3 text-zinc-500 shrink-0" />
                 <span className="text-zinc-300">[Story Build-up & Payoff]</span>
               </div>
             </div>
@@ -929,9 +940,9 @@ export default function SettingsPage() {
               </p>
               <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 bg-black/40 rounded-lg p-2 border border-white/5 font-mono">
                 <span className="text-violet-400 font-bold">[0s: Start]</span>
-                <span>➔</span>
+                <ArrowRight className="h-3 w-3 text-zinc-500 shrink-0" />
                 <span className="text-zinc-300">[Progression]</span>
-                <span>➔</span>
+                <ArrowRight className="h-3 w-3 text-zinc-500 shrink-0" />
                 <span className="text-emerald-400">[Payoff]</span>
               </div>
             </div>

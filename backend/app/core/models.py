@@ -120,15 +120,16 @@ class Job(Base):
     progress: Mapped[float] = mapped_column(Float, default=0.0)
     burn_captions: Mapped[bool] = mapped_column(Boolean, default=True)
     remove_dead_air: Mapped[bool] = mapped_column(Boolean, default=True)
-    framing_mode: Mapped[str] = mapped_column(String(32), default="crop_9_16")  # "crop_9_16", "blur_fit_9_16", "original_16_9"
+    framing_mode: Mapped[str] = mapped_column(String(32), default="blur_fit_9_16")  # "blur_fit_9_16", "crop_9_16", "original_16_9"
     canvas_background: Mapped[str] = mapped_column(String(32), default="blur")  # blur, black, white, gradient_obsidian, gradient_violet, gradient_sunset, gradient_ocean
     blur_radius: Mapped[int] = mapped_column(Integer, default=30)  # 10..80
-    subtitle_position: Mapped[int] = mapped_column(Integer, default=75)  # 10..90 percent from top
-    add_hook_header: Mapped[bool] = mapped_column(Boolean, default=False)  # Sticky TikTok hook header
+    subtitle_position: Mapped[int] = mapped_column(Integer, default=78)  # 10..90 percent from top
+    add_hook_header: Mapped[bool] = mapped_column(Boolean, default=True)  # Sticky TikTok hook header
     hook_header_position: Mapped[int] = mapped_column(Integer, default=12)  # 8..90 percent from top
     hook_header_style: Mapped[str] = mapped_column(String(64), default="viral_creator")  # viral_creator, white_box, meme, nostalgic, old_history, neon_cyber
-    remove_watermark: Mapped[bool] = mapped_column(Boolean, default=False)  # Delogo / erase watermark
-    watermark_position: Mapped[str] = mapped_column(String(32), default="top_right")  # "top_right", "bottom_right", "top_left", "bottom_left", "tiktok_bounce", "all_corners", "auto"
+    remove_watermark: Mapped[bool] = mapped_column(Boolean, default=True)  # Delogo / erase watermark
+    watermark_position: Mapped[str] = mapped_column(String(32), default="auto")  # "auto", "top_right", "bottom_right", "top_left", "bottom_left"
+    genre: Mapped[str] = mapped_column(String(64), default="documentary")
     enhance_quality: Mapped[bool] = mapped_column(Boolean, default=True)  # Studio color & detail boost
     hook_strategy: Mapped[str] = mapped_column(String(32), default="teaser_climax_hook")  # "teaser_climax_hook" | "direct_chronological"
     part_badge_position: Mapped[int] = mapped_column(Integer, default=6)  # 4..92 percent from top

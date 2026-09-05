@@ -72,6 +72,14 @@ NOSTALGIA_KEYWORDS = [
     "nostalgic", "throwback", "old school", "used to have", "can't believe we"
 ]
 
+# Documentary, True Crime & Investigative Mystery
+DOCUMENTARY_KEYWORDS = [
+    "unthinkable", "mystery", "police", "detective", "evidence", "witness", "murder",
+    "fbi", "confession", "interrogation", "secret", "truth", "discovered", "realized",
+    "caught", "suspect", "tragedy", "nightmare", "expose", "felony", "arrested",
+    "victim", "investigation", "crime", "alibi", "guilty", "trial", "sentence", "prison"
+]
+
 # Penalties for slow, boring, calm introductions in the first 10 seconds
 CALM_INTRO_PENALTIES = [
     "welcome back", "hey guys", "hey everyone", "in this video", "today we are",
@@ -234,6 +242,12 @@ class AudioHookAnalyzer:
         if nostalgia_hits:
             score += min(16.0, 10.0 + len(nostalgia_hits) * 3.0)
             reasons.append("Nostalgia recognition hook")
+
+        # 6. Documentary, True Crime & Investigative Revelations
+        doc_hits = [w for w in DOCUMENTARY_KEYWORDS if w in lower]
+        if doc_hits:
+            score += min(20.0, 12.0 + len(doc_hits) * 3.0)
+            reasons.append(f"Documentary/investigative hook ('{doc_hits[0]}')")
 
         # 6. High-Intensity Emotional Triggers
         retention_hits = [w for w in HIGH_RETENTION_KEYWORDS if w in lower]
@@ -494,8 +508,8 @@ class AudioHookAnalyzer:
             target_min, target_max = 28.0, 48.0
         elif "45-60" in duration_target:
             target_min, target_max = 42.0, 62.0
-        elif "60-90" in duration_target:
-            target_min, target_max = 58.0, 95.0
+        elif "60-90" in duration_target or "60-70" in duration_target or "60" in duration_target:
+            target_min, target_max = 58.0, 75.0
 
         total_dur = float(media_info.get("duration_seconds") or 60.0)
         target_min = min(target_min, max(3.0, total_dur * 0.4))

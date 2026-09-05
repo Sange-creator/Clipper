@@ -64,7 +64,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
   // V3 Discovery & Batch Processing Settings
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
-  const [genre, setGenre] = useState<VideoGenre>("auto");
+  const [genre, setGenre] = useState<VideoGenre>("documentary");
   const [enableSeriesParts, setEnableSeriesParts] = useState<boolean>(true);
   const [partBadgePosition, setPartBadgePosition] = useState<number>(6);
   const [partBadgeAlign, setPartBadgeAlign] = useState<"center" | "left" | "right">("center");
@@ -73,17 +73,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>("viral_creator");
-  const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
-  const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">("top_right");
+  const [removeWatermark, setRemoveWatermark] = useState<boolean>(true);
+  const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left" | "auto">("auto");
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
-  const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
+  const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("blur_fit_9_16");
   const [canvasBackground, setCanvasBackground] = useState<"blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean">("blur");
   const [blurRadius, setBlurRadius] = useState<number>(30);
-  const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
+  const [subtitlePosition, setSubtitlePosition] = useState<number>(78);
   const [hookStrategy, setHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
-  const [targetClips, setTargetClips] = useState(20);
-  const [durationPreset, setDurationPreset] = useState("30-45s");
+  const [targetClips, setTargetClips] = useState(5);
+  const [durationPreset, setDurationPreset] = useState("60-90s");
   const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_rounded_box");
   const [diversityWeight, setDiversityWeight] = useState(0.35);
   const [isStartingJob, setIsStartingJob] = useState(false);
@@ -526,6 +526,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {[
+                  {
+                    id: "documentary",
+                    label: "Documentary & Crime Mystery",
+                    desc: "Gripping true crime, investigative revelations, shocking twists, and untold secrets",
+                    icon: Film,
+                    color: "text-red-400",
+                  },
                   {
                     id: "auto",
                     label: "Auto-Detect / Any Genre",

@@ -440,3 +440,63 @@
   - `frontend/src/lib/types.ts`
   - `SESSION_TRACKER.md`
 
+---
+
+### Session 12: Fix Subtitle & Hook Margin Collisions, Zero-Emoji Settings UI & System Defaults (Documentary, Blurred Canvas, 60-70s, 5 Clips)
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"Look, there is a UI preferences, or what do you call it, and there's UI box and please fix it. And the another problem is that the caption is not still being shown, man. What the heck is going on? The captions in the screen is not being shown. I think the analysis part is being broken or something like that. Please debug the issues and then fix the issues, okay? Another thing is that, please keep documentary and then blur the blur or remove the caps, remove the what? Logos, watermarks, and then 60 to 70 second long, subtitle on, part one, part two on, captions on. Okay, as a default. And the video number of videos, clips, 5 video clips, default, okay? But the user must be able to select any or change those settings they like before rendering or before detecting the clips and then giving to the app."*
+
+- **Root Cause Analysis & Discoveries**:
+  1. **Subtitle & Hook Header Collision (CRITICAL GEOMETRY BUG)**:
+     - In `captioner.py`, HookHeader used Alignment 8 (Top Center). In ASS format, Alignment 8 measures `MarginV` from the **TOP** edge of the 1080x1920 canvas.
+     - However, `captioner.py` calculated: `hook_margin_v = max(60, min(1780, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))`.
+     - When `hook_pos_pct = 12` (12% from top), it produced `MarginV = 1689`! Because alignment was 8, ASS pushed the Hook Header **1689 pixels down from the top edge into the bottom canvas**!
+     - As a result, the entire top canvas was completely black/empty, while the Hook Header, Series Badge, and spoken dialogue karaoke captions were piled on top of each other between Y=1229 and Y=1459 at the bottom edge, colliding directly with mobile player controls and with the source video's own hardcoded subtitles.
+  2. **Zero-Emoji Policy Violation on `/settings`**:
+     - `frontend/src/app/settings/page.tsx` contained raw Unicode emojis (`⚡`, `▶`, `➔`) violating the UI Guidelines.
+  3. **Defaults Mismatch**:
+     - System previously defaulted to 10/20 clips, `crop_9_16`, `30-45s`, `remove_watermark: false`, and genre `auto`/`podcast` instead of the user's preferred defaults: **Documentary genre, 16:9 in 9:16 Blurred Canvas, Delogo/Watermark removal ON, 60-70s duration range, and 5 video clips**.
+
+- **Changes & Deliverables**:
+  1. **Fixed ASS Subtitle Coordinate Geometry**:
+     - Updated `captioner.py`:
+       - If `hook_pos_pct <= 50`, `hook_align = 8` and `hook_margin_v = max(40, min(1800, int(1920 * (hook_pos_pct / 100.0))))` (e.g. 12% = 230px from top).
+       - If `hook_pos_pct > 50`, `hook_align = 2` and `hook_margin_v = max(40, min(1800, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))`.
+       - In `ass_header`, used `{hook_align}` dynamically.
+       - Result: `PART 1` sits at Y=115px (Top Center), `HookHeader` sits at Y=230px (Top Center Headline), centered 16:9 video sits at Y=656-1264px, and spoken karaoke captions sit at Y=1498px in the bottom blurred canvas with zero collisions.
+  2. **Fixed Settings UI Preferences & Zero-Emoji Compliance**:
+     - In `frontend/src/app/settings/page.tsx`:
+       - Replaced raw `⚡` in title and cards with Lucide `<Zap />`.
+       - Replaced `▶` with Lucide `<Play />`.
+       - Replaced `➔` with Lucide `<ArrowRight />`.
+  3. **Updated System Defaults Across Frontend & Backend**:
+     - **Default Genre**: `documentary` (supported in AI prompts, heuristic discovery, `audio_analyzer.py` keyword scoring, and UI selectors).
+     - **Default Framing**: `blur_fit_9_16` ("16:9 in 9:16 (Blurred Canvas)", keeping the complete video centered with frosted blur).
+     - **Default Watermark Removal**: `remove_watermark = true`, `watermark_position = "auto"` (clean delogo filter active by default).
+     - **Default Duration**: `60-90s` (targeting 58.0 to 75.0s, covering 60 to 70 seconds).
+     - **Default Target Clips**: `5` clips (updated in `VideoUploader.tsx`, `projects/[id]/page.tsx`, `schemas.py`, and `pipeline.py`).
+     - **Default Captions & Series**: `burn_captions = true`, `add_hook_header = true`, `enableSeriesParts = true`.
+     - **Full User Customizability**: Maintained interactive controls so the user can easily customize any of these settings on the upload dropzone, single video page, and project page prior to running detection or rendering.
+  4. **Verification & Testing**:
+     - Extracted frame at 1.5s from newly rendered clip (`/tmp/test_rendered_frame.png`) and verified with visual inspection: `PART 1` at top, Hook Header in upper canvas, blurred background active, and karaoke captions clean in lower canvas.
+     - Ran complete backend test suite: **44/44 tests passed**.
+     - Compiled Next.js frontend with 0 errors.
+     - Deployed live to primary production Vercel: `https://ai-clipper-pro.vercel.app/`.
+
+- **Files Modified**:
+  - `backend/app/api/routes/jobs.py`
+  - `backend/app/config.py`
+  - `backend/app/core/models.py`
+  - `backend/app/core/schemas.py`
+  - `backend/app/services/ai/prompt_templates.py`
+  - `backend/app/services/media/audio_analyzer.py`
+  - `backend/app/services/media/captioner.py`
+  - `backend/app/services/pipeline/pipeline.py`
+  - `frontend/src/app/projects/[id]/page.tsx`
+  - `frontend/src/app/settings/page.tsx`
+  - `frontend/src/components/upload/VideoUploader.tsx`
+  - `frontend/src/lib/types.ts`
+  - `SESSION_TRACKER.md`
+
+

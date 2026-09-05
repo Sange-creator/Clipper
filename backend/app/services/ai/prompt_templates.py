@@ -2,6 +2,12 @@
 
 # Genre-Specific Discovery Rules
 GENRE_DIRECTIVES = {
+    "documentary": """
+GENRE FOCUS: DOCUMENTARY / INVESTIGATIVE / HISTORICAL & TRUE CRIME
+- Look for gripping narrative arcs, compelling investigative revelations, shocking twists in real events, untold secrets, and dramatic turning points.
+- Prioritize story completeness with emotional or intellectual payoff: the setup of an unbelievable event, the escalation, and the powerful resolution.
+- The opening 10 seconds MUST deliver a hypnotic hook: an intriguing mystery, a profound question, or an extraordinary fact that compels the viewer to stay until the end.
+""",
     "action_chase_pov": """
 GENRE FOCUS: ACTION / POLICE BODYCAM / RUNNER POV / CYCLE CHASE
 - Look for adrenaline-pumping moments: shouting, sirens, sudden acceleration, foot chases, bike maneuvers, suspects fleeing, tactical commands ("STOP!", "GET DOWN!", "DROP IT!").

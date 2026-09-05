@@ -226,10 +226,10 @@ class VideoProcessingPipeline:
                 return
 
             config = json.loads(job.config_json or "{}")
-            requested_clips = config.get("target_clips_count", 10)
-            requested_clips = config.get("target_clips_count", 10)
+            requested_clips = config.get("target_clips_count", 5)
             mode = config.get("mode", getattr(job, "mode", "podcast"))
-            duration_preset = config.get("duration_preset", "30-45s")
+            duration_preset = config.get("duration_preset", "60-90s")
+            video_genre = config.get("genre") or getattr(job, "genre", None) or "documentary"
             ai_provider_name = config.get("ai_provider")
             caption_style = config.get("caption_style", "tiktok_viral")
             burn_captions = config.get("burn_captions", getattr(job, "burn_captions", True))
@@ -357,7 +357,7 @@ class VideoProcessingPipeline:
                     "width": video.width,
                     "height": video.height,
                     "video_title": video.filename,
-                    "genre": config.get("genre") or mode or "viral_moments",
+                    "genre": video_genre,
                     "filename": video.filename,
                 }
                 raw_candidates = await candidate_discovery_service.discover_candidates(
@@ -507,11 +507,13 @@ class VideoProcessingPipeline:
                     )
                     hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand_summary_hint)
 
-                    job_framing_mode = getattr(job, "framing_mode", None) or "crop_9_16"
+                    job_framing_mode = getattr(job, "framing_mode", None) or settings.DEFAULT_FRAMING_MODE
                     job_canvas_background = getattr(job, "canvas_background", None) or "blur"
                     job_blur_radius = getattr(job, "blur_radius", None) or 30
-                    job_remove_watermark = getattr(job, "remove_watermark", False) or False
-                    job_watermark_position = getattr(job, "watermark_position", None) or "top_right"
+                    job_remove_watermark = getattr(job, "remove_watermark", True)
+                    if job_remove_watermark is None:
+                        job_remove_watermark = True
+                    job_watermark_position = getattr(job, "watermark_position", None) or "auto"
                     job_enhance_quality = getattr(job, "enhance_quality", True)
                     if job_enhance_quality is None:
                         job_enhance_quality = True
@@ -554,10 +556,7 @@ class VideoProcessingPipeline:
                     # FFmpeg render
                     out_video_path = settings.PROCESSED_DIR / f"{clip_id}.mp4"
 
-                    if out_video_path.exists() and out_video_path.stat().st_size > 50000:
-                        logger.info(f"Clip {clip_id} already rendered ({out_video_path.stat().st_size} bytes), skipping render.")
-                    else:
-                        await renderer.render_clip(
+                    await renderer.render_clip(
                             source_video_path=video_path,
                             start_time=cand.start,
                             end_time=cand.end,

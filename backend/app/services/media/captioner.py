@@ -494,9 +494,14 @@ class CaptionGenerator:
         else:
             margin_v = cfg.get("margin_v", 320)
 
-        # Calculate Hook Header MarginV (default 12% from top -> margin_v ~ 1689 from bottom)
+        # Calculate Hook Header Margin and Alignment (Alignment 8 = Top Center, Alignment 2 = Bottom Center)
         hook_pos_pct = max(8, min(90, hook_header_position if hook_header_position is not None else 12))
-        hook_margin_v = max(60, min(1780, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))
+        if hook_pos_pct > 50:
+            hook_align = 2
+            hook_margin_v = max(40, min(1800, int(1920 * (1.0 - (hook_pos_pct / 100.0)))))
+        else:
+            hook_align = 8
+            hook_margin_v = max(40, min(1800, int(1920 * (hook_pos_pct / 100.0))))
 
         # Calculate Part Badge Margin and Alignment
         part_pos_pct = max(4, min(92, part_badge_position if part_badge_position is not None else 6))
@@ -573,7 +578,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Default,{font_name},{font_size},{primary_color},{secondary_color},{outline_color},{back_color},-1,0,0,0,100,100,1,0,{border_style},{outline},{shadow},2,60,60,{margin_v},1
 Style: Emphasis,{font_name},{int(font_size * 1.1)},{secondary_color},{primary_color},{outline_color},{back_color},-1,0,0,0,110,110,1,0,{border_style},{outline + 1},{shadow + 1},2,60,60,{margin_v},1
 Style: PartBadge,Arial Black,36,&H00FFFFFF&,&H0000FFFF&,&H00000000&,&H000000E6&,-1,0,0,0,100,100,1,0,3,9,0,{part_align},{part_margin_l},{part_margin_r},{part_margin_v},1
-Style: HookHeader,{hook_font},{hook_size},{hook_primary},{hook_secondary},{hook_outline},{hook_back},-1,0,0,0,100,100,1,0,{hook_border},{hook_out_px},{hook_shadow_px},8,50,50,{max(140, hook_margin_v)},1
+Style: HookHeader,{hook_font},{hook_size},{hook_primary},{hook_secondary},{hook_outline},{hook_back},-1,0,0,0,100,100,1,0,{hook_border},{hook_out_px},{hook_shadow_px},{hook_align},50,50,{hook_margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

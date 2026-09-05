@@ -43,11 +43,13 @@ import {
   AlignCenter,
   AlignRight,
   Tag,
+  ArrowRight,
+  ShieldAlert,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
 import { formatFileSize } from "@/lib/utils";
-import { CaptionStyleType, VideoInfo } from "@/lib/types";
+import { CaptionStyleType, VideoInfo, VideoGenre } from "@/lib/types";
 
 export function VideoUploader() {
   const router = useRouter();
@@ -72,13 +74,14 @@ export function VideoUploader() {
 
   // V3 Configuration Presets
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
+  const [genre, setGenre] = useState<VideoGenre>("documentary");
   const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>("viral_creator");
   const [partBadgePosition, setPartBadgePosition] = useState<number>(6);
   const [partBadgeAlign, setPartBadgeAlign] = useState<"center" | "left" | "right">("center");
-  const [removeWatermark, setRemoveWatermark] = useState<boolean>(false);
+  const [removeWatermark, setRemoveWatermark] = useState<boolean>(true);
   const [watermarkPosition, setWatermarkPosition] = useState<string>("auto");
   const [isScanningWatermark, setIsScanningWatermark] = useState<boolean>(false);
   const [watermarkScanResult, setWatermarkScanResult] = useState<{
@@ -90,13 +93,13 @@ export function VideoUploader() {
   } | null>(null);
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
-  const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
+  const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("blur_fit_9_16");
   const [canvasBackground, setCanvasBackground] = useState<"blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean">("blur");
   const [blurRadius, setBlurRadius] = useState<number>(30);
-  const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
-  const [targetClipsCount, setTargetClipsCount] = useState<number>(10);
-  const [durationPreset, setDurationPreset] = useState<"15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom">("30-45s");
-  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_viral");
+  const [subtitlePosition, setSubtitlePosition] = useState<number>(78);
+  const [targetClipsCount, setTargetClipsCount] = useState<number>(5);
+  const [durationPreset, setDurationPreset] = useState<"15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom">("60-90s");
+  const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_rounded_box");
   const [aiProvider, setAiProvider] = useState<"gemini" | "groq" | "mock" | "auto">("auto");
   const [customInstructions, setCustomInstructions] = useState<string>("");
   const [hookStrategy, setHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
@@ -185,6 +188,7 @@ export function VideoUploader() {
       const job = await api.createJob({
         video_id: uploadedVideo.id,
         mode: mode,
+        genre: genre,
         target_clips_count: targetClipsCount,
         duration_preset: durationPreset,
         caption_style: resolvedCaptionStyle,
@@ -482,7 +486,7 @@ export function VideoUploader() {
                   <span className="text-amber-400 font-semibold flex items-center gap-1">
                     <Zap className="h-3 w-3 fill-amber-400/30" /> 0–5s Climax Teaser
                   </span>
-                  <span className="text-zinc-500">➔</span>
+                  <ArrowRight className="h-3 w-3 text-zinc-500 shrink-0" />
                   <span className="text-violet-300 font-semibold">Story Context & Payoff</span>
                 </div>
                 <div className="grid grid-cols-4 gap-1.5 h-2 rounded-full overflow-hidden bg-black/40 p-0.5 border border-white/5">
@@ -548,9 +552,9 @@ export function VideoUploader() {
                   <span className="text-cyan-400 font-semibold flex items-center gap-1">
                     <Play className="h-3 w-3 fill-cyan-400/30" /> Natural Opening
                   </span>
-                  <span className="text-zinc-500">➔</span>
+                  <ArrowRight className="h-3 w-3 text-zinc-500 shrink-0" />
                   <span className="text-zinc-300 font-semibold">Progression</span>
-                  <span className="text-zinc-500">➔</span>
+                  <ArrowRight className="h-3 w-3 text-zinc-500 shrink-0" />
                   <span className="text-emerald-400 font-semibold">Payoff</span>
                 </div>
                 <div className="grid grid-cols-3 gap-1.5 h-2 rounded-full overflow-hidden bg-black/40 p-0.5 border border-white/5">
@@ -565,6 +569,117 @@ export function VideoUploader() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* 2.5 Video Genre & 10-Second Hook Directives */}
+        <div className="glass-panel rounded-xl p-5 space-y-3.5 border border-amber-500/20 bg-gradient-to-b from-amber-950/10 to-transparent">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Flame className="h-4 w-4 text-amber-400" />
+              <div>
+                <h4 className="text-xs font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+                  Video Genre & 10s Hook Strategy
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    High Adrenaline
+                  </span>
+                </h4>
+                <p className="text-[11px] text-zinc-400">Select source video style for specialized viral candidate moment discovery</p>
+              </div>
+            </div>
+            <span className="text-[11px] font-mono px-2.5 py-1 rounded bg-zinc-900 border border-white/10 text-amber-300 font-semibold">
+              {genre === "documentary" ? "Documentary & Crime Mystery" : genre === "auto" ? "Any Genre" : genre.replace(/_/g, " ")}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            {[
+              {
+                id: "documentary",
+                label: "Documentary & Crime Mystery",
+                desc: "Gripping true crime, investigative revelations, shocking twists, and untold secrets",
+                icon: Film,
+                color: "text-red-400",
+              },
+              {
+                id: "action_chase_pov",
+                label: "Action, Police POV & Pursuits",
+                desc: "Bodycam pursuits, runner/bike POV, tackles, siren chaos, shouts, and physical adrenaline",
+                icon: ShieldAlert,
+                color: "text-rose-400",
+              },
+              {
+                id: "military_history",
+                label: "Military & History Chronicles",
+                desc: "Historic battles, tactical warfare, declassified secrets, and mind-bending historical facts",
+                icon: BookOpen,
+                color: "text-amber-400",
+              },
+              {
+                id: "nostalgia",
+                label: "Nostalgia & Retro Culture",
+                desc: "90s/2000s tech relics, discontinued childhood moments, and emotional throwback memories",
+                icon: Clock,
+                color: "text-cyan-400",
+              },
+              {
+                id: "vlog_pov",
+                label: "POV Vlog & Street Tension",
+                desc: "Chaotic public encounters, spontaneous tension, social awkwardness, and raw twists",
+                icon: Film,
+                color: "text-emerald-400",
+              },
+              {
+                id: "podcast_debate",
+                label: "Podcast & Heated Debates",
+                desc: "Polarizing hot takes, shouting clashes, explosive confessions, and hard truths",
+                icon: Mic,
+                color: "text-indigo-400",
+              },
+              {
+                id: "viral_moments",
+                label: "Climaxes & Shock Twists",
+                desc: "Crazy climaxes, sudden screams, mind-bending surprises, and viral open-loops",
+                icon: Zap,
+                color: "text-amber-400",
+              },
+              {
+                id: "auto",
+                label: "Auto-Detect / Any Genre",
+                desc: "Intelligently extracts fights, arguments, high tension, or peak moments across any topic",
+                icon: Sparkles,
+                color: "text-violet-400",
+              },
+            ].map((g) => {
+              const Icon = g.icon;
+              const isSel = genre === g.id;
+              return (
+                <div
+                  key={g.id}
+                  onClick={() => setGenre(g.id as VideoGenre)}
+                  className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${
+                    isSel
+                      ? "bg-gradient-to-r from-amber-500/15 to-violet-500/10 border-amber-500/60 ring-1 ring-amber-500/30"
+                      : "bg-white/[0.02] border-white/5 hover:border-white/20 hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <div className={`p-2 rounded-lg ${isSel ? "bg-amber-500/20 text-amber-300" : "bg-white/5 text-zinc-400"}`}>
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <span className={`text-xs font-semibold ${isSel ? "text-white" : "text-zinc-300"}`}>
+                        {g.label}
+                      </span>
+                      {isSel && <Check className="h-3.5 w-3.5 text-amber-400 shrink-0" />}
+                    </div>
+                    <p className="text-[11px] text-zinc-400 mt-0.5 leading-snug line-clamp-2">
+                      {g.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

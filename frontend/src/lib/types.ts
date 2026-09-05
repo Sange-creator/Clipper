@@ -203,6 +203,7 @@ export type CaptionStyleType =
 
 export type VideoGenre =
   | "auto"
+  | "documentary"
   | "action_chase_pov"
   | "military_history"
   | "nostalgia"
