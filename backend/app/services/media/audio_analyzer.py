@@ -247,6 +247,184 @@ class AudioHookAnalyzer:
         summary = "; ".join(reasons) if reasons else "Natural conclusion"
         return round(final_score, 1), summary
 
+    def find_peak_climax_moment(
+        self,
+        transcript_segments: List[Dict[str, Any]],
+        clip_start: float,
+        clip_end: float,
+        genre: Optional[str] = None,
+        target_climax_duration: float = 6.0,
+    ) -> Tuple[float, float, str]:
+        """
+        Locate the single most explosive 5-8 second climax/fight/chaos/argument window
+        inside the clip (preferring moments in the middle-to-end of the clip, from clip_start + 4.0 onwards).
+        Returns (climax_start, climax_end, climax_summary).
+        """
+        dur = clip_end - clip_start
+        if dur < 10.0:
+            mid = round(clip_start + dur * 0.5, 2)
+            return mid, clip_end, "Peak moment"
+
+        clip_segs = [
+            s for s in transcript_segments
+            if float(s.get("end", 0.0)) > clip_start + 3.0 and float(s.get("start", 0.0)) < clip_end
+        ]
+
+        if not clip_segs:
+            c_s = round(clip_start + dur * 0.6, 2)
+            c_e = round(min(clip_end, c_s + target_climax_duration), 2)
+            return c_s, c_e, "Climactic resolution"
+
+        best_score = -1.0
+        best_window = None
+        best_summary = "Climactic turning point"
+
+        for seg in clip_segs:
+            w_start = float(seg.get("start", clip_start))
+            if w_start < clip_start + 4.0:
+                continue
+            w_end = min(clip_end, w_start + target_climax_duration)
+            if w_end - w_start < 3.0:
+                continue
+
+            w_texts = []
+            for s in clip_segs:
+                s_s = float(s.get("start", 0.0))
+                s_e = float(s.get("end", 0.0))
+                if s_e > w_start and s_s < w_end:
+                    w_texts.append(s.get("text", ""))
+
+            combined = " ".join(w_texts).lower()
+            intensity = 50.0
+
+            chaos_hits = [k for k in CHAOS_ACTION_KEYWORDS if k in combined]
+            intensity += len(chaos_hits) * 14.0
+
+            arg_hits = [k for k in ARGUMENT_CLASH_KEYWORDS if k in combined]
+            intensity += len(arg_hits) * 12.0
+
+            exclamations = combined.count("!")
+            intensity += min(15.0, exclamations * 5.0)
+
+            ret_hits = [k for k in HIGH_RETENTION_KEYWORDS if k in combined]
+            intensity += len(ret_hits) * 8.0
+
+            w_count = len(combined.split())
+            velocity = w_count / max(1.0, w_end - w_start)
+            if velocity > 2.8:
+                intensity += 8.0
+
+            if intensity > best_score:
+                best_score = intensity
+                best_window = (round(w_start, 2), round(w_end, 2))
+                key_phrase = chaos_hits[0] if chaos_hits else (arg_hits[0] if arg_hits else "Peak climax")
+                best_summary = f"Peak intense moment ('{key_phrase}')"
+
+        if best_window and best_window[1] > best_window[0] + 2.0:
+            return best_window[0], best_window[1], best_summary
+
+        c_s = round(clip_start + dur * 0.60, 2)
+        c_e = round(min(clip_end, c_s + target_climax_duration), 2)
+        return c_s, c_e, "Climactic resolution"
+
+    def trim_calm_intro_to_hook(
+        self,
+        transcript_segments: List[Dict[str, Any]],
+        clip_start: float,
+        clip_end: float,
+        genre: Optional[str] = None,
+    ) -> float:
+        """
+        In direct chronological cut mode, ensures the clip does NOT start with calm greetings,
+        dead air, or filler pleasantries ('welcome back', 'hey guys', silence).
+        Scans opening segments and advances clip_start to the first segment that has genuine hook substance.
+        """
+        clip_segs = [
+            s for s in transcript_segments
+            if float(s.get("end", 0.0)) > clip_start and float(s.get("start", 0.0)) < min(clip_start + 14.0, clip_end)
+        ]
+
+        if not clip_segs:
+            return clip_start
+
+        for seg in clip_segs:
+            text = seg.get("text", "").strip().lower()
+            is_calm = any(calm in text for calm in CALM_INTRO_PENALTIES)
+            if is_calm:
+                continue
+
+            has_action = any(k in text for k in CHAOS_ACTION_KEYWORDS)
+            has_arg = any(k in text for k in ARGUMENT_CLASH_KEYWORDS)
+            has_q = "?" in text or any(text.startswith(q + " ") for q in HOOK_QUESTION_STARTERS)
+            has_excl = "!" in text
+            words = text.split()
+
+            if has_action or has_arg or has_q or has_excl or len(words) >= 4:
+                seg_s = float(seg.get("start", clip_start))
+                if clip_end - seg_s >= 15.0:
+                    return round(seg_s, 2)
+
+        return clip_start
+
+    def extract_hook_headline_from_script(
+        self,
+        transcript_segments: List[Dict[str, Any]],
+        clip_start: float,
+        clip_end: float,
+        genre: Optional[str] = None,
+        max_words: int = 7,
+    ) -> str:
+        """
+        Extracts an eye-catching, hooked headline directly analyzing the spoken dialogue of the clip.
+        Prefers urgent commands, questions, shocking statements, or high-intensity phrases.
+        """
+        clip_segs = [
+            s for s in transcript_segments
+            if float(s.get("end", 0.0)) > clip_start and float(s.get("start", 0.0)) < clip_end
+        ]
+
+        if not clip_segs:
+            return "WATCH TILL THE END"
+
+        best_cand = ""
+        best_score = -1.0
+
+        for seg in clip_segs:
+            raw = strip_emojis(seg.get("text", "")).strip()
+            if not raw or len(raw.split()) < 2:
+                continue
+            lower = raw.lower()
+
+            if any(c in lower for c in CALM_INTRO_PENALTIES):
+                continue
+
+            score = 10.0
+            if any(k in lower for k in CHAOS_ACTION_KEYWORDS):
+                score += 30.0
+            if any(k in lower for k in ARGUMENT_CLASH_KEYWORDS):
+                score += 28.0
+            if "?" in raw:
+                score += 20.0
+            if "!" in raw:
+                score += 15.0
+            if any(k in lower for k in HIGH_RETENTION_KEYWORDS):
+                score += 15.0
+
+            w_len = len(raw.split())
+            if 3 <= w_len <= 8:
+                score += 10.0
+
+            if score > best_score:
+                best_score = score
+                best_cand = clean_hook_title(raw, max_words=max_words).upper()
+
+        if best_cand:
+            return best_cand
+
+        first_text = strip_emojis(clip_segs[0].get("text", "")).strip()
+        cleaned = clean_hook_title(first_text, max_words=max_words).upper()
+        return cleaned if cleaned else "WATCH TILL THE END"
+
     def discover_candidates(
         self,
         transcript_segments: List[Dict[str, Any]],
@@ -355,10 +533,22 @@ class AudioHookAnalyzer:
             novelty_score = min(94.0, 72.0 + (i % 12))
             quotability_score = min(96.0, 75.0 + (payoff_score * 0.2))
 
-            c_s = round(start_time + clip_dur * 0.55, 2)
-            c_e = round(min(best_end_time, c_s + 4.0), 2)
+            # Real climax detection: Find true peak 5-7s moment of highest intensity in the clip
+            c_s, c_e, c_sum = self.find_peak_climax_moment(
+                transcript_segments=transcript_segments,
+                clip_start=start_time,
+                clip_end=best_end_time,
+                genre=active_genre,
+                target_climax_duration=6.0,
+            )
 
-            hook_title = clean_hook_title(start_text, max_words=9)
+            # Analyze authentic spoken script to produce punchy headline
+            hook_title = self.extract_hook_headline_from_script(
+                transcript_segments=transcript_segments,
+                clip_start=start_time,
+                clip_end=best_end_time,
+                genre=active_genre,
+            )
             payoff_clean = clean_hook_title(end_text, max_words=8)
 
             candidates.append(
@@ -367,7 +557,7 @@ class AudioHookAnalyzer:
                     end=round(best_end_time, 2),
                     climax_start=c_s,
                     climax_end=c_e,
-                    climax_summary=f"Climactic moment: {payoff_clean}",
+                    climax_summary=c_sum,
                     hook_score=round(hook_score, 1),
                     retention_score=round(retention_score, 1),
                     curiosity_score=round(curiosity_score, 1),
@@ -469,4 +659,5 @@ class AudioHookAnalyzer:
 
 audio_hook_analyzer = AudioHookAnalyzer()
 AudioScriptAnalyzer = AudioHookAnalyzer
+audio_analyzer = audio_hook_analyzer
 

@@ -166,3 +166,45 @@
     - `https://clipper-ai-pro.vercel.app/` -> `dpl_5nSqB6TwobY6GbuwaPBHrnGKbNcv` (HTTP/2 200 OK)
   - All multi-genre hooks, series numbering, TikTok rounded box subtitles, and Graphify integrations are live.
 
+---
+
+### Session 5: Dual Captions (Part 1..N + Script Headline) & Teaser Climax Timeline Splicing
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"in the cpations, when 4 clips are chosen by the user, part 1, part2, 3, and 4 are not being shown at the captions.*
+  > *one captions must be part 1,2,3,4*
+  > *another captions must be related with the clips(analyze the audio script, and write the captions).*
+  > *also the clips that u just generated have no hook at the starting 10s at all, if i have selected If I have selected 5-second climax teaser, then what it is to is suppose the clipped video is about 50 second long, okay? And in the middle of somewhere there is intense 10-second hook, then you have to cut that part and then bring it to the first 10-second part, and then the video must gradually go on to meet that cut part, okay? That cut part must be again shown at the later video. And another section is that direct chronological cut, and then in in this case the direct the direct 10-second clips must be shown at the first second video, at the first 10 second and the video must go on. And the you the technique the technique and the the technique and the method that you have used to extract the hook is not properly appropriate and is not properly working. The clips that you have generated have no hooks at all. Please update the method and use the best method you can."*
+
+- **Changes & Deliverables**:
+  1. **Dual On-Screen Captions with Explicit Series Numbering**:
+     - Layer 2 (`PartBadge`): Displays `PART 1/4`, `PART 2/4`, etc. in a dedicated, high-contrast on-screen pill badge (`Style: PartBadge`, top-center `MarginV: 75`).
+     - Layer 1 (`HookHeader`): Dynamically extracts and writes punchy, hook headlines analyzing the spoken dialogue of the audio script (`extract_hook_headline_from_script`). In teaser mode, shows `WAIT FOR IT...` during the teaser climax, then transitions to the authentic script hook title during the story.
+     - Layer 0: Spoken word-level karaoke subtitles with word highlights.
+  2. **5-Second Climax Teaser Hook Timeline Splicing (`teaser_climax_hook`)**:
+     - Implemented `find_peak_climax_moment`: Detects the single most intense 5-8 second climax/fight/chaos/argument window in the middle/later part of the clip (`clip_start + 4.0` onwards).
+     - Slices that climax moment to 0:00 as an opening teaser hook, then seamlessly plays the full chronological story from `cand.start` to `cand.end` to meet that cut again (`keep = [[climax_start, climax_end], [cand.start, cand.end]]`).
+  3. **Direct Chronological Cut (`direct_chronological`)**:
+     - Implemented `trim_calm_intro_to_hook`: Strips calm intro greetings (*"welcome back"*, *"hey guys"*, silence) and starts immediately at 0:00 on the intense hook sentence.
+  4. **Frontend Hook Strategy Selector**:
+     - Added 2-column card selector for Hook Extraction Strategy in Tab 2 of `frontend/src/app/projects/[id]/page.tsx` adhering to the zero-emoji policy and dark-mode obsidian aesthetic.
+     - Wired `hook_strategy` into `api.processProject`.
+  5. **Subtitle Retiming Multi-Interval Bug Fix**:
+     - Fixed bug where `renderer.py` called `retime_ass_subtitles` on subtitle files that were already retimed with `keep_intervals`, which squashed timestamps to 0.0.
+  6. **Pipeline Integration**:
+     - Wired `resolve_clip_timeline_and_hook` into both single-video (`process_video_pipeline`) and multi-video project batch (`process_project_pipeline`).
+  7. **Testing & Knowledge Graph**:
+     - Added `test_four_clips_part_badges_and_audio_script_hook_captions` verifying 4-clip series part badges, script headlines, and teaser interval splicing.
+     - 41/41 pytest tests passing (100%).
+     - Frontend `npx tsc --noEmit` passed with 0 errors.
+     - `graphify update .` synced knowledge graph (1,221 nodes, 1,649 edges, 113 communities).
+
+- **Files Modified**:
+  - `backend/app/services/media/audio_analyzer.py`
+  - `backend/app/services/media/captioner.py`
+  - `backend/app/services/media/renderer.py`
+  - `backend/app/services/pipeline/pipeline.py`
+  - `backend/tests/test_hook_strategy.py`
+  - `frontend/src/app/projects/[id]/page.tsx`
+  - `SESSION_TRACKER.md`
+

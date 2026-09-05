@@ -518,7 +518,8 @@ PlayResY: 1920
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Default,{font_name},{font_size},{primary_color},{secondary_color},{outline_color},{back_color},-1,0,0,0,100,100,1,0,{border_style},{outline},{shadow},2,60,60,{margin_v},1
 Style: Emphasis,{font_name},{int(font_size * 1.1)},{secondary_color},{primary_color},{outline_color},{back_color},-1,0,0,0,110,110,1,0,{border_style},{outline + 1},{shadow + 1},2,60,60,{margin_v},1
-Style: HookHeader,{hook_font},{hook_size},{hook_primary},{hook_secondary},{hook_outline},{hook_back},-1,0,0,0,100,100,1,0,{hook_border},{hook_out_px},{hook_shadow_px},2,50,50,{hook_margin_v},1
+Style: PartBadge,Arial Black,36,&H00FFFFFF&,&H0000FFFF&,&H00000000&,&H000000E6&,-1,0,0,0,100,100,1,0,3,9,0,8,40,40,75,1
+Style: HookHeader,{hook_font},{hook_size},{hook_primary},{hook_secondary},{hook_outline},{hook_back},-1,0,0,0,100,100,1,0,{hook_border},{hook_out_px},{hook_shadow_px},8,50,50,{max(140, hook_margin_v)},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -528,19 +529,40 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         total_duration = sum(max(0.0, e - s) for s, e in intervals)
         dialogue_lines: List[str] = []
 
-        # 1. Add persistent TikTok Hook Header on Layer 1 throughout entire video
-        if add_hook_header and hook_header_text:
-            raw_hook = hook_header_text
-            if part_index and total_parts:
-                raw_hook = f"PART {part_index}/{total_parts} • {hook_header_text}"
-            elif part_index:
-                raw_hook = f"PART {part_index} • {hook_header_text}"
-            formatted_hook = format_tiktok_hook_header(raw_hook)
+        # 1. Add dedicated on-screen Part Badge on Layer 2 (e.g. "PART 1/4" or "PART 1")
+        if part_index and (total_parts or add_hook_header):
+            part_str = f"PART {part_index}/{total_parts}" if total_parts and total_parts > 1 else f"PART {part_index}"
             start_str = self.format_timestamp_ass(0.0)
             end_str = self.format_timestamp_ass(max(0.5, total_duration))
             dialogue_lines.append(
-                f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
+                f"Dialogue: 2,{start_str},{end_str},PartBadge,,0,0,0,,{part_str}"
             )
+
+        # 2. Add dedicated on-screen Hook Title on Layer 1 (analyzed from audio script)
+        should_render_hook = (add_hook_header or (total_parts and total_parts > 1)) and hook_header_text
+        if should_render_hook:
+            # If multi-interval teaser is active (first interval is 3-8s teaser):
+            if len(intervals) > 1 and intervals[0] != intervals[-1]:
+                teaser_dur = max(0.5, intervals[0][1] - intervals[0][0])
+                t_end_str = self.format_timestamp_ass(teaser_dur)
+                total_end_str = self.format_timestamp_ass(max(0.5, total_duration))
+
+                # During teaser (0.0 to teaser_dur): show eye-catching teaser cue
+                dialogue_lines.append(
+                    f"Dialogue: 1,{self.format_timestamp_ass(0.0)},{t_end_str},HookHeader,,0,0,0,,WAIT FOR IT..."
+                )
+                # During main story (teaser_dur to end): show authentic hook title from script
+                formatted_hook = format_tiktok_hook_header(hook_header_text)
+                dialogue_lines.append(
+                    f"Dialogue: 1,{t_end_str},{total_end_str},HookHeader,,0,0,0,,{formatted_hook}"
+                )
+            else:
+                formatted_hook = format_tiktok_hook_header(hook_header_text)
+                start_str = self.format_timestamp_ass(0.0)
+                end_str = self.format_timestamp_ass(max(0.5, total_duration))
+                dialogue_lines.append(
+                    f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
+                )
 
         # 2. Add animated spoken karaoke subtitles on Layer 0 across all intervals
         cumulative_time = 0.0

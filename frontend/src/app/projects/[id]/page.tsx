@@ -71,6 +71,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("crop_9_16");
   const [blurRadius, setBlurRadius] = useState<number>(30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(75);
+  const [hookStrategy, setHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
   const [targetClips, setTargetClips] = useState(20);
   const [durationPreset, setDurationPreset] = useState("30-45s");
   const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_rounded_box");
@@ -139,6 +140,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         framing_mode: framingMode,
         blur_radius: blurRadius,
         subtitle_position: subtitlePosition,
+        hook_strategy: hookStrategy,
         reframing_mode: "center_crop",
         source_diversity_weight: diversityWeight,
       });
@@ -578,6 +580,63 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                     </button>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Hook Extraction Strategy Selector */}
+            <div className="space-y-3 pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-semibold text-white flex items-center gap-1.5">
+                    <Scissors className="h-3.5 w-3.5 text-rose-400" /> Hook Extraction Strategy
+                  </label>
+                  <p className="text-[11px] text-zinc-400">Controls how the first 10 seconds hook the viewer into the clip</p>
+                </div>
+                <span className="text-[9px] font-mono uppercase bg-rose-500/10 text-rose-300 border border-rose-500/20 px-2 py-0.5 rounded">
+                  {hookStrategy === "teaser_climax_hook" ? "5s Climax Teaser" : "Direct Chronological"}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setHookStrategy("teaser_climax_hook")}
+                  className={`rounded-xl p-3.5 text-left border transition-all ${
+                    hookStrategy === "teaser_climax_hook"
+                      ? "bg-rose-500/15 border-rose-500 text-white shadow-sm"
+                      : "bg-white/[0.02] border-white/10 text-zinc-400 hover:border-white/20 hover:text-zinc-200"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-1.5 font-bold text-xs text-white">
+                      <Zap className="h-3.5 w-3.5 text-rose-400" /> 5-Second Climax Teaser
+                    </div>
+                    {hookStrategy === "teaser_climax_hook" && <Check className="h-3 w-3 text-rose-400" />}
+                  </div>
+                  <p className="text-[10px] text-zinc-400 leading-relaxed">
+                    Slices intense peak climax from the middle, moves it to 0:00 as an opening teaser hook, then plays the full story to meet that cut again.
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setHookStrategy("direct_chronological")}
+                  className={`rounded-xl p-3.5 text-left border transition-all ${
+                    hookStrategy === "direct_chronological"
+                      ? "bg-amber-500/15 border-amber-500 text-white shadow-sm"
+                      : "bg-white/[0.02] border-white/10 text-zinc-400 hover:border-white/20 hover:text-zinc-200"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-1.5 font-bold text-xs text-white">
+                      <Flame className="h-3.5 w-3.5 text-amber-400" /> Direct Chronological Cut
+                    </div>
+                    {hookStrategy === "direct_chronological" && <Check className="h-3 w-3 text-amber-400" />}
+                  </div>
+                  <p className="text-[10px] text-zinc-400 leading-relaxed">
+                    Trims all calm intro pleasantries and dead space. Starts instantly at 0:00 on the intense hook sentence and flows forward.
+                  </p>
+                </button>
               </div>
             </div>
 

@@ -25,6 +25,7 @@ from app.core.models import (
 from app.services.ai.factory import get_ai_provider
 from app.services.ai.scoring import scorer
 from app.services.media.audio import audio_service
+from app.services.media.audio_analyzer import audio_analyzer, strip_emojis
 from app.services.media.captioner import captioner
 from app.services.media.inspector import inspector
 from app.services.media.reframing import reframer
@@ -63,6 +64,75 @@ STAGES = [
     (20, "Store results"),
     (21, "Mark job complete"),
 ]
+
+
+def resolve_clip_timeline_and_hook(
+    cand: Any,
+    raw_segments: List[Dict[str, Any]],
+    silence_intervals: List[List[float]],
+    hook_strategy: str,
+    remove_dead_air: bool,
+    genre: Optional[str] = None,
+    video_duration: Optional[float] = None,
+) -> tuple[TimelineEdit, str]:
+    """
+    Constructs the clip timeline and script-analyzed hook headline based on user hook strategy:
+    - 'teaser_climax_hook': Cuts a 5-8s intense climax from the middle/later part of the clip
+      and places it at 0:00 as a teaser hook, followed by the chronological story meeting the cut again.
+    - 'direct_chronological' / 'direct_hook': Trims calm intro fluff (greetings, silence, pleasantries)
+      so the video opens immediately on an intense hooked line.
+    """
+    if video_duration and video_duration > 0:
+        cand.start = round(max(0.0, min(cand.start, max(0.0, video_duration - 0.5))), 2)
+        cand.end = round(min(video_duration, max(cand.start + 0.5, cand.end)), 2)
+
+    # If direct chronological, trim calm intro pleasantries from the start
+    if hook_strategy in ("direct_chronological", "direct_hook"):
+        trimmed_start = audio_analyzer.trim_calm_intro_to_hook(raw_segments, cand.start, cand.end, genre)
+        if trimmed_start > cand.start and (cand.end - trimmed_start) >= 12.0:
+            cand.start = round(trimmed_start, 2)
+
+    # Base story intervals
+    if remove_dead_air:
+        base_edit = silence_detector.build_edited_timeline(cand.start, cand.end, silence_intervals)
+        story_intervals = list(base_edit.keep)
+        dead_air_sec = base_edit.dead_air_removed_seconds
+    else:
+        story_intervals = [[cand.start, cand.end]]
+        dead_air_sec = 0.0
+
+    final_keep = list(story_intervals)
+
+    if hook_strategy == "teaser_climax_hook":
+        c_start = getattr(cand, "climax_start", None)
+        c_end = getattr(cand, "climax_end", None)
+
+        if c_start is None or float(c_start) < cand.start + 3.0:
+            c_start, c_end, _ = audio_analyzer.find_peak_climax_moment(raw_segments, cand.start, cand.end, genre)
+
+        if c_start is not None and c_end is not None:
+            s = max(cand.start, float(c_start))
+            e = min(cand.end, max(s + 4.0, float(c_end)))
+            if e - s > 7.5:
+                e = s + 7.5
+            if s >= cand.start + 3.0 and (e - s) >= 2.5:
+                teaser_interval = [round(s, 2), round(e, 2)]
+                final_keep = [teaser_interval] + story_intervals
+
+    t_edit = TimelineEdit(
+        source_start=cand.start,
+        source_end=cand.end,
+        keep=final_keep,
+        dead_air_removed_seconds=dead_air_sec,
+    )
+
+    # Extract script-analyzed headline directly from spoken dialogue
+    headline = audio_analyzer.extract_hook_headline_from_script(raw_segments, cand.start, cand.end, genre)
+    if not headline or headline == "WATCH TILL THE END":
+        raw = cand.hook_summary or cand.reason or ""
+        headline = strip_emojis(raw).strip() or "WATCH TILL THE END"
+
+    return t_edit, headline
 
 
 class VideoProcessingPipeline:
@@ -344,44 +414,19 @@ class VideoProcessingPipeline:
                 await self.update_job_progress(session, job, 15, f"Finalizing clip boundaries for top {len(ranked_clips)} clips")
                 candidate_records: List[ClipCandidate] = []
                 timeline_edits: List[TimelineEdit] = []
-                # Default to direct_hook so the clip opens cleanly on the detected hook sentence
-                job_hook_strat = getattr(job, "hook_strategy", None) or "direct_hook"
+                # Default to teaser_climax_hook or user selection
+                job_hook_strat = getattr(job, "hook_strategy", None) or "teaser_climax_hook"
+                video_genre = getattr(job, "genre", None) or getattr(video, "genre", None)
 
                 for cand, comp_score, penalty, rank in ranked_clips:
-                    # Clamp candidate boundaries to actual video duration
-                    if video.duration_seconds and video.duration_seconds > 0:
-                        cand.start = round(max(0.0, min(cand.start, max(0.0, video.duration_seconds - 0.5))), 2)
-                        cand.end = round(min(video.duration_seconds, max(cand.start + 0.5, cand.end)), 2)
-
-                    if remove_dead_air:
-                        base_edit = silence_detector.build_edited_timeline(cand.start, cand.end, silence_intervals)
-                        story_intervals = list(base_edit.keep)
-                        dead_air_sec = base_edit.dead_air_removed_seconds
-                    else:
-                        story_intervals = [[cand.start, cand.end]]
-                        dead_air_sec = 0.0
-
-                    final_keep = list(story_intervals)
-                    # Only apply teaser climax when explicitly requested AND with a verified climax timestamp
-                    if job_hook_strat == "teaser_climax_hook":
-                        dur = cand.end - cand.start
-                        c_start = getattr(cand, "climax_start", None)
-                        c_end = getattr(cand, "climax_end", None)
-
-                        if c_start is not None and c_end is not None and float(c_end) > float(c_start) + 1.5:
-                            s = max(cand.start, float(c_start))
-                            e = min(cand.end, max(s + 3.0, float(c_end)))
-                            if e - s > 4.5:
-                                e = s + 4.5
-                            if s >= cand.start + 3.0 and (e - s) >= 2.0:
-                                teaser_interval = [round(s, 2), round(e, 2)]
-                                final_keep = [teaser_interval] + story_intervals
-
-                    t_edit = TimelineEdit(
-                        source_start=cand.start,
-                        source_end=cand.end,
-                        keep=final_keep,
-                        dead_air_removed_seconds=dead_air_sec,
+                    t_edit, _ = resolve_clip_timeline_and_hook(
+                        cand=cand,
+                        raw_segments=raw_segments,
+                        silence_intervals=silence_intervals,
+                        hook_strategy=job_hook_strat,
+                        remove_dead_air=remove_dead_air,
+                        genre=video_genre,
+                        video_duration=video.duration_seconds,
                     )
                     timeline_edits.append(t_edit)
 
@@ -438,13 +483,15 @@ class VideoProcessingPipeline:
                     srt_path = settings.SUBTITLE_DIR / f"{clip_id}.srt"
                     job_sub_pos = getattr(job, "subtitle_position", None) or 75
                     job_add_hook = getattr(job, "add_hook_header", False)
-                    job_hook_pos = getattr(job, "hook_header_position", None) or 12
-                    job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
-                    raw_hook = cand.hook_summary or cand.reason or ""
-                    from app.services.media.audio_analyzer import strip_emojis
-                    hook_title_text = strip_emojis(raw_hook)
                     part_idx = idx
                     tot_parts = len(ranked_clips)
+                    if tot_parts > 1:
+                        job_add_hook = True
+                    job_hook_pos = getattr(job, "hook_header_position", None) or 12
+                    job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
+
+                    script_headline = audio_analyzer.extract_hook_headline_from_script(raw_segments, cand.start, cand.end, video_genre)
+                    hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand.hook_summary or cand.reason or "")
 
                     captioner.generate_ass(
                         raw_segments,
@@ -759,16 +806,24 @@ class VideoProcessingPipeline:
             v = next(vid for vid in project_videos if vid.id == v_id)
             v_path = Path(v.file_path)
 
+            t_stmt = select(Transcript).where(Transcript.video_id == v.id)
+            t_res = await session.execute(t_stmt)
+            tr = t_res.scalar_one_or_none()
+            segs = json.loads(tr.segments_json) if tr else []
+
             silences = video_silences_map.get(v.id, [])
-            if remove_dead_air:
-                t_edit = silence_detector.build_edited_timeline(cand.start, cand.end, silences)
-            else:
-                t_edit = TimelineEdit(
-                    source_start=cand.start,
-                    source_end=cand.end,
-                    keep=[[cand.start, cand.end]],
-                    dead_air_removed_seconds=0.0,
-                )
+            v_genre = getattr(v, "genre", None) or getattr(job, "genre", None)
+            job_hook_strat = getattr(job, "hook_strategy", None) or "teaser_climax_hook"
+
+            t_edit, hook_headline = resolve_clip_timeline_and_hook(
+                cand=cand,
+                raw_segments=segs,
+                silence_intervals=silences,
+                hook_strategy=job_hook_strat,
+                remove_dead_air=remove_dead_air,
+                genre=v_genre,
+                video_duration=v.duration_seconds,
+            )
 
             cand_rec = ClipCandidate(
                 job_id=job.id,
@@ -809,20 +864,17 @@ class VideoProcessingPipeline:
             out_video = settings.PROCESSED_DIR / f"{clip_id}.mp4"
             thumb = settings.THUMBNAIL_DIR / f"{clip_id}.jpg"
 
-            t_stmt = select(Transcript).where(Transcript.video_id == v.id)
-            t_res = await session.execute(t_stmt)
-            tr = t_res.scalar_one_or_none()
-            segs = json.loads(tr.segments_json) if tr else []
-
             job_sub_pos = getattr(job, "subtitle_position", None) or 75
             job_add_hook = getattr(job, "add_hook_header", False)
+            tot_parts = len(ranked_project_clips)
+            if tot_parts > 1:
+                job_add_hook = True
             job_hook_pos = getattr(job, "hook_header_position", None) or 12
             job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
-            raw_hook = cand.hook_summary or cand.reason or ""
-            from app.services.media.audio_analyzer import strip_emojis
-            hook_title_text = strip_emojis(raw_hook)
             part_idx = idx
-            tot_parts = len(ranked_project_clips)
+
+            script_headline = audio_analyzer.extract_hook_headline_from_script(segs, cand.start, cand.end, v_genre)
+            hook_title_text = script_headline if script_headline and script_headline != "WATCH TILL THE END" else strip_emojis(cand.hook_summary or cand.reason or "")
 
             captioner.generate_ass(
                 segs,

@@ -216,9 +216,22 @@ class VideoRenderer:
         if burn_captions and ass_subtitle_path:
             p = Path(ass_subtitle_path).resolve()
             if p.exists():
-                if len(valid_intervals) > 1 and retime_subtitles:
-                    # Retime subtitles to match spliced timeline
-                    retimed_content = retime_ass_subtitles(p.read_text(encoding="utf-8"), valid_intervals)
+                ass_text = p.read_text(encoding="utf-8")
+                first_dialogue = next((l for l in ass_text.splitlines() if l.startswith("Dialogue:") and "Default" in l), None)
+                needs_retiming = False
+                if first_dialogue and len(valid_intervals) > 1 and retime_subtitles:
+                    parts = first_dialogue.split(",", 3)
+                    if len(parts) >= 3:
+                        try:
+                            h, m, s = parts[1].split(":")
+                            ts = float(h) * 3600 + float(m) * 60 + float(s)
+                            if ts > 1.0 and abs(ts - valid_intervals[0][0]) < 2.0:
+                                needs_retiming = True
+                        except Exception:
+                            pass
+
+                if needs_retiming:
+                    retimed_content = retime_ass_subtitles(ass_text, valid_intervals)
                     retimed_path = p.with_name(f"{p.stem}_retimed.ass")
                     retimed_path.write_text(retimed_content, encoding="utf-8")
                     final_ass_path = retimed_path
