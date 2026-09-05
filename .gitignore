@@ -91,3 +91,7 @@ Thumbs.db
 # Vercel
 .vercel
 .env*
+
+# Graphify
+graphify-out/cache/
+

@@ -25,9 +25,12 @@ Never claim that a clip is guaranteed to go viral. The system should identify cl
 
 # Session Tracking & Continuity Rule
 
-Always read `SESSION_TRACKER.md` at the beginning of each session.
-Always log user prompts verbatim, implementation actions, modified files, and system status into `SESSION_TRACKER.md`.
-Always commit changes locally with clean, atomic commit messages so the user can easily revert changes if desired.
+1. Always read `SESSION_TRACKER.md` at the beginning of each session.
+2. Always consult the Graphify knowledge graph (`graphify-out/GRAPH_REPORT.md` or `graphify query "<question>"`) before answering architecture or codebase questions.
+3. Primary Live Production Server: `https://ai-clipper-pro.vercel.app/`.
+4. Always log user prompts verbatim, implementation actions, modified files, and system status into `SESSION_TRACKER.md`.
+5. Always commit changes locally with clean, atomic commit messages so the user can easily revert changes if desired.
+6. After modifying code files, run `graphify update .` to keep `graphify-out/` synced.
 
 ---
 

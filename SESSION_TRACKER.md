@@ -8,6 +8,7 @@
 
 ## Current Architecture & System Overview
 
+- **Primary Live Production Server**: `https://ai-clipper-pro.vercel.app/`
 - **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui primitives.
   - Follows strict `UI_GUIDELINES.md` (zero-emoji policy in UI controls, Lucide-react SVG icons only, 2-column responsive layout).
 - **Backend**: Python 3.11, FastAPI, Pydantic v2, SQLite (local dev) / PostgreSQL.
@@ -109,8 +110,44 @@
   - Production Deployment Succeeded on Vercel:
     - Target: `ai-clipper-pro` (`prj_bb57uq24zhBH18NQgo8m98N9MLOh`)
     - Deployment ID: `dpl_36of7VVf7JYUrZqqFUqJmJVf93nK`
-    - Status: `● Ready`
-    - Live URLs:
-      - `https://ai-clipper-pro-lama8050-1395s-projects.vercel.app`
-      - `https://frontend-two-mu-2qajzx2xxc.vercel.app`
-      - `https://ai-clipper-pro-git-main-lama8050-1395s-projects.vercel.app`
+    - Primary Production URL: `https://ai-clipper-pro.vercel.app/`
+    - Alternative Aliases:
+      - `https://clipper-ai-pro.vercel.app/`
+      - `https://ai-clipper-pro-lama8050-1395s-projects.vercel.app/`
+      - `https://frontend-two-mu-2qajzx2xxc.vercel.app/`
+
+---
+
+### Session 3: Live Server Alias Correction & Graphify Installation (Local & Global Antigravity)
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"u are a fukcing idiot, my live server is this : 
+  > https://ai-clipper-pro.vercel.app/
+  > 
+  > please keep a track of what is what>
+  > 
+  > please install a graphify to keep track for this : https://github.com/Graphify-Labs/graphify.git
+  > 
+  > and always begin the session with this for this project,
+  > 
+  > Install globally for antigrabity too"*
+
+- **Status & Actions**:
+  1. **Primary Production Server Verified & Aliased**:
+     - Verified Vercel project `ai-clipper-pro`.
+     - Explicitly mapped the latest production deployment (`dpl_36of7VVf7JYUrZqqFUqJmJVf93nK`) to alias `https://ai-clipper-pro.vercel.app/` and verified with `curl -ILs` (HTTP 200 OK).
+     - Recorded `https://ai-clipper-pro.vercel.app/` as the single primary production server in `GEMINI.md` and `SESSION_TRACKER.md`.
+  2. **Graphify Knowledge Graph CLI Installed**:
+     - Installed `graphifyy` via `uv tool`.
+     - Ran AST code extraction across 112 repository files.
+     - Generated full codebase knowledge graph in `graphify-out/`:
+       - `graphify-out/graph.json`: 1,202 nodes, 1,619 edges, 113 communities.
+       - `graphify-out/GRAPH_REPORT.md`: God nodes, community structure, and architecture overview.
+       - `graphify-out/graph.html`: Interactive visual force-directed graph.
+  3. **Antigravity Global & Project Skills Configured**:
+     - Installed global Antigravity skill in `/Users/saangetamang/.gemini/config/skills/graphify/SKILL.md` and `/Users/saangetamang/.agents/skills/graphify/SKILL.md`.
+     - Installed workspace skill in `.agents/skills/graphify/SKILL.md`.
+     - Added always-on rule in `.agents/rules/graphify.md` and workflow in `.agents/workflows/graphify.md`.
+  4. **Engineering Guidelines Updated in `GEMINI.md`**:
+     - Mandatory rule added: Every future session MUST begin by consulting `SESSION_TRACKER.md` and Graphify (`graphify-out/GRAPH_REPORT.md` or `graphify query "<question>"`).
+     - After modifying code files, assistant must run `graphify update .` to keep the AST graph synchronized.
