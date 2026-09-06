@@ -294,40 +294,103 @@ async def test_api_key(req: TestApiKeyRequest):
         )
 
     elif req.provider == "gemini":
-        candidate_models = [
-            req.model or settings.GEMINI_MODEL,
-            "gemini-2.0-flash",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-        ]
-        # Deduplicate while preserving order
-        candidate_models = list(dict.fromkeys([m for m in candidate_models if m]))
+        try:
+            client = genai.Client(api_key=key)
 
-        last_error = None
-        for model_name in candidate_models:
+            # 1. Query available models dynamically from the user's Gemini account
+            available_models = []
             try:
-                client = genai.Client(api_key=key)
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents="Respond with 'OK' if you can read this.",
-                )
-                if response.text:
-                    settings.GEMINI_MODEL = model_name
-                    return TestApiKeyResponse(
-                        valid=True,
-                        message=f"Gemini API key is valid and successfully connected to {model_name}!",
-                        model_tested=model_name,
+                for m in client.models.list():
+                    m_name = getattr(m, "name", "") or ""
+                    clean_id = m_name.replace("models/", "").strip()
+                    methods = (
+                        getattr(m, "supported_actions", None)
+                        or getattr(m, "supported_generation_methods", None)
+                        or []
                     )
-            except Exception as e:
-                last_error = e
-                continue
+                    if (not methods or "generateContent" in methods) and clean_id and "gemini" in clean_id:
+                        available_models.append(clean_id)
+            except Exception as list_e:
+                logger.warning(f"Could not list models via client.models.list(): {list_e}")
+                list_err_str = str(list_e)
+                if "404" in list_err_str or "NOT_FOUND" in list_err_str or "not found" in list_err_str.lower():
+                    return TestApiKeyResponse(
+                        valid=False,
+                        message=(
+                            "Gemini verification failed (404 NOT FOUND): The Generative Language API is not enabled for this Google project, or this API key was created without Gemini access. "
+                            "Please create a free key directly at https://aistudio.google.com/app/apikey (where Gemini is enabled by default)."
+                        ),
+                        model_tested=req.model or "gemini-2.0-flash",
+                    )
 
-        logger.warning(f"Gemini API key test failed across models: {last_error}")
-        return TestApiKeyResponse(
-            valid=False,
-            message=f"Gemini verification failed: {str(last_error)}",
-            model_tested=candidate_models[0],
-        )
+            # Build candidate list with preferred modern models first
+            preferred_order = [
+                req.model,
+                settings.GEMINI_MODEL,
+                "gemini-2.0-flash",
+                "gemini-2.5-flash",
+                "gemini-1.5-flash",
+                "gemini-2.0-flash-exp",
+                "gemini-1.5-pro",
+            ]
+
+            if available_models:
+                candidate_models = [m for m in preferred_order if m and m in available_models]
+                for m in available_models:
+                    if m not in candidate_models:
+                        candidate_models.append(m)
+            else:
+                candidate_models = [m for m in preferred_order if m]
+
+            candidate_models = list(dict.fromkeys(candidate_models))
+
+            last_error = None
+            for model_name in candidate_models:
+                try:
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents="Respond with 'OK' if you can read this.",
+                    )
+                    if response.text:
+                        settings.GEMINI_MODEL = model_name
+                        await set_or_update("GEMINI_MODEL", model_name)
+                        return TestApiKeyResponse(
+                            valid=True,
+                            message=f"Gemini API key is valid and successfully connected to {model_name}!",
+                            model_tested=model_name,
+                        )
+                except Exception as e:
+                    last_error = e
+                    continue
+
+            # Interpret specific Google API error causes
+            err_str = str(last_error)
+            if "404" in err_str or "NOT_FOUND" in err_str or "not found" in err_str.lower():
+                user_msg = (
+                    "Gemini API key verification failed (404 NOT FOUND). This occurs when the Generative Language API is not enabled on this Google Cloud project, or the API key lacks Gemini permissions. "
+                    "Solution: Generate a free key directly from Google AI Studio at https://aistudio.google.com/app/apikey (where Gemini is pre-enabled), or enable the 'Generative Language API' in Google Cloud Console."
+                )
+            elif "400" in err_str and "API_KEY_INVALID" in err_str:
+                user_msg = "Gemini API key is invalid or misspelled. Please re-copy the key from Google AI Studio."
+            elif "403" in err_str or "PERMISSION_DENIED" in err_str:
+                user_msg = "Gemini API key permission denied (403). Check API restrictions or IP restrictions on your key in Google Cloud Console."
+            elif "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                user_msg = "Gemini API rate limit or quota exceeded (429). Please check your quota on Google AI Studio."
+            else:
+                user_msg = f"Gemini verification failed: {err_str}"
+
+            logger.warning(f"Gemini API key test failed across models: {last_error}")
+            return TestApiKeyResponse(
+                valid=False,
+                message=user_msg,
+                model_tested=candidate_models[0] if candidate_models else "gemini-2.0-flash",
+            )
+        except Exception as outer_e:
+            return TestApiKeyResponse(
+                valid=False,
+                message=f"Gemini connection error: {str(outer_e)}",
+                model_tested=req.model or "gemini-2.0-flash",
+            )
 
     elif req.provider == "groq":
         try:

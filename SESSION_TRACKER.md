@@ -555,4 +555,41 @@
   - `backend/tests/test_settings.py`
   - `SESSION_TRACKER.md`
 
+---
+
+### Session 4: Gemini Verification 404 NOT_FOUND Diagnosis, Dynamic Model Discovery & Failovers
+- **Date / Time**: 2026-09-06
+- **User Prompt**:
+  > *"Gemini verification failed: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}"*
+
+- **Root Cause Analysis & Discoveries**:
+  1. **Google 404 NOT_FOUND on v1beta**:
+     - The user's Google API key was recognized by Google (not a 400 API_KEY_INVALID), but Google's Generative Language API returned HTTP 404 for model endpoints (`gemini-2.0-flash`, `gemini-1.5-flash`, `gemini-1.5-pro`).
+     - In Google's infrastructure, this happens specifically when:
+       - The API key was created in Google Cloud Console without the **Generative Language API** enabled on the parent Google Cloud project (it is disabled by default in standard GCP projects).
+       - The API key has API restrictions configured that omit `generativelanguage.googleapis.com`.
+       - Or the key was created for Vertex AI instead of Google AI Studio.
+  2. **Last-Error Reporting Masked Prior Attempts**:
+     - `test_api_key` in `settings.py` tested `gemini-2.0-flash`, `gemini-1.5-flash`, and `gemini-1.5-pro` sequentially. When all failed, `last_error` displayed the last attempted model (`gemini-1.5-pro`), misleading the user into thinking only `gemini-1.5-pro` was tested.
+  3. **Lack of Dynamic Model Discovery**:
+     - Unlike Groq which lists account models dynamically, Gemini was hardcoded to try static strings.
+
+- **Changes & Deliverables**:
+  1. **Dynamic Model Discovery via `client.models.list()`**:
+     - In `backend/app/api/routes/settings.py`: Added dynamic model discovery querying `client.models.list()` from the user's account, automatically detecting supported `generateContent` models.
+  2. **Clear Actionable 404 Diagnostic Guidance**:
+     - Replaced raw JSON error with crystal-clear guidance informing the user how to fix the 404 error:
+       - Create a free key directly from [Google AI Studio](https://aistudio.google.com/app/apikey) where Generative Language API is pre-enabled.
+       - Or enable "Generative Language API" in Google Cloud Console.
+  3. **Multi-Model Failover in Gemini Pipeline**:
+     - In `backend/app/services/ai/gemini.py`: Added multi-model failover chains across `generate_candidates` and `generate_metadata` (`self.model` -> `gemini-2.0-flash` -> `gemini-1.5-flash`), falling back cleanly to `audio_hook_analyzer` if the API key has no active models.
+  4. **Verification**:
+     - 44/44 backend unit tests pass.
+     - Knowledge graph updated with `graphify update .`.
+
+- **Files Modified**:
+  - `backend/app/api/routes/settings.py`
+  - `backend/app/services/ai/gemini.py`
+  - `SESSION_TRACKER.md`
+
 

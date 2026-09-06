@@ -175,34 +175,43 @@ Return a JSON array of candidates:
 ]
 """
 
-        try:
-            response = await self.client.aio.models.generate_content(
-                model=self.model,
-                contents=user_prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    response_mime_type="application/json",
-                    temperature=0.4,
-                ),
-            )
-            raw = clean_json_text(response.text or "[]")
-            data = json.loads(raw)
-            if not isinstance(data, list):
-                if isinstance(data, dict) and "candidates" in data:
-                    data = data["candidates"]
-                else:
-                    data = [data]
+        models_to_try = [self.model, "gemini-2.0-flash", "gemini-1.5-flash"]
+        models_to_try = list(dict.fromkeys([m for m in models_to_try if m]))
+        last_cand_err = None
 
-            candidates: List[RawCandidateMoment] = []
-            for item in data:
-                try:
-                    candidates.append(RawCandidateMoment(**item))
-                except ValidationError as ve:
-                    logger.warning(f"Skipping malformed candidate: {ve}")
-            return candidates
-        except Exception as e:
-            logger.error(f"Gemini generate_candidates error: {e}")
-            raise AIProviderError(f"Gemini candidate discovery failed: {e}")
+        for model_name in models_to_try:
+            try:
+                response = await self.client.aio.models.generate_content(
+                    model=model_name,
+                    contents=user_prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction,
+                        response_mime_type="application/json",
+                        temperature=0.4,
+                    ),
+                )
+                raw = clean_json_text(response.text or "[]")
+                data = json.loads(raw)
+                if not isinstance(data, list):
+                    if isinstance(data, dict) and "candidates" in data:
+                        data = data["candidates"]
+                    else:
+                        data = [data]
+
+                candidates: List[RawCandidateMoment] = []
+                for item in data:
+                    try:
+                        candidates.append(RawCandidateMoment(**item))
+                    except ValidationError as ve:
+                        logger.warning(f"Skipping malformed candidate: {ve}")
+                if candidates:
+                    return candidates
+            except Exception as e:
+                last_cand_err = e
+                continue
+
+        logger.error(f"Gemini generate_candidates error across models: {last_cand_err}")
+        raise AIProviderError(f"Gemini candidate discovery failed: {last_cand_err}")
 
     async def rank_candidates(
         self,
@@ -234,36 +243,44 @@ Return a JSON array of candidates:
 Hook Summary: {clip_context.get('hook_summary', '')}
 Payoff Summary: {clip_context.get('payoff_summary', '')}{title_line}{series_line}
 """
-        try:
-            response = await self.client.aio.models.generate_content(
-                model=self.model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=METADATA_SYSTEM_PROMPT,
-                    response_mime_type="application/json",
-                    temperature=0.5,
-                ),
-            )
-            raw = clean_json_text(response.text or "{}")
-            data = json.loads(raw)
+        models_to_try = [self.model, "gemini-2.0-flash", "gemini-1.5-flash"]
+        models_to_try = list(dict.fromkeys([m for m in models_to_try if m]))
+        last_meta_err = None
 
-            # Ensure single_para_copy exists
-            if not data.get("single_para_copy"):
-                tt_t = data.get("tiktok_title", "Viral Clip")
-                tt_c = data.get("tiktok_caption", "")
-                tags_str = " ".join(data.get("tiktok_hashtags", ["#fyp", "#viral", "#shorts"]))
-                data["single_para_copy"] = f"{tt_t} — {tt_c} {tags_str}".strip()
+        for model_name in models_to_try:
+            try:
+                response = await self.client.aio.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=METADATA_SYSTEM_PROMPT,
+                        response_mime_type="application/json",
+                        temperature=0.5,
+                    ),
+                )
+                raw = clean_json_text(response.text or "{}")
+                data = json.loads(raw)
 
-            data["part_index"] = part_idx
-            data["total_parts"] = total_p
-            return PlatformClipMetadata(**data)
-        except Exception as e:
-            logger.error(f"Gemini metadata generation failed: {e}. Using domain-aware fallback...")
-            from app.services.media.audio_analyzer import audio_hook_analyzer
-            return audio_hook_analyzer.generate_clip_metadata(
-                clip_transcript=clip_transcript,
-                hook_summary=clip_context.get("hook_summary", ""),
-                payoff_summary=clip_context.get("payoff_summary", ""),
+                # Ensure single_para_copy exists
+                if not data.get("single_para_copy"):
+                    tt_t = data.get("tiktok_title", "Viral Clip")
+                    tt_c = data.get("tiktok_caption", "")
+                    tags_str = " ".join(data.get("tiktok_hashtags", ["#fyp", "#viral", "#shorts"]))
+                    data["single_para_copy"] = f"{tt_t} — {tt_c} {tags_str}".strip()
+
+                data["part_index"] = part_idx
+                data["total_parts"] = total_p
+                return PlatformClipMetadata(**data)
+            except Exception as e:
+                last_meta_err = e
+                continue
+
+        logger.error(f"Gemini metadata generation failed across models: {last_meta_err}. Using domain-aware fallback...")
+        from app.services.media.audio_analyzer import audio_hook_analyzer
+        return audio_hook_analyzer.generate_clip_metadata(
+            clip_transcript=clip_transcript,
+            hook_summary=clip_context.get("hook_summary", ""),
+            payoff_summary=clip_context.get("payoff_summary", ""),
                 part_index=part_idx,
                 total_parts=total_p,
                 video_title=source_title,
