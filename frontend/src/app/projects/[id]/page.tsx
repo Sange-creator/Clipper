@@ -43,6 +43,10 @@ import {
   AlignCenter,
   AlignRight,
   Tag,
+  ShieldCheck,
+  FlipHorizontal,
+  Move,
+  ZoomIn,
 } from "lucide-react";
 
 
@@ -58,18 +62,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const router = useRouter();
 
   const [project, setProject] = useState<ProjectDetailResponse | null>(null);
+  const [activeTab, setActiveTab] = useState<"sources" | "process" | "clips">("sources");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"sources" | "process" | "clips">("sources");
 
-  // V3 Discovery & Batch Processing Settings
+  // Configuration state
   const [mode, setMode] = useState<"podcast" | "viral_moments">("podcast");
   const [genre, setGenre] = useState<VideoGenre>("documentary");
+  const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
   const [enableSeriesParts, setEnableSeriesParts] = useState<boolean>(true);
   const [partBadgePosition, setPartBadgePosition] = useState<number>(6);
   const [partBadgeAlign, setPartBadgeAlign] = useState<"center" | "left" | "right">("center");
-  const [aiProvider, setAiProvider] = useState<"hybrid" | "gemini" | "groq">("hybrid");
-  const [burnCaptions, setBurnCaptions] = useState<boolean>(true);
   const [addHookHeader, setAddHookHeader] = useState<boolean>(true);
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(12);
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>("viral_creator");
@@ -77,11 +80,19 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left" | "auto">("auto");
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
+  const [mirrorVideo, setMirrorVideo] = useState<boolean>(false);
+  const [antiCopyright, setAntiCopyright] = useState<boolean>(false);
+  const [videoScale, setVideoScale] = useState<number>(1.0);
+  const [videoPanX, setVideoPanX] = useState<number>(0.0);
+  const [videoPanY, setVideoPanY] = useState<number>(0.0);
+  const [customMinDuration, setCustomMinDuration] = useState<number>(30);
+  const [customMaxDuration, setCustomMaxDuration] = useState<number>(60);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("blur_fit_9_16");
   const [canvasBackground, setCanvasBackground] = useState<"blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean">("blur");
   const [blurRadius, setBlurRadius] = useState<number>(30);
   const [subtitlePosition, setSubtitlePosition] = useState<number>(78);
   const [hookStrategy, setHookStrategy] = useState<"teaser_climax_hook" | "direct_chronological">("teaser_climax_hook");
+  const [aiProvider, setAiProvider] = useState<"hybrid" | "gemini" | "groq">("hybrid");
   const [targetClips, setTargetClips] = useState(5);
   const [durationPreset, setDurationPreset] = useState("60-90s");
   const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>("tiktok_rounded_box");
@@ -139,6 +150,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         ai_provider: aiProvider,
         target_clips_count: targetClips,
         duration_preset: durationPreset as any,
+        custom_min_duration: durationPreset === "custom" ? customMinDuration : undefined,
+        custom_max_duration: durationPreset === "custom" ? customMaxDuration : undefined,
+        mirror_video: mirrorVideo,
+        anti_copyright: antiCopyright,
+        video_scale: videoScale,
+        video_pan_x: videoPanX,
+        video_pan_y: videoPanY,
         caption_style: burnCaptions && captionStyle !== "none" ? captionStyle : "none",
         burn_captions: burnCaptions,
         part_badge_position: partBadgePosition,
@@ -925,8 +943,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             {/* Target Duration Preset */}
             <div className="space-y-2">
               <span className="text-xs font-semibold text-zinc-300">Duration Range</span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {["15-30s", "30-45s", "45-60s", "60-90s"].map((d) => (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {["15-30s", "30-45s", "45-60s", "60-90s", "custom"].map((d) => (
                   <button
                     key={d}
                     type="button"
@@ -941,6 +959,32 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   </button>
                 ))}
               </div>
+              {durationPreset === "custom" && (
+                <div className="pt-2 border-t border-white/5 grid grid-cols-2 gap-3 animate-in fade-in duration-150">
+                  <div>
+                    <label className="text-[10px] text-zinc-400 block mb-1">Min Duration (sec)</label>
+                    <input
+                      type="number"
+                      min={5}
+                      max={customMaxDuration - 1}
+                      value={customMinDuration}
+                      onChange={(e) => setCustomMinDuration(Math.max(5, Number(e.target.value)))}
+                      className="w-full rounded-lg bg-black/40 border border-white/10 px-2.5 py-1.5 text-xs text-white focus:border-violet-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-zinc-400 block mb-1">Max Duration (sec)</label>
+                    <input
+                      type="number"
+                      min={customMinDuration + 1}
+                      max={600}
+                      value={customMaxDuration}
+                      onChange={(e) => setCustomMaxDuration(Math.max(customMinDuration + 1, Number(e.target.value)))}
+                      className="w-full rounded-lg bg-black/40 border border-white/10 px-2.5 py-1.5 text-xs text-white focus:border-violet-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Framing & Aspect Ratio */}
@@ -1079,6 +1123,147 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
                   )}
                 </div>
               )}
+            </div>
+
+            {/* Mirror, Anti-Copyright & Zoom/Pan Studio */}
+            <div className="space-y-3 pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Move className="h-4 w-4 text-amber-400" />
+                  <div>
+                    <span className="text-xs font-semibold text-zinc-300">Mirror Video, Anti-Copyright & Zoom/Pan</span>
+                    <p className="text-[10px] text-zinc-400">Evade visual/audio reuse detection & customize framing ratio</p>
+                  </div>
+                </div>
+                {(videoScale !== 1.0 || videoPanX !== 0 || videoPanY !== 0 || mirrorVideo || antiCopyright) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVideoScale(1.0);
+                      setVideoPanX(0);
+                      setVideoPanY(0);
+                      setMirrorVideo(false);
+                      setAntiCopyright(false);
+                    }}
+                    className="text-[10px] text-amber-400 hover:text-amber-300 font-medium px-2 py-0.5 rounded bg-amber-400/10 border border-amber-400/20 cursor-pointer"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Mirror Video Toggle */}
+                <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <FlipHorizontal className="h-3.5 w-3.5 text-blue-400" />
+                      <span className="text-xs font-semibold text-white">Mirror Video</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setMirrorVideo(!mirrorVideo)}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                        mirrorVideo ? "bg-blue-600" : "bg-zinc-800"
+                      }`}
+                      aria-label="Toggle horizontal mirror"
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                          mirrorVideo ? "translate-x-4" : "translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-zinc-400">Horizontal flip. Subtitles stay normally readable.</p>
+                </div>
+
+                {/* Anti-Copyright Filter Toggle */}
+                <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="text-xs font-semibold text-white">Anti-Copyright Shield</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAntiCopyright(!antiCopyright)}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                        antiCopyright ? "bg-emerald-600" : "bg-zinc-800"
+                      }`}
+                      aria-label="Toggle anti-copyright filter"
+                    >
+                      <span
+                        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                          antiCopyright ? "translate-x-4" : "translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-zinc-400">1.2% micro pitch/tempo shift & organic video noise.</p>
+                </div>
+              </div>
+
+              {/* Zoom & Pan Sliders */}
+              <div className="rounded-xl p-3 bg-black/40 border border-white/10 space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-zinc-300 flex items-center gap-1">
+                        <ZoomIn className="h-3 w-3 text-amber-400" /> Zoom Scale
+                      </span>
+                      <span className="font-mono text-amber-300 text-[10px]">
+                        {Math.round(videoScale * 100)}% ({videoScale.toFixed(2)}x)
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0.5}
+                      max={1.8}
+                      step={0.05}
+                      value={videoScale}
+                      onChange={(e) => setVideoScale(Number(e.target.value))}
+                      className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-zinc-300">Horizontal Pan (X)</span>
+                      <span className="font-mono text-amber-300 text-[10px]">
+                        {videoPanX > 0 ? `+${videoPanX.toFixed(0)}% R` : videoPanX < 0 ? `${videoPanX.toFixed(0)}% L` : "0% Center"}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={-50}
+                      max={50}
+                      step={1}
+                      value={videoPanX}
+                      onChange={(e) => setVideoPanX(Number(e.target.value))}
+                      className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-zinc-300">Vertical Pan (Y)</span>
+                      <span className="font-mono text-amber-300 text-[10px]">
+                        {videoPanY > 0 ? `+${videoPanY.toFixed(0)}% D` : videoPanY < 0 ? `${videoPanY.toFixed(0)}% U` : "0% Center"}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={-50}
+                      max={50}
+                      step={1}
+                      value={videoPanY}
+                      onChange={(e) => setVideoPanY(Number(e.target.value))}
+                      className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Source Diversity Weight */}

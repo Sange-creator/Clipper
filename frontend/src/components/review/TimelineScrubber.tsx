@@ -1,9 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import { Scissors, RefreshCw, Sparkles, Sliders, Subtitles, Check, Smartphone, Maximize2, Monitor, Flame, Eraser, Wand2, Zap, FileText, MessageSquare, Clock, BookOpen, Bookmark, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+import {
+  Scissors,
+  RefreshCw,
+  Sparkles,
+  Sliders,
+  Subtitles,
+  Check,
+  Smartphone,
+  Maximize2,
+  Monitor,
+  Flame,
+  Eraser,
+  Wand2,
+  Zap,
+  FileText,
+  MessageSquare,
+  Clock,
+  BookOpen,
+  Bookmark,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  FlipHorizontal,
+  ShieldCheck,
+  Move,
+  ZoomIn,
+} from "lucide-react";
 
 import { formatSeconds } from "@/lib/utils";
+import { api } from "@/lib/api";
 
 interface TimelineScrubberProps {
   initialStart: number;
@@ -24,6 +51,12 @@ interface TimelineScrubberProps {
   initialEnhanceQuality?: boolean;
   initialCaptionStyle?: string;
   initialBurnCaptions?: boolean;
+  initialMirrorVideo?: boolean;
+  initialAntiCopyright?: boolean;
+  initialVideoScale?: number;
+  initialVideoPanX?: number;
+  initialVideoPanY?: number;
+  clipId?: string;
   onRerender: (
     start: number,
     end: number,
@@ -41,7 +74,12 @@ interface TimelineScrubberProps {
     burnCaptions?: boolean,
     addPartBadge?: boolean,
     partBadgePosition?: number,
-    partBadgeAlign?: string
+    partBadgeAlign?: string,
+    mirrorVideo?: boolean,
+    antiCopyright?: boolean,
+    videoScale?: number,
+    videoPanX?: number,
+    videoPanY?: number
   ) => Promise<void>;
 }
 
@@ -64,6 +102,12 @@ export function TimelineScrubber({
   initialEnhanceQuality = true,
   initialCaptionStyle = "tiktok_viral",
   initialBurnCaptions = true,
+  initialMirrorVideo = false,
+  initialAntiCopyright = false,
+  initialVideoScale = 1.0,
+  initialVideoPanX = 0.0,
+  initialVideoPanY = 0.0,
+  clipId,
   onRerender,
 }: TimelineScrubberProps) {
   const [startTime, setStartTime] = useState(initialStart);
@@ -89,6 +133,13 @@ export function TimelineScrubber({
     (initialWatermarkPosition as any) || "top_right"
   );
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(initialEnhanceQuality !== false);
+  const [mirrorVideo, setMirrorVideo] = useState<boolean>(initialMirrorVideo || false);
+  const [antiCopyright, setAntiCopyright] = useState<boolean>(initialAntiCopyright || false);
+  const [videoScale, setVideoScale] = useState<number>(initialVideoScale || 1.0);
+  const [videoPanX, setVideoPanX] = useState<number>(initialVideoPanX || 0.0);
+  const [videoPanY, setVideoPanY] = useState<number>(initialVideoPanY || 0.0);
+  const [isSnappingHook, setIsSnappingHook] = useState(false);
+  const [snapNotice, setSnapNotice] = useState<string | null>(null);
   const [isRendering, setIsRendering] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
 
@@ -113,6 +164,29 @@ export function TimelineScrubber({
     }
   };
 
+  const handleSnapToHook = async () => {
+    if (!clipId) return;
+    setIsSnappingHook(true);
+    setSnapNotice(null);
+    try {
+      const res = await api.snapToHook(clipId);
+      if (res && typeof res.snapped_start === "number") {
+        setStartTime(res.snapped_start);
+        setJustSaved(false);
+        const delta = (res.snapped_start - res.original_start).toFixed(1);
+        if (Number(delta) > 0) {
+          setSnapNotice(`Snapped to hook punchline! Stripped ${delta}s of leading filler.`);
+        } else {
+          setSnapNotice(`Hook is already laser-tight at ${formatSeconds(res.snapped_start)}.`);
+        }
+      }
+    } catch (err: any) {
+      setSnapNotice(err.message || "Failed to snap hook");
+    } finally {
+      setIsSnappingHook(false);
+    }
+  };
+
   const handleTriggerRerender = async () => {
     setIsRendering(true);
     try {
@@ -133,7 +207,12 @@ export function TimelineScrubber({
         burnCaptions,
         addPartBadge,
         partBadgePosition,
-        partBadgeAlign
+        partBadgeAlign,
+        mirrorVideo,
+        antiCopyright,
+        videoScale,
+        videoPanX,
+        videoPanY
       );
       setJustSaved(true);
     } finally {
@@ -224,8 +303,22 @@ export function TimelineScrubber({
         {/* Sliders */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <div className="flex justify-between text-xs">
-              <span className="text-zinc-400">Start Timestamp</span>
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-zinc-400">Start Timestamp</span>
+                {clipId && (
+                  <button
+                    type="button"
+                    onClick={handleSnapToHook}
+                    disabled={isSnappingHook}
+                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-violet-500/20 border border-violet-500/40 text-[10px] font-semibold text-violet-300 hover:bg-violet-500/30 hover:text-white transition-all cursor-pointer disabled:opacity-50 shadow-sm"
+                    title="Automatically strip leading filler words ('So', 'Um', 'Basically') and snap directly to the opening punchline"
+                  >
+                    <Zap className={`h-3 w-3 text-amber-400 ${isSnappingHook ? "animate-spin" : ""}`} />
+                    <span>{isSnappingHook ? "Snapping..." : "Snap to Hook"}</span>
+                  </button>
+                )}
+              </div>
               <span className="font-mono font-semibold text-white">{formatSeconds(startTime)}s</span>
             </div>
             <input
@@ -255,6 +348,22 @@ export function TimelineScrubber({
             />
           </div>
         </div>
+
+        {snapNotice && (
+          <div className="rounded-lg bg-violet-500/10 border border-violet-500/30 px-3 py-2 text-[11px] text-violet-300 flex items-center justify-between gap-2 animate-in fade-in">
+            <div className="flex items-center gap-2">
+              <Zap className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+              <span>{snapNotice}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSnapNotice(null)}
+              className="text-[10px] text-zinc-400 hover:text-white ml-2 cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Subtitles & Typography Styling Workstation */}
@@ -995,6 +1104,181 @@ export function TimelineScrubber({
             />
           </div>
         )}
+      </div>
+
+      {/* Mirror, Anti-Copyright & Zoom/Pan Workstation */}
+      <div className="pt-4 border-t border-white/5 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Move className="h-4 w-4 text-amber-400" />
+            <div>
+              <span className="text-xs font-semibold text-white">Mirror Video, Anti-Copyright & Zoom/Pan</span>
+              <p className="text-[11px] text-zinc-400">Scale, pan, flip horizontal, and apply Content ID evasion filters</p>
+            </div>
+          </div>
+          {(videoScale !== 1.0 || videoPanX !== 0 || videoPanY !== 0 || mirrorVideo || antiCopyright) && (
+            <button
+              type="button"
+              onClick={() => {
+                setVideoScale(1.0);
+                setVideoPanX(0);
+                setVideoPanY(0);
+                setMirrorVideo(false);
+                setAntiCopyright(false);
+                setJustSaved(false);
+              }}
+              className="text-[10px] text-amber-400 hover:text-amber-300 font-medium px-2 py-0.5 rounded bg-amber-400/10 border border-amber-400/20 cursor-pointer"
+            >
+              Reset Defaults
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Mirror Video Toggle */}
+          <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <FlipHorizontal className="h-4 w-4 text-blue-400" />
+                <span className="text-xs font-semibold text-white">Mirror Video</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMirrorVideo(!mirrorVideo);
+                  setJustSaved(false);
+                }}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                  mirrorVideo ? "bg-blue-600" : "bg-zinc-800"
+                }`}
+                aria-label="Toggle horizontal mirror"
+              >
+                <span
+                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                    mirrorVideo ? "translate-x-4" : "translate-x-0.5"
+                  }`}
+                />
+              </button>
+            </div>
+            <p className="text-[10px] text-zinc-400">Flip video horizontally. Subtitles stay normally readable.</p>
+          </div>
+
+          {/* Anti-Copyright Filter Toggle */}
+          <div className="rounded-xl p-3 bg-white/[0.02] border border-white/10 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                <span className="text-xs font-semibold text-white">Anti-Copyright Shield</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setAntiCopyright(!antiCopyright);
+                  setJustSaved(false);
+                }}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                  antiCopyright ? "bg-emerald-600" : "bg-zinc-800"
+                }`}
+                aria-label="Toggle anti-copyright filter"
+              >
+                <span
+                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                    antiCopyright ? "translate-x-4" : "translate-x-0.5"
+                  }`}
+                />
+              </button>
+            </div>
+            <p className="text-[10px] text-zinc-400">Subtle 1.2% micro pitch/tempo shift & organic video noise.</p>
+          </div>
+        </div>
+
+        {/* Zoom Scale and Pan Sliders */}
+        <div className="rounded-xl p-4 bg-black/40 border border-white/10 space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Zoom */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-300 flex items-center gap-1">
+                  <ZoomIn className="h-3 w-3 text-amber-400" /> Zoom Scale
+                </span>
+                <span className="font-mono text-amber-300 text-[10px]">
+                  {Math.round(videoScale * 100)}% ({videoScale.toFixed(2)}x)
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0.5}
+                max={1.8}
+                step={0.05}
+                value={videoScale}
+                onChange={(e) => {
+                  setVideoScale(Number(e.target.value));
+                  setJustSaved(false);
+                }}
+                className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+              />
+              <div className="flex justify-between text-[9px] text-zinc-400">
+                <span>50% (Zoom Out)</span>
+                <span>100%</span>
+                <span>180% (Zoom In)</span>
+              </div>
+            </div>
+
+            {/* Horizontal Pan */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-300">Horizontal Pan (X)</span>
+                <span className="font-mono text-amber-300 text-[10px]">
+                  {videoPanX > 0 ? `+${videoPanX.toFixed(0)}% R` : videoPanX < 0 ? `${videoPanX.toFixed(0)}% L` : "0% Center"}
+                </span>
+              </div>
+              <input
+                type="range"
+                min={-50}
+                max={50}
+                step={1}
+                value={videoPanX}
+                onChange={(e) => {
+                  setVideoPanX(Number(e.target.value));
+                  setJustSaved(false);
+                }}
+                className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+              />
+              <div className="flex justify-between text-[9px] text-zinc-400">
+                <span>-50% L</span>
+                <span>Center</span>
+                <span>+50% R</span>
+              </div>
+            </div>
+
+            {/* Vertical Pan */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-300">Vertical Pan (Y)</span>
+                <span className="font-mono text-amber-300 text-[10px]">
+                  {videoPanY > 0 ? `+${videoPanY.toFixed(0)}% D` : videoPanY < 0 ? `${videoPanY.toFixed(0)}% U` : "0% Center"}
+                </span>
+              </div>
+              <input
+                type="range"
+                min={-50}
+                max={50}
+                step={1}
+                value={videoPanY}
+                onChange={(e) => {
+                  setVideoPanY(Number(e.target.value));
+                  setJustSaved(false);
+                }}
+                className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+              />
+              <div className="flex justify-between text-[9px] text-zinc-400">
+                <span>-50% U</span>
+                <span>Center</span>
+                <span>+50% D</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Watermark Removal & Studio Enhancement Controls */}

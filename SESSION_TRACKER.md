@@ -692,3 +692,41 @@
      - Uploaded sample `.m4` video via `curl -X POST -F "file=@/tmp/test_sample.m4" http://127.0.0.1:8000/api/upload` -> **HTTP 200 Success**.
      - Tested `/api/health`, `/api/upload/recent`, `/api/clips` -> all return **HTTP 200 OK** with Clipper data.
      - Compiled Next.js frontend with `npm run build` -> **12/12 static/dynamic pages built cleanly with 0 errors**.
+
+---
+
+### Session 8: Video Mirroring, Anti-Copyright Filters, Manual Zoom/Crop Panning & Hook Perfection
+- **Date / Time**: 2026-09-08
+- **User Prompt**:
+  > *"Please make the user to mirror the whole video or not, using filters to avoid copyright strikes, and custom duration of the video length.*
+  > *the opttion keep the zoom out, or crop portion, by manually abling them to crop or slide the size of the video ratio to keep it as the users preference.*
+  > *still the hooks are not great, perfect it"*
+
+- **Implementation Summary**:
+  1. **Horizontal Video Mirroring (`mirror_video: bool`)**:
+     - Added `mirror_video` column to `Job` and `RenderedClip` SQL models and Pydantic schemas.
+     - Implemented FFmpeg `hflip` filter in `backend/app/services/media/renderer.py` for single-slice and multi-segment concat pipelines.
+     - **Critical Subtitle Preservation**: `hflip` runs prior to `subtitles='...'` rasterization in the filter chain, ensuring captions, part badges, and hook headers are never mirrored or reversed and read normally from left to right.
+  2. **Anti-Copyright Shield Evasion Filter (`anti_copyright: bool`)**:
+     - Evades automated YouTube Content ID, TikTok sound fingerprinting, and Instagram audio hash matching without altering dialogue comprehension.
+     - **Audio Filter**: `asetrate=48000*1.012,aresample=48000,atempo=1/1.012,equalizer=f=1000:t=q:w=1.2:g=-1.2,equalizer=f=3200:t=q:w=1.4:g=1.0,loudnorm=I=-14:TP=-1.0:LRA=11`.
+     - **Video Filter**: `eq=contrast=1.025:saturation=1.035:brightness=0.008:gamma=1.018,noise=alls=1.5:allf=t,vignette=PI/7`.
+  3. **Custom Video Duration (`duration_preset: "custom"`, `custom_min_duration`, `custom_max_duration`)**:
+     - Added `custom_min_duration` and `custom_max_duration` to `JobCreateRequest`, `ProjectProcessRequest`, `Job`, `CandidateDiscovery`, `AudioScriptAnalyzer`, and `RankingService`.
+     - Threaded bounds dynamically through AI prompt templates, heuristic audio discovery, duration penalties, and cross-video global ranking.
+     - Added `"custom"` preset selector with min/max numeric inputs in `VideoUploader.tsx` and `projects/[id]/page.tsx`.
+  4. **Manual Zoom Scaling & Framing Ratio Panning (`video_scale`, `video_pan_x`, `video_pan_y`)**:
+     - Added `video_scale` (0.5x to 1.8x, default 1.0), `video_pan_x` (-50% to +50%), and `video_pan_y` (-50% to +50%) to clip configuration, database models, and rendering pipelines.
+     - **Zoom Out (0.5x–0.95x)**: Scales video down and pads within a 9:16 container so full widescreen frame is visible with zero cropped content.
+     - **Zoom In (1.05x–1.8x)**: Scales video up and applies dynamic crop offsets based on user pan percentages.
+     - **Blur Fit Mode**: Dynamically positions foreground over blurred background with custom scale and offset.
+     - **Interactive Frontend UI**: Added sliders, reset button, and visual 9:16 simulation viewport in `VideoUploader.tsx`, `TimelineScrubber.tsx`, and `projects/[id]/page.tsx`.
+  5. **Hook Perfection (Zero-Preamble & Snap-to-Hook)**:
+     - **AI Prompt Refinement**: Injected zero-preamble directives into `PODCAST_DISCOVERY_SYSTEM_PROMPT` and `VIRAL_MOMENTS_DISCOVERY_SYSTEM_PROMPT` instructing models to set start timestamps directly on the first punchy word/syllable and eliminate throat-clearing, silence, and filler (*"So..."*, *"Basically..."*, *"Hey guys"*).
+     - **Context Expansion Bug Fix**: Fixed `context_expansion.py` which was previously rewinding start times into pre-hook pleasantries. Added `snap_to_hook(start, transcript_segments)` that scans words at or immediately following `start`, drops filler words, and snaps directly to the first punchy word.
+     - **Audio Script Analyzer**: Added leading filler word skipping in heuristic candidate discovery.
+     - **1-Click "Snap to Hook" Endpoint & UI**: Added `POST /api/clips/{id}/snap-hook` endpoint and a 1-click button with feedback notice in `TimelineScrubber.tsx`.
+  6. **Verification & Tests**:
+     - Created `backend/tests/test_mirror_copyright_framing.py` verifying real FFmpeg rendering with mirror, copyright shield, and zoom/pan math.
+     - All **48/48 backend pytest tests pass**.
+     - Frontend compiles with **0 errors** (`npm run build`).

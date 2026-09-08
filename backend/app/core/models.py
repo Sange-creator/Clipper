@@ -136,6 +136,13 @@ class Job(Base):
     part_badge_align: Mapped[str] = mapped_column(String(16), default="center")  # "center", "left", "right"
     enable_series_parts: Mapped[bool] = mapped_column(Boolean, default=True)  # On-screen Part 1...N series branding
     add_part_badge: Mapped[bool] = mapped_column(Boolean, default=True)
+    mirror_video: Mapped[bool] = mapped_column(Boolean, default=False)  # Horizontal flip (hflip)
+    anti_copyright: Mapped[bool] = mapped_column(Boolean, default=False)  # Audio/video anti-copyright strike shield
+    video_scale: Mapped[float] = mapped_column(Float, default=1.0)  # Manual zoom / scale (0.5 to 2.0)
+    video_pan_x: Mapped[float] = mapped_column(Float, default=0.0)  # Horizontal crop / pan offset (-50.0 to +50.0)
+    video_pan_y: Mapped[float] = mapped_column(Float, default=0.0)  # Vertical crop / pan offset (-50.0 to +50.0)
+    custom_min_duration: Mapped[Optional[float]] = mapped_column(Float, nullable=True)  # User custom min duration in seconds
+    custom_max_duration: Mapped[Optional[float]] = mapped_column(Float, nullable=True)  # User custom max duration in seconds
     config_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
 
@@ -232,6 +239,11 @@ class RenderedClip(Base):
     part_badge_align: Mapped[str] = mapped_column(String(16), default="center")
     enable_series_parts: Mapped[bool] = mapped_column(Boolean, default=True)  # On-screen Part 1...N series branding
     add_part_badge: Mapped[bool] = mapped_column(Boolean, default=True)
+    mirror_video: Mapped[bool] = mapped_column(Boolean, default=False)  # Horizontal flip (hflip)
+    anti_copyright: Mapped[bool] = mapped_column(Boolean, default=False)  # Audio/video anti-copyright strike shield
+    video_scale: Mapped[float] = mapped_column(Float, default=1.0)  # Manual zoom / scale (0.5 to 2.0)
+    video_pan_x: Mapped[float] = mapped_column(Float, default=0.0)  # Horizontal crop / pan offset (-50.0 to +50.0)
+    video_pan_y: Mapped[float] = mapped_column(Float, default=0.0)  # Vertical crop / pan offset (-50.0 to +50.0)
     caption_style: Mapped[str] = mapped_column(String(32), default="bold_yellow")
 
     burn_captions: Mapped[bool] = mapped_column(Boolean, default=True)

@@ -170,6 +170,11 @@ class VideoRenderer:
         watermark_position: str = "top_right",
         enhance_quality: bool = True,
         retime_subtitles: bool = False,
+        mirror_video: bool = False,
+        anti_copyright: bool = False,
+        video_scale: float = 1.0,
+        video_pan_x: float = 0.0,
+        video_pan_y: float = 0.0,
     ) -> Path:
         """
         Renders a short-form video clip from source:
@@ -179,6 +184,9 @@ class VideoRenderer:
             * crop_9_16: Full 9:16 vertical crop (TikTok / Reels / Shorts default)
             * blur_fit_9_16: 16:9 video centered within 9:16 vertical canvas with customized blurred background
             * original_16_9: Native 16:9 landscape widescreen
+        - Applies interactive zoom scaling (video_scale) and horizontal/vertical pan offsets (video_pan_x, video_pan_y).
+        - Optional horizontal video mirroring (hflip, keeping burned-in subtitles readable left-to-right).
+        - Anti-copyright shielding: micro-pitch & tempo frequency shifts + subtle invisible film grain & vignette.
         - Optional studio visual enhancement (unsharp edge sharpening, color vibrancy, contrast boost).
         - Burns in styled ASS subtitles if burn_captions is True.
         - Normalizes audio loudness (loudnorm).
@@ -200,6 +208,10 @@ class VideoRenderer:
         crop_cfg = reframing_config or {}
         mode = framing_mode or "crop_9_16"
         r = max(5, min(100, blur_radius or 30))
+
+        scale_val = max(0.5, min(2.5, float(video_scale or 1.0)))
+        pan_x = max(-100.0, min(100.0, float(video_pan_x or 0.0)))
+        pan_y = max(-100.0, min(100.0, float(video_pan_y or 0.0)))
 
         # Canvas background resolution (blur, black, white, gradient_obsidian, gradient_violet, gradient_sunset, gradient_ocean)
         GRADIENT_PALETTES = {
@@ -227,6 +239,12 @@ class VideoRenderer:
             or "fit_9_16" in mode
             or canvas_bg in ("blur", "black", "white", *GRADIENT_PALETTES.keys())
         ) and mode not in ("original_16_9", "crop_9_16")
+
+        # Foreground dimensions for canvas fit
+        fg_w = max(64, min(settings.TARGET_WIDTH * 2, int(settings.TARGET_WIDTH * scale_val)))
+        fg_h = max(64, min(settings.TARGET_HEIGHT * 2, int(settings.TARGET_HEIGHT * scale_val)))
+        fg_w -= fg_w % 2
+        fg_h -= fg_h % 2
 
         # Inspect source resolution if watermark removal is active
         src_w, src_h = 1920, 1080
@@ -293,6 +311,12 @@ class VideoRenderer:
             else:
                 delogo_cmd = get_delogo_filter(raw_pos, src_w, src_h)
 
+        # Audio filter construction (anti-copyright pitch/tempo/eq shifts + loudness normalization)
+        if anti_copyright:
+            audio_filter = "asetrate=48000*1.012,aresample=48000,atempo=1/1.012,equalizer=f=1000:t=q:w=1.2:g=-1.2,equalizer=f=3200:t=q:w=1.4:g=1.0,loudnorm=I=-14:TP=-1.0:LRA=11"
+        else:
+            audio_filter = "loudnorm=I=-14:TP=-1.0:LRA=11"
+
         # Check if single slice or multi-interval concat
         if len(valid_intervals) == 1:
             # Single slice: Fast seek with Lanczos sharp scaling
@@ -307,36 +331,66 @@ class VideoRenderer:
             if is_canvas_fit:
                 prefix = f"{filter_parts[0]}," if filter_parts else ""
                 if canvas_bg == "white":
-                    v_filter = f"{prefix}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=white"
+                    v_filter = f"{prefix}scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:'(ow-iw)/2 + ow*({pan_x}/100)':'(oh-ih)/2 + oh*({pan_y}/100)':color=white"
                 elif canvas_bg == "black":
-                    v_filter = f"{prefix}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=black"
+                    v_filter = f"{prefix}scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:'(ow-iw)/2 + ow*({pan_x}/100)':'(oh-ih)/2 + oh*({pan_y}/100)':color=black"
                 elif canvas_bg in GRADIENT_PALETTES:
                     c0, c1 = GRADIENT_PALETTES[canvas_bg]
                     v_filter = (
                         f"gradients=s={settings.TARGET_WIDTH}x{settings.TARGET_HEIGHT}:c0={c0}:c1={c1}:x0={settings.TARGET_WIDTH//2}:y0=0:x1={settings.TARGET_WIDTH//2}:y1={settings.TARGET_HEIGHT}[bg];"
-                        f"[in]{prefix}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
-                        f"[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1"
+                        f"[in]{prefix}scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
+                        f"[bg][fg]overlay='(W-w)/2 + W*({pan_x}/100)':'(H-h)/2 + H*({pan_y}/100)':shortest=1"
                     )
                 else:
-                    # Default: frosted blur
+                    # Default: frosted blur with scalable foreground
                     v_filter = (
                         f"{prefix}split=2[bg_raw][fg_raw];"
                         f"[bg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg];"
-                        f"[fg_raw]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
-                        f"[bg][fg]overlay=(W-w)/2:(H-h)/2"
+                        f"[fg_raw]scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear[fg];"
+                        f"[bg][fg]overlay='(W-w)/2 + W*({pan_x}/100)':'(H-h)/2 + H*({pan_y}/100)'"
                     )
             elif mode == "original_16_9":
                 filter_parts.append("scale=1920:1080:force_original_aspect_ratio=decrease:flags=bilinear")
                 v_filter = ",".join(filter_parts)
             else:
-                # Default: crop_9_16
-                filter_parts.append(f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}")
+                # Default: crop_9_16 with zoom & pan offsets
+                if scale_val >= 1.0:
+                    sw = int(settings.TARGET_WIDTH * scale_val)
+                    sh = int(settings.TARGET_HEIGHT * scale_val)
+                    sw -= sw % 2
+                    sh -= sh % 2
+                    filter_parts.append(
+                        f"scale={sw}:{sh}:force_original_aspect_ratio=increase:flags=bilinear,"
+                        f"crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:"
+                        f"x='min(max(0, (in_w-out_w)/2 + (in_w-out_w)*({pan_x}/100)), in_w-out_w)':"
+                        f"y='min(max(0, (in_h-out_h)/2 + (in_h-out_h)*({pan_y}/100)), in_h-out_h)'"
+                    )
+                else:
+                    # Zoomed out: preserve full frame within 9:16 padded container
+                    sw = int(settings.TARGET_WIDTH * scale_val)
+                    sh = int(settings.TARGET_HEIGHT * scale_val)
+                    sw -= sw % 2
+                    sh -= sh % 2
+                    filter_parts.append(
+                        f"scale={sw}:{sh}:force_original_aspect_ratio=increase:flags=bilinear,"
+                        f"pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:"
+                        f"'(ow-iw)/2 + ow*({pan_x}/100)':'(oh-ih)/2 + oh*({pan_y}/100)':color=black"
+                    )
                 v_filter = ",".join(filter_parts)
+
+            # Mirror video horizontally (before burning subtitles so subtitles stay readable)
+            if mirror_video:
+                v_filter += ",hflip"
+
+            # Anti-copyright subtle video shifts (evade spatial hashing and automated Content ID bots)
+            if anti_copyright:
+                v_filter += ",eq=contrast=1.025:saturation=1.035:brightness=0.008:gamma=1.018,noise=alls=1.5:allf=t,vignette=PI/7"
 
             # Studio visual quality enhancement (vibrancy + unsharp detail enhancement)
             if enhance_quality:
                 v_filter += ",eq=contrast=1.04:saturation=1.08:brightness=0.01,unsharp=lx=3:ly=3:la=0.35:cx=3:cy=3:ca=0.15"
 
+            # Subtitles burned in last
             if final_ass_path and final_ass_path.exists():
                 escaped_ass = str(final_ass_path).replace("\\", "/").replace(":", "\\:")
                 v_filter += f",subtitles='{escaped_ass}'"
@@ -348,7 +402,7 @@ class VideoRenderer:
                 "-i", str(src),
                 "-t", f"{seg_dur:.3f}",
                 "-vf", v_filter,
-                "-af", "loudnorm=I=-14:TP=-1.0:LRA=11",
+                "-af", audio_filter,
                 "-c:v", "libx264",
                 "-profile:v", "high",
                 "-level:v", "4.2",
@@ -377,36 +431,54 @@ class VideoRenderer:
                 if is_canvas_fit:
                     if canvas_bg == "white":
                         filter_chunks.append(
-                            f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=white,setsar=1[v{idx}]"
+                            f"{in_v}scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:'(ow-iw)/2 + ow*({pan_x}/100)':'(oh-ih)/2 + oh*({pan_y}/100)':color=white,setsar=1[v{idx}]"
                         )
                     elif canvas_bg == "black":
                         filter_chunks.append(
-                            f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1[v{idx}]"
+                            f"{in_v}scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear,pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:'(ow-iw)/2 + ow*({pan_x}/100)':'(oh-ih)/2 + oh*({pan_y}/100)':color=black,setsar=1[v{idx}]"
                         )
                     elif canvas_bg in GRADIENT_PALETTES:
                         c0, c1 = GRADIENT_PALETTES[canvas_bg]
                         filter_chunks.append(
                             f"gradients=s={settings.TARGET_WIDTH}x{settings.TARGET_HEIGHT}:c0={c0}:c1={c1}:x0={settings.TARGET_WIDTH//2}:y0=0:x1={settings.TARGET_WIDTH//2}:y1={settings.TARGET_HEIGHT}[bg{idx}];"
-                            f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg{idx}];"
-                            f"[bg{idx}][fg{idx}]overlay=(W-w)/2:(H-h)/2:shortest=1,setsar=1[v{idx}]"
+                            f"{in_v}scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear[fg{idx}];"
+                            f"[bg{idx}][fg{idx}]overlay='(W-w)/2 + W*({pan_x}/100)':'(H-h)/2 + H*({pan_y}/100)':shortest=1,setsar=1[v{idx}]"
                         )
                     else:
                         # Frosted blur
                         filter_chunks.append(
                             f"{in_v}split=2[bg_raw_{idx}][fg_raw_{idx}];"
                             f"[bg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},boxblur={r}:1,drawbox=color=black@0.35:replace=1[bg_{idx}];"
-                            f"[fg_raw_{idx}]scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=decrease:flags=bilinear[fg_{idx}];"
-                            f"[bg_{idx}][fg_{idx}]overlay=(W-w)/2:(H-h)/2,setsar=1[v{idx}]"
+                            f"[fg_raw_{idx}]scale={fg_w}:{fg_h}:force_original_aspect_ratio=decrease:flags=bilinear[fg_{idx}];"
+                            f"[bg_{idx}][fg_{idx}]overlay='(W-w)/2 + W*({pan_x}/100)':'(H-h)/2 + H*({pan_y}/100)',setsar=1[v{idx}]"
                         )
                 elif mode == "original_16_9":
                     filter_chunks.append(
                         f"{in_v}scale=1920:1080:force_original_aspect_ratio=decrease:flags=bilinear,setsar=1[v{idx}]"
                     )
                 else:
-                    # Default: crop_9_16
-                    filter_chunks.append(
-                        f"{in_v}scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT},setsar=1[v{idx}]"
-                    )
+                    # Default: crop_9_16 with zoom and pan
+                    if scale_val >= 1.0:
+                        sw = int(settings.TARGET_WIDTH * scale_val)
+                        sh = int(settings.TARGET_HEIGHT * scale_val)
+                        sw -= sw % 2
+                        sh -= sh % 2
+                        filter_chunks.append(
+                            f"{in_v}scale={sw}:{sh}:force_original_aspect_ratio=increase:flags=bilinear,"
+                            f"crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:"
+                            f"x='min(max(0, (in_w-out_w)/2 + (in_w-out_w)*({pan_x}/100)), in_w-out_w)':"
+                            f"y='min(max(0, (in_h-out_h)/2 + (in_h-out_h)*({pan_y}/100)), in_h-out_h)',setsar=1[v{idx}]"
+                        )
+                    else:
+                        sw = int(settings.TARGET_WIDTH * scale_val)
+                        sh = int(settings.TARGET_HEIGHT * scale_val)
+                        sw -= sw % 2
+                        sh -= sh % 2
+                        filter_chunks.append(
+                            f"{in_v}scale={sw}:{sh}:force_original_aspect_ratio=increase:flags=bilinear,"
+                            f"pad={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:"
+                            f"'(ow-iw)/2 + ow*({pan_x}/100)':'(oh-ih)/2 + oh*({pan_y}/100)':color=black,setsar=1[v{idx}]"
+                        )
 
                 concat_streams += f"[v{idx}][{idx}:a]"
 
@@ -416,8 +488,16 @@ class VideoRenderer:
             )
             v_cat_target = "[vcat]"
 
-            # Quality enhancement & subtitles
+            # Mirroring, Quality enhancement, anti-copyright & subtitles
             post_filters = []
+            if mirror_video:
+                post_filters.append("hflip")
+
+            if anti_copyright:
+                post_filters.append("eq=contrast=1.025:saturation=1.035:brightness=0.008:gamma=1.018")
+                post_filters.append("noise=alls=1.5:allf=t")
+                post_filters.append("vignette=PI/7")
+
             if enhance_quality:
                 post_filters.append("eq=contrast=1.04:saturation=1.08:brightness=0.01")
                 post_filters.append("unsharp=lx=3:ly=3:la=0.35:cx=3:cy=3:ca=0.15")
@@ -431,8 +511,11 @@ class VideoRenderer:
             else:
                 filter_chunks.append(f"{v_cat_target}null[vout]")
 
-            # Audio loudness normalization
-            filter_chunks.append("[acat]loudnorm=I=-14:TP=-1.0:LRA=11[aout]")
+            # Audio loudness & anti-copyright normalization
+            if anti_copyright:
+                filter_chunks.append("[acat]asetrate=48000*1.012,aresample=48000,atempo=1/1.012,equalizer=f=1000:t=q:w=1.2:g=-1.2,equalizer=f=3200:t=q:w=1.4:g=1.0,loudnorm=I=-14:TP=-1.0:LRA=11[aout]")
+            else:
+                filter_chunks.append("[acat]loudnorm=I=-14:TP=-1.0:LRA=11[aout]")
 
             full_filter = ";".join(filter_chunks)
             cmd = [
@@ -456,7 +539,7 @@ class VideoRenderer:
                 str(out)
             ]
 
-        logger.info(f"Executing FFmpeg render ({len(valid_intervals)} segments, framing: {mode}, blur: {r}px, duration: {duration:.1f}s, subtitles: {burn_captions})")
+        logger.info(f"Executing FFmpeg render ({len(valid_intervals)} segments, framing: {mode}, scale: {scale_val:.2f}, pan: ({pan_x:.1f},{pan_y:.1f}), mirror: {mirror_video}, anti_copyright: {anti_copyright}, blur: {r}px, duration: {duration:.1f}s, subtitles: {burn_captions})")
         proc = await asyncio.create_subprocess_exec(
             *cmd,
             stdout=asyncio.subprocess.PIPE,
@@ -481,6 +564,10 @@ class VideoRenderer:
             fallback_e = max(e for s, e in valid_intervals)
             fallback_dur = max(1.0, fallback_e - fallback_s)
             fallback_vf = f"scale={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}:force_original_aspect_ratio=increase:flags=bilinear,crop={settings.TARGET_WIDTH}:{settings.TARGET_HEIGHT}"
+            if mirror_video:
+                fallback_vf += ",hflip"
+            if anti_copyright:
+                fallback_vf += ",eq=contrast=1.025:saturation=1.035:brightness=0.008:gamma=1.018,noise=alls=1.5:allf=t,vignette=PI/7"
             if final_ass_path and final_ass_path.exists():
                 escaped_ass = str(final_ass_path).replace("\\", "/").replace(":", "\\:")
                 fallback_vf += f",subtitles='{escaped_ass}'"
@@ -492,6 +579,7 @@ class VideoRenderer:
                 "-i", str(src),
                 "-t", f"{fallback_dur:.3f}",
                 "-vf", fallback_vf,
+                "-af", audio_filter,
                 "-c:v", "libx264",
                 "-preset", "veryfast",
                 "-crf", "18",

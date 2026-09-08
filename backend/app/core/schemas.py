@@ -146,6 +146,11 @@ class RenderedClipResponse(BaseModel):
     part_badge_align: Optional[str] = "center"
     enable_series_parts: bool = True
     add_part_badge: bool = True
+    mirror_video: bool = False
+    anti_copyright: bool = False
+    video_scale: float = 1.0
+    video_pan_x: float = 0.0
+    video_pan_y: float = 0.0
     is_favorite: bool = False
     is_rejected: bool = False
     created_at: datetime
@@ -204,6 +209,13 @@ class ProjectProcessRequest(BaseModel):
     add_part_badge: bool = True
     part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
+    mirror_video: bool = False
+    anti_copyright: bool = False
+    video_scale: float = Field(default=1.0, ge=0.5, le=2.0)
+    video_pan_x: float = Field(default=0.0, ge=-50.0, le=50.0)
+    video_pan_y: float = Field(default=0.0, ge=-50.0, le=50.0)
+    custom_min_duration: Optional[float] = None
+    custom_max_duration: Optional[float] = None
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
     source_diversity_weight: float = Field(default=0.35, ge=0.0, le=1.0)
@@ -220,6 +232,8 @@ class JobCreateRequest(BaseModel):
     duration_preset: Literal["15-30s", "30-45s", "45-60s", "60-90s", "custom"] = "60-90s"
     min_duration: Optional[float] = None
     max_duration: Optional[float] = None
+    custom_min_duration: Optional[float] = None
+    custom_max_duration: Optional[float] = None
     ai_provider: Optional[Literal["gemini", "groq", "mock"]] = None
     caption_style: str = "tiktok_rounded_box"
     burn_captions: bool = True
@@ -235,6 +249,11 @@ class JobCreateRequest(BaseModel):
     add_part_badge: bool = True
     part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
+    mirror_video: bool = False
+    anti_copyright: bool = False
+    video_scale: float = Field(default=1.0, ge=0.5, le=2.0)
+    video_pan_x: float = Field(default=0.0, ge=-50.0, le=50.0)
+    video_pan_y: float = Field(default=0.0, ge=-50.0, le=50.0)
     remove_watermark: bool = True
     watermark_position: str = "auto"
     enhance_quality: bool = True
@@ -281,6 +300,11 @@ class ClipEditRequest(BaseModel):
     remove_watermark: Optional[bool] = None
     watermark_position: Optional[str] = None
     enhance_quality: Optional[bool] = None
+    mirror_video: Optional[bool] = None
+    anti_copyright: Optional[bool] = None
+    video_scale: Optional[float] = Field(default=None, ge=0.5, le=2.0)
+    video_pan_x: Optional[float] = Field(default=None, ge=-50.0, le=50.0)
+    video_pan_y: Optional[float] = Field(default=None, ge=-50.0, le=50.0)
 
 
 class ClipRegenerateRequest(BaseModel):
@@ -302,6 +326,11 @@ class ClipRegenerateRequest(BaseModel):
     remove_watermark: Optional[bool] = None
     watermark_position: Optional[str] = None
     enhance_quality: Optional[bool] = None
+    mirror_video: Optional[bool] = None
+    anti_copyright: Optional[bool] = None
+    video_scale: Optional[float] = Field(default=None, ge=0.5, le=2.0)
+    video_pan_x: Optional[float] = Field(default=None, ge=-50.0, le=50.0)
+    video_pan_y: Optional[float] = Field(default=None, ge=-50.0, le=50.0)
     custom_note: Optional[str] = None
 
 

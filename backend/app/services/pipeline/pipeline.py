@@ -360,6 +360,9 @@ class VideoProcessingPipeline:
                     "genre": video_genre,
                     "filename": video.filename,
                 }
+                custom_min_d = getattr(job, "custom_min_duration", None)
+                custom_max_d = getattr(job, "custom_max_duration", None)
+
                 raw_candidates = await candidate_discovery_service.discover_candidates(
                     ai_provider=ai_provider,
                     transcript_segments=raw_segments,
@@ -368,6 +371,8 @@ class VideoProcessingPipeline:
                     duration_preset=duration_preset,
                     mode=mode,
                     custom_instructions=custom_instructions,
+                    custom_min_duration=custom_min_d,
+                    custom_max_duration=custom_max_d,
                 )
                 latency = (datetime.now() - t0).total_seconds() * 1000.0
 
@@ -390,7 +395,13 @@ class VideoProcessingPipeline:
                 # Stage 9: Expand candidate context
                 await self.update_job_progress(session, job, 9, "Expanding context and snapping to sentence boundaries")
                 expanded_candidates = [
-                    context_expansion_service.expand_candidate_context(c, raw_segments, video.duration_seconds)
+                    context_expansion_service.expand_candidate_context(
+                        c,
+                        raw_segments,
+                        video.duration_seconds,
+                        custom_min_duration=custom_min_d,
+                        custom_max_duration=custom_max_d,
+                    )
                     for c in raw_candidates
                 ]
 
@@ -411,7 +422,13 @@ class VideoProcessingPipeline:
                 # Stage 13 & 14: Rank globally and apply duration constraints
                 await self.update_job_progress(session, job, 13, "Ranking candidates globally")
                 await self.update_job_progress(session, job, 14, f"Enforcing duration target ({duration_preset}) with narrative preservation")
-                ranked_clips = ranking_service.rank_and_select(deduped, target_count=requested_clips, duration_preset=duration_preset)
+                ranked_clips = ranking_service.rank_and_select(
+                    deduped,
+                    target_count=requested_clips,
+                    duration_preset=duration_preset,
+                    custom_min_duration=custom_min_d,
+                    custom_max_duration=custom_max_d,
+                )
 
 
                 # Stage 15: Store candidate records
@@ -528,6 +545,12 @@ class VideoProcessingPipeline:
                     if job_enhance_quality is None:
                         job_enhance_quality = True
 
+                    job_mirror_video = getattr(job, "mirror_video", False) or False
+                    job_anti_copyright = getattr(job, "anti_copyright", False) or False
+                    job_video_scale = getattr(job, "video_scale", 1.0) or 1.0
+                    job_video_pan_x = getattr(job, "video_pan_x", 0.0) or 0.0
+                    job_video_pan_y = getattr(job, "video_pan_y", 0.0) or 0.0
+
                     # Accurate burn logic: Burn if any visual overlay is active (subtitles, hook header, or part badge)
                     if job_burn_captions and (not caption_style or caption_style == "none"):
                         caption_style = "tiktok_viral"
@@ -587,6 +610,11 @@ class VideoProcessingPipeline:
                             remove_watermark=job_remove_watermark,
                             watermark_position=job_watermark_position,
                             enhance_quality=job_enhance_quality,
+                            mirror_video=job_mirror_video,
+                            anti_copyright=job_anti_copyright,
+                            video_scale=job_video_scale,
+                            video_pan_x=job_video_pan_x,
+                            video_pan_y=job_video_pan_y,
                         )
 
                     # Stage 18: Generate thumbnails from rendered vertical video (guarantees 9:16 layout & non-black frame)
@@ -645,6 +673,11 @@ class VideoProcessingPipeline:
                         remove_watermark=job_remove_watermark,
                         watermark_position=job_watermark_position,
                         enhance_quality=job_enhance_quality,
+                        mirror_video=job_mirror_video,
+                        anti_copyright=job_anti_copyright,
+                        video_scale=job_video_scale,
+                        video_pan_x=job_video_pan_x,
+                        video_pan_y=job_video_pan_y,
                         hook_strategy=job_hook_strat,
                         caption_style=caption_style if (job_burn_captions and caption_style) else "none",
                         burn_captions=bool(job_burn_captions),
@@ -805,6 +838,8 @@ class VideoProcessingPipeline:
                 raw_segs = json.loads(tr.segments_json)
 
             # Discover candidates
+            custom_min_d = getattr(job, "custom_min_duration", None)
+            custom_max_d = getattr(job, "custom_max_duration", None)
             v_title = getattr(v, "title", None) or getattr(v, "original_filename", None) or getattr(v, "filename", None) or "Video"
             raw_cands = await candidate_discovery_service.discover_candidates(
                 ai_provider=ai_provider,
@@ -818,10 +853,18 @@ class VideoProcessingPipeline:
                 requested_clips_count=max(5, requested_clips // len(project_videos)),
                 duration_preset=duration_preset,
                 mode=mode,
+                custom_min_duration=custom_min_d,
+                custom_max_duration=custom_max_d,
             )
 
             expanded = [
-                context_expansion_service.expand_candidate_context(c, raw_segs, v.duration_seconds)
+                context_expansion_service.expand_candidate_context(
+                    c,
+                    raw_segs,
+                    v.duration_seconds,
+                    custom_min_duration=custom_min_d,
+                    custom_max_duration=custom_max_d,
+                )
                 for c in raw_cands
             ]
             scored = []
@@ -843,6 +886,8 @@ class VideoProcessingPipeline:
             target_count=requested_clips,
             duration_preset=duration_preset,
             source_diversity_weight=source_diversity_weight,
+            custom_min_duration=custom_min_d,
+            custom_max_duration=custom_max_d,
         )
 
         # Render top global clips
@@ -952,6 +997,12 @@ class VideoProcessingPipeline:
             if job_enhance_quality is None:
                 job_enhance_quality = True
 
+            job_mirror_video = getattr(job, "mirror_video", False) or False
+            job_anti_copyright = getattr(job, "anti_copyright", False) or False
+            job_video_scale = getattr(job, "video_scale", 1.0) or 1.0
+            job_video_pan_x = getattr(job, "video_pan_x", 0.0) or 0.0
+            job_video_pan_y = getattr(job, "video_pan_y", 0.0) or 0.0
+
             if job_burn_captions and (not caption_style or caption_style == "none"):
                 caption_style = "tiktok_viral"
 
@@ -1007,6 +1058,11 @@ class VideoProcessingPipeline:
                 remove_watermark=job_remove_watermark,
                 watermark_position=job_watermark_position,
                 enhance_quality=job_enhance_quality,
+                mirror_video=job_mirror_video,
+                anti_copyright=job_anti_copyright,
+                video_scale=job_video_scale,
+                video_pan_x=job_video_pan_x,
+                video_pan_y=job_video_pan_y,
             )
 
             await renderer.generate_thumbnail(out_video, 1.0, thumb)
@@ -1048,6 +1104,11 @@ class VideoProcessingPipeline:
                 remove_watermark=job_remove_watermark,
                 watermark_position=job_watermark_position,
                 enhance_quality=job_enhance_quality,
+                mirror_video=job_mirror_video,
+                anti_copyright=job_anti_copyright,
+                video_scale=job_video_scale,
+                video_pan_x=job_video_pan_x,
+                video_pan_y=job_video_pan_y,
                 hook_strategy=getattr(job, "hook_strategy", None) or "teaser_climax_hook",
                 caption_style=caption_style if (job_burn_captions and caption_style) else "none",
                 burn_captions=bool(job_burn_captions),

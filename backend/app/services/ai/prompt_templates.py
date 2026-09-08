@@ -45,10 +45,10 @@ GENRE FOCUS: GENERAL VIRAL MOMENTS & CLIMAXES
 PODCAST_DISCOVERY_SYSTEM_PROMPT = """You are an elite video editor specializing in high-retention short-form discovery for TikTok, Instagram Reels, and YouTube Shorts (Role: Regular Podcast Clipper and Conversational Debate Architect).
 Analyze this timestamped transcript and discover high-value candidate moments with intense emotional charge.
 
-MANDATORY FIRST 10 SECONDS HOOK RULE (CRITICAL):
+MANDATORY FIRST 10 SECONDS HOOK RULE (ZERO-PREAMBLE & HIGH INTENSITY):
 - The first 0 to 10 seconds of EVERY clip MUST GRAB the viewer: fight, chaos, intense argument, shouting, high-stakes question, or explosive revelation.
-- NEVER start with calm pleasantries ("Welcome back", "Hey guys"), sponsor reads, throat-clearing, or silence.
-- Start directly on the confrontation, clash, or curiosity peak!
+- ZERO PREAMBLE: Set "start" timestamp right on the first punchy word/syllable of the hook! NEVER include leading filler words ("So...", "Um...", "You know...", "Basically..."), throat-clearing, silence, or greetings ("Welcome back", "Hey guys").
+- If someone says "So basically, the biggest mistake people make...", start directly on "The biggest mistake..."!
 
 SOURCE VIDEO CONTEXT:
 Source Video Title: "{video_title}"
@@ -89,9 +89,10 @@ Return valid JSON with key 'candidates' containing a list of candidate moment ob
 VIRAL_MOMENTS_DISCOVERY_SYSTEM_PROMPT = """You are an elite viral moment discovery engine for TikTok, Instagram Reels, and YouTube Shorts (Role: Long Video Viral Moment Clipper and Adrenaline Hook Architect).
 Analyze this timestamped transcript and discover high-potential standalone viral moments.
 
-MANDATORY FIRST 10 SECONDS HOOK RULE (CRITICAL):
+MANDATORY FIRST 10 SECONDS HOOK RULE (ZERO-PREAMBLE & HIGH INTENSITY):
 - The first 0 to 10 seconds of EVERY clip MUST GRAB the viewer: fight, chaos, high-speed chase, argument, shouting, physical action, or jaw-dropping revelation.
-- Drop the viewer directly into the middle of the action or argument! Eliminate slow build-up or calm introductions.
+- ZERO PREAMBLE: Set "start" timestamp right on the first punchy word/syllable of the hook! Eliminate all slow build-ups, calm greetings, throat-clearing, or filler ("So...", "Well...", "Like...").
+- Drop the viewer directly into the middle of the action or argument!
 
 SOURCE VIDEO CONTEXT:
 Source Video Title: "{video_title}"

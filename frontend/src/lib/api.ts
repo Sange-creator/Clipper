@@ -278,6 +278,11 @@ export const api = {
     remove_watermark?: boolean;
     watermark_position?: string;
     enhance_quality?: boolean;
+    mirror_video?: boolean;
+    anti_copyright?: boolean;
+    video_scale?: number;
+    video_pan_x?: number;
+    video_pan_y?: number;
   }): Promise<RenderedClipResponse> {
     const res = await fetch(`${API_BASE}/clips/${id}/re-render`, {
       method: "POST",
@@ -293,6 +298,19 @@ export const api = {
       method: "POST",
     });
     if (!res.ok) throw new Error("Failed to refresh thumbnail");
+    return res.json();
+  },
+
+  async snapToHook(id: string): Promise<{
+    original_start: number;
+    snapped_start: number;
+    delta_seconds: number;
+    filler_skipped: boolean;
+  }> {
+    const res = await fetch(`${API_BASE}/clips/${id}/snap-hook`, {
+      method: "POST",
+    });
+    if (!res.ok) throw new Error("Failed to snap to hook");
     return res.json();
   },
 
@@ -313,6 +331,11 @@ export const api = {
     remove_watermark?: boolean;
     watermark_position?: string;
     enhance_quality?: boolean;
+    mirror_video?: boolean;
+    anti_copyright?: boolean;
+    video_scale?: number;
+    video_pan_x?: number;
+    video_pan_y?: number;
   }): Promise<RenderedClipResponse> {
     const res = await fetch(`${API_BASE}/clips/${id}/regenerate`, {
       method: "POST",

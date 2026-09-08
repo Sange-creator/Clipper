@@ -99,7 +99,12 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     burnCaptions?: boolean,
     addPartBadge?: boolean,
     partBadgePosition?: number,
-    partBadgeAlign?: string
+    partBadgeAlign?: string,
+    mirrorVideo?: boolean,
+    antiCopyright?: boolean,
+    videoScale?: number,
+    videoPanX?: number,
+    videoPanY?: number
   ) => {
     if (!clip) return;
     const updated = await api.rerenderClip(clip.id, {
@@ -121,6 +126,11 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
       remove_watermark: removeWatermark,
       watermark_position: watermarkPosition,
       enhance_quality: enhanceQuality,
+      mirror_video: mirrorVideo !== undefined ? mirrorVideo : clip.mirror_video,
+      anti_copyright: antiCopyright !== undefined ? antiCopyright : clip.anti_copyright,
+      video_scale: videoScale !== undefined ? videoScale : clip.video_scale,
+      video_pan_x: videoPanX !== undefined ? videoPanX : clip.video_pan_x,
+      video_pan_y: videoPanY !== undefined ? videoPanY : clip.video_pan_y,
     });
     setClip(updated);
   };
@@ -297,6 +307,12 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
             initialRemoveWatermark={clip.remove_watermark}
             initialWatermarkPosition={clip.watermark_position as any}
             initialEnhanceQuality={clip.enhance_quality}
+            initialMirrorVideo={clip.mirror_video}
+            initialAntiCopyright={clip.anti_copyright}
+            initialVideoScale={clip.video_scale}
+            initialVideoPanX={clip.video_pan_x}
+            initialVideoPanY={clip.video_pan_y}
+            clipId={clip.id}
             onRerender={handleRerender}
           />
 

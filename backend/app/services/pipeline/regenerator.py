@@ -40,6 +40,11 @@ class ClipRegeneratorService:
         burn_captions: Optional[bool] = None,
         enable_series_parts: Optional[bool] = None,
         add_part_badge: Optional[bool] = None,
+        mirror_video: Optional[bool] = None,
+        anti_copyright: Optional[bool] = None,
+        video_scale: Optional[float] = None,
+        video_pan_x: Optional[float] = None,
+        video_pan_y: Optional[float] = None,
     ) -> RenderedClip:
         """Apply strategic regeneration adjustments and re-render clip."""
         stmt = (
@@ -68,8 +73,10 @@ class ClipRegeneratorService:
 
         # Apply intent transformations
         if intent == "stronger_hook":
-            # Trim first 2 seconds of fluff
-            start_time = min(end_time - 5.0, start_time + 2.0)
+            # Snap directly to the nearest punchy hook word and remove fillers
+            from app.services.pipeline.context_expansion import context_expansion_service
+            snapped = context_expansion_service.snap_to_hook(start_time + 0.8, segments)
+            start_time = min(end_time - 5.0, snapped)
         elif intent == "shorter_duration":
             # Trim 15% from end
             dur = end_time - start_time
@@ -110,6 +117,12 @@ class ClipRegeneratorService:
         if chosen_enhance is None:
             chosen_enhance = True
 
+        chosen_mirror = mirror_video if mirror_video is not None else getattr(clip, "mirror_video", False)
+        chosen_anti_copy = anti_copyright if anti_copyright is not None else getattr(clip, "anti_copyright", False)
+        chosen_scale = video_scale if video_scale is not None else getattr(clip, "video_scale", 1.0)
+        chosen_pan_x = video_pan_x if video_pan_x is not None else getattr(clip, "video_pan_x", 0.0)
+        chosen_pan_y = video_pan_y if video_pan_y is not None else getattr(clip, "video_pan_y", 0.0)
+
         clip.caption_style = chosen_style if (chosen_burn_captions and chosen_style) else "none"
         clip.burn_captions = bool(chosen_burn_captions)
         clip.enable_series_parts = bool(chosen_enable_parts)
@@ -122,6 +135,11 @@ class ClipRegeneratorService:
         clip.remove_watermark = chosen_remove_wm
         clip.watermark_position = chosen_wm_pos
         clip.enhance_quality = chosen_enhance
+        clip.mirror_video = bool(chosen_mirror)
+        clip.anti_copyright = bool(chosen_anti_copy)
+        clip.video_scale = float(chosen_scale or 1.0)
+        clip.video_pan_x = float(chosen_pan_x or 0.0)
+        clip.video_pan_y = float(chosen_pan_y or 0.0)
 
         video_path = Path(video.file_path)
         ass_path = settings.SUBTITLE_DIR / f"{clip.id}.ass"
@@ -192,6 +210,11 @@ class ClipRegeneratorService:
             remove_watermark=chosen_remove_wm,
             watermark_position=chosen_wm_pos,
             enhance_quality=chosen_enhance,
+            mirror_video=clip.mirror_video,
+            anti_copyright=clip.anti_copyright,
+            video_scale=clip.video_scale,
+            video_pan_x=clip.video_pan_x,
+            video_pan_y=clip.video_pan_y,
         )
 
         # 3. Thumbnail from rendered vertical video (guarantees 9:16 layout & non-black frame)

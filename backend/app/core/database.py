@@ -77,11 +77,23 @@ async def init_db() -> None:
             ("jobs", "part_badge_position", "INTEGER DEFAULT 6"),
             ("jobs", "part_badge_align", "VARCHAR(16) DEFAULT 'center'"),
             ("jobs", "add_part_badge", "BOOLEAN DEFAULT 1"),
+            ("jobs", "mirror_video", "BOOLEAN DEFAULT 0"),
+            ("jobs", "anti_copyright", "BOOLEAN DEFAULT 0"),
+            ("jobs", "video_scale", "FLOAT DEFAULT 1.0"),
+            ("jobs", "video_pan_x", "FLOAT DEFAULT 0.0"),
+            ("jobs", "video_pan_y", "FLOAT DEFAULT 0.0"),
+            ("jobs", "custom_min_duration", "FLOAT"),
+            ("jobs", "custom_max_duration", "FLOAT"),
             ("rendered_clips", "canvas_background", "VARCHAR(32) DEFAULT 'blur'"),
             ("rendered_clips", "part_badge_position", "INTEGER DEFAULT 6"),
             ("rendered_clips", "part_badge_align", "VARCHAR(16) DEFAULT 'center'"),
             ("rendered_clips", "enable_series_parts", "BOOLEAN DEFAULT 1"),
             ("rendered_clips", "add_part_badge", "BOOLEAN DEFAULT 1"),
+            ("rendered_clips", "mirror_video", "BOOLEAN DEFAULT 0"),
+            ("rendered_clips", "anti_copyright", "BOOLEAN DEFAULT 0"),
+            ("rendered_clips", "video_scale", "FLOAT DEFAULT 1.0"),
+            ("rendered_clips", "video_pan_x", "FLOAT DEFAULT 0.0"),
+            ("rendered_clips", "video_pan_y", "FLOAT DEFAULT 0.0"),
         ]
 
         for table, col, col_type in migrations:

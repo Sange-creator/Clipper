@@ -71,6 +71,8 @@ class AIProvider(ABC):
         duration_target: str = "30-45s",
         mode: str = "podcast",
         custom_instructions: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         """Discover an oversized pool of candidate moments (e.g. 5x-10x requested count)."""
         pass

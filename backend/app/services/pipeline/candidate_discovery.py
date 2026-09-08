@@ -19,6 +19,8 @@ class CandidateDiscoveryService:
         duration_preset: str = "30-45s",
         mode: str = "podcast",
         custom_instructions: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         """
         Discovers an oversized candidate pool (e.g. 5x - 10x of requested count)
@@ -35,6 +37,8 @@ class CandidateDiscoveryService:
                 duration_target=duration_preset,
                 mode=mode,
                 custom_instructions=custom_instructions,
+                custom_min_duration=custom_min_duration,
+                custom_max_duration=custom_max_duration,
             )
             if candidates and len(candidates) > 0:
                 logger.info(f"AI Provider returned {len(candidates)} raw candidate moments.")
@@ -52,6 +56,8 @@ class CandidateDiscoveryService:
             duration_target=duration_preset,
             mode=mode,
             custom_instructions=custom_instructions,
+            custom_min_duration=custom_min_duration,
+            custom_max_duration=custom_max_duration,
         )
 
 

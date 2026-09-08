@@ -16,9 +16,15 @@ class RankingService:
         deduplicated_candidates: List[Tuple[RawCandidateMoment, float, float]],
         target_count: int,
         duration_preset: str = "30-45s",
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[Tuple[RawCandidateMoment, float, float, int]]:
         """Single video ranking respecting user duration constraints."""
-        target_min, target_max = self._get_duration_bounds(duration_preset)
+        target_min, target_max = self._get_duration_bounds(
+            duration_preset,
+            custom_min_duration=custom_min_duration,
+            custom_max_duration=custom_max_duration,
+        )
 
         scored_candidates = []
         for candidate, comp_score, penalty in deduplicated_candidates:
@@ -51,13 +57,19 @@ class RankingService:
         target_count: int,
         duration_preset: str = "30-45s",
         source_diversity_weight: float = 0.35,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[Tuple[str, RawCandidateMoment, float, float, int]]:
         """
         Cross-Video Global Ranking using Greedy Diversity Selection:
         Combines candidates from all videos in a project and dynamically balances
         source representation using diversity penalties while prioritizing quality.
         """
-        target_min, target_max = self._get_duration_bounds(duration_preset)
+        target_min, target_max = self._get_duration_bounds(
+            duration_preset,
+            custom_min_duration=custom_min_duration,
+            custom_max_duration=custom_max_duration,
+        )
 
         # Build candidate pool with adjusted base scores
         pool: List[Dict[str, Any]] = []
@@ -118,7 +130,19 @@ class RankingService:
         )
         return results
 
-    def _get_duration_bounds(self, duration_preset: str) -> Tuple[float, float]:
+    def _get_duration_bounds(
+        self,
+        duration_preset: str,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
+    ) -> Tuple[float, float]:
+        if duration_preset == "custom" or (custom_min_duration is not None and custom_max_duration is not None):
+            c_min = float(custom_min_duration or 15.0)
+            c_max = float(custom_max_duration or 60.0)
+            if c_max < c_min:
+                c_max = c_min + 15.0
+            return max(5.0, c_min - 2.0), c_max + 4.0
+
         if "15-30" in duration_preset:
             return 14.0, 34.0
         elif "30-45" in duration_preset:

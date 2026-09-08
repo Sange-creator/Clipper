@@ -45,6 +45,11 @@ import {
   Tag,
   ArrowRight,
   ShieldAlert,
+  ShieldCheck,
+  FlipHorizontal,
+  Move,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 
 import { api } from "@/lib/api";
@@ -94,6 +99,13 @@ export function VideoUploader() {
   } | null>(null);
   const [enhanceQuality, setEnhanceQuality] = useState<boolean>(true);
   const [removeDeadAir, setRemoveDeadAir] = useState<boolean>(true);
+  const [mirrorVideo, setMirrorVideo] = useState<boolean>(false);
+  const [antiCopyright, setAntiCopyright] = useState<boolean>(false);
+  const [videoScale, setVideoScale] = useState<number>(1.0);
+  const [videoPanX, setVideoPanX] = useState<number>(0.0);
+  const [videoPanY, setVideoPanY] = useState<number>(0.0);
+  const [customMinDuration, setCustomMinDuration] = useState<number>(30);
+  const [customMaxDuration, setCustomMaxDuration] = useState<number>(60);
   const [framingMode, setFramingMode] = useState<"crop_9_16" | "blur_fit_9_16" | "original_16_9">("blur_fit_9_16");
   const [canvasBackground, setCanvasBackground] = useState<"blur" | "black" | "white" | "gradient_obsidian" | "gradient_violet" | "gradient_sunset" | "gradient_ocean">("blur");
   const [blurRadius, setBlurRadius] = useState<number>(30);
@@ -191,6 +203,13 @@ export function VideoUploader() {
         genre: genre,
         target_clips_count: targetClipsCount,
         duration_preset: durationPreset,
+        custom_min_duration: durationPreset === "custom" ? customMinDuration : undefined,
+        custom_max_duration: durationPreset === "custom" ? customMaxDuration : undefined,
+        mirror_video: mirrorVideo,
+        anti_copyright: antiCopyright,
+        video_scale: videoScale,
+        video_pan_x: videoPanX,
+        video_pan_y: videoPanY,
         caption_style: resolvedCaptionStyle,
         burn_captions: burnCaptions,
         add_hook_header: addHookHeader,
@@ -1056,6 +1075,224 @@ export function VideoUploader() {
           )}
         </div>
 
+        {/* Mirror, Anti-Copyright & Manual Zoom/Pan Studio */}
+        <div className="glass-panel rounded-xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Move className="h-4 w-4 text-amber-400" />
+              <div>
+                <h4 className="text-xs font-semibold text-white">Manual Zoom, Pan, Mirror & Anti-Copyright</h4>
+                <p className="text-[11px] text-zinc-400">Scale, position, mirror, and shield your video against content detection</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {mirrorVideo && (
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                  Mirrored
+                </span>
+              )}
+              {antiCopyright && (
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                  Shield Active
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/5">
+            {/* Mirror Video Toggle */}
+            <div className="rounded-xl p-4 bg-white/[0.02] border border-white/10 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FlipHorizontal className="h-4 w-4 text-blue-400" />
+                  <div>
+                    <h5 className="text-xs font-semibold text-white">Mirror Video (Flip Horizontal)</h5>
+                    <p className="text-[10px] text-zinc-400">Flip whole video horizontally</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMirrorVideo(!mirrorVideo)}
+                  className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors cursor-pointer ${
+                    mirrorVideo ? "bg-blue-600" : "bg-zinc-800"
+                  }`}
+                  aria-label="Toggle horizontal mirror"
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      mirrorVideo ? "translate-x-5" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+              <p className="text-[10px] text-zinc-400 leading-relaxed">
+                Reverses video horizontal axis. Evades automated visual reuse detection while keeping subtitle text 100% un-mirrored and readable left-to-right.
+              </p>
+            </div>
+
+            {/* Anti-Copyright Filter Toggle */}
+            <div className="rounded-xl p-4 bg-white/[0.02] border border-white/10 space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                  <div>
+                    <h5 className="text-xs font-semibold text-white">Anti-Copyright Shield</h5>
+                    <p className="text-[10px] text-zinc-400">Audio/video fingerprint evasion</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAntiCopyright(!antiCopyright)}
+                  className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors cursor-pointer ${
+                    antiCopyright ? "bg-emerald-600" : "bg-zinc-800"
+                  }`}
+                  aria-label="Toggle anti-copyright filter"
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      antiCopyright ? "translate-x-5" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+              <p className="text-[10px] text-zinc-400 leading-relaxed">
+                Applies subtle 1.2% audio pitch/tempo shift, dual-band speech EQ, and organic visual grain & vignette to evade Content ID bots without altering dialogue tone.
+              </p>
+            </div>
+          </div>
+
+          {/* Manual Zoom Scaling & Pan Scrubber */}
+          <div className="rounded-xl p-4 bg-black/40 border border-white/10 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ZoomIn className="h-4 w-4 text-amber-400" />
+                <div>
+                  <h5 className="text-xs font-semibold text-white">Manual Zoom Scaling & Framing Ratio</h5>
+                  <p className="text-[10px] text-zinc-400">Zoom out to show whole widescreen, or zoom in to crop close</p>
+                </div>
+              </div>
+              {(videoScale !== 1.0 || videoPanX !== 0 || videoPanY !== 0) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVideoScale(1.0);
+                    setVideoPanX(0);
+                    setVideoPanY(0);
+                  }}
+                  className="text-[10px] text-amber-400 hover:text-amber-300 font-medium px-2 py-0.5 rounded bg-amber-400/10 border border-amber-400/20 cursor-pointer"
+                >
+                  Reset Defaults
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Zoom Scale Slider */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] text-zinc-300 font-medium flex items-center gap-1">
+                    <ZoomIn className="h-3 w-3 text-amber-400" /> Zoom Scale
+                  </label>
+                  <span className="text-[10px] font-mono text-amber-300">
+                    {Math.round(videoScale * 100)}% ({videoScale.toFixed(2)}x)
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0.5}
+                  max={1.8}
+                  step={0.05}
+                  value={videoScale}
+                  onChange={(e) => setVideoScale(Number(e.target.value))}
+                  className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[9px] text-zinc-400">
+                  <span>50% (Zoom Out)</span>
+                  <span>100% (Fit)</span>
+                  <span>180% (Zoom In)</span>
+                </div>
+              </div>
+
+              {/* Horizontal Pan Slider */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] text-zinc-300 font-medium">Horizontal Pan (X)</label>
+                  <span className="text-[10px] font-mono text-amber-300">
+                    {videoPanX > 0 ? `+${videoPanX.toFixed(0)}% Right` : videoPanX < 0 ? `${videoPanX.toFixed(0)}% Left` : "0% Center"}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={-50}
+                  max={50}
+                  step={1}
+                  value={videoPanX}
+                  onChange={(e) => setVideoPanX(Number(e.target.value))}
+                  className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[9px] text-zinc-400">
+                  <span>-50% Left</span>
+                  <span>Center</span>
+                  <span>+50% Right</span>
+                </div>
+              </div>
+
+              {/* Vertical Pan Slider */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] text-zinc-300 font-medium">Vertical Pan (Y)</label>
+                  <span className="text-[10px] font-mono text-amber-300">
+                    {videoPanY > 0 ? `+${videoPanY.toFixed(0)}% Down` : videoPanY < 0 ? `${videoPanY.toFixed(0)}% Up` : "0% Center"}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={-50}
+                  max={50}
+                  step={1}
+                  value={videoPanY}
+                  onChange={(e) => setVideoPanY(Number(e.target.value))}
+                  className="w-full accent-amber-400 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[9px] text-zinc-400">
+                  <span>-50% Up</span>
+                  <span>Center</span>
+                  <span>+50% Down</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Visual Viewport Simulation Box */}
+            <div className="pt-2 border-t border-white/5 flex flex-col sm:flex-row items-center gap-4">
+              <div className="relative w-24 h-40 bg-zinc-950 rounded-lg border-2 border-amber-400/50 overflow-hidden flex items-center justify-center flex-shrink-0 shadow-inner">
+                {/* Simulated inner video container responding to scale and pan */}
+                <div
+                  className={`w-20 h-12 bg-gradient-to-r from-violet-600/80 to-indigo-600/80 rounded border border-white/30 flex items-center justify-center transition-all duration-75`}
+                  style={{
+                    transform: `scale(${videoScale}) translate(${videoPanX * 0.4}px, ${videoPanY * 0.4}px) ${mirrorVideo ? "scaleX(-1)" : ""}`,
+                  }}
+                >
+                  <Play className="h-3 w-3 text-white/90" />
+                </div>
+                {/* 9:16 Crosshair overlay */}
+                <div className="absolute inset-0 pointer-events-none border border-dashed border-amber-400/30" />
+              </div>
+              <div className="text-[11px] text-zinc-400 space-y-1">
+                <p className="text-white font-medium">Interactive Framing Ratio Viewport</p>
+                <p>
+                  {videoScale < 1.0
+                    ? `Zoomed out to ${(videoScale * 100).toFixed(0)}% — whole widescreen content is preserved within the 9:16 frame without cutting off side details.`
+                    : videoScale > 1.0
+                    ? `Zoomed in to ${(videoScale * 100).toFixed(0)}% — close crop focused on the center subject.`
+                    : "Standard 100% 1:1 framing."}
+                  {mirrorVideo && " Video is mirrored horizontally."}
+                  {antiCopyright && " Anti-copyright shield applied."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* 3. Subtitle, Hook Header & Silence Toggles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -1856,8 +2093,8 @@ export function VideoUploader() {
               </label>
               <span className="text-[11px] text-zinc-500">Story Priority</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {(["15-30s", "30-45s", "45-60s", "60-90s"] as const).map((preset) => (
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {(["15-30s", "30-45s", "45-60s", "60-90s", "custom"] as const).map((preset) => (
                 <button
                   key={preset}
                   type="button"
@@ -1872,6 +2109,32 @@ export function VideoUploader() {
                 </button>
               ))}
             </div>
+            {durationPreset === "custom" && (
+              <div className="pt-2 border-t border-white/5 grid grid-cols-2 gap-3 animate-in fade-in duration-150">
+                <div>
+                  <label className="text-[10px] text-zinc-400 block mb-1">Min Duration (sec)</label>
+                  <input
+                    type="number"
+                    min={5}
+                    max={customMaxDuration - 1}
+                    value={customMinDuration}
+                    onChange={(e) => setCustomMinDuration(Math.max(5, Number(e.target.value)))}
+                    className="w-full rounded-lg bg-black/40 border border-white/10 px-2.5 py-1.5 text-xs text-white focus:border-violet-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-zinc-400 block mb-1">Max Duration (sec)</label>
+                  <input
+                    type="number"
+                    min={customMinDuration + 1}
+                    max={600}
+                    value={customMaxDuration}
+                    onChange={(e) => setCustomMaxDuration(Math.max(customMinDuration + 1, Number(e.target.value)))}
+                    className="w-full rounded-lg bg-black/40 border border-white/10 px-2.5 py-1.5 text-xs text-white focus:border-violet-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Number of Clips to Discover */}

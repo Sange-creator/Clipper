@@ -82,16 +82,23 @@ class GroqProvider(AIProvider):
         duration_target: str = "30-45s",
         mode: str = "podcast",
         custom_instructions: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         if not self.client:
             raise AIProviderError("Groq API key is not configured.")
 
+        effective_target = (
+            f"{int(custom_min_duration)}s to {int(custom_max_duration)}s"
+            if (custom_min_duration is not None and custom_max_duration is not None)
+            else duration_target
+        )
         pool_size = max(requested_count * 5, 40)
         v_title = media_info.get("video_title") or media_info.get("filename") or "Video Highlights"
         v_genre = media_info.get("genre") or mode or "viral_moments"
         system_instruction = get_discovery_prompt(
             mode=mode,
-            duration_target=duration_target,
+            duration_target=effective_target,
             pool_size=pool_size,
             video_title=v_title,
             genre=v_genre,

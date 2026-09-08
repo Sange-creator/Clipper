@@ -84,6 +84,8 @@ class ResilientAIProvider(AIProvider):
         duration_target: str = "30-45s",
         mode: str = "podcast",
         custom_instructions: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         last_error = None
         for provider in self.providers:
@@ -96,6 +98,8 @@ class ResilientAIProvider(AIProvider):
                     duration_target=duration_target,
                     mode=mode,
                     custom_instructions=custom_instructions,
+                    custom_min_duration=custom_min_duration,
+                    custom_max_duration=custom_max_duration,
                 )
                 if results and len(results) > 0:
                     logger.info(f"{provider.__class__.__name__} succeeded with {len(results)} candidate moments.")
@@ -196,6 +200,8 @@ class HybridOrchestratedAIProvider(AIProvider):
         duration_target: str = "30-45s",
         mode: str = "podcast",
         custom_instructions: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         # Fast candidate discovery: Groq is champion for rapid extraction, fallback to Gemini, then Mock
         candidates_chain = [self.groq_provider, self.gemini_provider, self.mock_provider]
@@ -210,6 +216,8 @@ class HybridOrchestratedAIProvider(AIProvider):
                         duration_target=duration_target,
                         mode=mode,
                         custom_instructions=custom_instructions,
+                        custom_min_duration=custom_min_duration,
+                        custom_max_duration=custom_max_duration,
                     )
                     if cands and len(cands) > 0:
                         return cands
@@ -223,6 +231,8 @@ class HybridOrchestratedAIProvider(AIProvider):
             duration_target=duration_target,
             mode=mode,
             custom_instructions=custom_instructions,
+            custom_min_duration=custom_min_duration,
+            custom_max_duration=custom_max_duration,
         )
 
     async def rank_candidates(

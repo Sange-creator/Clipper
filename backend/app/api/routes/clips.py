@@ -225,6 +225,11 @@ async def get_clip(id: str, db: AsyncSession = Depends(get_db)):
         remove_watermark=getattr(clip, "remove_watermark", False) or False,
         watermark_position=getattr(clip, "watermark_position", "top_right") or "top_right",
         enhance_quality=getattr(clip, "enhance_quality", True) if getattr(clip, "enhance_quality", True) is not None else True,
+        mirror_video=getattr(clip, "mirror_video", False) or False,
+        anti_copyright=getattr(clip, "anti_copyright", False) or False,
+        video_scale=float(getattr(clip, "video_scale", 1.0) or 1.0),
+        video_pan_x=float(getattr(clip, "video_pan_x", 0.0) or 0.0),
+        video_pan_y=float(getattr(clip, "video_pan_y", 0.0) or 0.0),
         hook_strategy=getattr(clip, "hook_strategy", "teaser_climax_hook") or "teaser_climax_hook",
         caption_style=clip.caption_style,
         burn_captions=clip.burn_captions,
@@ -333,6 +338,17 @@ async def rerender_clip(
     clip.remove_watermark = remove_wm
     clip.watermark_position = wm_pos
     clip.enhance_quality = enhance
+    mirror = req.mirror_video if req.mirror_video is not None else getattr(clip, "mirror_video", False)
+    anti_copy = req.anti_copyright if req.anti_copyright is not None else getattr(clip, "anti_copyright", False)
+    v_scale = req.video_scale if req.video_scale is not None else getattr(clip, "video_scale", 1.0)
+    v_pan_x = req.video_pan_x if req.video_pan_x is not None else getattr(clip, "video_pan_x", 0.0)
+    v_pan_y = req.video_pan_y if req.video_pan_y is not None else getattr(clip, "video_pan_y", 0.0)
+
+    clip.mirror_video = bool(mirror)
+    clip.anti_copyright = bool(anti_copy)
+    clip.video_scale = float(v_scale or 1.0)
+    clip.video_pan_x = float(v_pan_x or 0.0)
+    clip.video_pan_y = float(v_pan_y or 0.0)
     clip.aspect_ratio = "16:9" if framing == "original_16_9" else "9:16"
     clip.timeline_edit_json = json.dumps(t_edit.model_dump())
 
@@ -398,6 +414,11 @@ async def rerender_clip(
         remove_watermark=remove_wm,
         watermark_position=wm_pos,
         enhance_quality=enhance,
+        mirror_video=clip.mirror_video,
+        anti_copyright=clip.anti_copyright,
+        video_scale=clip.video_scale,
+        video_pan_x=clip.video_pan_x,
+        video_pan_y=clip.video_pan_y,
     )
 
     thumb_path = settings.THUMBNAIL_DIR / f"{clip.id}.jpg"
@@ -410,6 +431,28 @@ async def rerender_clip(
     await db.refresh(clip)
 
     return await get_clip(id, db)
+
+
+@router.post("/{id}/snap-hook")
+async def snap_clip_to_hook(
+    id: str,
+    db: AsyncSession = Depends(get_db),
+):
+    """Snaps the clip's start boundary to the nearest explosive hook sentence starter and strips leading fillers."""
+    stmt = select(RenderedClip).where(RenderedClip.id == id)
+    res = await db.execute(stmt)
+    clip = res.scalar_one_or_none()
+    if not clip:
+        raise HTTPException(status_code=404, detail="Clip not found")
+
+    t_stmt = select(Transcript).where(Transcript.video_id == clip.video_id)
+    t_res = await db.execute(t_stmt)
+    transcript = t_res.scalar_one_or_none()
+    segments = json.loads(transcript.segments_json) if transcript else []
+
+    from app.services.pipeline.context_expansion import context_expansion_service
+    snapped_start = context_expansion_service.snap_to_hook(clip.start_time, segments)
+    return {"snapped_start": snapped_start, "original_start": clip.start_time}
 
 
 @router.post("/{id}/refresh-thumbnail", response_model=RenderedClipResponse)
@@ -460,6 +503,11 @@ async def regenerate_clip(
         burn_captions=req.burn_captions,
         enable_series_parts=req.enable_series_parts,
         add_part_badge=req.add_part_badge,
+        mirror_video=req.mirror_video,
+        anti_copyright=req.anti_copyright,
+        video_scale=req.video_scale,
+        video_pan_x=req.video_pan_x,
+        video_pan_y=req.video_pan_y,
     )
     # Track feedback
     db.add(UserFeedback(clip_id=id, action="regenerated", feedback_text=req.intent))

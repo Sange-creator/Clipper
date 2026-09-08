@@ -586,17 +586,25 @@ class AudioHookAnalyzer:
         duration_target: str = "30-45s",
         mode: str = "viral_moments",
         genre: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         """
         Discovers candidate moments anchored to high-retention spoken dialogue hooks.
         Ensures the first 10 seconds captivate the viewer and starts right on the hook.
+        Respects custom min/max duration targets when provided.
         """
         if not transcript_segments:
             return []
 
         target_min = 25.0
         target_max = 50.0
-        if "15-30" in duration_target:
+        if duration_target == "custom" or (custom_min_duration is not None and custom_max_duration is not None):
+            target_min = float(custom_min_duration or 15.0)
+            target_max = float(custom_max_duration or 60.0)
+            if target_max < target_min:
+                target_max = target_min + 15.0
+        elif "15-30" in duration_target:
             target_min, target_max = 15.0, 32.0
         elif "30-45" in duration_target:
             target_min, target_max = 28.0, 48.0
@@ -614,6 +622,9 @@ class AudioHookAnalyzer:
 
         active_genre = genre or media_info.get("genre") or mode
 
+        # Filler words to skip at candidate start
+        SKIP_START_FILLERS = {"so", "um", "uh", "like", "well", "basically", "and", "but", "now", "hey", "hello", "hi", "right", "yeah", "okay"}
+
         for i in range(num_segs):
             start_seg = transcript_segments[i]
             start_time = float(start_seg.get("start", 0.0))
@@ -624,9 +635,22 @@ class AudioHookAnalyzer:
             if not start_text or len(start_text.split()) < 2:
                 continue
 
+            # Check word-level timestamps and skip leading filler words
             words = start_seg.get("words", [])
             if words and len(words) > 0:
-                first_w_start = words[0].get("start")
+                w_idx = 0
+                while w_idx < len(words) and w_idx < 4:
+                    w = words[w_idx]
+                    w_clean = re.sub(r"[^\w]", "", w.get("word", "").lower())
+                    if w_clean in SKIP_START_FILLERS and w_idx + 1 < len(words):
+                        w_idx += 1
+                        continue
+                    first_w_start = w.get("start")
+                    if first_w_start is not None:
+                        start_time = float(first_w_start)
+                    break
+            else:
+                first_w_start = start_seg.get("start")
                 if first_w_start is not None:
                     start_time = float(first_w_start)
 

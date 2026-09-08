@@ -61,6 +61,8 @@ class MockAIProvider(AIProvider):
         duration_target: str = "30-45s",
         mode: str = "podcast",
         custom_instructions: Optional[str] = None,
+        custom_min_duration: Optional[float] = None,
+        custom_max_duration: Optional[float] = None,
     ) -> List[RawCandidateMoment]:
         if not transcript_segments:
             duration = media_info.get("duration_seconds", 60.0)
@@ -95,6 +97,8 @@ class MockAIProvider(AIProvider):
             requested_count=requested_count,
             duration_target=duration_target,
             mode=mode,
+            custom_min_duration=custom_min_duration,
+            custom_max_duration=custom_max_duration,
         )
 
         if not candidates:
