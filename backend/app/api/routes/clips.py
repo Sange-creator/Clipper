@@ -308,12 +308,19 @@ async def rerender_clip(
     clip.start_time = start_time
     clip.end_time = end_time
     clip.duration = final_dur
-    clip.caption_style = style
+    clip.caption_style = style if (req.burn_captions and style) else "none"
     hook_style = req.hook_header_style if req.hook_header_style is not None else (getattr(clip, "hook_header_style", "viral_creator") or "viral_creator")
     part_pos = req.part_badge_position if req.part_badge_position is not None else (getattr(clip, "part_badge_position", None) or 6)
     part_align = req.part_badge_align if req.part_badge_align is not None else (getattr(clip, "part_badge_align", "center") or "center")
+    enable_parts = req.enable_series_parts if req.enable_series_parts is not None else (
+        req.add_part_badge if req.add_part_badge is not None else (
+            getattr(clip, "enable_series_parts", getattr(clip, "add_part_badge", True))
+        )
+    )
     clip.part_badge_position = part_pos
     clip.part_badge_align = part_align
+    clip.enable_series_parts = bool(enable_parts)
+    clip.add_part_badge = bool(enable_parts)
     clip.burn_captions = req.burn_captions
     clip.framing_mode = framing
     clip.canvas_background = canvas_bg
@@ -355,6 +362,8 @@ async def rerender_clip(
         part_badge_align=part_align,
         canvas_background=canvas_bg,
         framing_mode=framing,
+        add_part_badge=enable_parts,
+        show_subtitles=req.burn_captions,
     )
     captioner.generate_srt(
         segments,
@@ -369,7 +378,11 @@ async def rerender_clip(
     out_video_path = settings.PROCESSED_DIR / f"{clip.id}.mp4"
     crop_info = {"mode": "center_crop"}
 
-    should_burn = bool(req.burn_captions or (style and style != "none") or add_hook or (clip.total_parts and clip.total_parts > 1))
+    should_burn = bool(
+        (req.burn_captions and style and style != "none")
+        or (add_hook and hook_txt)
+        or (enable_parts and clip.part_index)
+    )
     await renderer.render_clip(
         source_video_path=video_path,
         start_time=start_time,
@@ -444,6 +457,9 @@ async def regenerate_clip(
         remove_watermark=req.remove_watermark,
         watermark_position=req.watermark_position,
         enhance_quality=req.enhance_quality,
+        burn_captions=req.burn_captions,
+        enable_series_parts=req.enable_series_parts,
+        add_part_badge=req.add_part_badge,
     )
     # Track feedback
     db.add(UserFeedback(clip_id=id, action="regenerated", feedback_text=req.intent))

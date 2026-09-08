@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Scissors, RefreshCw, Sparkles, Sliders, Subtitles, Check, Smartphone, Maximize2, Monitor, Flame, Eraser, Wand2, Zap, FileText, MessageSquare, Clock, BookOpen } from "lucide-react";
+import { Scissors, RefreshCw, Sparkles, Sliders, Subtitles, Check, Smartphone, Maximize2, Monitor, Flame, Eraser, Wand2, Zap, FileText, MessageSquare, Clock, BookOpen, Bookmark, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 
 import { formatSeconds } from "@/lib/utils";
 
@@ -16,6 +16,9 @@ interface TimelineScrubberProps {
   initialHookHeaderPosition?: number;
   initialHookHeaderStyle?: string;
   initialHookHeaderText?: string | null;
+  initialAddPartBadge?: boolean;
+  initialPartBadgePosition?: number;
+  initialPartBadgeAlign?: "left" | "center" | "right" | string;
   initialRemoveWatermark?: boolean;
   initialWatermarkPosition?: "top_right" | "bottom_right" | "top_left" | "bottom_left" | string;
   initialEnhanceQuality?: boolean;
@@ -35,7 +38,10 @@ interface TimelineScrubberProps {
     enhanceQuality?: boolean,
     hookHeaderStyle?: string,
     captionStyle?: string,
-    burnCaptions?: boolean
+    burnCaptions?: boolean,
+    addPartBadge?: boolean,
+    partBadgePosition?: number,
+    partBadgeAlign?: string
   ) => Promise<void>;
 }
 
@@ -50,6 +56,9 @@ export function TimelineScrubber({
   initialHookHeaderPosition = 12,
   initialHookHeaderStyle = "viral_creator",
   initialHookHeaderText = "",
+  initialAddPartBadge = true,
+  initialPartBadgePosition = 6,
+  initialPartBadgeAlign = "center",
   initialRemoveWatermark = false,
   initialWatermarkPosition = "top_right",
   initialEnhanceQuality = true,
@@ -70,6 +79,11 @@ export function TimelineScrubber({
   const [hookHeaderPosition, setHookHeaderPosition] = useState<number>(initialHookHeaderPosition || 12);
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>(initialHookHeaderStyle || "viral_creator");
   const [hookHeaderText, setHookHeaderText] = useState<string>(initialHookHeaderText || "");
+  const [addPartBadge, setAddPartBadge] = useState<boolean>(initialAddPartBadge !== false);
+  const [partBadgePosition, setPartBadgePosition] = useState<number>(initialPartBadgePosition || 6);
+  const [partBadgeAlign, setPartBadgeAlign] = useState<"left" | "center" | "right">(
+    (initialPartBadgeAlign as any) || "center"
+  );
   const [removeWatermark, setRemoveWatermark] = useState<boolean>(initialRemoveWatermark || false);
   const [watermarkPosition, setWatermarkPosition] = useState<"top_right" | "bottom_right" | "top_left" | "bottom_left">(
     (initialWatermarkPosition as any) || "top_right"
@@ -116,7 +130,10 @@ export function TimelineScrubber({
         enhanceQuality,
         hookHeaderStyle,
         captionStyle,
-        burnCaptions
+        burnCaptions,
+        addPartBadge,
+        partBadgePosition,
+        partBadgeAlign
       );
       setJustSaved(true);
     } finally {
@@ -444,16 +461,30 @@ export function TimelineScrubber({
 
                 {/* Mini phone screen preview */}
                 <div className="w-10 h-16 rounded-lg bg-black/70 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                  {addPartBadge && (
+                    <div
+                      className={`absolute h-1 bg-violet-400 rounded-full shadow-sm shadow-violet-400/80 transition-all duration-150 ${
+                        partBadgeAlign === "left"
+                          ? "left-1 w-3"
+                          : partBadgeAlign === "right"
+                          ? "right-1 w-3"
+                          : "left-2.5 right-2.5"
+                      }`}
+                      style={{ top: `${partBadgePosition}%` }}
+                    />
+                  )}
                   {addHookHeader && (
                     <div
                       className="absolute left-1 right-1 h-1 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
                       style={{ top: `${hookHeaderPosition}%` }}
                     />
                   )}
-                  <div
-                    className="absolute left-1 right-1 h-1.5 bg-yellow-400 rounded-full shadow-sm shadow-yellow-400/50 transition-all duration-150"
-                    style={{ top: `${subtitlePosition}%` }}
-                  />
+                  {burnCaptions && (
+                    <div
+                      className="absolute left-1 right-1 h-1.5 bg-yellow-400 rounded-full shadow-sm shadow-yellow-400/50 transition-all duration-150"
+                      style={{ top: `${subtitlePosition}%` }}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -570,14 +601,28 @@ export function TimelineScrubber({
                 </div>
 
                 <div className="w-10 h-16 rounded-lg bg-black/70 border border-amber-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                  {addPartBadge && (
+                    <div
+                      className={`absolute h-1 bg-violet-400 rounded-full shadow-sm shadow-violet-400/80 transition-all duration-150 ${
+                        partBadgeAlign === "left"
+                          ? "left-1 w-3"
+                          : partBadgeAlign === "right"
+                          ? "right-1 w-3"
+                          : "left-2.5 right-2.5"
+                      }`}
+                      style={{ top: `${partBadgePosition}%` }}
+                    />
+                  )}
                   <div
                     className="absolute left-1 right-1 h-1.5 bg-amber-400 rounded-full shadow-sm shadow-amber-400/80 transition-all duration-150"
                     style={{ top: `${hookHeaderPosition}%` }}
                   />
-                  <div
-                    className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
-                    style={{ top: `${subtitlePosition}%` }}
-                  />
+                  {burnCaptions && (
+                    <div
+                      className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
+                      style={{ top: `${subtitlePosition}%` }}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -653,6 +698,175 @@ export function TimelineScrubber({
                   >
                     {hookHeaderText.trim() ? hookHeaderText : "WHY NOBODY TALKS ABOUT THIS"}
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Series Part 1...N Badge Controls */}
+      <div className="pt-4 border-t border-white/5 space-y-3.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bookmark className="h-4 w-4 text-violet-400" />
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-semibold text-white">Series Part 1...N Badge</span>
+                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                  MULTI-PART
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-400">Display &apos;Part 1, Part 2...&apos; badge overlay on this clip</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {addPartBadge && (
+              <div className="flex items-center gap-1 bg-zinc-900/80 p-1 rounded-lg border border-white/10">
+                {(["left", "center", "right"] as const).map((align) => (
+                  <button
+                    key={align}
+                    type="button"
+                    onClick={() => {
+                      setPartBadgeAlign(align);
+                      setJustSaved(false);
+                    }}
+                    className={`p-1.5 rounded text-xs transition-all ${
+                      partBadgeAlign === align
+                        ? "bg-violet-600 text-white shadow-sm"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                    title={`Align ${align}`}
+                  >
+                    {align === "left" && <AlignLeft className="h-3.5 w-3.5" />}
+                    {align === "center" && <AlignCenter className="h-3.5 w-3.5" />}
+                    {align === "right" && <AlignRight className="h-3.5 w-3.5" />}
+                  </button>
+                ))}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setAddPartBadge(!addPartBadge);
+                setJustSaved(false);
+              }}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+                addPartBadge ? "bg-violet-600" : "bg-zinc-800"
+              }`}
+              aria-label="Toggle Series Part Badges"
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  addPartBadge ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {addPartBadge && (
+          <div className="space-y-3.5 pt-1 animate-in fade-in duration-200">
+            {/* Position Presets */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-zinc-300">Part Badge Screen Position</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20">
+                  {partBadgePosition}% from Top ({partBadgeAlign})
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                {[
+                  { label: "Top Center", pos: 6, align: "center" as const },
+                  { label: "Top Left", pos: 6, align: "left" as const },
+                  { label: "Top Right", pos: 6, align: "right" as const },
+                  { label: "Above Hook", pos: 4, align: "center" as const },
+                  { label: "Upper 3rd", pos: 20, align: "center" as const },
+                  { label: "Bottom Bar", pos: 88, align: "center" as const },
+                ].map((p, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setPartBadgePosition(p.pos);
+                      setPartBadgeAlign(p.align);
+                      setJustSaved(false);
+                    }}
+                    className={`rounded-lg py-1.5 px-1.5 text-center text-[10px] font-medium border transition-all ${
+                      partBadgePosition === p.pos && partBadgeAlign === p.align
+                        ? "bg-violet-600/30 border-violet-400 text-white shadow-sm ring-1 ring-violet-500/50"
+                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    {p.label} ({p.pos}%)
+                  </button>
+                ))}
+              </div>
+
+              {/* Slider & Phone Preview */}
+              <div className="flex items-center gap-4 pt-1">
+                <div className="flex-1 space-y-1">
+                  <input
+                    type="range"
+                    min={3}
+                    max={90}
+                    step={1}
+                    value={partBadgePosition}
+                    onChange={(e) => {
+                      setPartBadgePosition(Number(e.target.value));
+                      setJustSaved(false);
+                    }}
+                    className="w-full accent-violet-500 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[9px] text-zinc-500">
+                    <span>Top (3%)</span>
+                    <span>Upper (20%)</span>
+                    <span>Center (50%)</span>
+                    <span>Bottom (90%)</span>
+                  </div>
+                </div>
+
+                <div className="w-10 h-16 rounded-lg bg-black/70 border border-violet-500/40 relative overflow-hidden flex-shrink-0 shadow-inner">
+                  <div
+                    className={`absolute z-20 transition-all duration-150 ${
+                      partBadgeAlign === "left"
+                        ? "left-1"
+                        : partBadgeAlign === "right"
+                        ? "right-1"
+                        : "left-1/2 -translate-x-1/2"
+                    }`}
+                    style={{ top: `${partBadgePosition}%` }}
+                  >
+                    <span className="px-1 py-0.2 rounded text-[5px] font-black tracking-wider uppercase bg-violet-600 text-white shadow">
+                      PART 1
+                    </span>
+                  </div>
+                  {addHookHeader && (
+                    <div
+                      className="absolute left-1 right-1 h-1 bg-amber-400/60 rounded-full transition-all duration-150"
+                      style={{ top: `${hookHeaderPosition}%` }}
+                    />
+                  )}
+                  {burnCaptions && (
+                    <div
+                      className="absolute left-1 right-1 h-1 bg-yellow-300/50 rounded-full transition-all duration-150"
+                      style={{ top: `${subtitlePosition}%` }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Badge Preview */}
+              <div className="rounded-xl bg-black/60 border border-white/10 p-3 flex items-center justify-between text-[11px] text-zinc-400">
+                <span>Badge Preview:</span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
+                    PART 1
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black tracking-wider uppercase bg-black/90 text-white border border-white/20 shadow">
+                    PART 2
+                  </span>
                 </div>
               </div>
             </div>

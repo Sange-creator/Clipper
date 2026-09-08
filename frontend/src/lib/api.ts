@@ -257,6 +257,8 @@ export const api = {
     hook_header_position?: number;
     hook_header_style?: string;
     hook_header_text?: string;
+    enable_series_parts?: boolean;
+    add_part_badge?: boolean;
     part_badge_position?: number;
     part_badge_align?: "center" | "left" | "right";
     remove_watermark?: boolean;
@@ -283,12 +285,15 @@ export const api = {
   async regenerateClip(id: string, params: {
     intent: string;
     caption_style?: string;
+    burn_captions?: boolean;
     custom_note?: string;
     subtitle_position?: number;
     add_hook_header?: boolean;
     hook_header_position?: number;
     hook_header_style?: string;
     hook_header_text?: string;
+    enable_series_parts?: boolean;
+    add_part_badge?: boolean;
     part_badge_position?: number;
     part_badge_align?: "center" | "left" | "right";
     remove_watermark?: boolean;

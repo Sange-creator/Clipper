@@ -12,6 +12,9 @@ import {
   RefreshCw,
   FileText,
   MessageSquare,
+  Subtitles,
+  Bookmark,
+  Flame,
 } from "lucide-react";
 import { CaptionPresetPicker } from "./CaptionPresetPicker";
 import { CaptionStyleType } from "@/lib/types";
@@ -19,9 +22,20 @@ import { CaptionStyleType } from "@/lib/types";
 interface RegenerateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegenerate: (intent: string, captionStyle?: string, note?: string, hookHeaderStyle?: string) => Promise<void>;
+  onRegenerate: (
+    intent: string,
+    captionStyle?: string,
+    note?: string,
+    hookHeaderStyle?: string,
+    burnCaptions?: boolean,
+    addPartBadge?: boolean,
+    addHookHeader?: boolean
+  ) => Promise<void>;
   currentStyle: string;
   currentHookHeaderStyle?: string;
+  currentBurnCaptions?: boolean;
+  currentAddPartBadge?: boolean;
+  currentAddHookHeader?: boolean;
 }
 
 const INTENTS = [
@@ -68,10 +82,16 @@ export function RegenerateModal({
   onRegenerate,
   currentStyle,
   currentHookHeaderStyle,
+  currentBurnCaptions = true,
+  currentAddPartBadge = true,
+  currentAddHookHeader = false,
 }: RegenerateModalProps) {
   const [selectedIntent, setSelectedIntent] = useState<string>("stronger_hook");
   const [captionStyle, setCaptionStyle] = useState<CaptionStyleType>((currentStyle as any) || "tiktok_viral");
   const [hookHeaderStyle, setHookHeaderStyle] = useState<string>(currentHookHeaderStyle || "viral_creator");
+  const [burnCaptions, setBurnCaptions] = useState<boolean>(currentBurnCaptions !== false);
+  const [addPartBadge, setAddPartBadge] = useState<boolean>(currentAddPartBadge !== false);
+  const [addHookHeader, setAddHookHeader] = useState<boolean>(currentAddHookHeader || false);
   const [customNote, setCustomNote] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -81,7 +101,15 @@ export function RegenerateModal({
     e.preventDefault();
     setIsLoading(true);
     try {
-      await onRegenerate(selectedIntent, captionStyle, customNote, hookHeaderStyle);
+      await onRegenerate(
+        selectedIntent,
+        captionStyle,
+        customNote,
+        hookHeaderStyle,
+        burnCaptions,
+        addPartBadge,
+        addHookHeader
+      );
       onClose();
     } finally {
       setIsLoading(false);
@@ -142,64 +170,172 @@ export function RegenerateModal({
             </div>
           </div>
 
-          {/* Caption Preset Picker */}
-          <CaptionPresetPicker
-            selected={captionStyle}
-            onChange={setCaptionStyle}
-          />
-
-          {/* Hook Header Visual Style */}
-          <div className="space-y-2 pt-1 border-t border-white/5">
+          {/* On-Screen Display Overlays: Subtitles, Part 1...N, Hook Caption */}
+          <div className="space-y-3 pt-1 border-t border-white/5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
-                Hook Header Visual Style
+                On-Screen Display Overlays
               </label>
-              <span className="text-[10px] text-amber-400 font-mono">
-                {hookHeaderStyle === "white_box"
-                  ? "White Card Box"
-                  : hookHeaderStyle === "meme"
-                  ? "Classic Meme"
-                  : hookHeaderStyle === "nostalgic"
-                  ? "Vintage Typewriter"
-                  : hookHeaderStyle === "old_history"
-                  ? "History Serif"
-                  : hookHeaderStyle === "neon_cyber"
-                  ? "Neon Glow"
-                  : "Viral Creator"}
-              </span>
+              <span className="text-[10px] text-zinc-500">Toggle visual text layers independently</span>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-              {[
-                { id: "viral_creator", label: "Viral Creator", icon: Zap, font: "Sans Bold" },
-                { id: "white_box", label: "White Card", icon: FileText, font: "Arial Black" },
-                { id: "meme", label: "Classic Meme", icon: MessageSquare, font: "Impact" },
-                { id: "nostalgic", label: "Nostalgic", icon: Clock, font: "Courier Type" },
-                { id: "old_history", label: "Old History", icon: BookOpen, font: "Georgia Serif" },
-                { id: "neon_cyber", label: "Cyber Neon", icon: Sparkles, font: "Cyan Glow" },
-              ].map((styleOpt) => {
-                const IconComponent = styleOpt.icon;
-                return (
-                  <button
-                    key={styleOpt.id}
-                    type="button"
-                    onClick={() => setHookHeaderStyle(styleOpt.id)}
-                    className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 ${
-                      hookHeaderStyle === styleOpt.id
-                        ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
-                        : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              {/* 1. Subtitles */}
+              <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                burnCaptions
+                  ? "bg-violet-600/10 border-violet-500/40"
+                  : "bg-white/[0.02] border-white/10 opacity-70"
+              }`}>
+                <div className="flex items-center gap-2">
+                  <Subtitles className={`h-4 w-4 ${burnCaptions ? "text-violet-400" : "text-zinc-500"}`} />
+                  <div>
+                    <p className="text-xs font-semibold text-white">Subtitles</p>
+                    <p className="text-[10px] text-zinc-400">Dialogue karaoke</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setBurnCaptions(!burnCaptions)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                    burnCaptions ? "bg-violet-600" : "bg-zinc-800"
+                  }`}
+                  aria-label="Toggle Subtitles"
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      burnCaptions ? "translate-x-4" : "translate-x-1"
                     }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <IconComponent className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-                      <span className="text-xs font-semibold leading-tight">{styleOpt.label}</span>
-                    </div>
-                    <span className="text-[9px] font-mono text-zinc-500">{styleOpt.font}</span>
-                  </button>
-                );
-              })}
+                  />
+                </button>
+              </div>
+
+              {/* 2. Part 1...N */}
+              <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                addPartBadge
+                  ? "bg-violet-600/10 border-violet-500/40"
+                  : "bg-white/[0.02] border-white/10 opacity-70"
+              }`}>
+                <div className="flex items-center gap-2">
+                  <Bookmark className={`h-4 w-4 ${addPartBadge ? "text-violet-400" : "text-zinc-500"}`} />
+                  <div>
+                    <p className="text-xs font-semibold text-white">Part 1...N</p>
+                    <p className="text-[10px] text-zinc-400">Series badge</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAddPartBadge(!addPartBadge)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                    addPartBadge ? "bg-violet-600" : "bg-zinc-800"
+                  }`}
+                  aria-label="Toggle Series Part Badges"
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      addPartBadge ? "translate-x-4" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* 3. Sticky Hook Caption */}
+              <div className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
+                addHookHeader
+                  ? "bg-amber-500/10 border-amber-500/40"
+                  : "bg-white/[0.02] border-white/10 opacity-70"
+              }`}>
+                <div className="flex items-center gap-2">
+                  <Flame className={`h-4 w-4 ${addHookHeader ? "text-amber-400" : "text-zinc-500"}`} />
+                  <div>
+                    <p className="text-xs font-semibold text-white">Hook Caption</p>
+                    <p className="text-[10px] text-zinc-400">Top headline banner</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAddHookHeader(!addHookHeader)}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                    addHookHeader ? "bg-amber-500" : "bg-zinc-800"
+                  }`}
+                  aria-label="Toggle Hook Header Caption"
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      addHookHeader ? "translate-x-4" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
+
+          {!burnCaptions && !addPartBadge && !addHookHeader && (
+            <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-200">
+              Clean video render: All on-screen text overlays are disabled. FFmpeg will render clean video directly.
+            </div>
+          )}
+
+          {/* Caption Preset Picker */}
+          {burnCaptions && (
+            <CaptionPresetPicker
+              selected={captionStyle}
+              onChange={setCaptionStyle}
+            />
+          )}
+
+          {/* Hook Header Visual Style */}
+          {addHookHeader && (
+            <div className="space-y-2 pt-1 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+                  Hook Header Visual Style
+                </label>
+                <span className="text-[10px] text-amber-400 font-mono">
+                  {hookHeaderStyle === "white_box"
+                    ? "White Card Box"
+                    : hookHeaderStyle === "meme"
+                    ? "Classic Meme"
+                    : hookHeaderStyle === "nostalgic"
+                    ? "Vintage Typewriter"
+                    : hookHeaderStyle === "old_history"
+                    ? "History Serif"
+                    : hookHeaderStyle === "neon_cyber"
+                    ? "Neon Glow"
+                    : "Viral Creator"}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                {[
+                  { id: "viral_creator", label: "Viral Creator", icon: Zap, font: "Sans Bold" },
+                  { id: "white_box", label: "White Card", icon: FileText, font: "Arial Black" },
+                  { id: "meme", label: "Classic Meme", icon: MessageSquare, font: "Impact" },
+                  { id: "nostalgic", label: "Nostalgic", icon: Clock, font: "Courier Type" },
+                  { id: "old_history", label: "Old History", icon: BookOpen, font: "Georgia Serif" },
+                  { id: "neon_cyber", label: "Cyber Neon", icon: Sparkles, font: "Cyan Glow" },
+                ].map((styleOpt) => {
+                  const IconComponent = styleOpt.icon;
+                  return (
+                    <button
+                      key={styleOpt.id}
+                      type="button"
+                      onClick={() => setHookHeaderStyle(styleOpt.id)}
+                      className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 ${
+                        hookHeaderStyle === styleOpt.id
+                          ? "bg-amber-500/20 border-amber-400 text-white shadow-sm ring-1 ring-amber-400/40"
+                          : "bg-white/[0.02] border-white/10 text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <IconComponent className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                        <span className="text-xs font-semibold leading-tight">{styleOpt.label}</span>
+                      </div>
+                      <span className="text-[9px] font-mono text-zinc-500">{styleOpt.font}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Custom Note */}
           <div className="space-y-2">

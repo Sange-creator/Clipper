@@ -37,6 +37,9 @@ class ClipRegeneratorService:
         remove_watermark: Optional[bool] = None,
         watermark_position: Optional[str] = None,
         enhance_quality: Optional[bool] = None,
+        burn_captions: Optional[bool] = None,
+        enable_series_parts: Optional[bool] = None,
+        add_part_badge: Optional[bool] = None,
     ) -> RenderedClip:
         """Apply strategic regeneration adjustments and re-render clip."""
         stmt = (
@@ -59,23 +62,21 @@ class ClipRegeneratorService:
         transcript = t_res.scalar_one_or_none()
         segments = json.loads(transcript.segments_json) if transcript else []
 
+        video_dur = clip.candidate.end - clip.candidate.start if clip.candidate else clip.duration
         start_time = clip.start_time
         end_time = clip.end_time
-        video_dur = video.duration_seconds
 
         # Apply intent transformations
         if intent == "stronger_hook":
-            # Trim leading 2-5 seconds or seek next punchy sentence boundary
-            start_time = min(end_time - 10.0, start_time + 3.5)
+            # Trim first 2 seconds of fluff
+            start_time = min(end_time - 5.0, start_time + 2.0)
         elif intent == "shorter_duration":
-            # Compress to ~25s target
-            mid = (start_time + end_time) / 2
-            start_time = max(0.0, mid - 12.0)
-            end_time = min(video_dur, start_time + 25.0)
+            # Trim 15% from end
+            dur = end_time - start_time
+            end_time = max(start_time + 5.0, end_time - (dur * 0.2))
         elif intent == "longer_context":
-            # Expand context
+            # Expand backwards by 5 seconds
             start_time = max(0.0, start_time - 5.0)
-            end_time = min(video_dur, end_time + 8.0)
         elif intent == "different_payoff":
             # Extend payoff
             end_time = min(video_dur, end_time + 6.0)
@@ -95,6 +96,8 @@ class ClipRegeneratorService:
         clip.end_time = round(end_time, 2)
         clip.duration = round(end_time - start_time, 2)
 
+        chosen_burn_captions = burn_captions if burn_captions is not None else getattr(clip, "burn_captions", True)
+        chosen_enable_parts = enable_series_parts if enable_series_parts is not None else (add_part_badge if add_part_badge is not None else getattr(clip, "enable_series_parts", getattr(clip, "add_part_badge", True)))
         chosen_style = caption_style or clip.caption_style or "bold_yellow"
         chosen_sub_pos = subtitle_position if subtitle_position is not None else getattr(clip, "subtitle_position", 75)
         chosen_add_hook = add_hook_header if add_hook_header is not None else getattr(clip, "add_hook_header", False)
@@ -107,7 +110,10 @@ class ClipRegeneratorService:
         if chosen_enhance is None:
             chosen_enhance = True
 
-        clip.caption_style = chosen_style
+        clip.caption_style = chosen_style if (chosen_burn_captions and chosen_style) else "none"
+        clip.burn_captions = bool(chosen_burn_captions)
+        clip.enable_series_parts = bool(chosen_enable_parts)
+        clip.add_part_badge = bool(chosen_enable_parts)
         clip.subtitle_position = chosen_sub_pos
         clip.add_hook_header = chosen_add_hook
         clip.hook_header_position = chosen_hook_pos
@@ -132,7 +138,13 @@ class ClipRegeneratorService:
             except Exception:
                 pass
 
-        # 1. Captions with persistent hook header
+        should_burn = bool(
+            (chosen_burn_captions and chosen_style and chosen_style != "none")
+            or (chosen_add_hook and chosen_hook_text)
+            or (chosen_enable_parts and clip.part_index)
+        )
+
+        # 1. Captions with persistent hook header & part badge
         captioner.generate_ass(
             segments,
             clip.start_time,
@@ -145,8 +157,24 @@ class ClipRegeneratorService:
             hook_header_position=chosen_hook_pos,
             hook_header_style=chosen_hook_style,
             keep_intervals=keep_intervals,
+            part_index=clip.part_index,
+            total_parts=clip.total_parts,
+            part_badge_position=getattr(clip, "part_badge_position", 6),
+            part_badge_align=getattr(clip, "part_badge_align", "center"),
+            canvas_background=getattr(clip, "canvas_background", "blur"),
+            framing_mode=getattr(clip, "framing_mode", "crop_9_16"),
+            add_part_badge=chosen_enable_parts,
+            show_subtitles=chosen_burn_captions,
         )
-        captioner.generate_srt(segments, clip.start_time, clip.end_time, srt_path, keep_intervals=keep_intervals)
+        captioner.generate_srt(
+            segments,
+            clip.start_time,
+            clip.end_time,
+            srt_path,
+            keep_intervals=keep_intervals,
+            part_index=clip.part_index,
+            total_parts=clip.total_parts,
+        )
 
         # 2. Reframing & Render
         crop_info = await reframer.calculate_crop_trajectory(video_path, clip.start_time, clip.end_time)
@@ -156,8 +184,8 @@ class ClipRegeneratorService:
             end_time=clip.end_time,
             output_video_path=out_video_path,
             reframing_config=crop_info,
-            ass_subtitle_path=ass_path,
-            burn_captions=True,
+            ass_subtitle_path=ass_path if should_burn else None,
+            burn_captions=should_burn,
             keep_intervals=keep_intervals,
             framing_mode=getattr(clip, "framing_mode", "crop_9_16"),
             blur_radius=getattr(clip, "blur_radius", 30),

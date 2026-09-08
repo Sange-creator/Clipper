@@ -462,6 +462,8 @@ class CaptionGenerator:
         part_badge_align: Optional[str] = "center",
         canvas_background: Optional[str] = None,
         framing_mode: Optional[str] = None,
+        add_part_badge: bool = True,
+        show_subtitles: bool = True,
     ) -> Path:
         """
         Generate an Advanced SubStation Alpha (.ass) subtitle file.
@@ -470,6 +472,10 @@ class CaptionGenerator:
         and multi-part series branding (e.g. PART 1/5 • TITLE).
         Guarantees 100% text contrast and visibility across all canvas backgrounds (including pure white).
         Allows customizable Part Badge position and alignment (left, center, right, top to bottom).
+        Supports independent on/off toggling for:
+          - show_subtitles: Spoken dialogue karaoke subtitles on screen (Layer 0)
+          - add_hook_header: Sticky hook headline text pinned on screen (Layer 1)
+          - add_part_badge: Series Part 1...N badge on screen (Layer 2)
         """
         out_file = Path(output_path)
         out_file.parent.mkdir(parents=True, exist_ok=True)
@@ -588,8 +594,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         total_duration = sum(max(0.0, e - s) for s, e in intervals)
         dialogue_lines: List[str] = []
 
-        # 1. Add dedicated on-screen Part Badge on Layer 2 (e.g. "PART 1" or "PART 2")
-        if part_index:
+        # 1. Add dedicated on-screen Part Badge on Layer 2 (e.g. "PART 1" or "PART 2") if enabled
+        if part_index and add_part_badge:
             part_str = f"PART {part_index}"
             start_str = self.format_timestamp_ass(0.0)
             end_str = self.format_timestamp_ass(max(0.5, total_duration))
@@ -597,8 +603,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 f"Dialogue: 2,{start_str},{end_str},PartBadge,,0,0,0,,{part_str}"
             )
 
-        # 2. Add dedicated on-screen Hook Title on Layer 1 (constant throughout the entire video)
-        should_render_hook = (add_hook_header or (total_parts and total_parts > 1)) and hook_header_text
+        # 2. Add dedicated on-screen Hook Title on Layer 1 (constant throughout the entire video) if enabled
+        should_render_hook = bool(add_hook_header and hook_header_text)
         if should_render_hook:
             formatted_hook = format_tiktok_hook_header(hook_header_text)
             start_str = self.format_timestamp_ass(0.0)
@@ -607,8 +613,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 f"Dialogue: 1,{start_str},{end_str},HookHeader,,0,0,0,,{formatted_hook}"
             )
 
-        # 3. Add animated spoken karaoke subtitles on Layer 0 across all intervals (if caption style is active)
-        if style and style.lower().strip() != "none":
+        # 3. Add animated spoken karaoke subtitles on Layer 0 across all intervals if enabled
+        if show_subtitles and style and style.lower().strip() != "none":
             cumulative_time = 0.0
             for iv_start, iv_end in intervals:
                 iv_dur = max(0.0, iv_end - iv_start)

@@ -65,8 +65,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/app/clips/[id]/page.tsx": {
-    "mtime": 1788559957.7471673,
-    "ast_hash": "841a9d864c08f8083b84967475b7539b",
+    "mtime": 1788829756.2090642,
+    "ast_hash": "b0c98614bef21210e42934e2f3b64217",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/app/projects/page.tsx": {
@@ -75,8 +75,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/app/projects/[id]/page.tsx": {
-    "mtime": 1788647346.2085764,
-    "ast_hash": "a5a69dd66774cf2f053ee60f228c63f4",
+    "mtime": 1788829726.1002223,
+    "ast_hash": "55f1bf9db9d63e4b77ed0e0de13cde01",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/app/admin/page.tsx": {
@@ -180,8 +180,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/review/RegenerateModal.tsx": {
-    "mtime": 1788558213.763287,
-    "ast_hash": "3e204d8937fb5a9068ae595fefbe4a80",
+    "mtime": 1788829670.6820362,
+    "ast_hash": "8adc8ab824ba2a01fd063a696bd410bb",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/review/ScoreRadar.tsx": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/review/TimelineScrubber.tsx": {
-    "mtime": 1788559939.7397878,
-    "ast_hash": "ac75b0fac97fcf33bbf148d5d6ca5006",
+    "mtime": 1788829610.9695878,
+    "ast_hash": "fffce4d960057ad49d99aa28039822c7",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/review/ClipCard.tsx": {
@@ -215,8 +215,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/upload/VideoUploader.tsx": {
-    "mtime": 1788647401.058495,
-    "ast_hash": "5815661453a7a5696d747290808610ce",
+    "mtime": 1788829494.6933405,
+    "ast_hash": "0af468c2f7b565cb2f2918e37f6aa584",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/lib/utils.ts": {
@@ -225,13 +225,13 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/lib/api.ts": {
-    "mtime": 1788645933.2309306,
-    "ast_hash": "c1524f7cc66a1f93e94091b736df171d",
+    "mtime": 1788829383.2094164,
+    "ast_hash": "b155a997e72116d5f5acd01d3e052243",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/lib/types.ts": {
-    "mtime": 1788647317.414356,
-    "ast_hash": "06fa048899507d2ac7b88aab36aee5c6",
+    "mtime": 1788829748.7612703,
+    "ast_hash": "f8eb02d5d17f596d5e8eaaf1d93873e0",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/config.py": {
@@ -245,18 +245,18 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/core/models.py": {
-    "mtime": 1788647309.4412668,
-    "ast_hash": "ade6ba1e0357d1326f07f1b1bd97d44d",
+    "mtime": 1788829157.7671742,
+    "ast_hash": "6960c1bc7b98224dff74fbb8ffaeb3de",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/core/database.py": {
-    "mtime": 1788645673.0524073,
-    "ast_hash": "d3b5512cd8dbb57b0a631125e58cbea8",
+    "mtime": 1788829165.6725483,
+    "ast_hash": "7d180d99c327352f1b9045223585a1b5",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/core/schemas.py": {
-    "mtime": 1788647216.5211346,
-    "ast_hash": "ea8f0d7efe839af39e981d59f2658f59",
+    "mtime": 1788829192.2774022,
+    "ast_hash": "3d1c6ef4827185b7d67ec5e6b88372e3",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/core/exceptions.py": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/api/routes/clips.py": {
-    "mtime": 1788645868.6520631,
-    "ast_hash": "3f260699257ad0c758eefb46273cc223",
+    "mtime": 1788829310.436118,
+    "ast_hash": "22eef8abb47ba92b0df73676da2f27b3",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/api/routes/__init__.py": {
@@ -300,8 +300,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/api/routes/jobs.py": {
-    "mtime": 1788647298.4386394,
-    "ast_hash": "08ed7420e9fc033f89ef33395026f5a8",
+    "mtime": 1788829424.2218773,
+    "ast_hash": "2be6d87c217d6188e35d112f7cd7859b",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/api/routes/admin.py": {
@@ -310,13 +310,13 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/api/routes/settings.py": {
-    "mtime": 1788652112.592299,
-    "ast_hash": "bb9d39a8ac2f47b89e6fc50b3e6aa228",
+    "mtime": 1788653797.5257835,
+    "ast_hash": "8c581792711ec1d3a7ba9ffe32b4a4da",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/api/routes/projects.py": {
-    "mtime": 1788645845.4714866,
-    "ast_hash": "b29f1a91195cd06f81b5ec9721f1a9e4",
+    "mtime": 1788829427.904921,
+    "ast_hash": "bb0c89056083d6328d461b578cc36cf0",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/pipeline/deduplication.py": {
@@ -325,8 +325,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/pipeline/pipeline.py": {
-    "mtime": 1788652478.2915778,
-    "ast_hash": "787f6c89a8c4b2eeb4cea17508532cfb",
+    "mtime": 1788829241.3438635,
+    "ast_hash": "f2a048ce357808eb0e2ec8b1b3ae0135",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/pipeline/ranking.py": {
@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/pipeline/regenerator.py": {
-    "mtime": 1788556821.6183293,
-    "ast_hash": "7462c68a20fc5247524b1dddd30d7c0b",
+    "mtime": 1788829266.7140462,
+    "ast_hash": "ac8dd61448847a745e945755673805cc",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/pipeline/candidate_discovery.py": {
@@ -375,8 +375,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/ai/gemini.py": {
-    "mtime": 1788652221.4351552,
-    "ast_hash": "2aed455392d75259d0625846e5f44d64",
+    "mtime": 1788653814.394274,
+    "ast_hash": "58e3a83d161378b40ed6713b17a8341c",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/ai/factory.py": {
@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/media/captioner.py": {
-    "mtime": 1788652052.7140677,
-    "ast_hash": "7faa62db4cef22a991e50de5e1cb94ab",
+    "mtime": 1788829128.1221862,
+    "ast_hash": "77b39e02f86ff6885a728d0aad54c091",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/services/media/renderer.py": {
@@ -499,6 +499,11 @@
     "ast_hash": "6095d1577dd49132b25301b2ff599396",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/tests/test_screen_overlay_toggles.py": {
+    "mtime": 1788829336.1187646,
+    "ast_hash": "18aafe5af1572883acf6b160f825a6f5",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/tests/test_caption_presets.py": {
     "mtime": 1788556883.8994317,
     "ast_hash": "a598095f7fe9d030badcd66a1fd358e7",
@@ -545,8 +550,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/SESSION_TRACKER.md": {
-    "mtime": 1788647542.5558107,
-    "ast_hash": "7754220d76222d884079d9438962f704",
+    "mtime": 1788653848.849376,
+    "ast_hash": "0c37a95ef4cfa474ae0139e48f570b62",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/docker-compose.yml": {
@@ -567,6 +572,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/AI-Clipper-NEXT-VERSION-BACKLOG.md": {
     "mtime": 1788296306.215139,
     "ast_hash": "d22ae8c5a6198af291bfcd4b65465978",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/README.md": {
+    "mtime": 1788829038.9630094,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_c0ad897b_titles_and_hashtags.txt": {
@@ -619,6 +629,11 @@
     "ast_hash": "eb5e4da806943b01486c2999660c0ff0",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_57aeb46d_titles_and_hashtags.txt": {
+    "mtime": 1788829327.2952616,
+    "ast_hash": "1dd9d27a52669a2f60e5ec067266cf35",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_02ac0d41_titles_and_hashtags.txt": {
     "mtime": 1788647451.1933124,
     "ast_hash": "bdd8e1558193cc05a208136b8d4829ea",
@@ -644,6 +659,11 @@
     "ast_hash": "937fb3e4abd4a33795fbca986d4bb893",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_f5292c5f_titles_and_hashtags.txt": {
+    "mtime": 1788829069.34015,
+    "ast_hash": "554f439bd1178043ecec514f5a671e2d",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_2a86d647_titles_and_hashtags.txt": {
     "mtime": 1788646140.3158438,
     "ast_hash": "a3577f917b606e813ab32b22e3266e68",
@@ -662,6 +682,16 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_5f35e0f6_titles_and_hashtags.txt": {
     "mtime": 1788652529.2831507,
     "ast_hash": "00c68ce0aba93db6c6152347ee8a40a0",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_e0413ec7_titles_and_hashtags.txt": {
+    "mtime": 1788652856.2669027,
+    "ast_hash": "81a3db6e66f4a6bc1a3697b9d16f578d",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_7a6714e2_titles_and_hashtags.txt": {
+    "mtime": 1788815075.425662,
+    "ast_hash": "7fdd61e1942ebe3162f1fd85526ba8ff",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_efb00c68_titles_and_hashtags.txt": {
@@ -684,6 +714,11 @@
     "ast_hash": "79304f5682c9cc0f5fb97635479d0e6b",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_352a23f7_titles_and_hashtags.txt": {
+    "mtime": 1788726815.624048,
+    "ast_hash": "a1df70a35efe7a13e06a9b8814d1d516",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_ab352b47_titles_and_hashtags.txt": {
     "mtime": 1788646718.8985634,
     "ast_hash": "eb5a953da18e12258b8f4f2e8df68670",
@@ -694,9 +729,19 @@
     "ast_hash": "5ed8637ee67e0443c63735e4798e5a87",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_c92e46d4_titles_and_hashtags.txt": {
+    "mtime": 1788654824.5593135,
+    "ast_hash": "96bf40aa3b684951bd3cd1cd12bad157",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_2229651e_titles_and_hashtags.txt": {
     "mtime": 1788560044.5131164,
     "ast_hash": "10dfe2df9a2694ca7e870fa22d8e1a5b",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_514243be_titles_and_hashtags.txt": {
+    "mtime": 1788829357.2619584,
+    "ast_hash": "0598685565ee4ae8ac382b9f23074fc4",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_9760dfe5_titles_and_hashtags.txt": {
@@ -765,8 +810,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/titles_and_hashtags.txt": {
-    "mtime": 1788652567.4512653,
-    "ast_hash": "5ed8637ee67e0443c63735e4798e5a87",
+    "mtime": 1788829785.3859105,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_f45145e4_titles_and_hashtags.txt": {
@@ -775,8 +820,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/all_titles_and_hashtags.txt": {
-    "mtime": 1788652567.4511962,
-    "ast_hash": "5ed8637ee67e0443c63735e4798e5a87",
+    "mtime": 1788829785.3856592,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_ef103df0_titles_and_hashtags.txt": {
@@ -787,6 +832,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_a41b4bbe_titles_and_hashtags.txt": {
     "mtime": 1788643364.8976097,
     "ast_hash": "fa47af95cb140ee1138380d2cad89e64",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_f04b4b3d_titles_and_hashtags.txt": {
+    "mtime": 1788653828.9560974,
+    "ast_hash": "2ee94d3e11234c86e882e0b5a86e3e16",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_2416a2e6_titles_and_hashtags.txt": {
@@ -805,8 +855,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/copy_paste_single_para_all_clips.txt": {
-    "mtime": 1788652567.4514122,
-    "ast_hash": "8570ad347ea45a0886668d7195a75e1d",
+    "mtime": 1788829785.3862534,
+    "ast_hash": "1b9691f01da8af8e45b214dcc2c9b42b",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_9611721c_titles_and_hashtags.txt": {
@@ -817,6 +867,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_23121460_titles_and_hashtags.txt": {
     "mtime": 1788475062.4743173,
     "ast_hash": "6199e2b3e9cb2e43a8f5af11490e7c5b",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_d09b7124_titles_and_hashtags.txt": {
+    "mtime": 1788829785.386611,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/titles_and_thumbnails/job_cf1e3c5c_titles_and_hashtags.txt": {
@@ -874,6 +929,11 @@
     "ast_hash": "eb5e4da806943b01486c2999660c0ff0",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_57aeb46d_titles_and_hashtags.txt": {
+    "mtime": 1788829327.2944055,
+    "ast_hash": "1dd9d27a52669a2f60e5ec067266cf35",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_02ac0d41_titles_and_hashtags.txt": {
     "mtime": 1788647451.1926563,
     "ast_hash": "bdd8e1558193cc05a208136b8d4829ea",
@@ -899,6 +959,11 @@
     "ast_hash": "937fb3e4abd4a33795fbca986d4bb893",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_f5292c5f_titles_and_hashtags.txt": {
+    "mtime": 1788829069.3382406,
+    "ast_hash": "554f439bd1178043ecec514f5a671e2d",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_2a86d647_titles_and_hashtags.txt": {
     "mtime": 1788646140.3151839,
     "ast_hash": "a3577f917b606e813ab32b22e3266e68",
@@ -917,6 +982,16 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_5f35e0f6_titles_and_hashtags.txt": {
     "mtime": 1788652529.2822173,
     "ast_hash": "00c68ce0aba93db6c6152347ee8a40a0",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_e0413ec7_titles_and_hashtags.txt": {
+    "mtime": 1788652856.2639518,
+    "ast_hash": "81a3db6e66f4a6bc1a3697b9d16f578d",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_7a6714e2_titles_and_hashtags.txt": {
+    "mtime": 1788815075.4234614,
+    "ast_hash": "7fdd61e1942ebe3162f1fd85526ba8ff",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_efb00c68_titles_and_hashtags.txt": {
@@ -939,6 +1014,11 @@
     "ast_hash": "79304f5682c9cc0f5fb97635479d0e6b",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_352a23f7_titles_and_hashtags.txt": {
+    "mtime": 1788726815.6229703,
+    "ast_hash": "a1df70a35efe7a13e06a9b8814d1d516",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_ab352b47_titles_and_hashtags.txt": {
     "mtime": 1788646718.896872,
     "ast_hash": "eb5a953da18e12258b8f4f2e8df68670",
@@ -949,9 +1029,19 @@
     "ast_hash": "5ed8637ee67e0443c63735e4798e5a87",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_c92e46d4_titles_and_hashtags.txt": {
+    "mtime": 1788654824.556376,
+    "ast_hash": "96bf40aa3b684951bd3cd1cd12bad157",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_2229651e_titles_and_hashtags.txt": {
     "mtime": 1788560044.5125134,
     "ast_hash": "10dfe2df9a2694ca7e870fa22d8e1a5b",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_514243be_titles_and_hashtags.txt": {
+    "mtime": 1788829357.259403,
+    "ast_hash": "0598685565ee4ae8ac382b9f23074fc4",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_9760dfe5_titles_and_hashtags.txt": {
@@ -1020,8 +1110,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/titles_and_hashtags.txt": {
-    "mtime": 1788652567.450728,
-    "ast_hash": "5ed8637ee67e0443c63735e4798e5a87",
+    "mtime": 1788829785.3831112,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_f45145e4_titles_and_hashtags.txt": {
@@ -1030,8 +1120,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/all_titles_and_hashtags.txt": {
-    "mtime": 1788652567.4506044,
-    "ast_hash": "5ed8637ee67e0443c63735e4798e5a87",
+    "mtime": 1788829785.3827517,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_ef103df0_titles_and_hashtags.txt": {
@@ -1042,6 +1132,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_a41b4bbe_titles_and_hashtags.txt": {
     "mtime": 1788643364.896588,
     "ast_hash": "fa47af95cb140ee1138380d2cad89e64",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_f04b4b3d_titles_and_hashtags.txt": {
+    "mtime": 1788653828.9552917,
+    "ast_hash": "2ee94d3e11234c86e882e0b5a86e3e16",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_2416a2e6_titles_and_hashtags.txt": {
@@ -1060,8 +1155,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/copy_paste_single_para_all_clips.txt": {
-    "mtime": 1788652567.450814,
-    "ast_hash": "8570ad347ea45a0886668d7195a75e1d",
+    "mtime": 1788829785.3840508,
+    "ast_hash": "1b9691f01da8af8e45b214dcc2c9b42b",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_9611721c_titles_and_hashtags.txt": {
@@ -1074,9 +1169,24 @@
     "ast_hash": "6199e2b3e9cb2e43a8f5af11490e7c5b",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_d09b7124_titles_and_hashtags.txt": {
+    "mtime": 1788829785.3846152,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/job_cf1e3c5c_titles_and_hashtags.txt": {
     "mtime": 1788556418.7739878,
     "ast_hash": "08537aa56293c277db0c9cc66abfe448",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/564fdb62f04a49f281044016d1d6d779/all_titles_and_hashtags.txt": {
+    "mtime": 1788726815.62312,
+    "ast_hash": "a1df70a35efe7a13e06a9b8814d1d516",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/564fdb62f04a49f281044016d1d6d779/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788726815.6231966,
+    "ast_hash": "896091f8ad438c7ff70cf0214390585f",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/f5e2303e238541cea7652c1090c7881f/titles_and_hashtags.txt": {
@@ -1092,6 +1202,16 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/f5e2303e238541cea7652c1090c7881f/job_2416a2e6_titles_and_hashtags.txt": {
     "mtime": 1788475062.4911327,
     "ast_hash": "aa523667e20af8f40ca9291ea99ef344",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/cca98ba94a3e4d93a190479b0008e2cd/all_titles_and_hashtags.txt": {
+    "mtime": 1788829069.3383677,
+    "ast_hash": "554f439bd1178043ecec514f5a671e2d",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/cca98ba94a3e4d93a190479b0008e2cd/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788829069.3386333,
+    "ast_hash": "4507e589fe237b9bde12c87e4cb5a644",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/8a0b467321144c228702df2a79671cd3/all_titles_and_hashtags.txt": {
@@ -1189,6 +1309,16 @@
     "ast_hash": "105922c34de12d11a60b1af274c7844b",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/d397217cc00d45139e37e97a588eda30/all_titles_and_hashtags.txt": {
+    "mtime": 1788815075.4238553,
+    "ast_hash": "7fdd61e1942ebe3162f1fd85526ba8ff",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/d397217cc00d45139e37e97a588eda30/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788815075.4239802,
+    "ast_hash": "f43b374609de110f601939693fbda556",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/5ecc4cf712924984aae8281ff2a1646e/job_2908838b_titles_and_hashtags.txt": {
     "mtime": 1788475062.4630504,
     "ast_hash": "0620107a442a7ff6a3772918b041454a",
@@ -1212,6 +1342,16 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/c4632939a82d488ea1fe38a71872bfa5/all_titles_and_hashtags.txt": {
     "mtime": 1788556081.8849738,
     "ast_hash": "670c3b6cbdfe9c24e5a0dc5c0f6cfcbe",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/111fd8c02cd343afb477bd6d8c866d8d/all_titles_and_hashtags.txt": {
+    "mtime": 1788829785.3851223,
+    "ast_hash": "089ff8d9f83115551a7ade725688e2ae",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/111fd8c02cd343afb477bd6d8c866d8d/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788829785.385411,
+    "ast_hash": "1b9691f01da8af8e45b214dcc2c9b42b",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/f400b6e1c8a942b2b86e783a4e16f23c/all_titles_and_hashtags.txt": {
@@ -1299,6 +1439,26 @@
     "ast_hash": "0a5042f4d3a6491c1bed81326d02b96e",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/0d865a42082a41d9b8787a98f6170079/all_titles_and_hashtags.txt": {
+    "mtime": 1788653828.9554012,
+    "ast_hash": "2ee94d3e11234c86e882e0b5a86e3e16",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/0d865a42082a41d9b8787a98f6170079/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788653828.9554875,
+    "ast_hash": "fe31341ee16931a92722eaee19fcc248",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/a2b42f10d25c4188a94be8bc9057aff1/all_titles_and_hashtags.txt": {
+    "mtime": 1788829357.2598534,
+    "ast_hash": "0598685565ee4ae8ac382b9f23074fc4",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/a2b42f10d25c4188a94be8bc9057aff1/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788829357.2601252,
+    "ast_hash": "82f9fc859c5e586abd2f08bcbbdb89db",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/a311769ab55a496d99e945062b1370da/all_titles_and_hashtags.txt": {
     "mtime": 1788641530.6267934,
     "ast_hash": "64d9a4d170fae7a958fccf8ae3025ff0",
@@ -1307,6 +1467,16 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/a311769ab55a496d99e945062b1370da/copy_paste_single_para_all_clips.txt": {
     "mtime": 1788641530.6268742,
     "ast_hash": "69e85259f4b8d6dcde2ae6efc35f0e7a",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/a2ef0cf9888e4d45bbd9f5717f0fe145/all_titles_and_hashtags.txt": {
+    "mtime": 1788829327.2945263,
+    "ast_hash": "1dd9d27a52669a2f60e5ec067266cf35",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/a2ef0cf9888e4d45bbd9f5717f0fe145/copy_paste_single_para_all_clips.txt": {
+    "mtime": 1788829327.294648,
+    "ast_hash": "20e42e4ec19c5944067acdbba9dedcc1",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/0cc748c589264fc2ba6ad44bc1f731ea/all_titles_and_hashtags.txt": {
@@ -1410,13 +1580,13 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/133ba33b01f2426f8302fc2ad8b742d5/all_titles_and_hashtags.txt": {
-    "mtime": 1788651681.372228,
-    "ast_hash": "a1c210af181d07c4d2ecf35b84879526",
+    "mtime": 1788654824.5573215,
+    "ast_hash": "96bf40aa3b684951bd3cd1cd12bad157",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/133ba33b01f2426f8302fc2ad8b742d5/copy_paste_single_para_all_clips.txt": {
-    "mtime": 1788651681.37233,
-    "ast_hash": "59bedf13bee46ffe982152da2c81b971",
+    "mtime": 1788654824.5574863,
+    "ast_hash": "991f3c2441e86cf38479d1da0c33f364",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/10dd0ee8e1c84e1ca19ccced3392d5bd/all_titles_and_hashtags.txt": {
@@ -1789,6 +1959,11 @@
     "ast_hash": "a1206d555e4b7d8d480de2277d06621e",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/38cbe7dac21e496781c721ce21a22c04.jpg": {
+    "mtime": 1788654824.5045137,
+    "ast_hash": "9e32621e6ebaa7a2d21160ea0b82ee95",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/f14771951e0d4ed2a0aa1a40690e0294.jpg": {
     "mtime": 1788472302.401314,
     "ast_hash": "02f88e2fe5de185de7b293307497cf29",
@@ -1824,6 +1999,11 @@
     "ast_hash": "42145a1510376261197f35af8d24677f",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/dd9b39894bdf4f4284d3e74222e7c74a.jpg": {
+    "mtime": 1788652807.8240676,
+    "ast_hash": "5a68c08df3ab58c8f6f32c1b247860d4",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/fcf1764d27b4448c9fca5ad13c052eaa.jpg": {
     "mtime": 1788645147.434509,
     "ast_hash": "a9a425b28c20ef3ca5d5f615d49c9c13",
@@ -1842,6 +2022,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/13298281049648c2a64ef70545ad58b8.jpg": {
     "mtime": 1788643364.8662224,
     "ast_hash": "a47d93d02a56c3ec4af82552101ebb0c",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/3c08a4bf5da8473e93374bc06e918ef7.jpg": {
+    "mtime": 1788726784.2513037,
+    "ast_hash": "cf6b7d6f59c15f46ee77d71b51e9e148",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/c722d1bcf7de47b996f043cf7242d802.jpg": {
@@ -1884,6 +2069,11 @@
     "ast_hash": "775dc4d12d5c8d5e7542eb9625691fa8",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/078054d1b98d4ef798ab8068999796e7.jpg": {
+    "mtime": 1788815024.6527438,
+    "ast_hash": "93f2b2bf8594bc8c79b65d124286af50",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/07e9dbea561b4588b2c5aa2ce68f239c.jpg": {
     "mtime": 1788561848.1198978,
     "ast_hash": "562bd7a90d4305b1ec3b2a310e6bbabb",
@@ -1924,6 +2114,11 @@
     "ast_hash": "45a122a512b327fbfcff543399c810c3",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/6a17f75e5faa45be9debb941fb3548a0.jpg": {
+    "mtime": 1788815050.191077,
+    "ast_hash": "03d627f20e69cdac3a5b9bea2e1d0f85",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/5cff070b01334c1e9a49b7902d536756.jpg": {
     "mtime": 1788646647.895465,
     "ast_hash": "cd7b5f263f588cfe594fde26ead3d734",
@@ -1957,6 +2152,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/2c5811d6a4db4d2e99d0def6d18ee44e.jpg": {
     "mtime": 1788561748.3189244,
     "ast_hash": "df37da057a412f56104cbb089fd3db10",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/97aabd084ca048df9b9131e6c909b5c0.jpg": {
+    "mtime": 1788652856.2100916,
+    "ast_hash": "03d9e8975bd8ee312d5978c9ead73b72",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/0d6c6fa071994ffcabfca31a9fdc071c.jpg": {
@@ -2059,6 +2259,11 @@
     "ast_hash": "4679ffcaba62d141b7f521357ce4a8fe",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/c23f799d830f4cb1978563b79320e09e.jpg": {
+    "mtime": 1788654763.762027,
+    "ast_hash": "0beadb34af6da9ca71e28051ab8c61b2",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/25b1b4838e814377bd29c93293a01af2.jpg": {
     "mtime": 1788644921.4756916,
     "ast_hash": "a47d93d02a56c3ec4af82552101ebb0c",
@@ -2079,6 +2284,16 @@
     "ast_hash": "31e7aa9257aae3a742a3cf6e8ad5a0a2",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/e8b23dd83692420487c3c0a8dca30f8b.jpg": {
+    "mtime": 1788829357.2320778,
+    "ast_hash": "4bfd330a6eb321eec1907b323f796364",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/b4038451cdf04de1a5a13c68600185da.jpg": {
+    "mtime": 1788652711.7389328,
+    "ast_hash": "958f7fbda63f4e321833ba5ee3d6055c",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/6af6ed6f924449bab06582cd3ed7f83d.jpg": {
     "mtime": 1788642826.4396589,
     "ast_hash": "68c4e3ec3bbbd5c164d05010c5c25ec0",
@@ -2094,14 +2309,44 @@
     "ast_hash": "aba13a695a601099b1d91c4164c36baf",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/ca024109caf04a6293bcdc185e6761d4.jpg": {
+    "mtime": 1788829069.3223221,
+    "ast_hash": "4bfd330a6eb321eec1907b323f796364",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/1a41db6744ce4698846f50c87da1eeb9.jpg": {
+    "mtime": 1788815003.9357822,
+    "ast_hash": "01ec2eaead347eabe04b9f87c6012f60",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/42e8c537f3974f8795f092dbf459abd8.jpg": {
+    "mtime": 1788829327.2811723,
+    "ast_hash": "4bfd330a6eb321eec1907b323f796364",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/081c4af336d24de783315732cd26d772.jpg": {
+    "mtime": 1788654692.0156832,
+    "ast_hash": "7fa715bd8a56739a7de804ac3e4fee07",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/b51d71b12e5d4e6f907145dc7267d588.jpg": {
     "mtime": 1788637176.3575354,
     "ast_hash": "1769b53c7e359fe1b4e93e3e22b72844",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/3c76efeafef54885a262a66b32018a98.jpg": {
+    "mtime": 1788829785.3602889,
+    "ast_hash": "4bfd330a6eb321eec1907b323f796364",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/e6ebbe47715245298e4adfb751bd506a.jpg": {
     "mtime": 1788637369.052114,
     "ast_hash": "1769b53c7e359fe1b4e93e3e22b72844",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/ecf419aeca1d4c298a56d7e90acd14be.jpg": {
+    "mtime": 1788815075.4097052,
+    "ast_hash": "0d3ecbd88de6cf5ec8a541649d4e8359",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/ef734ca29e164f629636c8103806176c.jpg": {
@@ -2137,6 +2382,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/1eff1f43c4e4414e81f38444287cdc92.jpg": {
     "mtime": 1788640261.5456703,
     "ast_hash": "755686dbc8fa02581dd346863d036b04",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/5d03c79fc4af489b8e3e609bd44e2109.jpg": {
+    "mtime": 1788726815.6059208,
+    "ast_hash": "50dfc42073fd1e9e6abd4a02abfd8859",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/5cdce3d694d842b499fdb59dea1b8f02.jpg": {
@@ -2249,6 +2499,16 @@
     "ast_hash": "9880e133a691c565f276d728819b81c1",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/f3b74295fa104d52baa9ee86337439fd.jpg": {
+    "mtime": 1788653828.9408622,
+    "ast_hash": "4bfd330a6eb321eec1907b323f796364",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/5d5f1a6d15e84bb6b80720d4168c639e.jpg": {
+    "mtime": 1788726749.0551672,
+    "ast_hash": "316aa92e6a132637f615a637ed14a047",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/98089aa778f149cb948d71e3d6e5318c.jpg": {
     "mtime": 1788645901.5965502,
     "ast_hash": "18306680a2c0aabfcae9f868a096fbd9",
@@ -2264,6 +2524,11 @@
     "ast_hash": "9847315b9574c2839685cfa64c68b3c3",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/03aff55fe4414588957ef8b6c2930ab6.jpg": {
+    "mtime": 1788652758.7473705,
+    "ast_hash": "3ac44648e5c9f89e177ba331bf403af0",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/390289ac2c404b668a662394df187f56.jpg": {
     "mtime": 1788471474.666636,
     "ast_hash": "0748e2922792892cb6b3df30019f229b",
@@ -2277,6 +2542,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/7c33d5c9270c4d1e865ce76b8111a96d.jpg": {
     "mtime": 1788472849.6957617,
     "ast_hash": "ec1400069e820479266961d755b4b5c0",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/c62a0a10ad6f45f69479220c863e9fa6.jpg": {
+    "mtime": 1788814976.3352253,
+    "ast_hash": "085162fa10915ceb3abfa40ab7765326",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/thumbnails/4ac7da5d18a1457c82d7fd0d892164cc.jpg": {
@@ -7464,6 +7734,11 @@
     "ast_hash": "de9b331f472994efd0fef9d669339db1",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/d8ac4d00f4db3cc5_Eating_Just_Makes_Everything_Better_My_600-lb_Life_Xtf-YaBigBw.mp4": {
+    "mtime": 1788726634.908947,
+    "ast_hash": "8efa35b1ffcab3da8e205cc1814c80b6",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/5bdfb69d81d44c7f81a9d3079908a906_audio.wav": {
     "mtime": 1788297127.9982066,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
@@ -7514,6 +7789,11 @@
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/0d865a42082a41d9b8787a98f6170079_audio.wav": {
+    "mtime": 1788653820.7560997,
+    "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/2f1bb06a846c4cfbac2d92e85e5579ab_audio.wav": {
     "mtime": 1788376497.7754033,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
@@ -7525,12 +7805,17 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/133ba33b01f2426f8302fc2ad8b742d5_audio.wav": {
-    "mtime": 1788652556.3381732,
+    "mtime": 1788654641.837305,
     "ast_hash": "4d2717042011f172794f76cf80be0e4c",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/e61feb9e81554d36a85881d98741c382_audio.wav": {
     "mtime": 1788465126.9439547,
+    "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/a2ef0cf9888e4d45bbd9f5717f0fe145_audio.wav": {
+    "mtime": 1788829316.7503705,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
     "semantic_hash": ""
   },
@@ -7589,6 +7874,11 @@
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/98932be42a0da766_Busted_Shoplifters_Used_an_Fake_Baby_Stroller_to_Loot_High-End_Stores_Instantly_Regret_It_wK2Wsv0B-Lg.mp4": {
+    "mtime": 1788814888.3810976,
+    "ast_hash": "93d71aa17da8dd7aa137304fb36919f7",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/bf1c6522e9ce4c13b0f748d3becd1bdc_audio.wav": {
     "mtime": 1788301329.568467,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
@@ -7607,6 +7897,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/0cc748c589264fc2ba6ad44bc1f731ea_audio.wav": {
     "mtime": 1788556216.8731282,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/564fdb62f04a49f281044016d1d6d779_audio.wav": {
+    "mtime": 1788726705.0928283,
+    "ast_hash": "904eeb214441bf436b49a9885200ef92",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/51513950ac7747f2a149cd330625f382_audio.wav": {
@@ -7644,6 +7939,11 @@
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/d397217cc00d45139e37e97a588eda30_audio.wav": {
+    "mtime": 1788814937.9300895,
+    "ast_hash": "adb7d99aa1d3ede756d4d7f7012313ec",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/aaa1af06ea674c27b562635118f8ef8e_audio.wav": {
     "mtime": 1788296517.1958222,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
@@ -7651,6 +7951,11 @@
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/bf4848bd232a46ebacbaefdf30a8698a_audio.wav": {
     "mtime": 1788301294.4078205,
+    "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/a2b42f10d25c4188a94be8bc9057aff1_audio.wav": {
+    "mtime": 1788829346.930772,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
     "semantic_hash": ""
   },
@@ -7729,8 +8034,18 @@
     "ast_hash": "e03402443a1f75b2e1b3da2a60c94fb5",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/111fd8c02cd343afb477bd6d8c866d8d_audio.wav": {
+    "mtime": 1788829771.0679116,
+    "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/6f70636fcd464aa78a45c46517c0f3fc_audio.wav": {
     "mtime": 1788442942.75138,
+    "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/uploads/cca98ba94a3e4d93a190479b0008e2cd_audio.wav": {
+    "mtime": 1788829058.2699578,
     "ast_hash": "f0d226d6d19d5e67be6cdc680e82fe08",
     "semantic_hash": ""
   },
@@ -7979,6 +8294,16 @@
     "ast_hash": "5f8dcc77e53e307c3b42d0f75f3bab6a",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/f3b74295fa104d52baa9ee86337439fd.mp4": {
+    "mtime": 1788653828.7408693,
+    "ast_hash": "8b6a865fc42bfe73c96bc0e07c791a01",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/5d5f1a6d15e84bb6b80720d4168c639e.mp4": {
+    "mtime": 1788726748.4493928,
+    "ast_hash": "04544c032b18536f70792a62f8821cbd",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/b880d402d2444c90a881d1d765f8fc9f.mp4": {
     "mtime": 1788561672.0500984,
     "ast_hash": "37365b0e4cbb942b35fcf5f5ed89402f",
@@ -8034,6 +8359,11 @@
     "ast_hash": "ba6cb1a099854163eb1dd5a7b2446ac2",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/03aff55fe4414588957ef8b6c2930ab6.mp4": {
+    "mtime": 1788652758.4760334,
+    "ast_hash": "07172938a6913e83257c987aad45615a",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/390289ac2c404b668a662394df187f56.mp4": {
     "mtime": 1788471473.450126,
     "ast_hash": "1e58d0e7b94f528f42623b77e18200d3",
@@ -8054,6 +8384,11 @@
     "ast_hash": "41f40a8633b681c5a453fb40bfc98984",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/c62a0a10ad6f45f69479220c863e9fa6.mp4": {
+    "mtime": 1788814976.084551,
+    "ast_hash": "3fa9f39593b42917a68f4169f9d264e3",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/7c33d5c9270c4d1e865ce76b8111a96d.mp4": {
     "mtime": 1788472849.3435946,
     "ast_hash": "fba501baa34fd1f1b2638d41475be733",
@@ -8069,9 +8404,39 @@
     "ast_hash": "8e06dac6b92153ed6332cd3c60b7ac6f",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/ca024109caf04a6293bcdc185e6761d4.mp4": {
+    "mtime": 1788829069.0417655,
+    "ast_hash": "8b6a865fc42bfe73c96bc0e07c791a01",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/2f356b03a1194a4d8d9cd9078eded433.mp4": {
     "mtime": 1788295823.7067263,
     "ast_hash": "cfdd5a14cb936b331d959be6901e855e",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/42e8c537f3974f8795f092dbf459abd8.mp4": {
+    "mtime": 1788829327.0299537,
+    "ast_hash": "8b6a865fc42bfe73c96bc0e07c791a01",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/081c4af336d24de783315732cd26d772.mp4": {
+    "mtime": 1788654691.1932707,
+    "ast_hash": "566d7f956f8ee88d7490ca6d29bddb78",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/1a41db6744ce4698846f50c87da1eeb9.mp4": {
+    "mtime": 1788815003.707801,
+    "ast_hash": "0e74cfbc37cff2cccb168f79a5d39b3d",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/3c76efeafef54885a262a66b32018a98.mp4": {
+    "mtime": 1788829785.0519927,
+    "ast_hash": "8b6a865fc42bfe73c96bc0e07c791a01",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/ecf419aeca1d4c298a56d7e90acd14be.mp4": {
+    "mtime": 1788815075.1748047,
+    "ast_hash": "63024845a8a5bdc012fe2251d30aa2d0",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/e6ebbe47715245298e4adfb751bd506a.mp4": {
@@ -8110,8 +8475,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/b4038451cdf04de1a5a13c68600185da.mp4": {
-    "mtime": 1788652689.0799055,
-    "ast_hash": "1532fe93a7dca804e9b9e72358f116b4",
+    "mtime": 1788652711.2665584,
+    "ast_hash": "17112f5ea9ee880a22c2e544d0d22354",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/8773daebe5dd4bf59c3d5c83994e9cee.mp4": {
@@ -8132,6 +8497,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/bf044b0ff0e8484f836a35987b243c49.mp4": {
     "mtime": 1788556409.1607895,
     "ast_hash": "3d9ca3740df75fc2f78585b3d4e49e00",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/e8b23dd83692420487c3c0a8dca30f8b.mp4": {
+    "mtime": 1788829356.971162,
+    "ast_hash": "8b6a865fc42bfe73c96bc0e07c791a01",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/d5e49d6ed15448cc9431abd2217c7adc.mp4": {
@@ -8167,6 +8537,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/ad6050eaa6104aefbb6ff1e3c0808186.mp4": {
     "mtime": 1788646610.5306141,
     "ast_hash": "870a59f87a178a77d69edf112beddb7e",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/5d03c79fc4af489b8e3e609bd44e2109.mp4": {
+    "mtime": 1788726815.3678994,
+    "ast_hash": "60209b6c9eeddd816cedf19dfe2cc2e0",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/5cdce3d694d842b499fdb59dea1b8f02.mp4": {
@@ -8264,6 +8639,11 @@
     "ast_hash": "fe84d8b4ea3f2a2160e2e03331713019",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/97aabd084ca048df9b9131e6c909b5c0.mp4": {
+    "mtime": 1788652855.739106,
+    "ast_hash": "1a9106a845f9004aa6c6678030865690",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/3c92941d6be3479094d33d92b653bc8d.mp4": {
     "mtime": 1788560011.835852,
     "ast_hash": "2d1476f487d0fa624f1bde17989f1965",
@@ -8297,6 +8677,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/c904e02bd0be481b84d090b60681e3f3.mp4": {
     "mtime": 1788470095.6956148,
     "ast_hash": "47f314aaf098296ae691f09c833d3d20",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/c23f799d830f4cb1978563b79320e09e.mp4": {
+    "mtime": 1788654763.3029156,
+    "ast_hash": "9fe13b86ef39b0974e3d413f423b5882",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/b018359d5ed246498ff5fa44179b5186.mp4": {
@@ -8369,6 +8754,11 @@
     "ast_hash": "3d9ca3740df75fc2f78585b3d4e49e00",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/dd9b39894bdf4f4284d3e74222e7c74a.mp4": {
+    "mtime": 1788652807.327907,
+    "ast_hash": "93f80f3b19b216075f05b15f8fdb0335",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/b42c2fdd3dd649bb91bdfdd538fe6eb5.mp4": {
     "mtime": 1788556453.4448214,
     "ast_hash": "3d9ca3740df75fc2f78585b3d4e49e00",
@@ -8402,6 +8792,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/b0238f6e1f0347a894ba315d3776afec.mp4": {
     "mtime": 1788652545.2759137,
     "ast_hash": "79bf51043f63fedc2249dbffb77dd5ea",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/3c08a4bf5da8473e93374bc06e918ef7.mp4": {
+    "mtime": 1788726783.835513,
+    "ast_hash": "bfcace9d1594d944bf687d8f5c5442db",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/a8454ed27ac04ad78d550bc10f89cfbc.mp4": {
@@ -8447,6 +8842,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/3a00701086714cd69b4afee8fba8de4f.mp4": {
     "mtime": 1788646218.7034154,
     "ast_hash": "d8543cf7e90062055e75b4fc1ea2f59f",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/38cbe7dac21e496781c721ce21a22c04.mp4": {
+    "mtime": 1788654823.6396136,
+    "ast_hash": "b3db8adc302ea93f0dac207052f28b84",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/f14771951e0d4ed2a0aa1a40690e0294.mp4": {
@@ -8514,6 +8914,11 @@
     "ast_hash": "c6b775c7cd84e82e79b939b1237c0546",
     "semantic_hash": ""
   },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/6a17f75e5faa45be9debb941fb3548a0.mp4": {
+    "mtime": 1788815049.9676752,
+    "ast_hash": "81890a5c603a19ac900a7b8ec87dc224",
+    "semantic_hash": ""
+  },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/582f9079159b441da4abc700bdd0b609.mp4": {
     "mtime": 1788472522.8642497,
     "ast_hash": "d69481bd4976522bbb48bc956cba4e59",
@@ -8522,6 +8927,11 @@
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/91dd2d5d20534eb38dbe0cb030fe8f1b.mp4": {
     "mtime": 1788651681.1148248,
     "ast_hash": "de77a1bce21794cf12c32af3757c832b",
+    "semantic_hash": ""
+  },
+  "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/078054d1b98d4ef798ab8068999796e7.mp4": {
+    "mtime": 1788815024.4309995,
+    "ast_hash": "3a0bd64e6eb598c7cf48944d2290cf8d",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/data/processed/07e9dbea561b4588b2c5aa2ce68f239c.mp4": {

@@ -142,6 +142,8 @@ export interface RenderedClipResponse {
   total_parts?: number | null;
   part_badge_position?: number;
   part_badge_align?: "center" | "left" | "right" | string;
+  enable_series_parts?: boolean;
+  add_part_badge?: boolean;
   scores: CandidateScores;
   reason?: string | null;
   hook_text?: string | null;
@@ -217,6 +219,7 @@ export interface JobCreatePayload {
   mode?: "podcast" | "viral_moments";
   genre?: VideoGenre;
   enable_series_parts?: boolean;
+  add_part_badge?: boolean;
   target_clips_count?: number;
   duration_preset?: "15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom";
   caption_style?: CaptionStyleType;
@@ -250,6 +253,7 @@ export interface ProjectProcessPayload {
   mode?: "podcast" | "viral_moments";
   genre?: VideoGenre;
   enable_series_parts?: boolean;
+  add_part_badge?: boolean;
   target_clips_count?: number;
   duration_preset?: "15-30s" | "30-45s" | "45-60s" | "60-90s" | "custom";
   caption_style?: CaptionStyleType;

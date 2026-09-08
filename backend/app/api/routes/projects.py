@@ -375,14 +375,17 @@ async def process_project(
     v_res = await db.execute(v_stmt)
     videos = v_res.scalars().all()
 
-    if req.caption_style and req.caption_style != "none":
-        req.burn_captions = True
-    elif req.burn_captions and (not req.caption_style or req.caption_style == "none"):
+    if req.burn_captions and (not req.caption_style or req.caption_style == "none"):
         req.caption_style = "tiktok_viral"
-    if req.add_hook_header:
-        req.burn_captions = True
+
 
     mode = req.mode or proj.mode or "podcast"
+    enable_parts = getattr(req, "enable_series_parts", None)
+    if enable_parts is None:
+        enable_parts = getattr(req, "add_part_badge", True)
+    if enable_parts is None:
+        enable_parts = True
+
     job = Job(
         project_id=id,
         mode=mode,
@@ -395,6 +398,8 @@ async def process_project(
         add_hook_header=req.add_hook_header,
         hook_header_position=req.hook_header_position,
         hook_header_style=getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
+        enable_series_parts=enable_parts,
+        add_part_badge=enable_parts,
         part_badge_position=getattr(req, "part_badge_position", 6) or 6,
         part_badge_align=getattr(req, "part_badge_align", "center") or "center",
         remove_watermark=req.remove_watermark,
@@ -417,13 +422,10 @@ async def process_project(
             "add_hook_header": req.add_hook_header,
             "hook_header_position": req.hook_header_position,
             "hook_header_style": getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
+            "enable_series_parts": enable_parts,
+            "add_part_badge": enable_parts,
             "part_badge_position": getattr(req, "part_badge_position", 6) or 6,
             "part_badge_align": getattr(req, "part_badge_align", "center") or "center",
-            "blur_radius": req.blur_radius,
-            "subtitle_position": req.subtitle_position,
-            "add_hook_header": req.add_hook_header,
-            "hook_header_position": req.hook_header_position,
-            "hook_header_style": getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
             "remove_watermark": req.remove_watermark,
             "watermark_position": req.watermark_position,
             "enhance_quality": req.enhance_quality,

@@ -592,4 +592,50 @@
   - `backend/app/services/ai/gemini.py`
   - `SESSION_TRACKER.md`
 
+---
+
+### Session 5: Independent On-Screen Display Overlay Toggles (Subtitles, Series Part 1...N, Hook Caption)
+- **Date / Time**: 2026-09-08
+- **User Prompt**:
+  > *"make a option to toggle on and off for subtiles, part1...N, captions... so the user can chose either to show on the screen"*
+
+- **Problem & Root Causes Identified**:
+  1. **Tight Coupling in Caption Generator (`captioner.py`)**:
+     - `captioner.py` line 601 previously checked `(add_hook_header or (total_parts and total_parts > 1)) and hook_header_text`. If there was more than 1 clip (`total_parts > 1`), hook header banner was forced on even if `add_hook_header` was set to False.
+     - `captioner.py` line 592 previously checked `if part_index:` without checking any boolean flag, forcing `PART 1...N` badges to always render whenever `part_index` existed.
+     - Subtitles were tied directly to `caption_style != "none"`, meaning disabling spoken karaoke subtitles while keeping a hook headline or part badge was impossible without corrupting the ASS subtitle file.
+  2. **Coupled Request Routing (`routes/jobs.py` & `routes/projects.py`)**:
+     - Previously had `if req.add_hook_header: req.burn_captions = True` and `if req.caption_style and req.caption_style != "none": req.burn_captions = True`, which overrode the user's explicit preference when turning subtitles off.
+  3. **Missing Frontend Controls**:
+     - `VideoUploader.tsx` only had position/alignment for the part badge, missing an explicit on/off switch for `enableSeriesParts`.
+     - `TimelineScrubber.tsx` lacked controls for the Series Part 1...N badge altogether.
+     - `RegenerateModal.tsx` lacked an overlay toggle section for controlling the 3 layers during regeneration.
+
+- **Changes & Deliverables**:
+  1. **Fully Decoupled ASS Caption Generator (`captioner.py`)**:
+     - Added explicit `add_part_badge: bool = True` and `show_subtitles: bool = True` parameters to `captioner.generate_ass(...)`.
+     - **Layer 0 (Spoken Karaoke Subtitles)**: Only rendered if `show_subtitles and style and style.lower().strip() != "none"`.
+     - **Layer 1 (Sticky Hook Headline Caption)**: Only rendered if `bool(add_hook_header and hook_header_text)`. Eliminated forced hook header on multi-clip series.
+     - **Layer 2 (Series Part 1...N Badge)**: Only rendered if `bool(part_index and add_part_badge)`.
+     - **Clean Video Fast-Path**: If all 3 toggles are turned off, `pipeline.py` and `regenerator.py` bypass ASS generation and FFmpeg text rasterization completely (`ass_subtitle_path=None`, `burn_captions=False`), yielding faster renders and 100% clean video.
+  2. **Database & Schema Updates**:
+     - Added `enable_series_parts` and `add_part_badge` boolean columns (default `True`) to `Job` and `RenderedClip` models in `models.py`.
+     - Added SQLite schema migrations in `database.py`.
+     - Updated Pydantic schemas in `schemas.py` (`JobCreateRequest`, `ProjectProcessRequest`, `RenderedClipResponse`, `ClipEditRequest`, `ClipRegenerateRequest`).
+  3. **Pipeline & Route Decoupling**:
+     - Updated `jobs.py`, `projects.py`, `clips.py`, and `regenerator.py` to preserve independent flags without overriding `burn_captions`.
+     - Updated pipeline `should_burn` logic to correctly reflect if any layer is active.
+  4. **Frontend Workstation & UI Integration**:
+     - **`VideoUploader.tsx`**: Added `enableSeriesParts` state & on/off toggle to the Part Badge card; wired to `api.createJob`; updated live 9:16 phone mockup and mini phone indicator to respect all 3 toggles.
+     - **`TimelineScrubber.tsx`**: Added Series Part 1...N Badge card with on/off switch, alignment buttons, position presets, slider, and phone preview; added `initialAddPartBadge`, `initialPartBadgePosition`, and `initialPartBadgeAlign` props; wired to `onRerender`.
+     - **`RegenerateModal.tsx`**: Added a dedicated "On-Screen Display Overlays" section with independent toggles for Subtitles, Part 1...N, and Hook Caption; wired to `onRegenerate`.
+     - **`clips/[id]/page.tsx`**: Connected `add_part_badge`, `enable_series_parts`, and `burn_captions` between `TimelineScrubber`, `RegenerateModal`, and `api.rerenderClip` / `api.regenerateClip`.
+     - **`projects/[id]/page.tsx`**: Decoupled `burn_captions` from `addHookHeader` in project batch processing.
+  5. **Verification**:
+     - Created comprehensive test suite `backend/tests/test_screen_overlay_toggles.py` covering all permutations (all on, subtitles off, part badge off, hook header off, all off).
+     - All **45/45 backend unit tests pass** (`uv run pytest`).
+     - Frontend compiles with **0 TypeScript errors** (`npx tsc --noEmit`).
+     - Knowledge graph synced with `graphify update .`.
+
+
 

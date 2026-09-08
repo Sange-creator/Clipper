@@ -96,7 +96,10 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     enhanceQuality?: boolean,
     hookHeaderStyle?: string,
     captionStyle?: string,
-    burnCaptions?: boolean
+    burnCaptions?: boolean,
+    addPartBadge?: boolean,
+    partBadgePosition?: number,
+    partBadgeAlign?: string
   ) => {
     if (!clip) return;
     const updated = await api.rerenderClip(clip.id, {
@@ -104,6 +107,10 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
       end_time: endTime,
       caption_style: captionStyle || clip.caption_style,
       burn_captions: burnCaptions !== undefined ? burnCaptions : clip.burn_captions,
+      add_part_badge: addPartBadge !== undefined ? addPartBadge : (clip.add_part_badge ?? clip.enable_series_parts ?? true),
+      enable_series_parts: addPartBadge !== undefined ? addPartBadge : (clip.enable_series_parts ?? true),
+      part_badge_position: partBadgePosition !== undefined ? partBadgePosition : (clip.part_badge_position || 6),
+      part_badge_align: (partBadgeAlign as any) || ((clip.part_badge_align as any) || "center"),
       framing_mode: framingMode,
       blur_radius: blurRadius,
       subtitle_position: subtitlePosition,
@@ -118,14 +125,25 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
     setClip(updated);
   };
 
-  const handleRegenerate = async (intent: string, captionStyle?: string, note?: string, hookHeaderStyle?: string) => {
+  const handleRegenerate = async (
+    intent: string,
+    captionStyle?: string,
+    note?: string,
+    hookHeaderStyle?: string,
+    burnCaptions?: boolean,
+    addPartBadge?: boolean,
+    addHookHeader?: boolean
+  ) => {
     if (!clip) return;
     const updated = await api.regenerateClip(clip.id, {
       intent,
       caption_style: captionStyle || clip.caption_style,
+      burn_captions: burnCaptions !== undefined ? burnCaptions : clip.burn_captions,
+      add_part_badge: addPartBadge !== undefined ? addPartBadge : (clip.add_part_badge ?? clip.enable_series_parts ?? true),
+      enable_series_parts: addPartBadge !== undefined ? addPartBadge : (clip.enable_series_parts ?? true),
       custom_note: note,
       subtitle_position: clip.subtitle_position,
-      add_hook_header: clip.add_hook_header,
+      add_hook_header: addHookHeader !== undefined ? addHookHeader : clip.add_hook_header,
       hook_header_position: clip.hook_header_position,
       hook_header_style: hookHeaderStyle || clip.hook_header_style,
       hook_header_text: clip.hook_header_text || undefined,
@@ -269,6 +287,9 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
             initialSubtitlePosition={clip.subtitle_position}
             initialCaptionStyle={clip.caption_style}
             initialBurnCaptions={clip.burn_captions}
+            initialAddPartBadge={clip.add_part_badge ?? clip.enable_series_parts ?? true}
+            initialPartBadgePosition={clip.part_badge_position || 6}
+            initialPartBadgeAlign={(clip.part_badge_align as any) || "center"}
             initialAddHookHeader={clip.add_hook_header}
             initialHookHeaderPosition={clip.hook_header_position}
             initialHookHeaderStyle={clip.hook_header_style}
@@ -301,6 +322,9 @@ export default function ClipDetailPage({ params }: { params: Promise<{ id: strin
         onRegenerate={handleRegenerate}
         currentStyle={clip.caption_style}
         currentHookHeaderStyle={clip.hook_header_style}
+        currentBurnCaptions={clip.burn_captions}
+        currentAddPartBadge={clip.add_part_badge ?? clip.enable_series_parts ?? true}
+        currentAddHookHeader={clip.add_hook_header}
       />
     </div>
   );

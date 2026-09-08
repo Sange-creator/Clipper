@@ -38,12 +38,15 @@ async def create_clipping_job(
     if not video:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Video not found.")
 
-    if req.caption_style and req.caption_style != "none":
-        req.burn_captions = True
-    elif req.burn_captions and (not req.caption_style or req.caption_style == "none"):
+    if req.burn_captions and (not req.caption_style or req.caption_style == "none"):
         req.caption_style = "tiktok_viral"
-    if req.add_hook_header:
-        req.burn_captions = True
+
+
+    enable_parts = getattr(req, "enable_series_parts", None)
+    if enable_parts is None:
+        enable_parts = getattr(req, "add_part_badge", True)
+    if enable_parts is None:
+        enable_parts = True
 
     config_dict = req.model_dump()
     db_job = Job(
@@ -60,6 +63,8 @@ async def create_clipping_job(
         add_hook_header=req.add_hook_header,
         hook_header_position=req.hook_header_position or 12,
         hook_header_style=getattr(req, "hook_header_style", "viral_creator") or "viral_creator",
+        enable_series_parts=enable_parts,
+        add_part_badge=enable_parts,
         part_badge_position=getattr(req, "part_badge_position", 6) or 6,
         part_badge_align=getattr(req, "part_badge_align", "center") or "center",
         remove_watermark=req.remove_watermark,

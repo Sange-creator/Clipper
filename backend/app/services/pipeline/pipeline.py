@@ -486,11 +486,20 @@ class VideoProcessingPipeline:
                     ass_path = settings.SUBTITLE_DIR / f"{clip_id}.ass"
                     srt_path = settings.SUBTITLE_DIR / f"{clip_id}.srt"
                     job_sub_pos = getattr(job, "subtitle_position", None) or 75
-                    job_add_hook = getattr(job, "add_hook_header", False)
+                    job_add_hook = getattr(job, "add_hook_header", None)
+                    if job_add_hook is None:
+                        job_add_hook = config.get("add_hook_header", True)
                     part_idx = idx
                     tot_parts = len(ranked_clips)
-                    if tot_parts > 1:
-                        job_add_hook = True
+                    job_enable_parts = getattr(job, "enable_series_parts", None)
+                    if job_enable_parts is None:
+                        job_enable_parts = getattr(job, "add_part_badge", None)
+                    if job_enable_parts is None:
+                        job_enable_parts = config.get("enable_series_parts", config.get("add_part_badge", True))
+                    job_burn_captions = getattr(job, "burn_captions", None)
+                    if job_burn_captions is None:
+                        job_burn_captions = config.get("burn_captions", True)
+
                     job_hook_pos = getattr(job, "hook_header_position", None) or 12
                     job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
                     job_part_pos = getattr(job, "part_badge_position", None)
@@ -519,11 +528,15 @@ class VideoProcessingPipeline:
                     if job_enhance_quality is None:
                         job_enhance_quality = True
 
-                    # Guaranteed burn logic: Burn whenever subtitles, hook header, or series badges are active
-                    if burn_captions and (not caption_style or caption_style == "none"):
+                    # Accurate burn logic: Burn if any visual overlay is active (subtitles, hook header, or part badge)
+                    if job_burn_captions and (not caption_style or caption_style == "none"):
                         caption_style = "tiktok_viral"
 
-                    should_burn = bool(burn_captions or (caption_style and caption_style != "none") or job_add_hook or (tot_parts and tot_parts > 1))
+                    should_burn = bool(
+                        (job_burn_captions and caption_style and caption_style != "none")
+                        or (job_add_hook and hook_title_text)
+                        or (job_enable_parts and part_idx)
+                    )
 
                     captioner.generate_ass(
                         raw_segments,
@@ -543,6 +556,8 @@ class VideoProcessingPipeline:
                         part_badge_align=job_part_align,
                         canvas_background=job_canvas_background,
                         framing_mode=job_framing_mode,
+                        add_part_badge=job_enable_parts,
+                        show_subtitles=job_burn_captions,
                     )
                     captioner.generate_srt(
                         raw_segments,
@@ -631,12 +646,14 @@ class VideoProcessingPipeline:
                         watermark_position=job_watermark_position,
                         enhance_quality=job_enhance_quality,
                         hook_strategy=job_hook_strat,
-                        caption_style=caption_style if should_burn else "none",
-                        burn_captions=should_burn,
+                        caption_style=caption_style if (job_burn_captions and caption_style) else "none",
+                        burn_captions=bool(job_burn_captions),
                         timeline_edit_json=json.dumps(t_edit.model_dump()),
                         single_para_copy=meta_res.single_para_copy,
                         part_index=part_idx,
                         total_parts=tot_parts,
+                        enable_series_parts=bool(job_enable_parts),
+                        add_part_badge=bool(job_enable_parts),
                         part_badge_position=job_part_pos,
                         part_badge_align=job_part_align,
                         tiktok_title=meta_res.tiktok_title,
@@ -897,10 +914,20 @@ class VideoProcessingPipeline:
             thumb = settings.THUMBNAIL_DIR / f"{clip_id}.jpg"
 
             job_sub_pos = getattr(job, "subtitle_position", None) or 75
-            job_add_hook = getattr(job, "add_hook_header", False)
+            job_add_hook = getattr(job, "add_hook_header", None)
+            if job_add_hook is None:
+                job_add_hook = config.get("add_hook_header", True)
+            part_idx = idx
             tot_parts = len(ranked_project_clips)
-            if tot_parts > 1:
-                job_add_hook = True
+            job_enable_parts = getattr(job, "enable_series_parts", None)
+            if job_enable_parts is None:
+                job_enable_parts = getattr(job, "add_part_badge", None)
+            if job_enable_parts is None:
+                job_enable_parts = config.get("enable_series_parts", config.get("add_part_badge", True))
+            job_burn_captions = getattr(job, "burn_captions", None)
+            if job_burn_captions is None:
+                job_burn_captions = config.get("burn_captions", True)
+
             job_hook_pos = getattr(job, "hook_header_position", None) or 12
             job_hook_style = getattr(job, "hook_header_style", "viral_creator") or "viral_creator"
             job_part_pos = getattr(job, "part_badge_position", None)
@@ -909,7 +936,6 @@ class VideoProcessingPipeline:
             job_part_align = getattr(job, "part_badge_align", None)
             if not job_part_align:
                 job_part_align = config.get("part_badge_align", "center")
-            part_idx = idx
 
             cand_summary_hint = cand.hook_summary or cand.reason or ""
             script_headline = audio_analyzer.extract_hook_headline_from_script(
@@ -926,10 +952,14 @@ class VideoProcessingPipeline:
             if job_enhance_quality is None:
                 job_enhance_quality = True
 
-            if burn_captions and (not caption_style or caption_style == "none"):
+            if job_burn_captions and (not caption_style or caption_style == "none"):
                 caption_style = "tiktok_viral"
 
-            should_burn = bool(burn_captions or (caption_style and caption_style != "none") or job_add_hook or (tot_parts and tot_parts > 1))
+            should_burn = bool(
+                (job_burn_captions and caption_style and caption_style != "none")
+                or (job_add_hook and hook_title_text)
+                or (job_enable_parts and part_idx)
+            )
 
             captioner.generate_ass(
                 segs,
@@ -949,6 +979,8 @@ class VideoProcessingPipeline:
                 part_badge_align=job_part_align,
                 canvas_background=job_canvas_background,
                 framing_mode=job_framing_mode,
+                add_part_badge=job_enable_parts,
+                show_subtitles=job_burn_captions,
             )
             captioner.generate_srt(
                 segs,
@@ -1017,12 +1049,14 @@ class VideoProcessingPipeline:
                 watermark_position=job_watermark_position,
                 enhance_quality=job_enhance_quality,
                 hook_strategy=getattr(job, "hook_strategy", None) or "teaser_climax_hook",
-                caption_style=caption_style if should_burn else "none",
-                burn_captions=should_burn,
+                caption_style=caption_style if (job_burn_captions and caption_style) else "none",
+                burn_captions=bool(job_burn_captions),
                 timeline_edit_json=json.dumps(t_edit.model_dump()),
                 single_para_copy=meta_res.single_para_copy,
                 part_index=part_idx,
                 total_parts=tot_parts,
+                enable_series_parts=bool(job_enable_parts),
+                add_part_badge=bool(job_enable_parts),
                 part_badge_position=job_part_pos,
                 part_badge_align=job_part_align,
                 tiktok_title=meta_res.tiktok_title,

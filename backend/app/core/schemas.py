@@ -144,6 +144,8 @@ class RenderedClipResponse(BaseModel):
     total_parts: Optional[int] = None
     part_badge_position: Optional[int] = 6
     part_badge_align: Optional[str] = "center"
+    enable_series_parts: bool = True
+    add_part_badge: bool = True
     is_favorite: bool = False
     is_rejected: bool = False
     created_at: datetime
@@ -198,6 +200,8 @@ class ProjectProcessRequest(BaseModel):
     watermark_position: str = "auto"
     enhance_quality: bool = True
     hook_strategy: Literal["teaser_climax_hook", "direct_chronological"] = "teaser_climax_hook"
+    enable_series_parts: bool = True
+    add_part_badge: bool = True
     part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
     reframing_mode: Literal["smart_face_track", "center_crop"] = "center_crop"
@@ -227,6 +231,8 @@ class JobCreateRequest(BaseModel):
     add_hook_header: bool = True
     hook_header_position: int = Field(default=12, ge=8, le=90)
     hook_header_style: Optional[str] = "viral_creator"
+    enable_series_parts: bool = True
+    add_part_badge: bool = True
     part_badge_position: Optional[int] = Field(default=6, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = "center"
     remove_watermark: bool = True
@@ -268,6 +274,8 @@ class ClipEditRequest(BaseModel):
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     hook_header_style: Optional[str] = None
     hook_header_text: Optional[str] = None
+    enable_series_parts: Optional[bool] = None
+    add_part_badge: Optional[bool] = None
     part_badge_position: Optional[int] = Field(default=None, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = None
     remove_watermark: Optional[bool] = None
@@ -278,6 +286,7 @@ class ClipEditRequest(BaseModel):
 class ClipRegenerateRequest(BaseModel):
     intent: Literal["stronger_hook", "shorter_duration", "longer_context", "different_payoff", "style_change"]
     caption_style: Optional[str] = None
+    burn_captions: Optional[bool] = None
     framing_mode: Optional[str] = None
     canvas_background: Optional[str] = None
     blur_radius: Optional[int] = Field(default=None, ge=5, le=100)
@@ -286,6 +295,8 @@ class ClipRegenerateRequest(BaseModel):
     hook_header_position: Optional[int] = Field(default=None, ge=8, le=90)
     hook_header_style: Optional[str] = None
     hook_header_text: Optional[str] = None
+    enable_series_parts: Optional[bool] = None
+    add_part_badge: Optional[bool] = None
     part_badge_position: Optional[int] = Field(default=None, ge=4, le=92)
     part_badge_align: Optional[Literal["center", "left", "right"]] = None
     remove_watermark: Optional[bool] = None

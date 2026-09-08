@@ -134,6 +134,8 @@ class Job(Base):
     hook_strategy: Mapped[str] = mapped_column(String(32), default="teaser_climax_hook")  # "teaser_climax_hook" | "direct_chronological"
     part_badge_position: Mapped[int] = mapped_column(Integer, default=6)  # 4..92 percent from top
     part_badge_align: Mapped[str] = mapped_column(String(16), default="center")  # "center", "left", "right"
+    enable_series_parts: Mapped[bool] = mapped_column(Boolean, default=True)  # On-screen Part 1...N series branding
+    add_part_badge: Mapped[bool] = mapped_column(Boolean, default=True)
     config_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
 
@@ -228,6 +230,8 @@ class RenderedClip(Base):
     hook_strategy: Mapped[str] = mapped_column(String(32), default="teaser_climax_hook")  # "teaser_climax_hook" | "direct_chronological"
     part_badge_position: Mapped[int] = mapped_column(Integer, default=6)
     part_badge_align: Mapped[str] = mapped_column(String(16), default="center")
+    enable_series_parts: Mapped[bool] = mapped_column(Boolean, default=True)  # On-screen Part 1...N series branding
+    add_part_badge: Mapped[bool] = mapped_column(Boolean, default=True)
     caption_style: Mapped[str] = mapped_column(String(32), default="bold_yellow")
 
     burn_captions: Mapped[bool] = mapped_column(Boolean, default=True)
