@@ -101,7 +101,7 @@ export function BatchUploader({ projectId, onUploadSuccess }: BatchUploaderProps
           ref={fileInputRef}
           type="file"
           multiple
-          accept="video/mp4,video/quicktime,video/x-matroska,video/webm"
+          accept="video/*,audio/*,.mp4,.mov,.mkv,.webm,.m4v,.m4a,.m4,.avi,.wmv,.flv,.mpeg,.mpg,.ts,.3gp"
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
         />

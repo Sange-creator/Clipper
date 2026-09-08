@@ -655,3 +655,40 @@
      - Assigned `https://clipper-ai-pro.vercel.app/` -> `dpl_4uscD5NKFBxa8DKEuwUG1wjPHPYN` (Success).
   4. **Live Verification**:
      - Verified with `curl -ILs https://ai-clipper-pro.vercel.app/` -> **HTTP/2 200 OK**.
+
+---
+
+### Session 7: Resolution of 404 on 500MB .m4 Upload, Port 8000 Conflict Resolution & Format Expansion
+- **Date / Time**: 2026-09-08
+- **User Prompt**:
+  > *"Not Found, when i uploaded 500 mb m4 :"*
+  *(accompanied by browser DevTools console showing 404 on `/api/upload`, `/api/upload/recent`, `/api/clips`, `/api/jobs`)*
+
+- **Problem & Root Causes Identified**:
+  1. **Port 8000 Hijacked by Unrelated Process**:
+     - An unrelated project (`/Users/saangetamang/Desktop/Recorder`) was running an API server on port 8000.
+     - Because Recorder returned 200 on `/api/health`, the Clipper frontend mistakenly reported "Engine Ready", but every Clipper endpoint (`/api/upload`, `/api/clips`, `/api/jobs`, `/api/upload/recent`) returned 404 Not Found.
+     - Clipper's backend in `backend/` was not running on port 8000.
+  2. **Missing `.m4` and `.m4a` in Allowed Extensions**:
+     - `backend/app/config.py` only listed `[".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"]` in `ALLOWED_VIDEO_EXTENSIONS`.
+     - `VideoUploader.tsx` and `BatchUploader.tsx` only accepted `video/mp4,video/quicktime,video/x-matroska,video/webm`.
+  3. **No Health Guardrail for Port Conflicts**:
+     - `frontend/src/lib/api.ts`'s `checkHealth()` only checked HTTP 200 without asserting `app_name === "AI Video Clipper"`.
+
+- **Changes & Deliverables**:
+  1. **Port 8000 Conflict Elimination**:
+     - Killed the conflicting Recorder process.
+     - Reconfigured Recorder's default port in `run_server.py`, `app/main.py`, and `client.ts` to port `8001` so it can never conflict with Clipper Pro on port 8000.
+     - Launched Clipper's FastAPI backend on port 8000 (`uvicorn app.main:app --port 8000`).
+  2. **Format Expansion (.m4, .m4a, and others)**:
+     - Expanded `ALLOWED_VIDEO_EXTENSIONS` in `backend/app/config.py` to include `[".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v", ".m4a", ".m4", ".wmv", ".flv", ".mpeg", ".mpg", ".ts", ".3gp"]`.
+     - Broadened `accept` attributes in `VideoUploader.tsx` and `BatchUploader.tsx` to `video/*,audio/*,.mp4,.mov,.mkv,.webm,.m4v,.m4a,.m4,.avi,.wmv,.flv,.mpeg,.mpg,.ts,.3gp`.
+     - Large files (500MB+) stream safely to disk in 64KB chunks (`shutil.copyfileobj`) with zero file size cap (`MAX_UPLOAD_SIZE_MB = 0`).
+  3. **Port Conflict Detection & Clear Diagnostics**:
+     - Updated `checkHealth()` in `frontend/src/lib/api.ts` to verify `data.app_name === "AI Video Clipper"`.
+     - Added port conflict warning badge in `frontend/src/components/layout/Navbar.tsx` (`Port 8000 Conflict: [App Name]`).
+     - Enhanced `uploadVideo()` to provide an explicit explanation if a 404 occurs.
+  4. **Verification**:
+     - Uploaded sample `.m4` video via `curl -X POST -F "file=@/tmp/test_sample.m4" http://127.0.0.1:8000/api/upload` -> **HTTP 200 Success**.
+     - Tested `/api/health`, `/api/upload/recent`, `/api/clips` -> all return **HTTP 200 OK** with Clipper data.
+     - Compiled Next.js frontend with `npm run build` -> **12/12 static/dynamic pages built cleanly with 0 errors**.

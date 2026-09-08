@@ -51,7 +51,9 @@ class Settings(BaseSettings):
 
     # Media Limits & Processing (0 = Unlimited file size, supports any video size)
     MAX_UPLOAD_SIZE_MB: int = 0
-    ALLOWED_VIDEO_EXTENSIONS: list[str] = [".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"]
+    ALLOWED_VIDEO_EXTENSIONS: list[str] = [
+        ".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v", ".m4a", ".m4", ".wmv", ".flv", ".mpeg", ".mpg", ".ts", ".3gp"
+    ]
     DEFAULT_OUTPUT_ASPECT_RATIO: str = "9:16"
     DEFAULT_FRAMING_MODE: str = "blur_fit_9_16"  # "blur_fit_9_16", "crop_9_16", "original_16_9"
     DEFAULT_BLUR_RADIUS: int = 30  # 10 (Light), 30 (Medium), 50 (Heavy), 80 (Ultra)

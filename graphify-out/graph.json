@@ -288,7 +288,7 @@
       "source_file": "frontend/package.json",
       "source_location": "L21",
       "id": "frontend_package_dependencies_next",
-      "community": 11,
+      "community": 54,
       "norm_label": "next"
     },
     {
@@ -2104,7 +2104,7 @@
       "label": ".ensure_directories()",
       "file_type": "code",
       "source_file": "backend/app/config.py",
-      "source_location": "L90",
+      "source_location": "L92",
       "id": "app_config_settings_ensure_directories",
       "community": 48,
       "norm_label": ".ensure_directories()"
@@ -2131,8 +2131,8 @@
       "label": "Create data directories if they do not exist.",
       "file_type": "rationale",
       "source_file": "backend/app/config.py",
-      "source_location": "L91",
-      "id": "app_config_rationale_91",
+      "source_location": "L93",
+      "id": "app_config_rationale_93",
       "community": 48,
       "norm_label": "create data directories if they do not exist."
     },
@@ -2205,7 +2205,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L1",
       "id": "backend_app_core_models_py",
-      "community": 23,
+      "community": 120,
       "norm_label": "models.py"
     },
     {
@@ -2214,7 +2214,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L20",
       "id": "core_models_generate_uuid",
-      "community": 23,
+      "community": 120,
       "norm_label": "generate_uuid()"
     },
     {
@@ -2223,7 +2223,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L25",
       "id": "core_models_utc_now",
-      "community": 23,
+      "community": 120,
       "norm_label": "utc_now()"
     },
     {
@@ -2268,7 +2268,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L79",
       "id": "core_models_transcript",
-      "community": 15,
+      "community": 120,
       "norm_label": "transcript"
     },
     {
@@ -2313,7 +2313,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L267",
       "id": "core_models_userfeedback",
-      "community": 22,
+      "community": 138,
       "norm_label": "userfeedback"
     },
     {
@@ -2340,7 +2340,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L316",
       "id": "core_models_systemsetting",
-      "community": 23,
+      "community": 120,
       "norm_label": "systemsetting"
     },
     {
@@ -2349,7 +2349,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L1",
       "id": "core_models_rationale_1",
-      "community": 23,
+      "community": 120,
       "norm_label": "sqlalchemy orm models for the ai video clipper platform (next version)."
     },
     {
@@ -2358,7 +2358,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L21",
       "id": "core_models_rationale_21",
-      "community": 23,
+      "community": 120,
       "norm_label": "generate a clean hex uuid string."
     },
     {
@@ -2367,7 +2367,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L26",
       "id": "core_models_rationale_26",
-      "community": 23,
+      "community": 120,
       "norm_label": "return current utc timestamp."
     },
     {
@@ -2394,7 +2394,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L80",
       "id": "core_models_rationale_80",
-      "community": 15,
+      "community": 120,
       "norm_label": "represents a timestamped speech-to-text transcript."
     },
     {
@@ -2439,7 +2439,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L268",
       "id": "core_models_rationale_268",
-      "community": 22,
+      "community": 138,
       "norm_label": "tracks human review actions and feedback for future quality learning."
     },
     {
@@ -2466,7 +2466,7 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L317",
       "id": "core_models_rationale_317",
-      "community": 23,
+      "community": 120,
       "norm_label": "dynamic system and api settings persisted in database."
     },
     {
@@ -2970,7 +2970,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L1",
       "id": "backend_app_utils_hashing_py",
-      "community": 100,
+      "community": 114,
       "norm_label": "hashing.py"
     },
     {
@@ -2979,7 +2979,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L7",
       "id": "utils_hashing_compute_file_hash",
-      "community": 100,
+      "community": 114,
       "norm_label": "compute_file_hash()"
     },
     {
@@ -2988,7 +2988,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L17",
       "id": "utils_hashing_compute_string_hash",
-      "community": 100,
+      "community": 114,
       "norm_label": "compute_string_hash()"
     },
     {
@@ -2997,7 +2997,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L1",
       "id": "utils_hashing_rationale_1",
-      "community": 100,
+      "community": 114,
       "norm_label": "hashing utilities for content identification and caching."
     },
     {
@@ -3006,7 +3006,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L8",
       "id": "utils_hashing_rationale_8",
-      "community": 100,
+      "community": 114,
       "norm_label": "compute sha-256 hash of a file efficiently without loading entirely into memory."
     },
     {
@@ -3015,7 +3015,7 @@
       "source_file": "backend/app/utils/hashing.py",
       "source_location": "L18",
       "id": "utils_hashing_rationale_18",
-      "community": 100,
+      "community": 114,
       "norm_label": "compute sha-256 hash of a string."
     },
     {
@@ -3186,7 +3186,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L472",
       "id": "routes_clips_submit_feedback",
-      "community": 22,
+      "community": 147,
       "norm_label": "submit_feedback()"
     },
     {
@@ -3195,7 +3195,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L500",
       "id": "routes_clips_toggle_favorite",
-      "community": 22,
+      "community": 146,
       "norm_label": "toggle_favorite()"
     },
     {
@@ -3204,7 +3204,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L515",
       "id": "routes_clips_delete_clip",
-      "community": 22,
+      "community": 147,
       "norm_label": "delete_clip()"
     },
     {
@@ -3213,7 +3213,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L536",
       "id": "routes_clips_bulk_delete_clips",
-      "community": 22,
+      "community": 146,
       "norm_label": "bulk_delete_clips()"
     },
     {
@@ -3276,7 +3276,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L477",
       "id": "routes_clips_rationale_477",
-      "community": 22,
+      "community": 147,
       "norm_label": "store human review action (accepted, rejected, favorite, edited) for future lear"
     },
     {
@@ -3285,7 +3285,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L501",
       "id": "routes_clips_rationale_501",
-      "community": 22,
+      "community": 146,
       "norm_label": "toggle clip favorite state."
     },
     {
@@ -3294,7 +3294,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L516",
       "id": "routes_clips_rationale_516",
-      "community": 22,
+      "community": 147,
       "norm_label": "permanently delete a rendered clip."
     },
     {
@@ -3303,7 +3303,7 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L540",
       "id": "routes_clips_rationale_540",
-      "community": 22,
+      "community": 146,
       "norm_label": "delete multiple rendered clips permanently."
     },
     {
@@ -3969,7 +3969,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L252",
       "id": "routes_projects_batch_upload_videos",
-      "community": 100,
+      "community": 114,
       "norm_label": "batch_upload_videos()"
     },
     {
@@ -3996,7 +3996,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L474",
       "id": "routes_projects_delete_project",
-      "community": 139,
+      "community": 1,
       "norm_label": "delete_project()"
     },
     {
@@ -4050,7 +4050,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L257",
       "id": "routes_projects_rationale_257",
-      "community": 100,
+      "community": 114,
       "norm_label": "batch upload (20\u201330+ files):     validates, computes stable sha-256 hashes, dete"
     },
     {
@@ -4077,7 +4077,7 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L475",
       "id": "routes_projects_rationale_475",
-      "community": 139,
+      "community": 1,
       "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate"
     },
     {
@@ -4185,7 +4185,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L1",
       "id": "backend_app_services_pipeline_pipeline_py",
-      "community": 54,
+      "community": 15,
       "norm_label": "pipeline.py"
     },
     {
@@ -4194,7 +4194,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L69",
       "id": "pipeline_pipeline_resolve_clip_timeline_and_hook",
-      "community": 54,
+      "community": 15,
       "norm_label": "resolve_clip_timeline_and_hook()"
     },
     {
@@ -4275,7 +4275,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L1",
       "id": "pipeline_pipeline_rationale_1",
-      "community": 54,
+      "community": 15,
       "norm_label": "deterministic 21-stage video processing pipeline orchestrator with stage checkpo"
     },
     {
@@ -4284,7 +4284,7 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L78",
       "id": "pipeline_pipeline_rationale_78",
-      "community": 54,
+      "community": 15,
       "norm_label": "constructs the clip timeline and script-analyzed hook headline based on user hoo"
     },
     {
@@ -4923,7 +4923,7 @@
       "source_file": "backend/app/services/ai/prompt_templates.py",
       "source_location": "L1",
       "id": "backend_app_services_ai_prompt_templates_py",
-      "community": 92,
+      "community": 100,
       "norm_label": "prompt_templates.py"
     },
     {
@@ -4932,7 +4932,7 @@
       "source_file": "backend/app/services/ai/prompt_templates.py",
       "source_location": "L163",
       "id": "ai_prompt_templates_get_discovery_prompt",
-      "community": 92,
+      "community": 100,
       "norm_label": "get_discovery_prompt()"
     },
     {
@@ -4941,7 +4941,7 @@
       "source_file": "backend/app/services/ai/prompt_templates.py",
       "source_location": "L1",
       "id": "ai_prompt_templates_rationale_1",
-      "community": 92,
+      "community": 100,
       "norm_label": "prompt templates and structured schemas for ai reasoning providers (multi-genre,"
     },
     {
@@ -4950,7 +4950,7 @@
       "source_file": "backend/app/services/ai/prompt_templates.py",
       "source_location": "L170",
       "id": "ai_prompt_templates_rationale_170",
-      "community": 92,
+      "community": 100,
       "norm_label": "return the optimized system prompt with genre directives and video title analysi"
     },
     {
@@ -5985,7 +5985,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L524",
       "id": "media_renderer_videorenderer_generate_thumbnail",
-      "community": 92,
+      "community": 150,
       "norm_label": ".generate_thumbnail()"
     },
     {
@@ -6039,7 +6039,7 @@
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L530",
       "id": "media_renderer_rationale_530",
-      "community": 92,
+      "community": 150,
       "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev"
     },
     {
@@ -6210,7 +6210,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L1",
       "id": "backend_app_services_media_silence_detector_py",
-      "community": 0,
+      "community": 64,
       "norm_label": "silence_detector.py"
     },
     {
@@ -6219,7 +6219,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L13",
       "id": "media_silence_detector_silenceinterval",
-      "community": 0,
+      "community": 64,
       "norm_label": "silenceinterval"
     },
     {
@@ -6228,7 +6228,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L19",
       "id": "media_silence_detector_timelineedit",
-      "community": 0,
+      "community": 15,
       "norm_label": "timelineedit"
     },
     {
@@ -6237,7 +6237,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L26",
       "id": "media_silence_detector_silencedetector",
-      "community": 0,
+      "community": 64,
       "norm_label": "silencedetector"
     },
     {
@@ -6246,7 +6246,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L29",
       "id": "media_silence_detector_silencedetector_init",
-      "community": 0,
+      "community": 64,
       "norm_label": ".__init__()"
     },
     {
@@ -6255,7 +6255,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L33",
       "id": "media_silence_detector_silencedetector_detect_silence",
-      "community": 0,
+      "community": 64,
       "norm_label": ".detect_silence()"
     },
     {
@@ -6264,7 +6264,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L88",
       "id": "media_silence_detector_silencedetector_build_edited_timeline",
-      "community": 0,
+      "community": 15,
       "norm_label": ".build_edited_timeline()"
     },
     {
@@ -6273,7 +6273,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L1",
       "id": "media_silence_detector_rationale_1",
-      "community": 0,
+      "community": 64,
       "norm_label": "silence and dead-air detector using ffmpeg analysis."
     },
     {
@@ -6282,7 +6282,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L27",
       "id": "media_silence_detector_rationale_27",
-      "community": 0,
+      "community": 64,
       "norm_label": "detects silence and dead-air intervals in audio/video media."
     },
     {
@@ -6291,7 +6291,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L39",
       "id": "media_silence_detector_rationale_39",
-      "community": 0,
+      "community": 64,
       "norm_label": "run ffmpeg silencedetect filter to extract quiet audio regions."
     },
     {
@@ -6300,7 +6300,7 @@
       "source_file": "backend/app/services/media/silence_detector.py",
       "source_location": "L96",
       "id": "media_silence_detector_rationale_96",
-      "community": 0,
+      "community": 15,
       "norm_label": "build kept timeline slices [ [t1, t2], [t3, t4] ] for a candidate window [start_"
     },
     {
@@ -6309,7 +6309,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L1",
       "id": "backend_app_services_media_audio_analyzer_py",
-      "community": 113,
+      "community": 94,
       "norm_label": "audio_analyzer.py"
     },
     {
@@ -6318,7 +6318,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L115",
       "id": "media_audio_analyzer_clean_video_filename_to_title",
-      "community": 113,
+      "community": 148,
       "norm_label": "clean_video_filename_to_title()"
     },
     {
@@ -6345,7 +6345,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L170",
       "id": "media_audio_analyzer_extract_topic_keywords",
-      "community": 113,
+      "community": 94,
       "norm_label": "extract_topic_keywords()"
     },
     {
@@ -6399,7 +6399,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L351",
       "id": "media_audio_analyzer_audiohookanalyzer_find_peak_climax_moment",
-      "community": 64,
+      "community": 66,
       "norm_label": ".find_peak_climax_moment()"
     },
     {
@@ -6417,7 +6417,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L470",
       "id": "media_audio_analyzer_audiohookanalyzer_extract_hook_headline_from_script",
-      "community": 127,
+      "community": 148,
       "norm_label": ".extract_hook_headline_from_script()"
     },
     {
@@ -6444,7 +6444,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L1",
       "id": "media_audio_analyzer_rationale_1",
-      "community": 113,
+      "community": 94,
       "norm_label": "audio hook & linguistic momentum analyzer. extracts high-retention opening hooks"
     },
     {
@@ -6453,7 +6453,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L116",
       "id": "media_audio_analyzer_rationale_116",
-      "community": 113,
+      "community": 148,
       "norm_label": "turn raw video filename or path like 'the_most_arrogant_driver_police_have_ever_"
     },
     {
@@ -6480,7 +6480,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L171",
       "id": "media_audio_analyzer_rationale_171",
-      "community": 113,
+      "community": 94,
       "norm_label": "extract salient, meaningful topic keywords from the spoken dialogue."
     },
     {
@@ -6534,7 +6534,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L359",
       "id": "media_audio_analyzer_rationale_359",
-      "community": 64,
+      "community": 66,
       "norm_label": "locate the single most explosive 5-8 second climax/fight/chaos/argument window"
     },
     {
@@ -6552,7 +6552,7 @@
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L480",
       "id": "media_audio_analyzer_rationale_480",
-      "community": 127,
+      "community": 148,
       "norm_label": "extracts an eye-catching, hooked headline directly analyzing the spoken dialogue"
     },
     {
@@ -7002,7 +7002,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L1",
       "id": "backend_tests_test_v3_features_py",
-      "community": 92,
+      "community": 149,
       "norm_label": "test_v3_features.py"
     },
     {
@@ -7011,7 +7011,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L11",
       "id": "tests_test_v3_features_test_silence_detector_timeline_cuts",
-      "community": 0,
+      "community": 64,
       "norm_label": "test_silence_detector_timeline_cuts()"
     },
     {
@@ -7029,7 +7029,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L58",
       "id": "tests_test_v3_features_test_v3_prompt_generation_for_modes",
-      "community": 92,
+      "community": 100,
       "norm_label": "test_v3_prompt_generation_for_modes()"
     },
     {
@@ -7038,7 +7038,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L70",
       "id": "tests_test_v3_features_test_mock_ai_provider_modes_and_v3_scores",
-      "community": 92,
+      "community": 149,
       "norm_label": "test_mock_ai_provider_modes_and_v3_scores()"
     },
     {
@@ -7047,7 +7047,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L94",
       "id": "tests_test_v3_features_test_watermark_removal_filter_and_metadata_stripping",
-      "community": 92,
+      "community": 149,
       "norm_label": "test_watermark_removal_filter_and_metadata_stripping()"
     },
     {
@@ -7056,7 +7056,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L1",
       "id": "tests_test_v3_features_rationale_1",
-      "community": 92,
+      "community": 149,
       "norm_label": "tests for v3 backlog features: silence detection, timeline cuts, subtitle toggli"
     },
     {
@@ -7065,7 +7065,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L12",
       "id": "tests_test_v3_features_rationale_12",
-      "community": 0,
+      "community": 64,
       "norm_label": "test dead-air interval removal and kept segments generation."
     },
     {
@@ -7083,7 +7083,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L59",
       "id": "tests_test_v3_features_rationale_59",
-      "community": 92,
+      "community": 100,
       "norm_label": "test dedicated system prompts for podcast vs viral moments."
     },
     {
@@ -7092,7 +7092,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L71",
       "id": "tests_test_v3_features_rationale_71",
-      "community": 92,
+      "community": 149,
       "norm_label": "test that mockaiprovider respects mode and generates 14-factor v3 scores."
     },
     {
@@ -7101,7 +7101,7 @@
       "source_file": "backend/tests/test_v3_features.py",
       "source_location": "L95",
       "id": "tests_test_v3_features_rationale_95",
-      "community": 92,
+      "community": 149,
       "norm_label": "test delogo coordinates for all corners and comprehensive metadata stripping arg"
     },
     {
@@ -7110,7 +7110,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L1",
       "id": "backend_tests_test_hook_strategy_py",
-      "community": 0,
+      "community": 139,
       "norm_label": "test_hook_strategy.py"
     },
     {
@@ -7119,7 +7119,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L7",
       "id": "tests_test_hook_strategy_test_captioner_keep_intervals_teaser_retiming",
-      "community": 0,
+      "community": 139,
       "norm_label": "test_captioner_keep_intervals_teaser_retiming()"
     },
     {
@@ -7128,7 +7128,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L72",
       "id": "tests_test_hook_strategy_test_hook_strategy_timeline_edits",
-      "community": 0,
+      "community": 139,
       "norm_label": "test_hook_strategy_timeline_edits()"
     },
     {
@@ -7137,7 +7137,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L129",
       "id": "tests_test_hook_strategy_test_four_clips_part_badges_and_audio_script_hook_captions",
-      "community": 54,
+      "community": 139,
       "norm_label": "test_four_clips_part_badges_and_audio_script_hook_captions()"
     },
     {
@@ -7146,7 +7146,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L207",
       "id": "tests_test_hook_strategy_test_custom_part_badge_position_and_alignment",
-      "community": 0,
+      "community": 139,
       "norm_label": "test_custom_part_badge_position_and_alignment()"
     },
     {
@@ -7155,7 +7155,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L8",
       "id": "tests_test_hook_strategy_rationale_8",
-      "community": 0,
+      "community": 139,
       "norm_label": "test that ass and srt subtitles cleanly retime across teaser + story intervals."
     },
     {
@@ -7164,7 +7164,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L73",
       "id": "tests_test_hook_strategy_rationale_73",
-      "community": 0,
+      "community": 139,
       "norm_label": "test timeline structure for teaser_climax_hook vs direct_chronological."
     },
     {
@@ -7173,7 +7173,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L130",
       "id": "tests_test_hook_strategy_rationale_130",
-      "community": 54,
+      "community": 139,
       "norm_label": "test user requirement:     - 4 clips generated by user must show part 1/4, part"
     },
     {
@@ -7182,7 +7182,7 @@
       "source_file": "backend/tests/test_hook_strategy.py",
       "source_location": "L208",
       "id": "tests_test_hook_strategy_rationale_208",
-      "community": 0,
+      "community": 139,
       "norm_label": "test user requirement:     - user must be able to choose custom screen position"
     },
     {
@@ -7506,7 +7506,7 @@
       "source_file": "backend/tests/test_canvas_backgrounds.py",
       "source_location": "L1",
       "id": "backend_tests_test_canvas_backgrounds_py",
-      "community": 11,
+      "community": 0,
       "norm_label": "test_canvas_backgrounds.py"
     },
     {
@@ -7524,7 +7524,7 @@
       "source_file": "backend/tests/test_canvas_backgrounds.py",
       "source_location": "L33",
       "id": "tests_test_canvas_backgrounds_test_white_canvas_high_contrast_subtitles",
-      "community": 11,
+      "community": 54,
       "norm_label": "test_white_canvas_high_contrast_subtitles()"
     },
     {
@@ -7533,7 +7533,7 @@
       "source_file": "backend/tests/test_canvas_backgrounds.py",
       "source_location": "L1",
       "id": "tests_test_canvas_backgrounds_rationale_1",
-      "community": 11,
+      "community": 0,
       "norm_label": "tests for canvas backgrounds (white, black, obsidian, violet, sunset, ocean) and"
     },
     {
@@ -7551,7 +7551,7 @@
       "source_file": "backend/tests/test_canvas_backgrounds.py",
       "source_location": "L34",
       "id": "tests_test_canvas_backgrounds_rationale_34",
-      "community": 11,
+      "community": 54,
       "norm_label": "verify that white canvas enforces thick 8px solid black stroke and deep shadow f"
     },
     {
@@ -7587,7 +7587,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L1",
       "id": "backend_tests_test_viral_hook_and_series_py",
-      "community": 92,
+      "community": 143,
       "norm_label": "test_viral_hook_and_series.py"
     },
     {
@@ -7596,7 +7596,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L16",
       "id": "tests_test_viral_hook_and_series_test_genre_directives_and_hook_prompts",
-      "community": 92,
+      "community": 100,
       "norm_label": "test_genre_directives_and_hook_prompts()"
     },
     {
@@ -7605,7 +7605,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L27",
       "id": "tests_test_viral_hook_and_series_test_audio_script_analyzer_hook_penalties_and_boosts",
-      "community": 92,
+      "community": 143,
       "norm_label": "test_audio_script_analyzer_hook_penalties_and_boosts()"
     },
     {
@@ -7614,7 +7614,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L47",
       "id": "tests_test_viral_hook_and_series_test_tiktok_rounded_box_caption_preset",
-      "community": 92,
+      "community": 143,
       "norm_label": "test_tiktok_rounded_box_caption_preset()"
     },
     {
@@ -7623,7 +7623,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L93",
       "id": "tests_test_viral_hook_and_series_test_single_para_builder",
-      "community": 92,
+      "community": 143,
       "norm_label": "test_single_para_builder()"
     },
     {
@@ -7632,7 +7632,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L1",
       "id": "tests_test_viral_hook_and_series_rationale_1",
-      "community": 92,
+      "community": 143,
       "norm_label": "tests for intense 10-second hook scoring, multi-genre candidate discovery, multi"
     },
     {
@@ -7641,7 +7641,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L17",
       "id": "tests_test_viral_hook_and_series_rationale_17",
-      "community": 92,
+      "community": 100,
       "norm_label": "verify that all genres are configured and include first 10-second hook directive"
     },
     {
@@ -7650,7 +7650,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L28",
       "id": "tests_test_viral_hook_and_series_rationale_28",
-      "community": 92,
+      "community": 143,
       "norm_label": "verify that calm greetings receive heavy penalties and chaos/fights receive stro"
     },
     {
@@ -7659,7 +7659,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L48",
       "id": "tests_test_viral_hook_and_series_rationale_48",
-      "community": 92,
+      "community": 143,
       "norm_label": "test generating subtitles with the tiktok_rounded_box (rounded translucent pill)"
     },
     {
@@ -7668,7 +7668,7 @@
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L94",
       "id": "tests_test_viral_hook_and_series_rationale_94",
-      "community": 92,
+      "community": 143,
       "norm_label": "test building a 1-click single-paragraph copy-paste block."
     },
     {
@@ -7884,7 +7884,7 @@
       "source_file": "README.md",
       "source_location": "L29",
       "id": "clipper_readme_system_requirements",
-      "community": 143,
+      "community": 99,
       "norm_label": "system requirements"
     },
     {
@@ -7893,7 +7893,7 @@
       "source_file": "README.md",
       "source_location": "L31",
       "id": "clipper_readme_processing_backend",
-      "community": 143,
+      "community": 99,
       "norm_label": "processing backend"
     },
     {
@@ -7902,7 +7902,7 @@
       "source_file": "README.md",
       "source_location": "L38",
       "id": "clipper_readme_web_client_optional_for_local_hosting",
-      "community": 143,
+      "community": 99,
       "norm_label": "web client (optional for local hosting)"
     },
     {
@@ -8318,6 +8318,33 @@
       "id": "clipper_session_tracker_session_4_gemini_verification_404_not_found_diagnosis_dynamic_model_discovery_failovers",
       "community": 53,
       "norm_label": "session 4: gemini verification 404 not_found diagnosis, dynamic model discovery & failovers"
+    },
+    {
+      "label": "Session 5: Independent On-Screen Display Overlay Toggles (Subtitles, Series Part 1...N, Hook Caption)",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L597",
+      "id": "clipper_session_tracker_session_5_independent_on_screen_display_overlay_toggles_subtitles_series_part_1_n_hook_caption",
+      "community": 53,
+      "norm_label": "session 5: independent on-screen display overlay toggles (subtitles, series part 1...n, hook caption)"
+    },
+    {
+      "label": "Session 6: GitHub Push & Production Vercel Deployment Sync",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L642",
+      "id": "clipper_session_tracker_session_6_github_push_production_vercel_deployment_sync",
+      "community": 53,
+      "norm_label": "session 6: github push & production vercel deployment sync"
+    },
+    {
+      "label": "Session 7: Resolution of 404 on 500MB .m4 Upload, Port 8000 Conflict Resolution & Format Expansion",
+      "file_type": "document",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L661",
+      "id": "clipper_session_tracker_session_7_resolution_of_404_on_500mb_m4_upload_port_8000_conflict_resolution_format_expansion",
+      "community": 53,
+      "norm_label": "session 7: resolution of 404 on 500mb .m4 upload, port 8000 conflict resolution & format expansion"
     },
     {
       "label": "gemini.md",
@@ -11236,6 +11263,15 @@
       "norm_label": "readme.md"
     },
     {
+      "label": "Create data directories if they do not exist.",
+      "file_type": "rationale",
+      "source_file": "backend/app/config.py",
+      "source_location": "L91",
+      "community": 48,
+      "norm_label": "create data directories if they do not exist.",
+      "id": "app_config_rationale_91"
+    },
+    {
       "label": "Represents a high-potential clip candidate moment scored across 12 dimensions.",
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
@@ -11258,7 +11294,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L264",
-      "community": 22,
+      "community": 138,
       "norm_label": "tracks human review actions and feedback for future quality learning.",
       "id": "core_models_rationale_264"
     },
@@ -11285,7 +11321,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L313",
-      "community": 23,
+      "community": 120,
       "norm_label": "dynamic system and api settings persisted in database.",
       "id": "core_models_rationale_313"
     },
@@ -11321,7 +11357,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L461",
-      "community": 22,
+      "community": 147,
       "norm_label": "store human review action (accepted, rejected, favorite, edited) for future lear",
       "id": "routes_clips_rationale_461"
     },
@@ -11330,7 +11366,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L485",
-      "community": 22,
+      "community": 146,
       "norm_label": "toggle clip favorite state.",
       "id": "routes_clips_rationale_485"
     },
@@ -11339,7 +11375,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L500",
-      "community": 22,
+      "community": 147,
       "norm_label": "permanently delete a rendered clip.",
       "id": "routes_clips_rationale_500"
     },
@@ -11348,7 +11384,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L524",
-      "community": 22,
+      "community": 146,
       "norm_label": "delete multiple rendered clips permanently.",
       "id": "routes_clips_rationale_524"
     },
@@ -11438,7 +11474,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L473",
-      "community": 139,
+      "community": 1,
       "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate",
       "id": "routes_projects_rationale_473"
     },
@@ -11609,7 +11645,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L121",
-      "community": 113,
+      "community": 94,
       "norm_label": "extract salient, meaningful topic keywords from the spoken dialogue.",
       "id": "media_audio_analyzer_rationale_121"
     },
@@ -11663,7 +11699,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L305",
-      "community": 64,
+      "community": 66,
       "norm_label": "locate the single most explosive 5-8 second climax/fight/chaos/argument window",
       "id": "media_audio_analyzer_rationale_305"
     },
@@ -11681,7 +11717,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L425",
-      "community": 127,
+      "community": 148,
       "norm_label": "extracts an eye-catching, hooked headline directly analyzing the spoken dialogue",
       "id": "media_audio_analyzer_rationale_425"
     },
@@ -11735,7 +11771,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L263",
-      "community": 22,
+      "community": 138,
       "norm_label": "tracks human review actions and feedback for future quality learning.",
       "id": "core_models_rationale_263"
     },
@@ -11762,7 +11798,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L312",
-      "community": 23,
+      "community": 120,
       "norm_label": "dynamic system and api settings persisted in database.",
       "id": "core_models_rationale_312"
     },
@@ -11843,7 +11879,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/ai/prompt_templates.py",
       "source_location": "L164",
-      "community": 92,
+      "community": 100,
       "norm_label": "return the optimized system prompt with genre directives and video title analysi",
       "id": "ai_prompt_templates_rationale_164"
     },
@@ -11861,7 +11897,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L113",
-      "community": 113,
+      "community": 94,
       "norm_label": "extract salient, meaningful topic keywords from the spoken dialogue.",
       "id": "media_audio_analyzer_rationale_113"
     },
@@ -11915,7 +11951,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L291",
-      "community": 64,
+      "community": 66,
       "norm_label": "locate the single most explosive 5-8 second climax/fight/chaos/argument window",
       "id": "media_audio_analyzer_rationale_291"
     },
@@ -11933,7 +11969,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L411",
-      "community": 127,
+      "community": 148,
       "norm_label": "extracts an eye-catching, hooked headline directly analyzing the spoken dialogue",
       "id": "media_audio_analyzer_rationale_411"
     },
@@ -11978,7 +12014,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L259",
-      "community": 22,
+      "community": 138,
       "norm_label": "tracks human review actions and feedback for future quality learning.",
       "id": "core_models_rationale_259"
     },
@@ -12005,7 +12041,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L308",
-      "community": 23,
+      "community": 120,
       "norm_label": "dynamic system and api settings persisted in database.",
       "id": "core_models_rationale_308"
     },
@@ -12050,7 +12086,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L443",
-      "community": 22,
+      "community": 147,
       "norm_label": "store human review action (accepted, rejected, favorite, edited) for future lear",
       "id": "routes_clips_rationale_443"
     },
@@ -12059,7 +12095,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L467",
-      "community": 22,
+      "community": 146,
       "norm_label": "toggle clip favorite state.",
       "id": "routes_clips_rationale_467"
     },
@@ -12068,7 +12104,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L482",
-      "community": 22,
+      "community": 147,
       "norm_label": "permanently delete a rendered clip.",
       "id": "routes_clips_rationale_482"
     },
@@ -12077,7 +12113,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L506",
-      "community": 22,
+      "community": 146,
       "norm_label": "delete multiple rendered clips permanently.",
       "id": "routes_clips_rationale_506"
     },
@@ -12158,7 +12194,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L255",
-      "community": 100,
+      "community": 114,
       "norm_label": "batch upload (20\u201330+ files):     validates, computes stable sha-256 hashes, dete",
       "id": "routes_projects_rationale_255"
     },
@@ -12185,7 +12221,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L460",
-      "community": 139,
+      "community": 1,
       "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate",
       "id": "routes_projects_rationale_460"
     },
@@ -12266,7 +12302,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L258",
-      "community": 64,
+      "community": 66,
       "norm_label": "locate the single most explosive 5-8 second climax/fight/chaos/argument window",
       "id": "media_audio_analyzer_rationale_258"
     },
@@ -12284,7 +12320,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/audio_analyzer.py",
       "source_location": "L377",
-      "community": 127,
+      "community": 148,
       "norm_label": "extracts an eye-catching, hooked headline directly analyzing the spoken dialogue",
       "id": "media_audio_analyzer_rationale_377"
     },
@@ -12329,7 +12365,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L257",
-      "community": 22,
+      "community": 138,
       "norm_label": "tracks human review actions and feedback for future quality learning.",
       "id": "core_models_rationale_257"
     },
@@ -12356,7 +12392,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/models.py",
       "source_location": "L306",
-      "community": 23,
+      "community": 120,
       "norm_label": "dynamic system and api settings persisted in database.",
       "id": "core_models_rationale_306"
     },
@@ -12392,7 +12428,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L438",
-      "community": 22,
+      "community": 147,
       "norm_label": "store human review action (accepted, rejected, favorite, edited) for future lear",
       "id": "routes_clips_rationale_438"
     },
@@ -12401,7 +12437,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L462",
-      "community": 22,
+      "community": 146,
       "norm_label": "toggle clip favorite state.",
       "id": "routes_clips_rationale_462"
     },
@@ -12491,7 +12527,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L458",
-      "community": 139,
+      "community": 1,
       "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate",
       "id": "routes_projects_rationale_458"
     },
@@ -12536,7 +12572,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L472",
-      "community": 92,
+      "community": 150,
       "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev",
       "id": "media_renderer_rationale_472"
     },
@@ -12626,7 +12662,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L453",
-      "community": 139,
+      "community": 1,
       "norm_label": "delete a single project workspace and cascade all its jobs, clips, and candidate",
       "id": "routes_projects_rationale_453"
     },
@@ -12653,7 +12689,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L467",
-      "community": 92,
+      "community": 150,
       "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev",
       "id": "media_renderer_rationale_467"
     },
@@ -12824,7 +12860,7 @@
       "file_type": "rationale",
       "source_file": "backend/tests/test_viral_hook_and_series.py",
       "source_location": "L93",
-      "community": 92,
+      "community": 143,
       "norm_label": "test building a 1-click single-paragraph copy-paste block.",
       "id": "tests_test_viral_hook_and_series_rationale_93"
     },
@@ -12869,7 +12905,7 @@
       "file_type": "rationale",
       "source_file": "backend/app/services/media/renderer.py",
       "source_location": "L454",
-      "community": 92,
+      "community": 150,
       "norm_label": "extract a crisp, high-quality, representative non-black frame for thumbnail prev",
       "id": "media_renderer_rationale_454"
     },
@@ -16768,6 +16804,16 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/config.py",
+      "source_location": "L93",
+      "weight": 1.0,
+      "source": "app_config_rationale_93",
+      "target": "app_config_settings_ensure_directories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/config.py",
       "source_location": "L91",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -17425,9 +17471,9 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L158",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_models_rationale_158",
-      "target": "core_models_clipcandidate",
-      "confidence_score": 1.0
+      "target": "core_models_clipcandidate"
     },
     {
       "relation": "uses",
@@ -17528,9 +17574,9 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L201",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_models_rationale_201",
-      "target": "core_models_renderedclip",
-      "confidence_score": 1.0
+      "target": "core_models_renderedclip"
     },
     {
       "relation": "uses",
@@ -17631,9 +17677,9 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L268",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_models_rationale_268",
-      "target": "core_models_userfeedback",
-      "confidence_score": 1.0
+      "target": "core_models_userfeedback"
     },
     {
       "relation": "calls",
@@ -17736,9 +17782,9 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L282",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_models_rationale_282",
-      "target": "core_models_airequestlog",
-      "confidence_score": 1.0
+      "target": "core_models_airequestlog"
     },
     {
       "relation": "uses",
@@ -17807,9 +17853,9 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L298",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_models_rationale_298",
-      "target": "core_models_performanceanalytics",
-      "confidence_score": 1.0
+      "target": "core_models_performanceanalytics"
     },
     {
       "relation": "rationale_for",
@@ -17857,9 +17903,9 @@
       "source_file": "backend/app/core/models.py",
       "source_location": "L317",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_models_rationale_317",
-      "target": "core_models_systemsetting",
-      "confidence_score": 1.0
+      "target": "core_models_systemsetting"
     },
     {
       "relation": "rationale_for",
@@ -18024,9 +18070,9 @@
       "source_file": "backend/app/core/database.py",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "core_database_rationale_96",
-      "target": "core_database_get_db",
-      "confidence_score": 1.0
+      "target": "core_database_get_db"
     },
     {
       "relation": "rationale_for",
@@ -19698,9 +19744,9 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L420",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_clips_rationale_420",
-      "target": "routes_clips_refresh_thumbnail",
-      "confidence_score": 1.0
+      "target": "routes_clips_refresh_thumbnail"
     },
     {
       "relation": "rationale_for",
@@ -19738,9 +19784,9 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L445",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_clips_rationale_445",
-      "target": "routes_clips_regenerate_clip",
-      "confidence_score": 1.0
+      "target": "routes_clips_regenerate_clip"
     },
     {
       "relation": "rationale_for",
@@ -19778,9 +19824,9 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L477",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_clips_rationale_477",
-      "target": "routes_clips_submit_feedback",
-      "confidence_score": 1.0
+      "target": "routes_clips_submit_feedback"
     },
     {
       "relation": "rationale_for",
@@ -19818,9 +19864,9 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L501",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_clips_rationale_501",
-      "target": "routes_clips_toggle_favorite",
-      "confidence_score": 1.0
+      "target": "routes_clips_toggle_favorite"
     },
     {
       "relation": "rationale_for",
@@ -19858,9 +19904,9 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L516",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_clips_rationale_516",
-      "target": "routes_clips_delete_clip",
-      "confidence_score": 1.0
+      "target": "routes_clips_delete_clip"
     },
     {
       "relation": "rationale_for",
@@ -19898,9 +19944,9 @@
       "source_file": "backend/app/api/routes/clips.py",
       "source_location": "L540",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_clips_rationale_540",
-      "target": "routes_clips_bulk_delete_clips",
-      "confidence_score": 1.0
+      "target": "routes_clips_bulk_delete_clips"
     },
     {
       "relation": "rationale_for",
@@ -20595,9 +20641,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_109",
-      "target": "routes_jobs_list_all_jobs",
-      "confidence_score": 1.0
+      "target": "routes_jobs_list_all_jobs"
     },
     {
       "relation": "rationale_for",
@@ -20655,9 +20701,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L149",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_149",
-      "target": "routes_jobs_get_job_status",
-      "confidence_score": 1.0
+      "target": "routes_jobs_get_job_status"
     },
     {
       "relation": "rationale_for",
@@ -20715,9 +20761,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L181",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_181",
-      "target": "routes_jobs_stream_job_events",
-      "confidence_score": 1.0
+      "target": "routes_jobs_stream_job_events"
     },
     {
       "relation": "rationale_for",
@@ -20775,9 +20821,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L215",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_215",
-      "target": "routes_jobs_get_job_candidates",
-      "confidence_score": 1.0
+      "target": "routes_jobs_get_job_candidates"
     },
     {
       "relation": "rationale_for",
@@ -20835,9 +20881,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L271",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_271",
-      "target": "routes_jobs_get_job_clips",
-      "confidence_score": 1.0
+      "target": "routes_jobs_get_job_clips"
     },
     {
       "relation": "rationale_for",
@@ -20906,9 +20952,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L370",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_370",
-      "target": "routes_jobs_cancel_job",
-      "confidence_score": 1.0
+      "target": "routes_jobs_cancel_job"
     },
     {
       "relation": "rationale_for",
@@ -20966,9 +21012,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L383",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_383",
-      "target": "routes_jobs_retry_job",
-      "confidence_score": 1.0
+      "target": "routes_jobs_retry_job"
     },
     {
       "relation": "rationale_for",
@@ -21026,9 +21072,9 @@
       "source_file": "backend/app/api/routes/jobs.py",
       "source_location": "L415",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_jobs_rationale_415",
-      "target": "routes_jobs_delete_job",
-      "confidence_score": 1.0
+      "target": "routes_jobs_delete_job"
     },
     {
       "relation": "rationale_for",
@@ -21605,9 +21651,9 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L454",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_projects_rationale_454",
-      "target": "routes_projects_bulk_clip_action",
-      "confidence_score": 1.0
+      "target": "routes_projects_bulk_clip_action"
     },
     {
       "relation": "rationale_for",
@@ -21655,9 +21701,9 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L475",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_projects_rationale_475",
-      "target": "routes_projects_delete_project",
-      "confidence_score": 1.0
+      "target": "routes_projects_delete_project"
     },
     {
       "relation": "rationale_for",
@@ -21705,9 +21751,9 @@
       "source_file": "backend/app/api/routes/projects.py",
       "source_location": "L521",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "routes_projects_rationale_521",
-      "target": "routes_projects_bulk_delete_projects",
-      "confidence_score": 1.0
+      "target": "routes_projects_bulk_delete_projects"
     },
     {
       "relation": "rationale_for",
@@ -22233,9 +22279,9 @@
       "source_file": "backend/app/services/pipeline/pipeline.py",
       "source_location": "L743",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_pipeline_rationale_743",
-      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline",
-      "confidence_score": 1.0
+      "target": "pipeline_pipeline_videoprocessingpipeline_run_project_pipeline"
     },
     {
       "relation": "calls",
@@ -22570,9 +22616,9 @@
       "source_file": "backend/app/services/pipeline/regenerator.py",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "pipeline_regenerator_rationale_44",
-      "target": "pipeline_regenerator_clipregeneratorservice_regenerate_clip",
-      "confidence_score": 1.0
+      "target": "pipeline_regenerator_clipregeneratorservice_regenerate_clip"
     },
     {
       "relation": "calls",
@@ -25428,9 +25474,9 @@
       "source_file": "backend/app/services/media/captioner.py",
       "source_location": "L468",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "media_captioner_rationale_468",
-      "target": "media_captioner_captiongenerator_generate_ass",
-      "confidence_score": 1.0
+      "target": "media_captioner_captiongenerator_generate_ass"
     },
     {
       "relation": "calls",
@@ -27809,9 +27855,9 @@
       "source_file": "backend/tests/test_screen_overlay_toggles.py",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "backend_tests_test_screen_overlay_toggles_py",
-      "target": "tests_test_screen_overlay_toggles_test_independent_overlay_toggles_ass",
-      "confidence_score": 1.0
+      "target": "tests_test_screen_overlay_toggles_test_independent_overlay_toggles_ass"
     },
     {
       "relation": "contains",
@@ -28832,6 +28878,36 @@
       "confidence_score": 1.0,
       "source": "clipper_session_tracker_session_history_log",
       "target": "clipper_session_tracker_session_4_gemini_verification_404_not_found_diagnosis_dynamic_model_discovery_failovers"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L597",
+      "weight": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_5_independent_on_screen_display_overlay_toggles_subtitles_series_part_1_n_hook_caption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L642",
+      "weight": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_6_github_push_production_vercel_deployment_sync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_TRACKER.md",
+      "source_location": "L661",
+      "weight": 1.0,
+      "source": "clipper_session_tracker_session_history_log",
+      "target": "clipper_session_tracker_session_7_resolution_of_404_on_500mb_m4_upload_port_8000_conflict_resolution_format_expansion",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32145,5 +32221,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "193919b0d6904312cb5273c3ec61440e1a12fa1f"
+  "built_at_commit": "c8138f06c12fcf850191d08fe11536895456d2ed"
 }

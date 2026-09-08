@@ -23,11 +23,20 @@ export const api = {
   },
 
   // System Health Check
-  async checkHealth(): Promise<{ status: string; app_name?: string; ai_provider?: string } | null> {
+  async checkHealth(): Promise<{ status: string; app_name?: string; ai_provider?: string; conflict?: boolean } | null> {
     try {
       const res = await fetch(`${API_BASE}/health`, { cache: "no-store" });
       if (!res.ok) return null;
-      return await res.json();
+      const data = await res.json();
+      // Ensure the server on port 8000 is actually the Clipper backend
+      if (data.app_name !== "AI Video Clipper") {
+        return {
+          status: "conflict",
+          app_name: data.app_name || data.app || "Different Process",
+          conflict: true,
+        };
+      }
+      return data;
     } catch {
       return null;
     }
@@ -56,11 +65,16 @@ export const api = {
       });
     } catch {
       throw new Error(
-        `Cannot connect to Clipper backend at ${API_BASE}. Please ensure the FastAPI backend is running on port 8000 (uvicorn app.main:app --port 8000).`
+        `Cannot connect to Clipper backend at ${API_BASE}. Please ensure the FastAPI backend is running on port 8000 (run: ./dev.sh or uv run uvicorn app.main:app --port 8000).`
       );
     }
 
     if (!res.ok) {
+      if (res.status === 404) {
+        throw new Error(
+          `Clipper upload endpoint (${API_BASE}/upload) returned 404 Not Found. This occurs when another application is occupying port 8000 instead of Clipper. Please start the Clipper backend on port 8000.`
+        );
+      }
       const err = await res.json().catch(() => ({ detail: "Upload failed" }));
       throw new Error(err.detail || "Upload failed");
     }

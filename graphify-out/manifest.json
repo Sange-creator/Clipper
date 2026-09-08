@@ -165,8 +165,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/layout/Navbar.tsx": {
-    "mtime": 1788556180.6238549,
-    "ast_hash": "0d270ab2ce168ec85f36ae1cdf4d1214",
+    "mtime": 1788830814.626935,
+    "ast_hash": "f506a3b047c0e0fb34b2af5469eb4ba3",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/review/ClipPlayer.tsx": {
@@ -210,13 +210,13 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/upload/BatchUploader.tsx": {
-    "mtime": 1788465110.0592384,
-    "ast_hash": "22b6fb57c2c2a79639e26a4c05796314",
+    "mtime": 1788830789.7547748,
+    "ast_hash": "9d75b47459690c933d3765fc46251f68",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/components/upload/VideoUploader.tsx": {
-    "mtime": 1788829494.6933405,
-    "ast_hash": "0af468c2f7b565cb2f2918e37f6aa584",
+    "mtime": 1788830784.9922647,
+    "ast_hash": "81d58dd6ebedd6751d33a091424a5f0c",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/lib/utils.ts": {
@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/lib/api.ts": {
-    "mtime": 1788829383.2094164,
-    "ast_hash": "b155a997e72116d5f5acd01d3e052243",
+    "mtime": 1788830799.6022801,
+    "ast_hash": "d4d3e1720ced9a9fbb9cd42b4de168ff",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/frontend/src/lib/types.ts": {
@@ -235,8 +235,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/config.py": {
-    "mtime": 1788647205.3769739,
-    "ast_hash": "9e4606807a46bb2a7c5673ad4da70b3e",
+    "mtime": 1788830771.9165246,
+    "ast_hash": "76d57f0e47f64de788724269ac04002b",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/backend/app/main.py": {
@@ -550,8 +550,8 @@
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/SESSION_TRACKER.md": {
-    "mtime": 1788653848.849376,
-    "ast_hash": "0c37a95ef4cfa474ae0139e48f570b62",
+    "mtime": 1788831040.9409864,
+    "ast_hash": "994f0064c382d6d6b49eb8d265862b6e",
     "semantic_hash": ""
   },
   "/Users/saangetamang/Documents/Apps and Software/Clipper/docker-compose.yml": {

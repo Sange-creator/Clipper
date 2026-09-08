@@ -9,14 +9,22 @@ import { api } from "@/lib/api";
 
 export function Navbar() {
   const pathname = usePathname();
-  const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline">("checking");
+  const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline" | "conflict">("checking");
+  const [conflictAppName, setConflictAppName] = useState<string>("");
 
   useEffect(() => {
     let isMounted = true;
     const check = async () => {
       const res = await api.checkHealth();
       if (isMounted) {
-        setBackendStatus(res ? "online" : "offline");
+        if (!res) {
+          setBackendStatus("offline");
+        } else if (res.conflict) {
+          setBackendStatus("conflict");
+          setConflictAppName(res.app_name || "Different App");
+        } else {
+          setBackendStatus("online");
+        }
       }
     };
     check();
@@ -87,6 +95,16 @@ export function Navbar() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
               </span>
               <span className="tracking-tight">Backend Offline (Port 8000)</span>
+            </div>
+          )}
+
+          {backendStatus === "conflict" && (
+            <div
+              title={`Port 8000 is occupied by '${conflictAppName}'. Stop that process and run: ./dev.sh`}
+              className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 shadow-sm shadow-amber-500/10"
+            >
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+              <span className="tracking-tight">Port 8000 Conflict: {conflictAppName}</span>
             </div>
           )}
 
